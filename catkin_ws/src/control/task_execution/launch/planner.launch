@@ -1,0 +1,3 @@
+<launch>
+    <node name="trajectory_planner_node" pkg="task_execution" type="trajectory_planner.py" />
+</launch>

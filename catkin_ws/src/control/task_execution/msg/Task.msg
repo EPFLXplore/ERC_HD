@@ -1,0 +1,2 @@
+string description
+geometry_msgs/Pose pose
