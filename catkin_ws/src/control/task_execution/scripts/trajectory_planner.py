@@ -303,11 +303,12 @@ class Planner:
         self.scene.add_box(name, p, dimensions)
         if add_to_objects:
             self.objects.append(name)
+        rospy.logwarn(str(pose))
         rospy.logwarn("KNOWN OBJECTS : " + str(self.scene.get_known_object_names()))
         rospy.sleep(.1*5)
     
     def remove_object_from_world(self, name=None):
-        if name is None:
+        if 1 or name is None:
             if len(self.objects) > 0:
                 self.scene.remove_world_object(self.objects[-1])
             return
