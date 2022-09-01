@@ -3,6 +3,7 @@ import time
 import math
 import copy
 import geometry_msgs.msg
+from std_msgs.msg import Float32MultiArray
 from task_execution.srv import PoseGoal, JointGoal
 from task_execution.msg import Object
 import task_execution.quaternion_arithmetic as qa
@@ -22,7 +23,7 @@ class Command(object):
     def execute(self):
         """attempts to execute command
         returns a bool indicating if it succeeded"""
-        self.execuute_count += 1
+        self.execute_count += 1
 
     def abort(self):
         """stops all movement"""
@@ -60,10 +61,10 @@ class StraightMoveCommand(Command):
         
     def constructPose(self):
         self.pose = geometry_msgs.msg.Pose()
-        self.pose.orientation = copy.deepcopy(END_EFFECTOR_POSE.orientation)
+        self.pose.orientation = copy.deepcopy(pt.END_EFFECTOR_POSE.orientation)
         p = qa.list_to_point(qa.normalize(self.axis))
         p = qa.mul(self.distance, p)
-        self.pose.position = qa.quat_to_point(qa.add(END_EFFECTOR_POSE.position, p))
+        self.pose.position = qa.quat_to_point(qa.add(pt.END_EFFECTOR_POSE.position, p))
 
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
@@ -89,9 +90,9 @@ class GripperRotationCommand(Command):
     
     def constructPose(self):
         self.pose = geometry_msgs.msg.Pose()
-        self.pose.position = copy.deepcopy(END_EFFECTOR_POSE.position)
+        self.pose.position = copy.deepcopy(pt.END_EFFECTOR_POSE.position)
         q = qa.quat(self.axis, self.angle)
-        o = qa.mul(q, END_EFFECTOR_POSE.orientation)
+        o = qa.mul(q, pt.END_EFFECTOR_POSE.orientation)
         self.pose.orientation = qa.quat_normalize(o)
     
     def execute(self):
@@ -122,7 +123,8 @@ class AddObjectCommand(Command):
     def __init__(self, pose, dims, type="box", name=""):
         super(AddObjectCommand, self).__init__()
         self.pose = pose
-        self.dims = dims
+        self.dims = Float32MultiArray()
+        self.dims.data = dims
         self.type = type
         self.name = name
     
@@ -197,7 +199,6 @@ class Task(object):
         while not self.currentCommandValidated():
             if not self.oneCommandLoop():
                 return False
-        print("NEXT COMMAAAAAAND")
         self.cmd_counter += 1
         return True
         
@@ -234,8 +235,13 @@ class PressButton(Task):
     
     def getPressOrientation(self):
         # for now
-        q = qa.quat([0,0,1], math.pi)
-        return qa.mul(self.btn_pose.orientation, q)
+        #q = qa.quat([0,0,1], math.pi)
+        #return qa.mul(self.btn_pose.orientation, q)
+        axis = qa.point_image([1,0,0], self.btn_pose.orientation)
+        q = qa.quat(axis, math.pi)
+        return qa.mul(q, self.btn_pose.orientation)
+        return qa.inv(self.btn_pose.orientation)
+        return qa.mul(qa.inv(self.btn_pose.orientation), q) #qa.inv(qa.mul(self.btn_pose.orientation, q))
 
     def setupNextCommand(self):
         cmd = self.currentCommand()
@@ -260,11 +266,12 @@ class PressButton(Task):
         elif self.cmd_counter == 1:
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
+            cmd.axis = qa.mul(-1, cmd.axis)
             cmd.constructPose()
         elif self.cmd_counter == 2:
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
-            cmd.axis = qa.mul(-1, cmd.axis)
+            #cmd.axis = qa.mul(-1, cmd.axis)
             cmd.constructPose()
 
     def constructCommandChain(self):

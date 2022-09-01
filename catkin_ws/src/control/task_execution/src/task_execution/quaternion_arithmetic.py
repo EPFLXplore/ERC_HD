@@ -201,3 +201,26 @@ def compose_poses(pose1, pose2):
     res.orientation = mul(q, pose1.orientation)
     res = quat_normalize(res)
     return res
+
+
+def colinear(v1, v2):
+    for j in range(len(v1)):
+        if v1[j] != 0:
+            break
+    else:
+        return True
+    return all(v1[j]*v2[i] == v1[i]*v2[j] for i in range(len(v1)))
+
+
+def solve_2d(v1, v2):
+    pass
+
+def solve_system(v1, v2):
+    s = v1[1]*v2[0] - v2[1]*v1[0]
+    t = v1[2]*v2[0] - v2[2]*v1[0]
+    r = v1[1]*v2[2] - v2[1]*v1[2]
+    if s == t == r == 0:
+        return [0,0,0]
+    if s == 0:
+        if t == 0:
+            pass
