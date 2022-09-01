@@ -2,11 +2,13 @@
 
 import rospy
 from task_execution.task_classes import *
-from task_execution.msg import Task
+from task_execution.pose_tracker import *
+from task_execution.msg import Task, Object
+import vision_no_ros.msg
 import geometry_msgs.msg
 import std_msgs.msg
 import threading
-
+    
 
 class Executor:
     def __init__(self):
@@ -19,6 +21,15 @@ class Executor:
         if isinstance(self.task, (PositionManualMotion, OrientationManualMotion)) and self.task.finished:
             return False
         return True
+
+    """def add_panel(self, name, pose):
+        dims = (2, 2, 0.05)
+        msg = Object()
+        msg.type == "box"
+        msg.name = name
+        msg.pose = pose
+        msg.dims = dims
+        self.add_obj_pub.publish(msg)"""
 
     def taskAssignementCallback(self, msg):
         """listens to /arm_control/task_assignment topic"""
@@ -60,7 +71,7 @@ class Executor:
         self.task.pursue = True
         self.task.axis = (msg.data[:3])
         self.task.velocity_scaling = msg.data[3]
-
+    
     def assignTask(self, task):
         """assigns the task"""
         # TODO: implement or delete
@@ -75,8 +86,10 @@ class Executor:
         # TODO
     
     def run(self):
+        #self.add_obj_pub = rospy.Publisher("arm_control/add_object", Object, queue_size=5)
         rospy.Subscriber("/arm_control/task_assignment", Task, self.taskAssignementCallback)
-        rospy.Subscriber("/arm_control/end_effector_pose", geometry_msgs.msg.Pose, register_end_effector_pose)
+        rospy.Subscriber("/arm_control/end_effector_pose", geometry_msgs.msg.Pose, eef_pose_callback)
+        rospy.Subscriber("detected_elements", vision_no_ros.msg.object_list, detected_objects_pose_callback)
         rospy.Subscriber("/arm_control/pos_manual_inverse_cmd", std_msgs.msg.Float32MultiArray, self.positionManualTaskCallback)
         rospy.Subscriber("/arm_control/orient_manual_inverse_cmd", std_msgs.msg.Float32MultiArray, self.orientationManualTaskCallback)
         rate = rospy.Rate(25)   # 25hz

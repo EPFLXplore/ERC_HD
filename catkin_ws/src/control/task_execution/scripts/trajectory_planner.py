@@ -47,7 +47,6 @@ class Planner:
     def __init__(self):
         # initialize ROS ===============================================================================================
         moveit_commander.roscpp_initialize(sys.argv)
-        rospy.init_node("trajectory_planner_node", anonymous=True)
 
         # publishers ===================================================================================================
         self.end_of_mvt_pub = rospy.Publisher("/arm_control/end_of_movement", task_execution.msg.cmdOutcome, queue_size=5)  # TODO: probably remove this
@@ -63,9 +62,8 @@ class Planner:
         rospy.Service("/arm_control/joint_goal", JointGoal, self.handle_joint_goal)
         #rospy.Subscriber("/arm_control/pose_goal", PoseGoal, self.handle_pose_goal)
         #rospy.Subscriber("/arm_control/joint_goal", JointGoal, self.handle_joint_goal)
-        rospy.Subscriber("/arm_control/world_update", geometry_msgs.msg.Pose, self.object_callback)
-        rospy.Subscriber("/arm_control/remove_box", std_msgs.msg.Bool, self.remove_object_from_world)
-        #rospy.Subscriber("/arm_control/add_box_to_world", )
+        rospy.Subscriber("/arm_control/add_object", task_execution.msg.Object, self.add_object_callback)
+        rospy.Subscriber("/arm_control/remove_object", std_msgs.msg.String, self.remove_object_callback)
         rospy.Subscriber("/arm_control/joint_telemetry", sensor_msgs.msg.JointState, self.telemetry_callback)
         rospy.Subscriber("/arm_control/show_lidar", std_msgs.msg.Bool, self.show_lidar_callback)
 
@@ -125,13 +123,11 @@ class Planner:
         """
         Listens to /arm_control/pose_goal topic
         """
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         if self.moving:
             # TODO: send message to indicate non execution
             return PoseGoalResponse(False)
         goal_type = Planner.CARTESIAN_GOAL if req.cartesian else Planner.POSE_GOAL
-        goal = req.goal
-        self.achieve_goal(req.id, goal, goal_type)
+        self.achieve_goal(req.id, req.goal, goal_type)
         return PoseGoalResponse(True)
 
     def handle_joint_goal(self, req):
@@ -144,13 +140,19 @@ class Planner:
         self.achieve_goal(req.id, req.goal.data, Planner.JOINT_GOAL)
         return JointGoalResponse(True)
 
-    def object_callback(self, msg):
+    def add_object_callback(self, msg):
         """
         Listens to /arm_control/world_update topic
         """
         # TODO
-        dims = (0.2, 0.2, 0.0001)
-        self.add_box_to_world(msg, dims, "artag")
+        if msg.type == "box":
+            self.add_box_to_world(msg.pose, msg.dims, msg.name)
+
+    def remove_object_callback(self, msg):
+        """
+        Listens to /arm_control/remove_object topic
+        """
+        self.remove_object_from_world(msg.data)
 
     def telemetry_callback(self, msg):
         """
@@ -293,32 +295,36 @@ class Planner:
         TODO: modify this function
         Add and object to the world that will be used to compute collision free trajectories.
         """
-        if name is None:
+        if name is None or name == "":
             name = "object%d" % len(self.objects)
-        rospy.sleep(0.2*5)    # crucial for some reason
+        rospy.sleep(.2)    # crucial for some reason
 
         p = geometry_msgs.msg.PoseStamped()
         p.header.frame_id = self.robot.get_planning_frame()
         p.pose = pose
         self.scene.add_box(name, p, dimensions)
-        if add_to_objects:
+        if add_to_objects and name not in self.objects:
             self.objects.append(name)
-        rospy.logwarn(str(pose))
-        rospy.logwarn("KNOWN OBJECTS : " + str(self.scene.get_known_object_names()))
-        rospy.sleep(.1*5)
+        # rospy.loginfo("KNOWN OBJECTS : " + str(self.scene.get_known_object_names()))
+        rospy.sleep(.1)
     
     def remove_object_from_world(self, name=None):
-        if 1 or name is None:
+        if name is None:
             if len(self.objects) > 0:
                 self.scene.remove_world_object(self.objects[-1])
+                self.objects.pop()
             return
         self.scene.remove_world_object(name)
+        if name in self.objects:
+            self.objects.remove(name)
 
     def clear_world(self):
         """
         Remove all added objects.
         """
         # TODO
+        while self.objects:
+            self.remove_object_from_world()
 
     def send_feedback(self, cmd_id, success):
         """
@@ -337,4 +343,5 @@ class Planner:
 
 
 if __name__ == "__main__":
+    rospy.init_node("trajectory_planner_node", anonymous=True)
     Planner().spin()

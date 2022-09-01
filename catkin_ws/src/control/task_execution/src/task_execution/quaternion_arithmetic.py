@@ -64,7 +64,10 @@ def reverse_quat(q):
     q = make_quat(q)
     cost = q.w
     sint = norm(quat_to_point(q))
-    axis = [q.x/sint, q.y/sint, q.z/sint]
+    if sint != 0:
+        axis = [q.x/sint, q.y/sint, q.z/sint]
+    else:
+        axis = [0, 0, 0]
     angle = 2*reverse_trig(cost, sint)
     return (axis, angle)
 
@@ -196,4 +199,5 @@ def compose_poses(pose1, pose2):
     axis2 = point_image(axis2, pose1.orientation)
     q = quat(axis2, angle2)
     res.orientation = mul(q, pose1.orientation)
+    res = quat_normalize(res)
     return res

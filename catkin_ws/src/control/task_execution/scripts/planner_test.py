@@ -7,7 +7,7 @@ import std_msgs.msg
 import geometry_msgs.msg
 import sensor_msgs.msg
 from task_execution.srv import PoseGoal, PoseGoalResponse, JointGoal, JointGoalResponse
-from task_execution.msg import Task
+from task_execution.msg import Task, Object
 import task_execution.quaternion_arithmetic as qa
 from task_execution.quaternion_arithmetic import normalize
 import keyboard
@@ -16,6 +16,7 @@ import keyboard
 pose_goal_pub = rospy.Publisher("/arm_control/pose_goal", geometry_msgs.msg.Pose, queue_size=5)
 joint_goal_pub = rospy.Publisher("/arm_control/joint_goal", std_msgs.msg.Float64MultiArray, queue_size=5)
 press_btn_pub = rospy.Publisher("/arm_control/task_assignment", Task, queue_size=5)
+add_object_pub = rospy.Publisher("/arm_control/add_object", Object, queue_size=5)
 pos_manual_cmd_pub = rospy.Publisher("/arm_control/pos_manual_cmd", std_msgs.msg.Float32MultiArray, queue_size=1)
 orient_manual_cmd_pub = rospy.Publisher("/arm_control/orient_manual_cmd", std_msgs.msg.Float32MultiArray, queue_size=1)
 
@@ -90,7 +91,14 @@ def publish_press_btn_task():
     task.pose.position.x = 0.9
     task.pose.position.y = 0.1
     task.pose.position.z = 0.6
-    task.pose.orientation = qa.quat([1, 1, 0], math.pi/3)
+    task.pose.orientation = qa.quat([0, 1, 0], -math.pi/2)
+    obj = Object()
+    obj.type = "box"
+    obj.name = "button"
+    obj.dims = (0.2, 0.2, 0.0001)
+    obj.pose = task.pose
+    add_object_pub.publish(obj)
+    rospy.sleep(.5)
     press_btn_pub.publish(task)
 
 
@@ -137,16 +145,16 @@ def manual_inverse():
 def main():
     rospy.init_node("planner_test_node", anonymous=True)
 
-    # publish_press_btn_task()
+    publish_press_btn_task()
     """if sys.argv[1] == "j":
         req_joint_goal(int(sys.argv[2]))
     else:
         req_pose_goal((float(sys.argv[2]), float(sys.argv[3]), float(sys.argv[4])), float(sys.argv[5]))"""
     
-    rate = rospy.Rate(25)   # 25hz
+    """rate = rospy.Rate(25)   # 25hz
     while not rospy.is_shutdown():
         manual_inverse()
-        rate.sleep()
+        rate.sleep()"""
 
 
 if __name__ == "__main__":

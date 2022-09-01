@@ -1,34 +1,29 @@
-import sys
 import rospy
 import time
 import math
 import copy
-import std_msgs.msg
 import geometry_msgs.msg
-import sensor_msgs.msg
 from task_execution.srv import PoseGoal, JointGoal
+from task_execution.msg import Object
 import task_execution.quaternion_arithmetic as qa
+import task_execution.pose_tracker as pt
 
 
-END_EFFECTOR_POSE = geometry_msgs.msg.Pose()
 #pose_goal_pub = rospy.Publisher("/arm_control/pose_goal", PoseGoal, queue_size=5)
 #joint_goal_pub = rospy.Publisher("/arm_control/joint_goal", JointGoal, queue_size=5)
+add_object_pub = rospy.Publisher("/arm_control/add_object", Object, queue_size=5)
 
 
-def register_end_effector_pose(pose):
-    """listens to /arm_control/end_effector_pose topic"""
-    global END_EFFECTOR_POSE
-    END_EFFECTOR_POSE = pose
-
-
-class Command:
+class Command(object):
     """abstract class representing a command"""
+    def __init__(self):
+        self.execute_count = 0
 
-    def finished(self):
-        """indicates if the command can be considered as executed"""
     def execute(self):
         """attempts to execute command
         returns a bool indicating if it succeeded"""
+        self.execuute_count += 1
+
     def abort(self):
         """stops all movement"""
 
@@ -36,12 +31,14 @@ class PoseCommand(Command):
     """moves the arm to a requested pose (position + orientation of the end effector)"""
 
     def __init__(self, pose=None, cartesian=False):
+        super(PoseCommand, self).__init__()
         self.pose = pose    # geometry_msgs.msg.Pose
         self.cartesian = cartesian
         self.finished = False
 
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
+        super(PoseCommand, self).execute()
         rospy.wait_for_service('/arm_control/pose_goal')
         try:
             proxy = rospy.ServiceProxy('/arm_control/pose_goal', PoseGoal)
@@ -57,6 +54,7 @@ class StraightMoveCommand(Command):
     """moves the end effector in a straight line by a certain distance in a certain direction without affecting its orientation"""
 
     def __init__(self, axis=(1,0,0), distance=0):
+        super(StraightMoveCommand, self).__init__()
         self.axis = axis
         self.distance = distance
         
@@ -69,6 +67,7 @@ class StraightMoveCommand(Command):
 
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
+        super(StraightMoveCommand, self).execute()
         rospy.wait_for_service('/arm_control/pose_goal')
         try:
             proxy = rospy.ServiceProxy('/arm_control/pose_goal', PoseGoal)
@@ -84,6 +83,7 @@ class GripperRotationCommand(Command):
     """rotates the gripper around the given axis by the given angle without affecting its position"""
 
     def __init__(self, axis=(0,0,1), angle=0):
+        super(GripperRotationCommand, self).__init__()
         self.axis = axis
         self.angle = angle
     
@@ -96,6 +96,7 @@ class GripperRotationCommand(Command):
     
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
+        super(GripperRotationCommand, self).execute()
         rospy.wait_for_service('/arm_control/pose_goal')
         try:
             proxy = rospy.ServiceProxy('/arm_control/pose_goal', PoseGoal)
@@ -109,8 +110,46 @@ class GripperRotationCommand(Command):
 
 class GripperManipulationCommand(Command):
     """opens/closes the gripper to a desired position"""
+    def __init__(self):
+        super(GripperManipulationCommand, self).__init_()
+
     def execute(self):
         """publishes on /arm_control/joint_cmd topic for the motor controller"""
+        super(GripperManipulationCommand, self).execute()
+
+
+class AddObjectCommand(Command):
+    def __init__(self, pose, dims, type="box", name=""):
+        super(AddObjectCommand, self).__init__()
+        self.pose = pose
+        self.dims = dims
+        self.type = type
+        self.name = name
+    
+    def execute(self):
+        super(AddObjectCommand, self).execute()
+        msg = Object()
+        msg.type = self.type
+        msg.name = self.name
+        msg.pose = self.pose
+        msg.dims = self.dims
+        add_object_pub.publish(msg)
+        rospy.sleep(.5)
+
+
+class RequestDetectionCommand(Command):
+    def __init__(self):
+        super(RequestDetectionCommand, self).__init__()
+        self.max_wait_time = 10
+    
+    def execute(self):
+        super(RequestDetectionCommand, self).execute()
+        rospy.sleep(1.5)
+        pt.deprecate_detection()
+        start = time.time()
+        while not pt.DETECTION_UPDATED:
+            if time.time()-start > self.max_wait_time:
+                return
 
 
 class Task(object):
@@ -177,7 +216,7 @@ class PressButton(Task):
     def __init__(self, btn_pose):
         super(PressButton, self).__init__()
         self.btn_pose = btn_pose
-        self.press_distance = 0.1
+        self.press_distance = 0.2
         self.pause_time = 2
     
     def currentCommand(self):
@@ -187,11 +226,9 @@ class PressButton(Task):
 
     def getPressPosition(self):
         p = qa.point_image([0, 0, 1], self.btn_pose.orientation)
-        d = 0.001
-        if self.cmd_counter != 1:
-            d += self.press_distance
+        d = self.press_distance + 0.001
         p = qa.mul(d, p)
-        p = qa.mul(-1, p)   # TODO: direction is reversed for some reason
+        #p = qa.mul(-1, p)   # TODO: direction is reversed for some reason
         res = qa.quat_to_point(qa.add(self.btn_pose.position, p))
         return res
     
@@ -242,6 +279,7 @@ class PressButton(Task):
             StraightMoveCommand()   # go backwards
         ]
 
+
 class FlipSwitch(Task):
     def constructCommandChain(self):
         command_chain = [
@@ -278,15 +316,21 @@ class PositionManualMotion:
         """calls setNextGoal to set the first goal"""
         self.axis = axis
         self.velocity_scaling = velocity_scaling
-        self.max_step_distance = 0.05
+        self.max_step_distance = 0.1
+        self.min_step_distance = 0.01
         self.pursue = True
         self.finished = False
-        
+    
+    def get_distance(self):
+        if self.velocity_scaling < 0.01:    # to eliminate ghost signals
+            return
+        return self.min_step_distance + (self.max_step_distance-self.min_step_distance)*self.velocity_scaling
+
     def execute(self):
         """executes all commands"""
         while self.pursue:
             self.pursue = False
-            cmd = StraightMoveCommand(axis=self.axis, distance=self.max_step_distance)
+            cmd = StraightMoveCommand(axis=self.axis, distance=self.get_distance())
             cmd.constructPose()
             cmd.execute()
             self.pursue = False

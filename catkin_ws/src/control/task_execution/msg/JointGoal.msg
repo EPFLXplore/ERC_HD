@@ -1,2 +1,0 @@
-uint16 id
-std_msgs/Float64MultiArray goal

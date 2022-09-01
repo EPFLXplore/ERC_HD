@@ -57,6 +57,7 @@ add_message_files(
   FILES
   cmdOutcome.msg
   Task.msg
+  Object.msg
 )
 
 ## Generate services in the 'srv' folder
