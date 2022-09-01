@@ -150,7 +150,7 @@ class Planner:
         """
         # TODO
         dims = (0.2, 0.2, 0.0001)
-        self.add_box_to_world(msg, dims)
+        self.add_box_to_world(msg, dims, "artag")
 
     def telemetry_callback(self, msg):
         """

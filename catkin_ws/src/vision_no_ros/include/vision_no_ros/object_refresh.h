@@ -119,6 +119,8 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
       object.y_quaternion =quaternion[2];
       object.z_quaternion =quaternion[3];
       
+      //cout << "distance on z axis is ; "  << depth.get_distance(depth.get_width()/2,depth.get_height()/2) << endl;
+
       break;
     }
     else { //send an error message or a reset arm position command

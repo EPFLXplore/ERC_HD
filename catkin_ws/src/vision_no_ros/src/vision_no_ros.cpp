@@ -27,7 +27,7 @@ using namespace cv;
 
 static bool show_input_image(0); //for showing the images directly on the jetson, not through a ros topic
 static bool show_output_image(1);//need to turn it on to activate the corresponding ros topic
-#define SAMPLES 30
+#define SAMPLES 1
 #define TAG_SIZE 0.044f
 
 
@@ -109,7 +109,7 @@ int main(int argc, char **argv) try {
         }
        
        
-        //find_plaque(image,depth,intrinsics);
+        find_plaque(image,depth,intrinsics);
        
 
        ////////////////find AR tags ///////////////////////////
