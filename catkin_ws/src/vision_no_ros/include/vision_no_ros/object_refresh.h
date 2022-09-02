@@ -20,11 +20,19 @@ static float z_pos_average=0;
 static float x_rot_average=0;
 static float y_rot_average=0;
 static float z_rot_average=0;
+
+static float artag_x_pos_average=0;
+static float artag_y_pos_average=0;
+static float artag_z_pos_average=0;
+
 static int active_sample=0;
 
 void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,const vector<cv::Vec3d>& rvecs,const vector<cv::Vec3d>& tvecs,
                     const cntrl_pnl::ArTag& ar_1,const cntrl_pnl::Object& obj,const rs2::depth_frame& depth,const vector<vector<Point2f>>& corners,
                     const rs2_intrinsics& intrinsics, const int& samples);// should maybe add another artgag argument for the objects needing 2 artags at least to localize them...
+
+void refresh_ar_tag_pos(vision_no_ros::panel_object& object,const vector<int>& ids,const vector<cv::Vec3d>& rvecs,const vector<cv::Vec3d>& tvecs,
+                        const cntrl_pnl::ArTag& ArTag,const rs2::depth_frame& depth,const vector<vector<Point2f>>& corners,const int& samples);
 
 float scalar_product_projection_on_axis(const float (&pixel_right) [2],const float (&pixel_left) [2],const float (&axis) [3],const rs2::depth_frame& depth,const rs2_intrinsics& intrinsics);
    
@@ -129,6 +137,44 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
   }
 }
 
+
+void refresh_ar_tag_pos(vision_no_ros::panel_object& object,const vector<int>& ids,const vector<cv::Vec3d>& rvecs,const vector<cv::Vec3d>& tvecs,
+                        const cntrl_pnl::ArTag& ArTag,const rs2::depth_frame& depth,const vector<vector<Point2f>>& corners,const int& samples){
+  if (active_sample<samples){
+    for (int i(0);i < ids.size();++i){
+      if (ids[i]==ArTag.id){
+        float tag_center_x = (corners[i][0].x+corners[i][2].x)/2;
+        float tag_center_y = (corners[i][0].y+corners[i][2].y)/2;
+        float dist=depth.get_distance(int(tag_center_x),int(tag_center_y));
+        object.id = ArTag.id;
+        object.x_pos=tvecs[i][0]*1000;
+        object.y_pos=tvecs[i][1]*1000;
+        object.z_pos=dist*1000;
+        vector<double> quaternion (4);
+        convert_rvec_to_quaternion(rvecs[i],quaternion);
+        object.w_quaternion =quaternion[0];
+        object.x_quaternion =quaternion[1];
+        object.y_quaternion =quaternion[2];
+        object.z_quaternion =quaternion[3];
+        object.x_rot=0;
+        object.y_rot=0;
+        object.z_rot=0;
+        ++active_sample;
+        artag_x_pos_average=artag_x_pos_average+object.x_pos;
+        artag_y_pos_average=artag_y_pos_average+object.y_pos;
+        artag_z_pos_average=artag_z_pos_average+object.z_pos;
+      }
+    }
+  }else{
+    artag_x_pos_average=artag_x_pos_average/samples;
+    artag_y_pos_average=artag_y_pos_average/samples;
+    artag_z_pos_average=artag_z_pos_average/samples;
+    object.x_pos=artag_x_pos_average;
+    object.y_pos=artag_y_pos_average;
+    object.z_pos=artag_z_pos_average;
+    active_sample=0;
+  }
+}
 
 float scalar_product_projection_on_axis(const float (&pixel_right) [2],const float (&pixel_left) [2],const float (&axis) [3],const rs2::depth_frame& depth,const rs2_intrinsics& intrinsics){
    

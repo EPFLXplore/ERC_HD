@@ -143,7 +143,7 @@ class AddObjectCommand(Command):
 class RequestDetectionCommand(Command):
     def __init__(self):
         super(RequestDetectionCommand, self).__init__()
-        self.max_wait_time = 10
+        self.max_wait_time = 10*0
     
     def execute(self):
         super(RequestDetectionCommand, self).execute()
@@ -219,6 +219,7 @@ class PressButton(Task):
         super(PressButton, self).__init__()
         self.btn_id = btn_id
         self.btn_pose = pose
+        self.artag_pose = None
         self.scan_pose = scan_pose
         self.press_distance = 0.2
         self.pause_time = 2
@@ -229,25 +230,28 @@ class PressButton(Task):
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:
             if obj.id == self.btn_id:
-                relative_pose = obj.pose
+                relative_pose = obj.object_pose
                 self.btn_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
                 self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
-                rospy.logwarn("btn\n" + str(self.btn_pose.orientation) + "\n")
-                rospy.logwarn("eef\n" + str(pt.END_EFFECTOR_POSE.orientation) + "\n")
+                relative_pose = obj.artag_pose
+                self.artag_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
+                self.artag_pose.orientation = qa.turn_around(self.btn_pose.orientation)
 
     def currentCommand(self):
         print(len(self.command_chain))
         print(self.cmd_counter)
         return self.command_chain[self.cmd_counter]
 
-    def getPressPosition(self):
+    def getPressPosition(self, position=None):
+        if position is None:
+            position = self.btn_pose.orientation
         p = qa.point_image([0, 0, 1], self.btn_pose.orientation)
         d = 0.001
         if self.cmd_counter != 1:
             d += self.press_distance
         p = qa.mul(d, p)
         #p = qa.mul(-1, p)   # TODO: direction is reversed for some reason
-        res = qa.quat_to_point(qa.add(self.btn_pose.position, p))
+        res = qa.quat_to_point(qa.add(position, p))
         return res
     
     def getPressOrientation(self):
@@ -262,24 +266,36 @@ class PressButton(Task):
         return qa.mul(qa.inv(self.btn_pose.orientation), q) #qa.inv(qa.mul(self.btn_pose.orientation, q))
 
     def setupNextCommand(self):
-        rospy.logwarn("STARTINT CMD " + str(self.cmd_counter))
+        rospy.logwarn("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
         cmd = self.currentCommand()
         if self.cmd_counter == 1:
+            if self.scan_pose:
+                self.scan_for_btn_pose()
+            self.artag_pose = copy.deepcopy(self.btn_pose)
+            self.artag_pose.position.x += 0.15
+            cmd.pose = self.artag_pose
+            cmd.dims = [0.4, 0.2, 0.0001]
+            cmd.name = "AR_tag"
+        if self.cmd_counter == 2:
+            cmd.pose = geometry_msgs.msg.Pose()
+            cmd.pose.position = self.getPressPosition(self.artag_pose.position)
+            cmd.pose.orientation = self.getPressOrientation()
+        elif self.cmd_counter == 4:
             if self.scan_pose:
                 self.scan_for_btn_pose()
             cmd.pose = self.btn_pose
             cmd.dims = [0.4, 0.2, 0.0001]
             cmd.name = "btn"
-        if self.cmd_counter == 2:
+        elif self.cmd_counter == 5:
             cmd.pose = geometry_msgs.msg.Pose()
-            cmd.pose.position = self.getPressPosition()
+            cmd.pose.position = self.getPressPosition(self.btn_pose.position)
             cmd.pose.orientation = self.getPressOrientation()
-        elif self.cmd_counter == 3:
+        elif self.cmd_counter == 6:
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
             cmd.axis = qa.mul(-1, cmd.axis)
             cmd.constructPose()
-        elif self.cmd_counter == 4:
+        elif self.cmd_counter == 7:
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
             #cmd.axis = qa.mul(-1, cmd.axis)
@@ -322,8 +338,22 @@ class PressButton(Task):
             RequestDetectionCommand(),
             AddObjectCommand(),
             PoseCommand(),   # go at a predetermined position in front of the button with gripper facing towards it
+            RequestDetectionCommand(),
+            AddObjectCommand(),
+            PoseCommand(),
             StraightMoveCommand(),   # go forward enough to press the button
             StraightMoveCommand()   # go backwards
+        ]
+        self.command_description = [
+            "request detection",
+            "add AR tag to world",
+            "go in front of AR tag",
+            "request detection",
+            "add button to world",
+            "go in front of button",
+            "move straight to button",
+            "move staight away from button"
+            ""
         ]
 
 

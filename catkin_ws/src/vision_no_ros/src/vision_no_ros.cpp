@@ -294,6 +294,18 @@ int main(int argc, char **argv) try {
                     }
                 }
 
+                //////////////////// send AR tag positions and corner limits//////////////////
+                if (get_command()==0 or get_command()==15){
+                    vision_no_ros::panel_object artag_panelA;
+                    
+                    refresh_ar_tag_pos(artag_panelA,ids,rvecs,tvecs,my_panel.panelA.artg1,depth,corners,SAMPLES);
+                    //draw_object(image,ethernet,intrinsics);
+                    if (active_sample==SAMPLES) {
+                        offset_to_fingers(artag_panelA);
+                        objects.detected_objects.push_back(artag_panelA);
+                    }
+                }
+
                 /////////////////////////////////////////////// end object referesh /////////////////////////////////////////////////
 
                 //cout << "active command is : "<< get_command() <<endl;

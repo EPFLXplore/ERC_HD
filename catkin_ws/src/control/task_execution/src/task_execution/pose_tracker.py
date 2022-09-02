@@ -12,7 +12,8 @@ DETECTION_UPDATED = False
 class DetectedObject:
     def __init__(self, id=0):
         self.id = id
-        self.pose = Pose()
+        self.object_pose = Pose()
+        self.artag_pose = Pose()
     
     def str(self):
         return str(self.pose)
@@ -36,13 +37,13 @@ def detected_objects_pose_callback(msg):
     for obj in msg.detected_objects:
         pose = DetectedObject()
         pose.id = obj.id
-        pose.pose.position.x = -obj.y_pos*mm_to_m
-        pose.pose.position.y = -obj.x_pos*mm_to_m
-        pose.pose.position.z = obj.z_pos*mm_to_m
-        pose.pose.orientation.w = obj.w_quaternion
-        pose.pose.orientation.x = -obj.y_quaternion
-        pose.pose.orientation.y = obj.z_quaternion
-        pose.pose.orientation.z = obj.x_quaternion
+        pose.object_pose.position.x = -obj.y_pos*mm_to_m
+        pose.object_pose.position.y = -obj.x_pos*mm_to_m
+        pose.object_pose.position.z = obj.z_pos*mm_to_m
+        pose.object_pose.orientation.w = obj.w_quaternion
+        pose.object_pose.orientation.x = -obj.y_quaternion
+        pose.object_pose.orientation.y = obj.z_quaternion
+        pose.object_pose.orientation.z = obj.x_quaternion
         DETECTED_OBJECTS_POSE.append(pose)
     DETECTED_OBJECTS_LOCKED = False
     #if len(DETECTED_OBJECTS_POSE) > 0:

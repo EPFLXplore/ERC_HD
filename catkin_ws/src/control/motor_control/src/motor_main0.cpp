@@ -50,7 +50,7 @@ double current_pos_qc[MAX_MOTOR_COUNT] = {0};
 double target_pos[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0};
 double target_vel[MAX_MOTOR_COUNT] = {0,0};
 double max_current[MAX_MOTOR_COUNT] = {0.155};
-Epos4::control_mode_t control_mode(Epos4::velocity_CSV);
+Epos4::control_mode_t control_mode(Epos4::position_CSP);
 
 //double offset[MAX_MOTOR_COUNT] = {0};   // TODO: makes the max/min angles unusable -> correct that
 
