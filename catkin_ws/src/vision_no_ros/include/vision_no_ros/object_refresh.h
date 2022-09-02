@@ -101,7 +101,7 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
       #else  //test which method is more accurate
         object.x_pos =offset.x_coor+tvecs[i][0]*1000; //casting and representing the foats with ints cf bens idea...
         object.y_pos =offset.y_coor-tvecs[i][1]*1000;
-        object.z_pos=dist*1000;
+        object.z_pos=dist*1000;                 //this is not correct, give depth to the middle pixel use
         //solution with linear fit not ideal 
         float yaw = get_pixel_distance(corners[i][0],corners[i][3])-get_pixel_distance(corners[i][1],corners[i][2]);
         get_angle_from_polyfit(yaw);
@@ -119,6 +119,10 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
       object.x_rot =pitch; //will give the ar tags rotations then the gripper can stay at that angle
       object.y_rot =yaw;//rvecs[i][1]*180/M_PI; //add rotation relative to gripper
       object.z_rot =roll;//rvecs[i][2]*180/M_PI; //add rotation relative to gripper
+      object.ar_tag_id =ar_1.id;
+      object.x_pos_tag=tvecs[i][0]*1000;
+      object.y_pos_tag=tvecs[i][1]*1000;
+      object.z_pos_tag=dist*1000;//dist*1000;
       average_object_params(object,samples);
       vector<double> quaternion (4);
       convert_rvec_to_quaternion(rvecs[i],quaternion);//quaternions wont be averaged beacuae of the +/- transition at 0.7
@@ -160,7 +164,7 @@ void refresh_ar_tag_pos(vision_no_ros::panel_object& object,const vector<int>& i
         object.y_rot=0;
         object.z_rot=0;
         ++active_sample;
-        artag_x_pos_average=artag_x_pos_average+object.x_pos;
+        artag_x_pos_average=artag_x_pos_average+object.x_pos;  
         artag_y_pos_average=artag_y_pos_average+object.y_pos;
         artag_z_pos_average=artag_z_pos_average+object.z_pos;
       }
@@ -172,6 +176,9 @@ void refresh_ar_tag_pos(vision_no_ros::panel_object& object,const vector<int>& i
     object.x_pos=artag_x_pos_average;
     object.y_pos=artag_y_pos_average;
     object.z_pos=artag_z_pos_average;
+    artag_x_pos_average=0;
+    artag_y_pos_average=0;
+    artag_z_pos_average=0;
     active_sample=0;
   }
 }
@@ -222,6 +229,9 @@ void average_object_params(vision_no_ros::panel_object& object,int samples){
     x_rot_average= object.x_rot+x_rot_average;
     y_rot_average= object.y_rot+y_rot_average;
     z_rot_average= object.z_rot+z_rot_average;
+    artag_x_pos_average=artag_x_pos_average+object.x_pos_tag;
+    artag_y_pos_average=artag_y_pos_average+object.y_pos_tag;
+    artag_z_pos_average=artag_z_pos_average+object.z_pos_tag;
     ++active_sample;
   }else {
     object.x_pos=x_pos_average/samples;
@@ -230,12 +240,18 @@ void average_object_params(vision_no_ros::panel_object& object,int samples){
     object.x_rot=x_rot_average/samples;
     object.y_rot=y_rot_average/samples;
     object.z_rot=z_rot_average/samples;
+    object.x_pos_tag=artag_x_pos_average/samples;
+    object.y_pos_tag=artag_y_pos_average/samples;
+    object.z_pos_tag=artag_z_pos_average/samples;
     x_pos_average=0;
     y_pos_average=0;
     z_pos_average=0;
     x_rot_average=0;
     y_rot_average=0;
     z_rot_average=0;
+    artag_x_pos_average=0;
+    artag_y_pos_average=0;
+    artag_z_pos_average=0;
     active_sample=0;
   }
 }

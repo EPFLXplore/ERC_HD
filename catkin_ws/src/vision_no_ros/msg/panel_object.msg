@@ -10,3 +10,7 @@ float32 w_quaternion
 float32 x_quaternion
 float32 y_quaternion
 float32 z_quaternion
+int8 ar_tag_id
+float32 x_pos_tag
+float32 y_pos_tag
+float32 z_pos_tag

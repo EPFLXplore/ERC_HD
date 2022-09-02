@@ -18,9 +18,9 @@
 #include <vision_no_ros/serial_commander.h>
 #include <vision_no_ros/gripper_extrinsics.h>
 //custom messages includes
+
 #include <vision_no_ros/panel_object.h> //even though this file doesnt exist, the .msg one does
 #include <vision_no_ros/object_list.h>
-
 
 
 using namespace std;
@@ -34,7 +34,7 @@ static bool show_depth_image(0);
 
 
 ////////////////////// vectors required for AR tag detection ///////////////////////////////////
-cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
+cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_7X7_250);
 static cv::Mat cameraMatrix ;
 static cv::Mat distCoeffs ;
 static vector<int> ids;
@@ -295,6 +295,7 @@ int main(int argc, char **argv) try {
                 }
 
                 //////////////////// send AR tag positions and corner limits//////////////////
+                
                 if (get_command()==0 or get_command()==15){
                     vision_no_ros::panel_object artag_panelA;
                     
@@ -305,7 +306,7 @@ int main(int argc, char **argv) try {
                         objects.detected_objects.push_back(artag_panelA);
                     }
                 }
-
+                
                 /////////////////////////////////////////////// end object referesh /////////////////////////////////////////////////
 
                 //cout << "active command is : "<< get_command() <<endl;

@@ -7,17 +7,18 @@
 
 using namespace cv;
 using namespace std;
-
+/*
 static vector<double> w_quat_avrg;
 static vector<double> x_quat_avrg;
 static vector<double> y_quat_avrg;
 static vector<double> z_quat_avrg;
 
 static double range=0.01;
+*/
 
 void convert_rvec_to_quaternion(const cv::Vec3d& rvec, vector<double>& quat);    //double& quat [] is an array of references I believe, not a reference of an array
 void getQuaternion(const cv::Mat& R, vector<double>& Q);
-void reduce_noise_on_quat();
+//void reduce_noise_on_quat();
 
 void convert_rvec_to_quaternion(const cv::Vec3d& rvec,vector<double>& quat){
     cv::Mat rotation_matrix;
@@ -57,7 +58,7 @@ void getQuaternion(const cv::Mat& R, vector<double>& Q){
     }
 }
 
-
+/*
 void reduce_noise_on_quat(double Q, vector<double>& table ,const int& active_sample, const int& num_samples){
 
     if (active_sample<num_samples){       
@@ -84,5 +85,5 @@ void find_mode(const vector<double>& tab){
 
 }
 
-
+*/
 #endif

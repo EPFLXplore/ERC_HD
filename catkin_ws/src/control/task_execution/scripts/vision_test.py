@@ -16,6 +16,7 @@ remove_box_pub = rospy.Publisher("/arm_control/remove_box", Bool, queue_size=5)
 
 end_effector_pose = Pose()
 artag_pose = Pose()
+artag_pose2 = Pose()
 #artag_pose.orientation = Quaternion(1,0,0,0)
 
 
@@ -25,9 +26,16 @@ def artag_callback(msg):
     artag_pose.position.y = -o.x_pos/1000
     artag_pose.position.z = o.z_pos/1000
     artag_pose.orientation.w = o.w_quaternion
-    artag_pose.orientation.x = -o.y_quaternion
-    artag_pose.orientation.y = o.z_quaternion
-    artag_pose.orientation.z = o.x_quaternion
+    artag_pose.orientation.x = o.x_quaternion
+    artag_pose.orientation.y = o.y_quaternion
+    artag_pose.orientation.z = o.z_quaternion
+    artag_pose2.position.x = o.y_pos_tag/1000
+    artag_pose2.position.y = -o.x_pos_tag/1000
+    artag_pose2.position.z = o.z_pos_tag/1000
+    artag_pose2.orientation.w = o.w_quaternion
+    artag_pose2.orientation.x = -o.y_quaternion
+    artag_pose2.orientation.y = o.x_quaternion
+    artag_pose2.orientation.z = o.z_quaternion
 
 
 def end_effector_callback(msg):
@@ -45,7 +53,14 @@ def get_btn_pose():
     obj.name = "button"
     obj.dims = Float32MultiArray()
     obj.dims.data = [0.2,0.1,0.0001]
-    return obj
+
+    obj2 = Object()
+    obj2.pose = qa.compose_poses(end_effector_pose, artag_pose2)
+    obj2.type = "box"
+    obj2.name = "artag"
+    obj2.dims = Float32MultiArray()
+    obj2.dims.data = [0.2,0.1,0.0001]
+    return obj, obj2
     
 
 
@@ -62,8 +77,11 @@ def main():
         if time.time()-t > btn_refresh_time:
             print("eeeeeeeeeeeeeeeee")
             t = time.time()
-            add_box_pub.publish(get_btn_pose())
-            time.sleep(0.2)
+            o1,o2 = get_btn_pose()
+            add_box_pub.publish(o2)
+            rospy.sleep(0.2)
+            #add_box_pub.publish(o2)
+            #rospy.sleep(0.2)
         rate.sleep()
 
 

@@ -143,7 +143,7 @@ class AddObjectCommand(Command):
 class RequestDetectionCommand(Command):
     def __init__(self):
         super(RequestDetectionCommand, self).__init__()
-        self.max_wait_time = 10*0
+        self.max_wait_time = 10
     
     def execute(self):
         super(RequestDetectionCommand, self).execute()
@@ -272,7 +272,7 @@ class PressButton(Task):
             if self.scan_pose:
                 self.scan_for_btn_pose()
             self.artag_pose = copy.deepcopy(self.btn_pose)
-            self.artag_pose.position.x += 0.15
+            self.artag_pose.y += 0.15
             cmd.pose = self.artag_pose
             cmd.dims = [0.4, 0.2, 0.0001]
             cmd.name = "AR_tag"
