@@ -22,13 +22,14 @@ artag_pose2 = Pose()
 
 def artag_callback(msg):
     o = msg.detected_objects[0]
-    artag_pose.position.x = -o.y_pos/1000
+    artag_pose.position.x = o.y_pos/1000
     artag_pose.position.y = -o.x_pos/1000
     artag_pose.position.z = o.z_pos/1000
     artag_pose.orientation.w = o.w_quaternion
-    artag_pose.orientation.x = o.x_quaternion
-    artag_pose.orientation.y = o.y_quaternion
+    artag_pose.orientation.x = -o.y_quaternion
+    artag_pose.orientation.y = o.x_quaternion
     artag_pose.orientation.z = o.z_quaternion
+
     artag_pose2.position.x = o.y_pos_tag/1000
     artag_pose2.position.y = -o.x_pos_tag/1000
     artag_pose2.position.z = o.z_pos_tag/1000
