@@ -2,7 +2,7 @@
 
 import rospy
 from task_execution.task_classes import *
-from task_execution.pose_tracker import *
+import task_execution.pose_tracker as pt
 from task_execution.msg import Task, Object
 import vision_no_ros.msg
 import geometry_msgs.msg
@@ -33,10 +33,12 @@ class Executor:
 
     def taskAssignementCallback(self, msg):
         """listens to /arm_control/task_assignment topic"""
+        rospy.logwarn("RECEIVED CMD")
         if self.hasTask():
             return
         if msg.description == "btn":
-            self.task = PressButton(msg.pose)
+            rospy.logwarn("RECEIVED BTN CMD")
+            self.task = PressButton(msg.id, msg.pose)
             self.new_task = True
     
     def positionManualTaskCallback(self, msg):
@@ -88,8 +90,8 @@ class Executor:
     def run(self):
         #self.add_obj_pub = rospy.Publisher("arm_control/add_object", Object, queue_size=5)
         rospy.Subscriber("/arm_control/task_assignment", Task, self.taskAssignementCallback)
-        rospy.Subscriber("/arm_control/end_effector_pose", geometry_msgs.msg.Pose, eef_pose_callback)
-        rospy.Subscriber("detected_elements", vision_no_ros.msg.object_list, detected_objects_pose_callback)
+        rospy.Subscriber("/arm_control/end_effector_pose", geometry_msgs.msg.Pose, pt.eef_pose_callback)
+        rospy.Subscriber("detected_elements", vision_no_ros.msg.object_list, pt.detected_objects_pose_callback)
         rospy.Subscriber("/arm_control/pos_manual_inverse_cmd", std_msgs.msg.Float32MultiArray, self.positionManualTaskCallback)
         rospy.Subscriber("/arm_control/orient_manual_inverse_cmd", std_msgs.msg.Float32MultiArray, self.orientationManualTaskCallback)
         rate = rospy.Rate(25)   # 25hz

@@ -120,11 +120,10 @@ class GripperManipulationCommand(Command):
 
 
 class AddObjectCommand(Command):
-    def __init__(self, pose, dims, type="box", name=""):
+    def __init__(self, pose=None, dims=None, type="box", name=""):
         super(AddObjectCommand, self).__init__()
         self.pose = pose
-        self.dims = Float32MultiArray()
-        self.dims.data = dims
+        self.dims = dims
         self.type = type
         self.name = name
     
@@ -135,6 +134,8 @@ class AddObjectCommand(Command):
         msg.name = self.name
         msg.pose = self.pose
         msg.dims = self.dims
+        msg.dims = Float32MultiArray()
+        msg.dims.data = self.dims
         add_object_pub.publish(msg)
         rospy.sleep(.5)
 
@@ -214,12 +215,26 @@ class Task(object):
 
 
 class PressButton(Task):
-    def __init__(self, btn_pose):
+    def __init__(self, btn_id, pose=None, scan_pose=True):
         super(PressButton, self).__init__()
-        self.btn_pose = btn_pose
+        self.btn_id = btn_id
+        self.btn_pose = pose
+        self.scan_pose = scan_pose
         self.press_distance = 0.2
         self.pause_time = 2
     
+    def scan_for_btn_pose(self):
+        RequestDetectionCommand().execute()
+        while pt.DETECTED_OBJECTS_LOCKED:
+            pass
+        for obj in pt.DETECTED_OBJECTS_POSE:
+            if obj.id == self.btn_id:
+                relative_pose = obj.pose
+                self.btn_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
+                self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
+                rospy.logwarn("btn\n" + str(self.btn_pose.orientation) + "\n")
+                rospy.logwarn("eef\n" + str(pt.END_EFFECTOR_POSE.orientation) + "\n")
+
     def currentCommand(self):
         print(len(self.command_chain))
         print(self.cmd_counter)
@@ -227,7 +242,9 @@ class PressButton(Task):
 
     def getPressPosition(self):
         p = qa.point_image([0, 0, 1], self.btn_pose.orientation)
-        d = self.press_distance + 0.001
+        d = 0.001
+        if self.cmd_counter != 1:
+            d += self.press_distance
         p = qa.mul(d, p)
         #p = qa.mul(-1, p)   # TODO: direction is reversed for some reason
         res = qa.quat_to_point(qa.add(self.btn_pose.position, p))
@@ -237,6 +254,7 @@ class PressButton(Task):
         # for now
         #q = qa.quat([0,0,1], math.pi)
         #return qa.mul(self.btn_pose.orientation, q)
+        return qa.turn_around(self.btn_pose.orientation)
         axis = qa.point_image([1,0,0], self.btn_pose.orientation)
         q = qa.quat(axis, math.pi)
         return qa.mul(q, self.btn_pose.orientation)
@@ -244,12 +262,31 @@ class PressButton(Task):
         return qa.mul(qa.inv(self.btn_pose.orientation), q) #qa.inv(qa.mul(self.btn_pose.orientation, q))
 
     def setupNextCommand(self):
+        rospy.logwarn("STARTINT CMD " + str(self.cmd_counter))
         cmd = self.currentCommand()
-        """if self.cmd_counter == 0:
+        if self.cmd_counter == 1:
+            if self.scan_pose:
+                self.scan_for_btn_pose()
+            cmd.pose = self.btn_pose
+            cmd.dims = [0.4, 0.2, 0.0001]
+            cmd.name = "btn"
+        if self.cmd_counter == 2:
             cmd.pose = geometry_msgs.msg.Pose()
             cmd.pose.position = self.getPressPosition()
             cmd.pose.orientation = self.getPressOrientation()
-        elif self.cmd_counter == 1:
+        elif self.cmd_counter == 3:
+            cmd.distance = self.press_distance
+            cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
+            cmd.axis = qa.mul(-1, cmd.axis)
+            cmd.constructPose()
+        elif self.cmd_counter == 4:
+            cmd.distance = self.press_distance
+            cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
+            #cmd.axis = qa.mul(-1, cmd.axis)
+            cmd.constructPose()
+        #if self.cmd_counter > 2:
+        #    cmd.cartesian = True
+        """elif self.cmd_counter == 1:
             cmd.pose = geometry_msgs.msg.Pose()
             cmd.pose.orientation = self.getPressOrientation()
             cmd.pose.position = self.getPressPosition()
@@ -259,7 +296,8 @@ class PressButton(Task):
             cmd.pose.position = self.getPressPosition()
             cmd.pose.orientation = self.getPressOrientation()
             cmd.cartesian = True"""
-        if self.cmd_counter == 0:
+
+        """if self.cmd_counter == 0:
             cmd.pose = geometry_msgs.msg.Pose()
             cmd.pose.position = self.getPressPosition()
             cmd.pose.orientation = self.getPressOrientation()
@@ -272,7 +310,7 @@ class PressButton(Task):
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
             #cmd.axis = qa.mul(-1, cmd.axis)
-            cmd.constructPose()
+            cmd.constructPose()"""
 
     def constructCommandChain(self):
         """self.command_chain = [
@@ -281,6 +319,8 @@ class PressButton(Task):
             PoseCommand()
         ]"""
         self.command_chain = [
+            RequestDetectionCommand(),
+            AddObjectCommand(),
             PoseCommand(),   # go at a predetermined position in front of the button with gripper facing towards it
             StraightMoveCommand(),   # go forward enough to press the button
             StraightMoveCommand()   # go backwards

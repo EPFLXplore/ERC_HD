@@ -16,6 +16,7 @@
 #include <vision_no_ros/object_refresh.h>
 #include <vision_no_ros/plaque_detection.h>
 #include <vision_no_ros/serial_commander.h>
+#include <vision_no_ros/gripper_extrinsics.h>
 //custom messages includes
 #include <vision_no_ros/panel_object.h> //even though this file doesnt exist, the .msg one does
 #include <vision_no_ros/object_list.h>
@@ -27,12 +28,13 @@ using namespace cv;
 
 static bool show_input_image(0); //for showing the images directly on the jetson, not through a ros topic
 static bool show_output_image(1);//need to turn it on to activate the corresponding ros topic
-#define SAMPLES 1
+static bool show_depth_image(0);
+#define SAMPLES 30
 #define TAG_SIZE 0.044f
 
 
 ////////////////////// vectors required for AR tag detection ///////////////////////////////////
-cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_7X7_250);
+cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
 static cv::Mat cameraMatrix ;
 static cv::Mat distCoeffs ;
 static vector<int> ids;
@@ -86,7 +88,22 @@ int main(int argc, char **argv) try {
         data = align_to_color.process(data); //for aligning the depth and color frames
         rs2::frame color = data.get_color_frame();
         rs2::depth_frame depth =data.get_depth_frame();
+       
+        if (show_depth_image){  //ADDING DEPTH VISUALISATION OPTION
+            
+            rs2::colorizer color_map;
+            rs2::frame depth_frame=data.get_depth_frame().apply_filter(color_map);
+            //cv::Mat depth_image = frame_to_mat(depth);
+             // Query frame size (width and height)
+            const int w = depth_frame.as<rs2::video_frame>().get_width();
+            const int h = depth_frame.as<rs2::video_frame>().get_height();
 
+            // Create OpenCV matrix of size (w,h) from the colorized depth data
+            Mat depth_image(Size(w, h), CV_8UC3, (void*)depth_frame.get_data(), Mat::AUTO_STEP);
+            
+            
+            imshow("colored depth image",depth_image);
+        } 
 
         ///////////////// camera calibration and image conversion from rs2 frame to cv mat /////////////////////////
         rs2_intrinsics intrinsics = get_field_of_view(pipe,cameraMatrix,distCoeffs); //function to get the camera intrinsics and copy them into the right matrices
@@ -109,7 +126,7 @@ int main(int argc, char **argv) try {
         }
        
        
-        find_plaque(image,depth,intrinsics);
+        //find_plaque(image,depth,intrinsics);
        
 
        ////////////////find AR tags ///////////////////////////
@@ -132,77 +149,105 @@ int main(int argc, char **argv) try {
                 //// panel A
 
                 if (get_command()==0 or get_command()==1){
-                    //declare object and refresh it
+                    //declare object and refresh it (refresh object function returns coordinates of the camera relative to the ar tag after the last frame, need to call the extrinsics function befor publishibg)
                     vision_no_ros::panel_object main_switch;
                     refresh_object(main_switch,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switchMain,depth,corners,intrinsics,SAMPLES);//need to make a function that gets the rvecs and tvecs for the ar tag with id hard coded
                     //push back the object to the list to be published
                     draw_object(image,main_switch,intrinsics);
                     if (active_sample==SAMPLES){ 
+                        //add the gripper extrinsics to the computed camera translation
+                        offset_to_fingers(main_switch);
                         objects.detected_objects.push_back(main_switch);
-
                     }
                 }
                 if (get_command()==0 or get_command()==2){
                     vision_no_ros::panel_object switch_1;
                     refresh_object(switch_1,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch1,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_1,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(switch_1);
+                    if (active_sample==SAMPLES){ 
+                        offset_to_fingers(switch_1);
+                        objects.detected_objects.push_back(switch_1);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==3){
                     vision_no_ros::panel_object switch_2;
                     refresh_object(switch_2,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch2,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_2,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(switch_2);
+                    if (active_sample==SAMPLES){ 
+                        offset_to_fingers(switch_2);
+                        objects.detected_objects.push_back(switch_2);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==4){
                     vision_no_ros::panel_object switch_3;
                     refresh_object(switch_3,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch3,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_3,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(switch_3);
+                    if (active_sample==SAMPLES){ 
+                        offset_to_fingers(switch_3);
+                        objects.detected_objects.push_back(switch_3);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==5){
                     vision_no_ros::panel_object switch_4;
                     refresh_object(switch_4,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch4,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_4,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(switch_4);
+                    if (active_sample==SAMPLES){
+                        offset_to_fingers(switch_4);
+                        objects.detected_objects.push_back(switch_4);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==6){
                     vision_no_ros::panel_object switch_5;
                     refresh_object(switch_5,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch5,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_5,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(switch_5);
+                    if (active_sample==SAMPLES){ 
+                        offset_to_fingers(switch_5);
+                        objects.detected_objects.push_back(switch_5);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==7){
                     vision_no_ros::panel_object switch_6;
                     refresh_object(switch_6,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch6,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_6,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(switch_6);
+                    if (active_sample==SAMPLES){ 
+                        offset_to_fingers(switch_6);
+                        objects.detected_objects.push_back(switch_6);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==8){
                     vision_no_ros::panel_object switch_7;
                     refresh_object(switch_7,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch7,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_7,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(switch_7);
+                    if (active_sample==SAMPLES){ 
+                        offset_to_fingers(switch_7);
+                        objects.detected_objects.push_back(switch_7);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==9){
                     vision_no_ros::panel_object switch_8;
                     refresh_object(switch_8,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch8,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_8,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(switch_8);
+                    if (active_sample==SAMPLES) {
+                        offset_to_fingers(switch_8);
+                        objects.detected_objects.push_back(switch_8);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==10){
                     vision_no_ros::panel_object switch_9;
                     refresh_object(switch_9,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch9,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_9,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(switch_9);
+                    if (active_sample==SAMPLES){ 
+                        offset_to_fingers(switch_9);
+                        objects.detected_objects.push_back(switch_9);
+                    }
                 }
 
                 //// panel B1
@@ -211,21 +256,30 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object button;
                     refresh_object(button,ids,rvecs,tvecs,my_panel.panelB1.artg2,my_panel.panelB1.button,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,button,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(button);
+                    if (active_sample==SAMPLES) {
+                        offset_to_fingers(button);
+                        objects.detected_objects.push_back(button);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==12){
                     vision_no_ros::panel_object outlet;
                     refresh_object(outlet,ids,rvecs,tvecs,my_panel.panelB1.artg3,my_panel.panelB1.outlet,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,outlet,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(outlet);
+                    if (active_sample==SAMPLES) {
+                        offset_to_voltmeter(outlet);
+                        objects.detected_objects.push_back(outlet);
+                    }
                 }
 
                 if (get_command()==0 or get_command()==13){
                     vision_no_ros::panel_object emagLock;
                     refresh_object(emagLock,ids,rvecs,tvecs,my_panel.panelB1.artg3,my_panel.panelB1.emagLock,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,emagLock,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(emagLock);
+                    if (active_sample==SAMPLES) {
+                        offset_to_fingers(emagLock);
+                        objects.detected_objects.push_back(emagLock);
+                    }
                 }
 
                 //// panel B2
@@ -234,7 +288,10 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object ethernet;
                     refresh_object(ethernet,ids,rvecs,tvecs,my_panel.panelB2.artg4,my_panel.panelB2.ethernet,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,ethernet,intrinsics);
-                    if (active_sample==SAMPLES) objects.detected_objects.push_back(ethernet);
+                    if (active_sample==SAMPLES) {
+                        offset_to_fingers(ethernet);
+                        objects.detected_objects.push_back(ethernet);
+                    }
                 }
 
                 /////////////////////////////////////////////// end object referesh /////////////////////////////////////////////////

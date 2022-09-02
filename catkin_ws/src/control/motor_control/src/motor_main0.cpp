@@ -50,7 +50,7 @@ double current_pos_qc[MAX_MOTOR_COUNT] = {0};
 double target_pos[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0};
 double target_vel[MAX_MOTOR_COUNT] = {0,0};
 double max_current[MAX_MOTOR_COUNT] = {0.155};
-Epos4::control_mode_t control_mode(Epos4::position_CSP);
+Epos4::control_mode_t control_mode(Epos4::velocity_CSV);
 
 //double offset[MAX_MOTOR_COUNT] = {0};   // TODO: makes the max/min angles unusable -> correct that
 
@@ -369,6 +369,9 @@ void set_goals(vector<xcontrol::Epos4Extended*> chain) {
                         break;
                 }
             }
+            else {
+                //chain[it]->reset_Fault();
+            }
         }
     }
 }
@@ -436,10 +439,10 @@ int main(int argc, char **argv) {
     auto t = chrono::steady_clock::now();
 
     while (ros::ok()){
-        auto now = chrono::steady_clock::now();
+        /*auto now = chrono::steady_clock::now();
         if (chrono::duration_cast<chrono::milliseconds>(now-t).count() > 5000) {
             control_mode = Epos4::position_CSP;
-        }
+        }*/
         // check device status
         ethercat_master.switch_motors_to_enable_op();
         //epos_1.switch_to_enable_op();

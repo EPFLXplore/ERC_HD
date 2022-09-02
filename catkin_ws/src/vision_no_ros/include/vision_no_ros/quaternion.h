@@ -1,4 +1,6 @@
 //quaternion_conversion
+#ifndef QUATERNION_H
+#define QUATERNION_H
 #include <opencv2/opencv.hpp>
 #include <cmath>
 #include <vector>
@@ -13,10 +15,10 @@ void getQuaternion(const cv::Mat& R, vector<double>& Q);
 void convert_rvec_to_quaternion(const cv::Vec3d& rvec,vector<double>& quat){
     cv::Mat rotation_matrix;
     Rodrigues(rvec,rotation_matrix);
-   // std::cout << "roatation matrix is : "<< rotation_matrix <<std::endl;
+    std::cout << "roatation matrix is : "<< rotation_matrix <<std::endl;
     getQuaternion(rotation_matrix,quat);
     for (size_t i=0 ; i<quat.size();++i){
-        //cout<<"quaterion coordinates are : " << quat [i] << endl;
+        cout<<"quaterion coordinates are : " << quat [i] << endl;
     }
 }
 
@@ -47,3 +49,5 @@ void getQuaternion(const cv::Mat& R, vector<double>& Q){
         Q[k] = (R.at<double>(k,i) + R.at<double>(i,k)) * s;
     }
 }
+
+#endif

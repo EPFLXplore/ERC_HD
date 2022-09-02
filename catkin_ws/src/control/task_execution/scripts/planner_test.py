@@ -4,6 +4,7 @@ import sys
 import math
 import rospy
 import std_msgs.msg
+from std_msgs.msg import Float32MultiArray
 import geometry_msgs.msg
 import sensor_msgs.msg
 from task_execution.srv import PoseGoal, PoseGoalResponse, JointGoal, JointGoalResponse
@@ -88,6 +89,10 @@ def publish_press_btn_task():
     task = Task()
     task.description = "btn"
     task.pose = geometry_msgs.msg.Pose()
+    """task.pose.position.x = 0.9
+    task.pose.position.y = -0.3
+    task.pose.position.z = 0.6
+    task.pose.orientation = qa.quat([1, 1, 0], -math.pi/3)"""
     task.pose.position.x = 0.9
     task.pose.position.y = 0.1
     task.pose.position.z = 0.6
@@ -95,9 +100,10 @@ def publish_press_btn_task():
     obj = Object()
     obj.type = "box"
     obj.name = "button"
-    obj.dims = (0.2, 0.2, 0.0001)
+    obj.dims = Float32MultiArray()
+    obj.dims.data = [0.4, 0.2, 0.0001]
     obj.pose = task.pose
-    add_object_pub.publish(obj)
+    #add_object_pub.publish(obj)
     rospy.sleep(.5)
     press_btn_pub.publish(task)
 

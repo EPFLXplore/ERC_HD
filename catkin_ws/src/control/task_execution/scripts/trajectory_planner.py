@@ -146,7 +146,7 @@ class Planner:
         """
         # TODO
         if msg.type == "box":
-            self.add_box_to_world(msg.pose, msg.dims, msg.name)
+            self.add_box_to_world(msg.pose, msg.dims.data, msg.name)
 
     def remove_object_callback(self, msg):
         """

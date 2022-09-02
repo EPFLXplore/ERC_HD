@@ -1,4 +1,4 @@
-from math import sqrt, sin, cos, asin, acos
+from math import sqrt, sin, cos, asin, acos, pi
 from geometry_msgs.msg import Quaternion, Point, Pose
 
 
@@ -26,6 +26,8 @@ def normalize(axis):
 def quat_normalize(q):
     """normalize for quaternions"""
     n = sqrt(q.x**2+q.y**2+q.z**2+q.w**2)
+    if n == 0:
+        return q
     q.x /= n
     q.y /= n
     q.z /= n
@@ -70,6 +72,12 @@ def reverse_quat(q):
         axis = [0, 0, 0]
     angle = 2*reverse_trig(cost, sint)
     return (axis, angle)
+
+
+def turn_around(q, axis=(1,0,0), angle=pi):
+    axis = point_image(axis, q)
+    r = quat(axis, angle)
+    return mul(r, q)
 
 
 def nb_to_quat(x):
@@ -199,7 +207,7 @@ def compose_poses(pose1, pose2):
     axis2 = point_image(axis2, pose1.orientation)
     q = quat(axis2, angle2)
     res.orientation = mul(q, pose1.orientation)
-    res = quat_normalize(res)
+    res.orientation = quat_normalize(res.orientation)
     return res
 
 
