@@ -34,7 +34,7 @@ static bool show_depth_image(0);
 
 
 ////////////////////// vectors required for AR tag detection ///////////////////////////////////
-cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
+cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_7X7_250);
 static cv::Mat cameraMatrix ;
 static cv::Mat distCoeffs ;
 static vector<int> ids;
@@ -154,17 +154,18 @@ int main(int argc, char **argv) try {
                     refresh_object(main_switch,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switchMain,depth,corners,intrinsics,SAMPLES);//need to make a function that gets the rvecs and tvecs for the ar tag with id hard coded
                     //push back the object to the list to be published
                     draw_object(image,main_switch,intrinsics);
-                    if (active_sample==SAMPLES){ 
+                    if (active_sample==SAMPLES && main_switch.reliability!=0){ 
                         //add the gripper extrinsics to the computed camera translation
                         offset_to_fingers(main_switch);
                         objects.detected_objects.push_back(main_switch);
+                        //cv::aruco::drawDetectedMarkers(image,corners,ids);
                     }
                 }
                 if (get_command()==0 or get_command()==2){
                     vision_no_ros::panel_object switch_1;
                     refresh_object(switch_1,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch1,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_1,intrinsics);
-                    if (active_sample==SAMPLES){ 
+                    if (active_sample==SAMPLES && switch_1.reliability!=0){ 
                         offset_to_fingers(switch_1);
                         objects.detected_objects.push_back(switch_1);
                     }
@@ -174,7 +175,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object switch_2;
                     refresh_object(switch_2,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch2,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_2,intrinsics);
-                    if (active_sample==SAMPLES){ 
+                    if (active_sample==SAMPLES && switch_2.reliability!=0){ 
                         offset_to_fingers(switch_2);
                         objects.detected_objects.push_back(switch_2);
                     }
@@ -184,7 +185,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object switch_3;
                     refresh_object(switch_3,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch3,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_3,intrinsics);
-                    if (active_sample==SAMPLES){ 
+                    if (active_sample==SAMPLES && switch_3.reliability!=0){ 
                         offset_to_fingers(switch_3);
                         objects.detected_objects.push_back(switch_3);
                     }
@@ -194,7 +195,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object switch_4;
                     refresh_object(switch_4,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch4,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_4,intrinsics);
-                    if (active_sample==SAMPLES){
+                    if (active_sample==SAMPLES && switch_4.reliability!=0){
                         offset_to_fingers(switch_4);
                         objects.detected_objects.push_back(switch_4);
                     }
@@ -204,7 +205,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object switch_5;
                     refresh_object(switch_5,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch5,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_5,intrinsics);
-                    if (active_sample==SAMPLES){ 
+                    if (active_sample==SAMPLES && switch_5.reliability!=0){ 
                         offset_to_fingers(switch_5);
                         objects.detected_objects.push_back(switch_5);
                     }
@@ -214,7 +215,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object switch_6;
                     refresh_object(switch_6,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch6,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_6,intrinsics);
-                    if (active_sample==SAMPLES){ 
+                    if (active_sample==SAMPLES && switch_6.reliability!=0){ 
                         offset_to_fingers(switch_6);
                         objects.detected_objects.push_back(switch_6);
                     }
@@ -224,7 +225,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object switch_7;
                     refresh_object(switch_7,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch7,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_7,intrinsics);
-                    if (active_sample==SAMPLES){ 
+                    if (active_sample==SAMPLES && switch_7.reliability!=0){ 
                         offset_to_fingers(switch_7);
                         objects.detected_objects.push_back(switch_7);
                     }
@@ -234,7 +235,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object switch_8;
                     refresh_object(switch_8,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch8,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_8,intrinsics);
-                    if (active_sample==SAMPLES) {
+                    if (active_sample==SAMPLES && switch_8.reliability!=0) {
                         offset_to_fingers(switch_8);
                         objects.detected_objects.push_back(switch_8);
                     }
@@ -244,7 +245,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object switch_9;
                     refresh_object(switch_9,ids,rvecs,tvecs,my_panel.panelA.artg1,my_panel.panelA.switch9,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,switch_9,intrinsics);
-                    if (active_sample==SAMPLES){ 
+                    if (active_sample==SAMPLES && switch_9.reliability!=0){ 
                         offset_to_fingers(switch_9);
                         objects.detected_objects.push_back(switch_9);
                     }
@@ -256,7 +257,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object button;
                     refresh_object(button,ids,rvecs,tvecs,my_panel.panelB1.artg2,my_panel.panelB1.button,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,button,intrinsics);
-                    if (active_sample==SAMPLES) {
+                    if (active_sample==SAMPLES && button.reliability!=0) {
                         offset_to_fingers(button);
                         objects.detected_objects.push_back(button);
                     }
@@ -266,7 +267,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object outlet;
                     refresh_object(outlet,ids,rvecs,tvecs,my_panel.panelB1.artg3,my_panel.panelB1.outlet,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,outlet,intrinsics);
-                    if (active_sample==SAMPLES) {
+                    if (active_sample==SAMPLES && outlet.reliability!=0) {
                         offset_to_voltmeter(outlet);
                         objects.detected_objects.push_back(outlet);
                     }
@@ -276,7 +277,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object emagLock;
                     refresh_object(emagLock,ids,rvecs,tvecs,my_panel.panelB1.artg3,my_panel.panelB1.emagLock,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,emagLock,intrinsics);
-                    if (active_sample==SAMPLES) {
+                    if (active_sample==SAMPLES && emagLock.reliability!=0) {
                         offset_to_fingers(emagLock);
                         objects.detected_objects.push_back(emagLock);
                     }
@@ -288,7 +289,7 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object ethernet;
                     refresh_object(ethernet,ids,rvecs,tvecs,my_panel.panelB2.artg4,my_panel.panelB2.ethernet,depth,corners,intrinsics,SAMPLES);
                     draw_object(image,ethernet,intrinsics);
-                    if (active_sample==SAMPLES) {
+                    if (active_sample==SAMPLES && ethernet.reliability!=0) {
                         offset_to_fingers(ethernet);
                         objects.detected_objects.push_back(ethernet);
                     }
@@ -300,7 +301,6 @@ int main(int argc, char **argv) try {
                     vision_no_ros::panel_object artag_panelA;
                     
                     refresh_ar_tag_pos(artag_panelA,ids,rvecs,tvecs,my_panel.panelA.artg1,depth,corners,SAMPLES);
-                    //draw_object(image,ethernet,intrinsics);
                     if (active_sample==SAMPLES) {
                         offset_to_fingers(artag_panelA);
                         objects.detected_objects.push_back(artag_panelA);

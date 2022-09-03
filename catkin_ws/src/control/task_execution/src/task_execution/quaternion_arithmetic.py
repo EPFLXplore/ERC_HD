@@ -131,6 +131,7 @@ def make_quat(x):
         return point_to_quat(x)
     elif isinstance(x, (tuple, list)):
         return list_to_quat(x)
+    raise
 
 
 def make_point(x):
@@ -141,6 +142,7 @@ def make_point(x):
         return quat_to_point(x)
     if isinstance(x, (tuple, list)):
         return list_to_point(x)
+    raise
 
 
 def inv(q):

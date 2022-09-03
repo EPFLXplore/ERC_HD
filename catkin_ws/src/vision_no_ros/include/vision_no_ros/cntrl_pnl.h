@@ -77,7 +77,7 @@ namespace cntrl_pnl {
         PNLA.artg1.pos.x_coor= -Dist2;   //modified panel one for new rules
         PNLA.artg1.pos.y_coor= Dist1;    
         PNLA.artg1.width=Wdth1;
-        PNLA.artg1.id = 2;//this should be 2              // need to put the right Id's!! maybe make a setup function with a camera so we can create the panel with just a picture
+        PNLA.artg1.id = 0;//this should be 2              // need to put the right Id's!! maybe make a setup function with a camera so we can create the panel with just a picture
  
         /*//this Ar tag no longer exists
         strcpy(PNLA.artg2.name, "ARTG2"); 
@@ -112,27 +112,27 @@ namespace cntrl_pnl {
         PNLA.switch4.pos.y_coor= 0;
         PNLA.switch4.id = 5;
 
-        strcpy(PNLA.switch4.name, "SWTC5");
+        strcpy(PNLA.switch5.name, "SWTC5");
         PNLA.switch5.pos.x_coor= Dist2+Switch_width;
         PNLA.switch5.pos.y_coor= 0;
         PNLA.switch5.id = 6;
 
-        strcpy(PNLA.switch4.name, "SWTC6");
+        strcpy(PNLA.switch6.name, "SWTC6");
         PNLA.switch6.pos.x_coor= -Dist2-Switch_width;
         PNLA.switch6.pos.y_coor= -Dist1;
         PNLA.switch6.id = 7;
 
-        strcpy(PNLA.switch4.name, "SWTC7");
+        strcpy(PNLA.switch7.name, "SWTC7");
         PNLA.switch7.pos.x_coor= -Dist2+Switch_width;
         PNLA.switch7.pos.y_coor= -Dist1;
         PNLA.switch7.id = 8;
 
-        strcpy(PNLA.switch4.name, "SWTC8");
+        strcpy(PNLA.switch8.name, "SWTC8");
         PNLA.switch8.pos.x_coor= Dist2-Switch_width;
         PNLA.switch8.pos.y_coor= -Dist1;
         PNLA.switch8.id = 9;
 
-        strcpy(PNLA.switch4.name, "SWTC9");
+        strcpy(PNLA.switch9.name, "SWTC9");
         PNLA.switch9.pos.x_coor= Dist2+Switch_width;
         PNLA.switch9.pos.y_coor= -Dist1;
         PNLA.switch9.id = 10;

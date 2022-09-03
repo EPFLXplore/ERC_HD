@@ -44,6 +44,8 @@ void get_angle_from_polyfit(float& difference);
 
 void draw_object(cv::Mat& image,const vision_no_ros::panel_object& object,const rs2_intrinsics& intrinsics);
 
+float get_distance_to_object(vision_no_ros::panel_object& object,const rs2::depth_frame& depth,const rs2_intrinsics& intrinsics,const float& dist);
+
 //#define USE_RS2_PROJECTION
 
 /*
@@ -99,9 +101,9 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
         float roll =acos((corners[i][1].x-corners[i][0].x)/get_pixel_distance (corners[i][1],corners[i][0]))*180/M_PI;// done with pixels, try doing it in 3d with the same projection algo
         if(corners[i][1].y<corners[i][0].y) roll=-roll;
       #else  //test which method is more accurate
-        object.x_pos =offset.x_coor+tvecs[i][0]*1000; //casting and representing the foats with ints cf bens idea...
-        object.y_pos =offset.y_coor-tvecs[i][1]*1000;
-        object.z_pos=dist*1000;                 //this is not correct, give depth to the middle pixel use
+        object.x_pos =-offset.x_coor+tvecs[i][0]*1000; //casting and representing the foats with ints cf bens idea...
+        object.y_pos =-offset.y_coor-tvecs[i][1]*1000;
+        object.z_pos =dist*1000;//                 //this is not correct, give depth to the middle pixel use
         //solution with linear fit not ideal 
         float yaw = get_pixel_distance(corners[i][0],corners[i][3])-get_pixel_distance(corners[i][1],corners[i][2]);
         get_angle_from_polyfit(yaw);
@@ -121,11 +123,11 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
       object.z_rot =roll;//rvecs[i][2]*180/M_PI; //add rotation relative to gripper
       object.ar_tag_id =ar_1.id;
       object.x_pos_tag=tvecs[i][0]*1000;
-      object.y_pos_tag=tvecs[i][1]*1000;
-      object.z_pos_tag=dist*1000;//dist*1000;
+      object.y_pos_tag=-tvecs[i][1]*1000;
+      object.z_pos_tag= dist*1000;
       average_object_params(object,samples);
       vector<double> quaternion (4);
-      convert_rvec_to_quaternion(rvecs[i],quaternion);//quaternions wont be averaged beacuae of the +/- transition at 0.7
+      convert_rvec_to_quaternion(rvecs[i],quaternion);//quaternions wont be averaged becauae of the +/- transition at 0.7
       object.w_quaternion =quaternion[0];
       object.x_quaternion =quaternion[1];
       object.y_quaternion =quaternion[2];
@@ -278,8 +280,25 @@ void draw_object(cv::Mat& image,const vision_no_ros::panel_object& object,const 
   float point[3]={object.x_pos,-object.y_pos,object.z_pos}; //added - sign to the object y coordinate beause the axes are inverted (non euclidian repere)
   rs2_project_point_to_pixel(pixel,&intrinsics,point);
   Point center (pixel[0],pixel[1]);
+  //cout<< pixel[0] << pixel[1] << endl;
   cv::circle(image,center,20,Scalar(0,255,0),2);
 }
 
 
+//TRASH
+
+/* 
+float get_distance_to_object(vision_no_ros::panel_object& object,const rs2::depth_frame& depth,const rs2_intrinsics& intrinsics,const float& dist ){ //was thinking about doinit with pythagoras but finally wont work
+  float distance;
+  float pixel[2];
+  float point[3]={object.x_pos,-object.y_pos,dist};
+  cout<< point[0]<<" " << point[1]<< " " << point[2] <<endl;
+  rs2_project_point_to_pixel(pixel,&intrinsics,point);
+  Point center (pixel[0],pixel[1]);
+  cout<< pixel[0] <<" "<< pixel[1] << endl;
+  distance=depth.get_distance(pixel[0],pixel[1]);
+  cout << distance <<endl;
+  return distance;
+}
+*/
 #endif
