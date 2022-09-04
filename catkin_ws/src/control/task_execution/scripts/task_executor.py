@@ -38,7 +38,7 @@ class Executor:
             return
         if msg.description == "btn":
             rospy.logwarn("RECEIVED BTN CMD")
-            self.task = PressButton(msg.id, msg.pose)
+            self.task = PressButton(msg.id, msg.pose, True)
             self.new_task = True
     
     def positionManualTaskCallback(self, msg):

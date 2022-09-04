@@ -23,7 +23,7 @@ artag_pose2 = Pose()
 
 def artag_callback(msg):
     o = msg.detected_objects[0]
-    artag_pose.position.x = o.y_pos/1000
+    artag_pose.position.x = -o.y_pos/1000
     artag_pose.position.y = -o.x_pos/1000
     artag_pose.position.z = o.z_pos/1000
     #artag_pose.orientation.w = o.w_quaternion
@@ -37,14 +37,14 @@ def artag_callback(msg):
     q = qa.quat(axis, pi)
     artag_pose.orientation = qa.mul(q, artag_pose.orientation)"""
 
-    artag_pose2.position.x = o.y_pos_tag/1000
+    artag_pose2.position.x = -o.y_pos_tag/1000
     artag_pose2.position.y = -o.x_pos_tag/1000
     artag_pose2.position.z = o.z_pos_tag/1000
     artag_pose2.orientation = copy.deepcopy(artag_pose.orientation)
 
-    dx = artag_pose2.position.x - artag_pose.position.x
-    dy = artag_pose2.position.y - artag_pose.position.y
-    dz = artag_pose2.position.z - artag_pose.position.z
+    dx = (artag_pose2.position.x - artag_pose.position.x)
+    dy = -(artag_pose2.position.y - artag_pose.position.y)
+    dz = -(artag_pose2.position.z - artag_pose.position.z)
 
     position = artag_pose2.position
     q = qa.mul(dx, qa.point_image([1,0,0], artag_pose2.orientation))
@@ -54,6 +54,9 @@ def artag_callback(msg):
     q = qa.mul(dz, qa.point_image([0,0,1], artag_pose2.orientation))
     position = qa.add(position, q)
     artag_pose.position = qa.make_point(position)
+
+    artag_pose2.orientation = qa.turn_around(artag_pose2.orientation, [0,0,1])
+    artag_pose.orientation = copy.deepcopy(artag_pose2.orientation)
 
 
 def end_effector_callback(msg):

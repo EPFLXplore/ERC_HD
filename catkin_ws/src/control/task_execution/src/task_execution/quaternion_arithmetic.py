@@ -110,7 +110,10 @@ def list_to_quat(l):
     q.x = l[0]
     q.y = l[1]
     q.z = l[2]
-    q.w = l[3]
+    if len(l) < 4:
+        q.w = 0
+    else:
+        q.w = l[3]
 
 
 def list_to_point(l):

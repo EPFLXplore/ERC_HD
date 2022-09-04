@@ -30,7 +30,7 @@ using namespace ethercatcpp;
 using namespace pid;
 //using namespace xcontrol;
 
-#define MOTOR_COUNT 8
+#define MOTOR_COUNT 7
 #define MAX_MOTOR_COUNT 8
 #define PRINT_STATE true
 #define QC_SPEED_CONVERSION 4000
@@ -50,7 +50,7 @@ double current_pos_qc[MAX_MOTOR_COUNT] = {0};
 double target_pos[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0};
 double target_vel[MAX_MOTOR_COUNT] = {0,0};
 double max_current[MAX_MOTOR_COUNT] = {0.155};
-Epos4::control_mode_t control_mode(Epos4::position_CSP);
+Epos4::control_mode_t control_mode(Epos4::velocity_CSV);
 
 //double offset[MAX_MOTOR_COUNT] = {0};   // TODO: makes the max/min angles unusable -> correct that
 
@@ -76,6 +76,8 @@ static const double rotation_dir_for_moveit[MAX_MOTOR_COUNT] = {1, -1, -1, 1, -1
 static const double security_angle_coef[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
 static const vector<int> order = {1, 2, 8, 3, 4, 5, 6, 7};
 
+static const bool reset_faults = false;
+
 int32_t joint2_offset = 0;
 
 //====================================================================================================
@@ -99,14 +101,14 @@ void manualCommandCallback(const std_msgs::Float32MultiArray::ConstPtr& msg) {
     last_command_time = chrono::steady_clock::now();
     float vel;
     bool empty_command = true;
-    cout << "received velocity   :";
+    // cout << "received velocity   :";
     for (size_t it=0; it<MOTOR_COUNT; ++it) {
         vel = msg->data[it];    // between -1 and 1
         empty_command = empty_command && (vel == 0);
         target_vel[it] = double(vel*max_velocity[it]*reduction[it]*2*PI/60);
-        cout << setw(9) << target_vel[it];
+        // cout << setw(9) << target_vel[it];
     }
-    cout << endl;
+    // cout << endl;
     
     if (JOINT56_DEPENDENT) {
         //accountForJoint56Dependency();
@@ -316,12 +318,8 @@ gives the target positions and velocities to the motors
 void set_goals(vector<xcontrol::Epos4Extended*> chain) {
     stopped = false;
     if (command_too_old()) {
-        cout << "COMMAND TOO OLD" << endl;
-        //stop(chain);  //TODO: uncomment this
-    }
-    else if (resetting) {
-        cout << "RESETTTTTTTTTTTTTTTTTTTTTTTTTTTTT" << endl;
-        //reset_position(chain);
+        ROS_WARN("COMMAND TOO OLD");
+        stop(chain);  //TODO: uncomment this
     }
     
     account_for_joint2_home_loss(chain);
@@ -343,13 +341,13 @@ void set_goals(vector<xcontrol::Epos4Extended*> chain) {
                             else {
                                 chain[it]->set_Target_Position_In_Qc(target_pos[it]);
                             }
-                            cout << "set position       " << target_pos[it] << endl;
+                            // cout << "set position       " << target_pos[it] << endl;
                         }
                         break;
 
                     case Epos4::velocity_CSV:
                         chain[it]->set_Target_Velocity_In_Rads(target_vel[it]);
-                        cout << "set velocity       " << target_vel[it] << endl;
+                        //cout << "set velocity       " << target_vel[it] << endl;
                         break;
 
                     case Epos4::profile_position_PPM:
@@ -369,14 +367,11 @@ void set_goals(vector<xcontrol::Epos4Extended*> chain) {
                         break;
                 }
             }
-            else {
-                //chain[it]->reset_Fault();
-            }
         }
     }
 }
 
-
+ 
 void definitive_stop(vector<xcontrol::Epos4Extended*> chain) {
     taking_commands = false;
     stop(chain);
@@ -386,9 +381,10 @@ void definitive_stop(vector<xcontrol::Epos4Extended*> chain) {
 
 int main(int argc, char **argv) {
 
-    std::string network_interface_name("eth0");
+    std::string network_interface_name("eth1");
     ros::init(argc, argv, "hd_controller_motors");
     ros::NodeHandle n;
+    ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
     ros::Subscriber man_cmd_sub = n.subscribe<std_msgs::Float32MultiArray>("/arm_control/manual_direct_cmd", 10, manualCommandCallback);
     //ros::Subscriber reset_sub = n.subscribe<std_msgs::Bool>("/arm_control/reset_arm_pos", 10, resetCallback);
     //ros::Subscriber set_zero_sub = n.subscribe<std_msgs::Bool>("/arm_control/set_zero_arm_pos", 10, setZeroCallback);
@@ -396,7 +392,11 @@ int main(int argc, char **argv) {
     ros::Publisher telem_pub = n.advertise<sensor_msgs::JointState>("/arm_control/joint_telemetry", 1000);
     ros::Publisher sim_telem_pub = n.advertise<motor_control::simJointState>("/arm_control/sim_joint_telemetry", 1000);  // for simulation only
     ros::Rate loop_rate(PERIOD);
-    cout << "ROS node initialized" << endl;
+    ros::Time last_print_time(0);
+    ROS_INFO("ROS node initialized");
+
+
+restart : 
 
     // Device definition
     // 3-axis: 1st slot next to ETHERNET-IN
@@ -412,7 +412,7 @@ int main(int argc, char **argv) {
     //xcontrol::ThreeAxisSlot epos_5(true), epos_6(true), epos_7(true);
     vector<xcontrol::Epos4Extended*> chain = {&epos_1, &epos_2, &empty, &epos_3, &epos_4, &epos_6, &epos_7, &epos_5};
 
-    bool is_scanning = false; // true;
+    bool is_scanning = true; // true;
 
     xcontrol::NetworkMaster ethercat_master(chain, network_interface_name);
 
@@ -423,58 +423,73 @@ int main(int argc, char **argv) {
 	for (size_t i = 0; i < order.size(); i++) {
         chain[order[i]-1] = temp[i];
     }
+    chain.pop_back();   // pop empty motor slot
 
-    cout << "BBBBBBBBBBBBBBBBBBb" << endl;
     ethercat_master.init_network();
     //Master ethercat_master;
     //EthercatBus robot;
     //ethercat_master.add_Interface_Primary(network_interface_name);
     //robot.add_Device(epos_1);
-    cout << "AAAAAAAAAAAAAAAAA" << endl;
     //ethercat_master.add_Bus(robot);
 
-    cout << "Ethercat network online" << endl;
+    ROS_INFO("Ethercat network online");
 
     //sleep(1);
     auto t = chrono::steady_clock::now();
 
     while (ros::ok()){
-        /*auto now = chrono::steady_clock::now();
-        if (chrono::duration_cast<chrono::milliseconds>(now-t).count() > 5000) {
-            control_mode = Epos4::position_CSP;
-        }*/
+        auto now = chrono::steady_clock::now();
         // check device status
         ethercat_master.switch_motors_to_enable_op();
         //epos_1.switch_to_enable_op();
 
-        if (!is_scanning) { // && taking_commands) {    TODO
-            set_goals(chain);
-        }
+        if (is_scanning) {
+            for (size_t it=0; it<chain.size(); ++it) {
+                chain[it]->set_Target_Position_In_Qc(chain[it]->get_Actual_Position_In_Qc());
+            }
+		}
 
         bool wkc = ethercat_master.next_Cycle(); // Function used to launch next cycle of the EtherCat net
         if (wkc) {
+
+            if (!is_scanning) { // && taking_commands) {    TODO
+                set_goals(chain);
+            }
+
             for (size_t it=0; it<chain.size(); ++it) {
                 if (chain[it]->get_has_motor()) {
-                    if (PRINT_STATE) {
-                        cout << "Motor " << it << "\n";
-                        cout << "State device : " << chain[it]->get_Device_State_In_String() << "\n";
-                        cout << "Control mode = " << chain[it]->get_Control_Mode_In_String() << "\n";
-                    }
                     current_pos_qc[it] = chain[it]->get_Actual_Position_In_Qc();
                     current_pos_rad[it] = chain[it]->get_Actual_Position_In_Qc()/full_circle[it]*2*PI;
                     if (is_scanning) {
                         target_pos[it] = current_pos_qc[it];
                     }
-                    if (PRINT_STATE) { 
-                        cout << "Actual position : " << std::dec << current_pos_qc[it] << " rad" << "\n";
-                        cout << "Actual velocity : " << std::dec << chain[it]->get_Actual_Average_Velocity_In_Rads()/reduction[it] << " rad/s" << "\n";
-                        cout << "Actual current value = " << chain[it]->get_Actual_Current_In_A() << "A" << "\n";
-                        cout << "\n";
+                    if (PRINT_STATE && ros::Time::now() - last_print_time > ros::Duration(.1)) {
+                        ROS_DEBUG_STREAM("Motor " << it);
+                        ROS_DEBUG_STREAM("State device : " << chain[it]->get_Device_State_In_String());
+                        ROS_DEBUG_STREAM("Control mode = " << chain[it]->get_Control_Mode_In_String());
+                        ROS_DEBUG_STREAM("Actual position : " << std::dec << current_pos_qc[it] << " rad");
+                        ROS_DEBUG_STREAM("Actual velocity : " << std::dec << chain[it]->get_Actual_Average_Velocity_In_Rads()/reduction[it] << " rad/s");
+                        ROS_DEBUG_STREAM("Actual current value = " << chain[it]->get_Actual_Current_In_A() << "A");
+
+                    }
+                    if (reset_faults && (chain[it]->get_Device_State_In_String() == "Fault")) {
+                        goto restart;
                     }
                 }
             }
+            if (PRINT_STATE && ros::Time::now() - last_print_time > ros::Duration(.1))
+                last_print_time = ros::Time::now();
+
             is_scanning = false;
         } //end of valid workcounter
+        else {
+            ROS_ERROR_THROTTLE(.5, "EtherCat cycle failed");
+            stop(chain);
+            if (!is_scanning) { // && taking_commands) {    TODO
+                set_goals(chain);
+            }
+            goto restart;
+        }
 
         sensor_msgs::JointState msg;
         motor_control::simJointState sim_msg;   // for simulation only
@@ -500,11 +515,9 @@ int main(int argc, char **argv) {
         sim_telem_pub.publish(sim_msg);
         ros::spinOnce();
         loop_rate.sleep();
-        if (PRINT_STATE) {
-            cout << "\n" << endl;
-        }
+
     }
     definitive_stop(chain);
-    cout << "End program" << endl;
+    ROS_INFO("End program");
     return 0;
 }

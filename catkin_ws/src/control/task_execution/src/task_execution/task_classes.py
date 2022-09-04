@@ -228,14 +228,17 @@ class PressButton(Task):
         RequestDetectionCommand().execute()
         while pt.DETECTED_OBJECTS_LOCKED:
             pass
+        #rospy.logerr("scan")
         for obj in pt.DETECTED_OBJECTS_POSE:
+            #rospy.logerr("lmqjf " + str(self.btn_id))
             if obj.id == self.btn_id:
+                #rospy.logerr("entered")
                 relative_pose = obj.object_pose
                 self.btn_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
-                self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
+                #self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
                 relative_pose = obj.artag_pose
                 self.artag_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
-                self.artag_pose.orientation = qa.turn_around(self.btn_pose.orientation)
+                #self.artag_pose.orientation = qa.turn_around(self.btn_pose.orientation)
 
     def currentCommand(self):
         print(len(self.command_chain))
@@ -269,14 +272,14 @@ class PressButton(Task):
         rospy.logwarn("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
         cmd = self.currentCommand()
         if self.cmd_counter == 1:
-            if self.scan_pose:
+            if 1 or self.scan_pose:
                 self.scan_for_btn_pose()
-            self.artag_pose = copy.deepcopy(self.btn_pose)
-            self.artag_pose.y += 0.15
+            #self.artag_pose = copy.deepcopy(self.btn_pose)
+            #self.artag_pose.y += 0.15
             cmd.pose = self.artag_pose
-            cmd.dims = [0.4, 0.2, 0.0001]
+            cmd.dims = [0.2, 0.1, 0.0001]
             cmd.name = "AR_tag"
-        if self.cmd_counter == 2:
+        elif self.cmd_counter == 2:
             cmd.pose = geometry_msgs.msg.Pose()
             cmd.pose.position = self.getPressPosition(self.artag_pose.position)
             cmd.pose.orientation = self.getPressOrientation()
@@ -330,9 +333,9 @@ class PressButton(Task):
 
     def constructCommandChain(self):
         """self.command_chain = [
-            PoseCommand(),
-            PoseCommand(),
-            PoseCommand()
+            RequestDetectionCommand(),
+            AddObjectCommand(),
+            AddObjectCommand()
         ]"""
         self.command_chain = [
             RequestDetectionCommand(),

@@ -77,8 +77,8 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
         float point[3];
         //center of AR Tag
         rs2_deproject_pixel_to_point(point,&intrinsics,pixel,dist);
-        object.x_pos =offset.x_coor+point[0]*1000; //.
-        object.y_pos =offset.y_coor-point[1]*1000;//minus because the camera yaxis points down
+        object.x_pos =-offset.x_coor+point[0]*1000; //.
+        object.y_pos =-offset.y_coor-point[1]*1000;//minus because the camera yaxis points down
         object.z_pos=point[2]*1000;
         //projection of horizontal line of ar tag on camera horizontal axis (xaxis positive rightwards)
         float pixel_right [2];
@@ -101,8 +101,8 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
         float roll =acos((corners[i][1].x-corners[i][0].x)/get_pixel_distance (corners[i][1],corners[i][0]))*180/M_PI;// done with pixels, try doing it in 3d with the same projection algo
         if(corners[i][1].y<corners[i][0].y) roll=-roll;
       #else  //test which method is more accurate
-        object.x_pos =-offset.x_coor+tvecs[i][0]*1000; //casting and representing the foats with ints cf bens idea...
-        object.y_pos =-offset.y_coor-tvecs[i][1]*1000;
+        object.x_pos =offset.x_coor+tvecs[i][0]*1000; //casting and representing the foats with ints cf bens idea...
+        object.y_pos =offset.y_coor-tvecs[i][1]*1000;
         object.z_pos =dist*1000;//                 //this is not correct, give depth to the middle pixel use
         //solution with linear fit not ideal 
         float yaw = get_pixel_distance(corners[i][0],corners[i][3])-get_pixel_distance(corners[i][1],corners[i][2]);
