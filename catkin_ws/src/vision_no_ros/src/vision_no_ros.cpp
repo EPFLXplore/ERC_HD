@@ -26,11 +26,11 @@
 using namespace std;
 using namespace cv;
 
-static bool show_input_image(0); //for showing the images directly on the jetson, not through a ros topic
+static bool show_input_image(1); //for showing the images directly on the jetson, not through a ros topic
 static bool show_output_image(1);//need to turn it on to activate the corresponding ros topic
 static bool show_depth_image(0);
 #define SAMPLES 30
-#define TAG_SIZE 0.05f
+#define TAG_SIZE 0.044f
 
 
 ////////////////////// vectors required for AR tag detection ///////////////////////////////////

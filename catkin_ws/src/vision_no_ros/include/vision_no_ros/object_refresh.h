@@ -135,7 +135,7 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
       object.z_rot =roll;//rvecs[i][2]*180/M_PI; //add rotation relative to gripper
       object.ar_tag_id =ar_1.id;
       object.x_pos_tag=tvecs[i][0]*1000;
-      object.y_pos_tag=tvecs[i][1]*1000; //add minus sign ?
+      object.y_pos_tag=-tvecs[i][1]*1000; //add minus sign ?
       object.z_pos_tag= dist*1000;
       
       vector<double> quaternion (4);

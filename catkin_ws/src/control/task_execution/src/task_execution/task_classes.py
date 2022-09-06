@@ -276,29 +276,29 @@ class PressButton(Task):
                 self.scan_for_btn_pose()
             #self.artag_pose = copy.deepcopy(self.btn_pose)
             #self.artag_pose.y += 0.15
-            cmd.pose = self.btn_pose#self.artag_pose    # TODO: don't give self.artag_pose if it is None and abort the add object command
+            cmd.pose = self.artag_pose    # TODO: don't give self.artag_pose if it is None and abort the add object command
             cmd.dims = [0.2, 0.1, 0.0001]
             cmd.name = "AR_tag"
-        elif self.cmd_counter == 20000000:
+        elif self.cmd_counter == 2:
             cmd.pose = geometry_msgs.msg.Pose()
             cmd.pose.position = self.getPressPosition(self.artag_pose.position)
             cmd.pose.orientation = self.getPressOrientation()
-        elif self.cmd_counter == 40000000:
+        elif self.cmd_counter == 4:
             if self.scan_pose:
                 self.scan_for_btn_pose()
             cmd.pose = self.btn_pose
             cmd.dims = [0.2, 0.1, 0.0001]
             cmd.name = "btn"
-        elif self.cmd_counter == 2:#5:
+        elif self.cmd_counter == 5:
             cmd.pose = geometry_msgs.msg.Pose()
             cmd.pose.position = self.getPressPosition(self.btn_pose.position)
             cmd.pose.orientation = self.getPressOrientation()
-        elif self.cmd_counter == 3:#6:
+        elif self.cmd_counter == 6:
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
             cmd.axis = qa.mul(-1, cmd.axis)
             cmd.constructPose()
-        elif self.cmd_counter == 4:#7:
+        elif self.cmd_counter == 7:
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
             #cmd.axis = qa.mul(-1, cmd.axis)
@@ -341,9 +341,9 @@ class PressButton(Task):
             RequestDetectionCommand(),
             AddObjectCommand(),
             PoseCommand(),   # go at a predetermined position in front of the button with gripper facing towards it
-            #RequestDetectionCommand(),
-            #AddObjectCommand(),
-            #PoseCommand(),
+            RequestDetectionCommand(),
+            AddObjectCommand(),
+            PoseCommand(),
             StraightMoveCommand(),   # go forward enough to press the button
             StraightMoveCommand()   # go backwards
         ]
