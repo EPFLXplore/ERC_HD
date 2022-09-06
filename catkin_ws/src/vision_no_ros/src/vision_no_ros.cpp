@@ -30,11 +30,11 @@ static bool show_input_image(0); //for showing the images directly on the jetson
 static bool show_output_image(1);//need to turn it on to activate the corresponding ros topic
 static bool show_depth_image(0);
 #define SAMPLES 30
-#define TAG_SIZE 0.044f
+#define TAG_SIZE 0.05f
 
 
 ////////////////////// vectors required for AR tag detection ///////////////////////////////////
-cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_7X7_250);
+cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
 static cv::Mat cameraMatrix ;
 static cv::Mat distCoeffs ;
 static vector<int> ids;
@@ -53,7 +53,7 @@ int main(int argc, char **argv) try {
     //////////// ROS node initialisation ////////////////
     ros::init(argc, argv, "detected_elements_publisher");
     ros::NodeHandle n;
-    ros::Publisher pub = n.advertise<vision_no_ros::object_list>("detected_elements", 1);
+    ros::Publisher pub = n.advertise<vision_no_ros::object_list>("detected_elements",1);
     ros::Subscriber sub = n.subscribe("fsm_state", 1, fsm_callback);
     
     image_transport::ImageTransport it(n);

@@ -18,6 +18,7 @@
 #include <sys/mman.h>
 #include <pid/signal_manager.h>
 #include <math.h>
+#include <cmath>
 
 #include <ethercatcpp/epos4.h>
 #include <ethercatcpp/master.h>
@@ -50,7 +51,7 @@ double current_pos_qc[MAX_MOTOR_COUNT] = {0};
 double target_pos[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0};
 double target_vel[MAX_MOTOR_COUNT] = {0,0};
 double max_current[MAX_MOTOR_COUNT] = {0.155};
-Epos4::control_mode_t control_mode(Epos4::velocity_CSV);
+Epos4::control_mode_t control_mode(Epos4::position_CSP);
 
 //double offset[MAX_MOTOR_COUNT] = {0};   // TODO: makes the max/min angles unusable -> correct that
 
@@ -68,17 +69,20 @@ static const float max_angle[MAX_MOTOR_COUNT] = {9.77, 2.3, 411, 9.63, 7.26, INF
 static const float min_angle[MAX_MOTOR_COUNT] = {-9.6, -1.393, -259, -9.54, -0.79, -INF, -0.14, -INF};
 static const double min_qc[MAX_MOTOR_COUNT] = {-(2<<18), -84000, -1250, -((2<<18)/16), -160000, -((2<<13)/2), -10000000000};
 static const double max_qc[MAX_MOTOR_COUNT] = {2<<18, 60000, 1000, (2<<18)/16, 160000, (2<<13)/2, 10000000000};
-static const double max_velocity[MAX_MOTOR_COUNT] = {3, 1, 700, 5, 6, 12, 1, 0};    // rotations per minute
+static const double max_velocity[MAX_MOTOR_COUNT] = {3, 0.5, 200, 5, 6, 12, 1, 0};    // rotations per minute
 //static const double reduction[MAX_MOTOR_COUNT] = {2*231, 480*16, 676.0/49.0, 2*439, 2*439, 2*231, 1*16*700, 0};
 static const double reduction[MAX_MOTOR_COUNT] = {1000, 200, 0.5, 50, 50*1.5, 50*1.5, 10000, 100};
 static const double full_circle[MAX_MOTOR_COUNT] = {2<<17, 2<<17, 2<<12, 2<<17, 2<<18, 2<<12, 1/2*PI};
-static const double rotation_dir_for_moveit[MAX_MOTOR_COUNT] = {1, -1, -1, 1, -1, -1, 1};
+static const double rotation_dir_for_moveit[MAX_MOTOR_COUNT] = {1, -1, -1, 1, 1, -1, 1};
 static const double security_angle_coef[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
 static const vector<int> order = {1, 2, 8, 3, 4, 5, 6, 7};
 
+
+static const double interpolation_param[MAX_MOTOR_COUNT] = {3, 1, 1, 1, 1, 1, 1};
 static const bool reset_faults = false;
 
 int32_t joint2_offset = 0;
+bool is_scanning = false; // true;
 
 //====================================================================================================
 
@@ -96,6 +100,28 @@ void accountForJoint56Dependency() {
 }
 
 
+
+//double interpolate(double x, size_t it);
+
+vector<double> min_val_per_joint = {0.05, 0.05, 0.05, 0.05, 0.05, 0.05};
+double interpolate(double x, size_t it) {
+    //double tau[MAX_MOTOR_COUNT] = {};
+    if (x < 0) { return -interpolate(-x, it); }
+    vector<double> point_x = {0, 0.2, 0.20001, 1};
+    vector<double> point_y = {0, 0, min_val_per_joint[0], min_val_per_joint[0]};
+    for (size_t i=0; i < point_x.size(); i++) {
+        if (x >= point_x[i] && x <= point_x[i+1]) {
+            return point_y[i] + (point_y[i+1]-point_y[i]) * (x-point_x[i])/(point_x[i+1]-point_x[i]);
+        }
+    }
+    //return (!(it || x) ? x*x*x/fabs(x) : x);
+    //return std::pow(x, interpolation_param[it]);
+    ROS_WARN("AAAAAAAAAAAAAAAAAAAAAA");
+    std::cout << x << endl;
+    return x;
+}
+
+
 void manualCommandCallback(const std_msgs::Float32MultiArray::ConstPtr& msg) {
     if (!taking_commands) return;
     last_command_time = chrono::steady_clock::now();
@@ -103,11 +129,12 @@ void manualCommandCallback(const std_msgs::Float32MultiArray::ConstPtr& msg) {
     bool empty_command = true;
     // cout << "received velocity   :";
     for (size_t it=0; it<MOTOR_COUNT; ++it) {
-        vel = msg->data[it];    // between -1 and 1
+        vel = interpolate(msg->data[it], it);    // between -1 and 1
         empty_command = empty_command && (vel == 0);
         target_vel[it] = double(vel*max_velocity[it]*reduction[it]*2*PI/60);
         // cout << setw(9) << target_vel[it];
     }
+    target_vel[1] *= -1;    // TODO: remove this
     // cout << endl;
     
     if (JOINT56_DEPENDENT) {
@@ -283,6 +310,7 @@ updates target positions and velocities in order to lead the motor to its home (
 void account_for_joint2_home_loss(vector<xcontrol::Epos4Extended*> chain) {
     int32_t pos = chain[1]->get_Actual_Position_In_Qc();
     if (pos > 2<<18) {
+        ROS_ERROR("Joint 2 position is too big");
         joint2_offset = 2<<19;
         if (target_pos[1] < -2<<18) {
             target_pos[1] += 2<<20;
@@ -292,6 +320,7 @@ void account_for_joint2_home_loss(vector<xcontrol::Epos4Extended*> chain) {
         }
     }
     else if (pos < -2<<18) {
+        ROS_ERROR("Joint 2 position is too small");
         joint2_offset = -2<<19;
         if (target_pos[1] > 2<<18) {
             target_pos[1] -= 2<<20;
@@ -318,8 +347,10 @@ gives the target positions and velocities to the motors
 void set_goals(vector<xcontrol::Epos4Extended*> chain) {
     stopped = false;
     if (command_too_old()) {
-        ROS_WARN("COMMAND TOO OLD");
-        stop(chain);  //TODO: uncomment this
+        //ROS_WARN("COMMAND TOO OLD");
+        if (1 || !is_scanning) {
+            stop(chain);  //TODO: uncomment this
+        }
     }
     
     account_for_joint2_home_loss(chain);
@@ -381,7 +412,7 @@ void definitive_stop(vector<xcontrol::Epos4Extended*> chain) {
 
 int main(int argc, char **argv) {
 
-    std::string network_interface_name("eth1");
+    std::string network_interface_name("eth0");
     ros::init(argc, argv, "hd_controller_motors");
     ros::NodeHandle n;
     ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
@@ -394,6 +425,17 @@ int main(int argc, char **argv) {
     ros::Rate loop_rate(PERIOD);
     ros::Time last_print_time(0);
     ROS_INFO("ROS node initialized");
+
+    int cm = 0;
+    ros::NodeHandle nh("~");
+    nh.param<int>("control_mode", cm, 0);
+    if (cm == 1)
+        control_mode = Epos4::position_CSP;
+    else if (cm == 2)
+        control_mode = Epos4::velocity_CSV;
+    else 
+        return EXIT_FAILURE;
+
 
 
 restart : 
@@ -412,8 +454,6 @@ restart :
     //xcontrol::ThreeAxisSlot epos_5(true), epos_6(true), epos_7(true);
     vector<xcontrol::Epos4Extended*> chain = {&epos_1, &epos_2, &empty, &epos_3, &epos_4, &epos_6, &epos_7, &epos_5};
 
-    bool is_scanning = true; // true;
-
     xcontrol::NetworkMaster ethercat_master(chain, network_interface_name);
 
 	std::vector<xcontrol::Epos4Extended*> temp;
@@ -426,6 +466,17 @@ restart :
     chain.pop_back();   // pop empty motor slot
 
     ethercat_master.init_network();
+
+    // tell motors to hold their current position
+    for (size_t it=0; it<chain.size(); ++it) {
+            chain[it]->set_Control_Mode(control_mode);
+            chain[it]->set_Target_Position_In_Qc(chain[it]->get_Actual_Position_In_Qc());
+    }
+
+    // set motors to operational 
+    // ethercat_master.switch_motors_to_enable_op();
+
+
     //Master ethercat_master;
     //EthercatBus robot;
     //ethercat_master.add_Interface_Primary(network_interface_name);
@@ -440,14 +491,15 @@ restart :
     while (ros::ok()){
         auto now = chrono::steady_clock::now();
         // check device status
-        ethercat_master.switch_motors_to_enable_op();
+        
         //epos_1.switch_to_enable_op();
+        ethercat_master.switch_motors_to_enable_op();
 
-        if (is_scanning) {
+        /*if (is_scanning) {
             for (size_t it=0; it<chain.size(); ++it) {
                 chain[it]->set_Target_Position_In_Qc(chain[it]->get_Actual_Position_In_Qc());
             }
-		}
+		}*/
 
         bool wkc = ethercat_master.next_Cycle(); // Function used to launch next cycle of the EtherCat net
         if (wkc) {
@@ -463,21 +515,39 @@ restart :
                     if (is_scanning) {
                         target_pos[it] = current_pos_qc[it];
                     }
-                    if (PRINT_STATE && ros::Time::now() - last_print_time > ros::Duration(.1)) {
+
+                    if (!((chain[it]->get_Device_State_In_String() == "Operation enable") ||
+                         (chain[it]->get_Device_State_In_String() == "Ready to switch ON")))
+                    {
+                        ROS_WARN_STREAM("Motor " << it);
+                        ROS_WARN_STREAM("State device : " << chain[it]->get_Device_State_In_String());
+                        ROS_WARN_STREAM("Control mode = " << chain[it]->get_Control_Mode_In_String());
+                        ROS_WARN_STREAM("Actual position : " << std::dec << current_pos_qc[it] << " rad");
+                        ROS_WARN_STREAM("Actual velocity : " << std::dec << chain[it]->get_Actual_Average_Velocity_In_Rads()/reduction[it] << " rad/s");
+                        ROS_WARN_STREAM("Actual current value = " << chain[it]->get_Actual_Current_In_A() << "A" << "\n");
+
+                    }
+                    else if (PRINT_STATE && ros::Time::now() - last_print_time > ros::Duration(0.1)) {
                         ROS_DEBUG_STREAM("Motor " << it);
                         ROS_DEBUG_STREAM("State device : " << chain[it]->get_Device_State_In_String());
                         ROS_DEBUG_STREAM("Control mode = " << chain[it]->get_Control_Mode_In_String());
                         ROS_DEBUG_STREAM("Actual position : " << std::dec << current_pos_qc[it] << " rad");
                         ROS_DEBUG_STREAM("Actual velocity : " << std::dec << chain[it]->get_Actual_Average_Velocity_In_Rads()/reduction[it] << " rad/s");
-                        ROS_DEBUG_STREAM("Actual current value = " << chain[it]->get_Actual_Current_In_A() << "A");
+                        ROS_DEBUG_STREAM("Actual current value = " << chain[it]->get_Actual_Current_In_A() << "A" << "\n");
 
                     }
                     if (reset_faults && (chain[it]->get_Device_State_In_String() == "Fault")) {
+                        control_mode = Epos4::velocity_CSV;
+                        for (size_t it; it < MAX_MOTOR_COUNT; it++) {
+                            target_vel[it] = 0;
+                        }
+                        is_scanning = true;
                         goto restart;
+                        
                     }
                 }
             }
-            if (PRINT_STATE && ros::Time::now() - last_print_time > ros::Duration(.1))
+            if (PRINT_STATE && ros::Time::now() - last_print_time > ros::Duration(0.1))
                 last_print_time = ros::Time::now();
 
             is_scanning = false;
@@ -488,12 +558,17 @@ restart :
             if (!is_scanning) { // && taking_commands) {    TODO
                 set_goals(chain);
             }
-            goto restart;
+            control_mode = Epos4::velocity_CSV;
+            for (size_t it; it < MAX_MOTOR_COUNT; it++) {
+                target_vel[it] = 0;
+            }
+            is_scanning = true;
+            //goto restart;
         }
 
         sensor_msgs::JointState msg;
         motor_control::simJointState sim_msg;   // for simulation only
-        for (size_t it=0; it<chain.size()-1; ++it) {
+        for (size_t it=0; it<chain.size(); ++it) {
             msg.position.push_back(chain[it]->get_Actual_Position_In_Qc()/full_circle[it]*2*PI*rotation_dir_for_moveit[it]);
             msg.velocity.push_back(chain[it]->get_Actual_Velocity_In_Rads()/reduction[it]);
             //sim_msg.position[it] = chain[it]->get_Actual_Position_In_Qc()/reduction[it]*2*PI/ROT_IN_QC;
