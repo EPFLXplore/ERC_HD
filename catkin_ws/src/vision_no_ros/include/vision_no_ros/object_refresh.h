@@ -25,6 +25,16 @@ static float artag_x_pos_average=0;
 static float artag_y_pos_average=0;
 static float artag_z_pos_average=0;
 
+static float w_quat_average=0;
+static float x_quat_average=0;
+static float y_quat_average=0;
+static float z_quat_average=0;
+
+static int w_positive=0;
+static int x_positive=0;
+static int y_positive=0;
+static int z_positive=0;
+
 static int active_sample=0;
 
 void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,const vector<cv::Vec3d>& rvecs,const vector<cv::Vec3d>& tvecs,
@@ -45,6 +55,8 @@ void get_angle_from_polyfit(float& difference);
 void draw_object(cv::Mat& image,const vision_no_ros::panel_object& object,const rs2_intrinsics& intrinsics);
 
 float get_distance_to_object(vision_no_ros::panel_object& object,const rs2::depth_frame& depth,const rs2_intrinsics& intrinsics,const float& dist);
+
+void set_sign_of_quat(int& was_positive,const int& num_samples,float& quat,float& quat_avrg );
 
 //#define USE_RS2_PROJECTION
 
@@ -77,8 +89,8 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
         float point[3];
         //center of AR Tag
         rs2_deproject_pixel_to_point(point,&intrinsics,pixel,dist);
-        object.x_pos =-offset.x_coor+point[0]*1000; //.
-        object.y_pos =-offset.y_coor-point[1]*1000;//minus because the camera yaxis points down
+        object.x_pos =offset.x_coor+point[0]*1000; //.
+        object.y_pos =offset.y_coor-point[1]*1000;//minus because the camera yaxis points down
         object.z_pos=point[2]*1000;
         //projection of horizontal line of ar tag on camera horizontal axis (xaxis positive rightwards)
         float pixel_right [2];
@@ -101,7 +113,7 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
         float roll =acos((corners[i][1].x-corners[i][0].x)/get_pixel_distance (corners[i][1],corners[i][0]))*180/M_PI;// done with pixels, try doing it in 3d with the same projection algo
         if(corners[i][1].y<corners[i][0].y) roll=-roll;
       #else  //test which method is more accurate
-        object.x_pos =offset.x_coor+tvecs[i][0]*1000; //casting and representing the foats with ints cf bens idea...
+        object.x_pos =offset.x_coor+tvecs[i][0]*1000; //casting and representing the foats with ints cf bens idea...add minus sign 
         object.y_pos =offset.y_coor-tvecs[i][1]*1000;
         object.z_pos =dist*1000;//                 //this is not correct, give depth to the middle pixel use
         //solution with linear fit not ideal 
@@ -123,15 +135,17 @@ void refresh_object(vision_no_ros::panel_object& object,const vector<int>& ids,c
       object.z_rot =roll;//rvecs[i][2]*180/M_PI; //add rotation relative to gripper
       object.ar_tag_id =ar_1.id;
       object.x_pos_tag=tvecs[i][0]*1000;
-      object.y_pos_tag=-tvecs[i][1]*1000;
+      object.y_pos_tag=tvecs[i][1]*1000; //add minus sign ?
       object.z_pos_tag= dist*1000;
-      average_object_params(object,samples);
+      
       vector<double> quaternion (4);
       convert_rvec_to_quaternion(rvecs[i],quaternion);//quaternions wont be averaged becauae of the +/- transition at 0.7
       object.w_quaternion =quaternion[0];
       object.x_quaternion =quaternion[1];
       object.y_quaternion =quaternion[2];
       object.z_quaternion =quaternion[3];
+
+      average_object_params(object,samples);
       
       break;
     }
@@ -234,6 +248,15 @@ void average_object_params(vision_no_ros::panel_object& object,int samples){
     artag_x_pos_average=artag_x_pos_average+object.x_pos_tag;
     artag_y_pos_average=artag_y_pos_average+object.y_pos_tag;
     artag_z_pos_average=artag_z_pos_average+object.z_pos_tag;
+    w_quat_average=w_quat_average+fabs(object.w_quaternion);
+    x_quat_average=x_quat_average+fabs(object.x_quaternion);
+    y_quat_average=y_quat_average+fabs(object.y_quaternion);
+    z_quat_average=z_quat_average+fabs(object.z_quaternion);
+    set_sign_of_quat(w_positive,samples,object.w_quaternion,w_quat_average);
+    set_sign_of_quat(x_positive,samples,object.x_quaternion,x_quat_average);
+    set_sign_of_quat(y_positive,samples,object.y_quaternion,y_quat_average);
+    set_sign_of_quat(z_positive,samples,object.z_quaternion,z_quat_average);
+
     ++active_sample;
   }else {
     object.x_pos=x_pos_average/samples;
@@ -245,6 +268,14 @@ void average_object_params(vision_no_ros::panel_object& object,int samples){
     object.x_pos_tag=artag_x_pos_average/samples;
     object.y_pos_tag=artag_y_pos_average/samples;
     object.z_pos_tag=artag_z_pos_average/samples;
+    w_quat_average=w_quat_average/samples;
+    x_quat_average=x_quat_average/samples;
+    y_quat_average=y_quat_average/samples;
+    z_quat_average=z_quat_average/samples;
+    set_sign_of_quat(w_positive,samples,object.w_quaternion,w_quat_average);
+    set_sign_of_quat(x_positive,samples,object.x_quaternion,x_quat_average);
+    set_sign_of_quat(y_positive,samples,object.y_quaternion,y_quat_average);
+    set_sign_of_quat(z_positive,samples,object.z_quaternion,z_quat_average);
     x_pos_average=0;
     y_pos_average=0;
     z_pos_average=0;
@@ -254,6 +285,14 @@ void average_object_params(vision_no_ros::panel_object& object,int samples){
     artag_x_pos_average=0;
     artag_y_pos_average=0;
     artag_z_pos_average=0;
+    w_quat_average=0;
+    x_quat_average=0;
+    y_quat_average=0;
+    z_quat_average=0;
+    w_positive=0;
+    x_positive=0;
+    y_positive=0;
+    z_positive=0;
     active_sample=0;
   }
 }
@@ -284,10 +323,57 @@ void draw_object(cv::Mat& image,const vision_no_ros::panel_object& object,const 
   cv::circle(image,center,20,Scalar(0,255,0),2);
 }
 
+void set_sign_of_quat(int& was_positive,const int& num_samples,float& quat,float& quat_avrg ){
+  if (active_sample<num_samples){
+    if (quat>=0) ++was_positive;
+  }else{
+    if (was_positive >= num_samples-was_positive) quat=quat_avrg;
+    else quat=-quat_avrg;
+  }
+}
+
+
+
 
 //TRASH
 
-/* 
+
+
+/*
+
+void fix_rotation(const cv::Vec3d& rvec_tag,const cv::Vec3d& tvec_tag,const cv::Vec3d& rvec_obj,const cv::Vec3d& tvec_obj,vision_no_ros::panel_object& object){
+cv::Vec3d rvec_cam;
+cv::Vec3d tvec_cam;
+//tvec
+//for (i=0;i<3;++i){
+//  tvec_cam[i]=tvec_tag[i]+tvec_tag[i];
+//}
+//cv::Mat rotation_matrix_obj;
+//Rodrigues(rvec_obj,rotation_matrix_obj);
+//cv::Mat rotation_matrix_tag;
+//Rodrigues(rvec_obj,rotation_matrix_tag);
+//cv:Mat rotation_matrix_cam;
+composeRT(rvec_obj,tvec_obj,rvec_tag,tvec_tag,rvec_cam,tvec_cam);
+object.x_pos=tvec_cam[0];
+object.y_pos=tvec_cam[1];
+object.z_pos=tvec_cam[2];
+cout << "coords are : " << object.x_pos << endl<< object.y_pos << endl << object.z_pos<< endl;
+
+vector<double> quaternion (4);
+convert_rvec_to_quaternion(rvec_cam,quaternion);
+
+object.w_quaternion=quaternion[0];
+object.x_quaternion=quaternion[1];
+object.y_quaternion=quaternion[2];
+object.z_quaternion=quaternion[3];
+cout << "quaternions are : " << object.w_quaternion << endl<< object.x_quaternion << endl<< object.y_quaternion << endl<< object.z_quaternion << endl;
+
+}
+
+
+
+
+
 float get_distance_to_object(vision_no_ros::panel_object& object,const rs2::depth_frame& depth,const rs2_intrinsics& intrinsics,const float& dist ){ //was thinking about doinit with pythagoras but finally wont work
   float distance;
   float pixel[2];

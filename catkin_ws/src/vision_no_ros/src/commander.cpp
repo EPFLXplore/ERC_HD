@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     std::cout <<"enter new command" << std::endl;
     std::cin >> command ; //add check for a valid command !!
     
-    if (command>=-1 && command<=15){ 
+    if (command>=-1 && command<=16){ 
       msg.data = command;
     }else{
       std::cout<< "invalid command " << std::endl;

@@ -203,7 +203,7 @@ class Planner:
             wpose.position.y = goal.position.y
             wpose.position.z = goal.position.z
             waypoints = [wpose]
-            plan, fraction = self.move_group.compute_cartesian_path(waypoints, eef_step=0.01, jump_threshold=5)  # TODO: change the jump_threshold
+            plan, fraction = self.move_group.compute_cartesian_path(waypoints, eef_step=0.003, jump_threshold=5)  # TODO: change the jump_threshold and the eef_step
             success = fraction == 1
         else:
             raise   # TODO

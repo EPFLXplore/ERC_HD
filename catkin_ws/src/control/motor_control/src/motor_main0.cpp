@@ -362,7 +362,8 @@ void set_goals(vector<xcontrol::Epos4Extended*> chain) {
         if (chain[it]->get_has_motor()) {
             chain[it]->set_Control_Mode(control_mode);
 
-            if (chain[it]->get_Device_State_In_String() == "Operation enable") {
+            std::string state = chain[it]->get_Device_State_In_String();
+            if ((state == "Operation enable") || (state == "Switched ON") || (state == "Ready to switch ON")) {
                 switch (control_mode) {
                     case Epos4::position_CSP:
                         if (!stopped) {
@@ -407,6 +408,17 @@ void definitive_stop(vector<xcontrol::Epos4Extended*> chain) {
     taking_commands = false;
     stop(chain);
     set_goals(chain);
+    for (size_t it=0; it < chain.size(); it++) {
+        chain[it]->set_Device_State_Control_Word(Epos4::shutdown);
+    }
+}
+
+
+void definitive_stop(vector<xcontrol::Epos4Extended*> chain, size_t it) {
+    taking_commands = false;
+    stop(chain);
+    set_goals(chain);
+    chain[it]->set_Device_State_Control_Word(Epos4::shutdown);
 }
 
 
@@ -504,7 +516,7 @@ restart :
         bool wkc = ethercat_master.next_Cycle(); // Function used to launch next cycle of the EtherCat net
         if (wkc) {
 
-            if (!is_scanning) { // && taking_commands) {    TODO
+            if (!is_scanning && taking_commands) {    //TODO
                 set_goals(chain);
             }
 
@@ -538,10 +550,7 @@ restart :
                     }
                     if (reset_faults && (chain[it]->get_Device_State_In_String() == "Fault")) {
                         control_mode = Epos4::velocity_CSV;
-                        for (size_t it; it < MAX_MOTOR_COUNT; it++) {
-                            target_vel[it] = 0;
-                        }
-                        is_scanning = true;
+                        definitive_stop(chain);
                         goto restart;
                         
                     }
@@ -555,13 +564,11 @@ restart :
         else {
             ROS_ERROR_THROTTLE(.5, "EtherCat cycle failed");
             stop(chain);
-            if (!is_scanning) { // && taking_commands) {    TODO
+            if (!is_scanning && taking_commands) {    // TODO
                 set_goals(chain);
             }
             control_mode = Epos4::velocity_CSV;
-            for (size_t it; it < MAX_MOTOR_COUNT; it++) {
-                target_vel[it] = 0;
-            }
+            definitive_stop(chain);
             is_scanning = true;
             //goto restart;
         }

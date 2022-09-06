@@ -46,13 +46,13 @@ class Executor:
         if self.task is not None and not isinstance(self.task, PositionManualMotion):
             return
         if self.task is None or self.task.finished:
-            print("NEW MANUAL COMMAND")
+            rospy.logwarn("NEW MANUAL COMMAND")
             self.task = PositionManualMotion()
             self.task.axis = (msg.data[:3])
             self.task.velocity_scaling = msg.data[3]
             self.new_task = True
             return
-        print("PURSUE MANUAL COMMAND")
+        rospy.logwarn("PURSUE MANUAL COMMAND")
         self.task.pursue = True
         self.task.axis = (msg.data[:3])
         self.task.velocity_scaling = msg.data[3]

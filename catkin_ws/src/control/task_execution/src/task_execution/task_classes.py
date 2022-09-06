@@ -276,7 +276,7 @@ class PressButton(Task):
                 self.scan_for_btn_pose()
             #self.artag_pose = copy.deepcopy(self.btn_pose)
             #self.artag_pose.y += 0.15
-            cmd.pose = self.btn_pose#self.artag_pose
+            cmd.pose = self.btn_pose#self.artag_pose    # TODO: don't give self.artag_pose if it is None and abort the add object command
             cmd.dims = [0.2, 0.1, 0.0001]
             cmd.name = "AR_tag"
         elif self.cmd_counter == 20000000:
@@ -402,8 +402,8 @@ class PositionManualMotion:
         self.finished = False
     
     def get_distance(self):
-        if self.velocity_scaling < 0.01:    # to eliminate ghost signals
-            return
+        if self.velocity_scaling < 0.03:    # to eliminate ghost signals
+            return 0
         return self.min_step_distance + (self.max_step_distance-self.min_step_distance)*self.velocity_scaling
 
     def execute(self):

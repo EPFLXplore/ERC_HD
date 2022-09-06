@@ -1,5 +1,6 @@
 from math import sqrt, sin, cos, asin, acos, pi
 from geometry_msgs.msg import Quaternion, Point, Pose
+import rospy
 
 
 def norm(x):
@@ -134,6 +135,7 @@ def make_quat(x):
         return point_to_quat(x)
     elif isinstance(x, (tuple, list)):
         return list_to_quat(x)
+    rospy.logerror("Invalid expression for making quaternion : " + str(x))
     raise
 
 
