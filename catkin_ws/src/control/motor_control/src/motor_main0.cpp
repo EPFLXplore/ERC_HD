@@ -31,7 +31,7 @@ using namespace ethercatcpp;
 using namespace pid;
 //using namespace xcontrol;
 
-#define MOTOR_COUNT 6
+#define MOTOR_COUNT 7
 #define MAX_MOTOR_COUNT 8
 #define PRINT_STATE true
 #define QC_SPEED_CONVERSION 4000
@@ -68,8 +68,8 @@ static const double command_expiration = 200;
 static const int period = 25;
 static const float max_angle[MAX_MOTOR_COUNT] = {9.77, 2.3, 411, 9.63, 7.26, INF, 0.395, INF};
 static const float min_angle[MAX_MOTOR_COUNT] = {-9.6, -1.393, -259, -9.54, -0.79, -INF, -0.14, -INF};
-static const double min_qc[MAX_MOTOR_COUNT] = {-(2<<18), -84000, -1250, -((2<<18)/16), -160000, -((2<<13)/2), -10000000000};
-static const double max_qc[MAX_MOTOR_COUNT] = {2<<18, 60000, 1000, (2<<18)/16, 160000, (2<<13)/2, 10000000000};
+static const double min_qc[MAX_MOTOR_COUNT] = {-(2<<18), -84000, -1250, -1000*((2<<18)/16), -160000, -((2<<13)/2), -10000000000};
+static const double max_qc[MAX_MOTOR_COUNT] = {2<<18, 60000, 1000, 1000*(2<<18)/16, 160000, (2<<13)/2, 10000000000};
 static const double max_velocity[MAX_MOTOR_COUNT] = {3, 0.5, 200, 5, 6, 12, 1, 0};    // rotations per minute
 //static const double reduction[MAX_MOTOR_COUNT] = {2*231, 480*16, 676.0/49.0, 2*439, 2*439, 2*231, 1*16*700, 0};
 static const double reduction[MAX_MOTOR_COUNT] = {1000, 200, 0.5, 50, 50*1.5, 50*1.5, 10000, 100};
@@ -113,14 +113,16 @@ void accountForJoint56Dependency() {
 
 
 vector<double> min_val_per_joint = {0.05, 0.05, 0.05, 0.05, 0.05, 0.05};
-double tau = 0.2;
-double startval = 0.6;
+double tau = 0.1;
+double startval = 0.11;
 
 double interpolate(double x, size_t it) {
     //double tau[MAX_MOTOR_COUNT] = {};
     if (x < 0) { return -interpolate(-x, it); }
-    vector<double> point_x = {0, tau, tau + 0.00001, startval, 1};
-    vector<double> point_y = {0, 0, min_val_per_joint[it], min_val_per_joint[it], 1};
+    //vector<double> point_x = {0, tau, tau + 0.00001, startval, 1};
+    //vector<double> point_y = {0, 0, min_val_per_joint[it], min_val_per_joint[it], 1};
+    vector<double> point_x = {0, 1};
+    vector<double> point_y = {0, 1};
     for (size_t i=0; i < point_x.size(); i++) {
         if (x >= point_x[i] && x <= point_x[i+1]) {
             return point_y[i] + (point_y[i+1]-point_y[i]) * (x-point_x[i])/(point_x[i+1]-point_x[i]);
@@ -139,15 +141,15 @@ void manualCommandCallback(const std_msgs::Float32MultiArray::ConstPtr& msg) {
     last_command_time = chrono::steady_clock::now();
     float vel;
     bool empty_command = true;
-    // cout << "received velocity   :";
+    //cout << "received velocity   :";
     for (size_t it=0; it<MOTOR_COUNT; ++it) {
         vel = interpolate(msg->data[it], it);    // between -1 and 1
         empty_command = empty_command && (vel == 0);
         target_vel[it] = double(vel*max_velocity[it]*reduction[it]*2*PI/60);
-        // cout << setw(9) << target_vel[it];
+        //cout << setw(9) << target_vel[it];
     }
     target_vel[1] *= -1;    // TODO: remove this
-    // cout << endl;
+    //cout << endl;
     
     if (JOINT56_DEPENDENT) {
         //accountForJoint56Dependency();
@@ -440,7 +442,7 @@ void definitive_stop(vector<xcontrol::Epos4Extended*> chain, size_t it) {
 
 int main(int argc, char **argv) {
 
-    std::string network_interface_name("eth0");
+    std::string network_interface_name("eth2");
     ros::init(argc, argv, "hd_controller_motors");
     ros::NodeHandle n;
     ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
@@ -454,7 +456,7 @@ int main(int argc, char **argv) {
     ros::Time last_print_time(0);
     ROS_INFO("ROS node initialized");
 
-    /*int cm = 0;
+    int cm = 0;
     ros::NodeHandle nh("~");
     nh.param<int>("control_mode", cm, 0);
     if (cm == 1)
@@ -462,7 +464,7 @@ int main(int argc, char **argv) {
     else if (cm == 2)
         control_mode = Epos4::velocity_CSV;
     else 
-        return EXIT_FAILURE;*/
+        return EXIT_FAILURE;
 
 
 
@@ -492,7 +494,7 @@ restart :
 	for (size_t i = 0; i < order.size(); i++) {
         chain[order[i]-1] = temp[i];
     }
-    //chain.pop_back();   // pop empty motor slot
+    chain.pop_back();   // pop empty motor slot
 
     ethercat_master.init_network();
 
