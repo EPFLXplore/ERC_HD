@@ -31,7 +31,7 @@ using namespace ethercatcpp;
 using namespace pid;
 //using namespace xcontrol;
 
-#define MOTOR_COUNT 7
+#define MOTOR_COUNT 6
 #define MAX_MOTOR_COUNT 8
 #define PRINT_STATE true
 #define QC_SPEED_CONVERSION 4000
@@ -48,10 +48,11 @@ using namespace pid;
 //====================================================================================================
 double current_pos_rad[MAX_MOTOR_COUNT] = {0,0};
 double current_pos_qc[MAX_MOTOR_COUNT] = {0};
+double previous_pos_qc[MAX_MOTOR_COUNT] = {0};
 double target_pos[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0};
 double target_vel[MAX_MOTOR_COUNT] = {0,0};
 double max_current[MAX_MOTOR_COUNT] = {0.155};
-Epos4::control_mode_t control_mode(Epos4::position_CSP);
+Epos4::control_mode_t control_mode(Epos4::velocity_CSV);
 
 //double offset[MAX_MOTOR_COUNT] = {0};   // TODO: makes the max/min angles unusable -> correct that
 
@@ -319,6 +320,10 @@ updates target positions and velocities in order to lead the motor to its home (
 
 
 void account_for_joint2_home_loss(vector<xcontrol::Epos4Extended*> chain) {
+    if (fabs(previous_pos_qc[1]-current_pos_qc[1]) > 20000) {
+        ROS_ERROR_STREAM("Joint 2 jumped from " << previous_pos_qc[1] << " qc to " << current_pos_qc[1]);
+    }
+
     int32_t pos = chain[1]->get_Actual_Position_In_Qc();
     if (pos > 2<<18) {
         ROS_ERROR("Joint 2 position is too big");
@@ -449,7 +454,7 @@ int main(int argc, char **argv) {
     ros::Time last_print_time(0);
     ROS_INFO("ROS node initialized");
 
-    int cm = 0;
+    /*int cm = 0;
     ros::NodeHandle nh("~");
     nh.param<int>("control_mode", cm, 0);
     if (cm == 1)
@@ -457,7 +462,7 @@ int main(int argc, char **argv) {
     else if (cm == 2)
         control_mode = Epos4::velocity_CSV;
     else 
-        return EXIT_FAILURE;
+        return EXIT_FAILURE;*/
 
 
 
@@ -476,6 +481,7 @@ restart :
     //xcontrol::ThreeAxisSlot epos_2(true), epos_3(true), epos_4(true);
     //xcontrol::ThreeAxisSlot epos_5(true), epos_6(true), epos_7(true);
     vector<xcontrol::Epos4Extended*> chain = {&epos_1, &epos_2, &empty, &epos_3, &epos_4, &epos_6, &epos_7, &epos_5};
+    //vector<xcontrol::Epos4Extended*> chain = {&epos_1, &epos_2, &empty, &epos_3, &epos_4, &epos_6};
 
     xcontrol::NetworkMaster ethercat_master(chain, network_interface_name);
 
@@ -486,7 +492,7 @@ restart :
 	for (size_t i = 0; i < order.size(); i++) {
         chain[order[i]-1] = temp[i];
     }
-    chain.pop_back();   // pop empty motor slot
+    //chain.pop_back();   // pop empty motor slot
 
     ethercat_master.init_network();
 
@@ -533,6 +539,7 @@ restart :
 
             for (size_t it=0; it<chain.size(); ++it) {
                 if (chain[it]->get_has_motor()) {
+                    previous_pos_qc[it] = current_pos_qc[it];
                     current_pos_qc[it] = chain[it]->get_Actual_Position_In_Qc();
                     current_pos_rad[it] = chain[it]->get_Actual_Position_In_Qc()/full_circle[it]*2*PI;
                     if (is_scanning) {
