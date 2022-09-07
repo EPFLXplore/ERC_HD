@@ -103,12 +103,23 @@ void accountForJoint56Dependency() {
 
 //double interpolate(double x, size_t it);
 
+// !!!*******************************************************************************************************************************
+
+// FONCTION A TUNER PAR LOIC
+// 1. Tuner vector minvalperjoint
+// 2. Tuner tau (valeur sans output sur chaque joystick)
+// 3. Tuner startval pour quitter domaine constant à vitesse minvalperjoint et continuer sur droite affine jusqu'à fullspeed
+
+
 vector<double> min_val_per_joint = {0.05, 0.05, 0.05, 0.05, 0.05, 0.05};
+double tau = 0.2;
+double startval = 0.6;
+
 double interpolate(double x, size_t it) {
     //double tau[MAX_MOTOR_COUNT] = {};
     if (x < 0) { return -interpolate(-x, it); }
-    vector<double> point_x = {0, 0.2, 0.20001, 1};
-    vector<double> point_y = {0, 0, min_val_per_joint[0], min_val_per_joint[0]};
+    vector<double> point_x = {0, tau, tau + 0.00001, startval, 1};
+    vector<double> point_y = {0, 0, min_val_per_joint[it], min_val_per_joint[it], 1};
     for (size_t i=0; i < point_x.size(); i++) {
         if (x >= point_x[i] && x <= point_x[i+1]) {
             return point_y[i] + (point_y[i+1]-point_y[i]) * (x-point_x[i])/(point_x[i+1]-point_x[i]);
