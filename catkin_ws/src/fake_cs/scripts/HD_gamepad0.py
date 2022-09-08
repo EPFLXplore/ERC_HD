@@ -44,7 +44,7 @@ class GamePad():
 
         self.reset_arm_pos = False
 
-        self.HD_Angles_pub    = rospy.Publisher('HD_joints', Int8MultiArray, queue_size=1)
+        self.HD_Angles_pub    = rospy.Publisher('HD_Angles_aaaaaaaaaaaaaaaaaaaa', Int8MultiArray, queue_size=1)
         self.HD_Reset_arm_pub = rospy.Publisher('HD_reset_arm_pos', Bool, queue_size=1)
         self.HD_set_zero_pub = rospy.Publisher('HD_set_zero_arm_pos', Bool, queue_size=1)
         self.timer = Inft_Timer(dt, self.publish_twist)

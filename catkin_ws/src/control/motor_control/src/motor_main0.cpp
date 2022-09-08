@@ -83,7 +83,7 @@ static const double interpolation_param[MAX_MOTOR_COUNT] = {3, 1, 1, 1, 1, 1, 1}
 static const bool reset_faults = false;
 
 int32_t joint2_offset = 0;
-bool is_scanning = false; // true;
+bool is_scanning = true; // true;
 
 //====================================================================================================
 
@@ -166,27 +166,6 @@ void shutdownCallback(const std_msgs::Bool::ConstPtr& msg) {
         must_shutdown[it] = msg->data;
     }
 }
-
-
-/*void resetCallback(const std_msgs::Bool::ConstPtr& msg) {
-    taking_commands = !msg->data;
-    resetting = msg->data;
-}*/
-
-
-/*
-sets zero position of the arm at the current position
-*/
-/*void set_zero_position() {
-    for (size_t it = 0; it < MOTOR_COUNT; it++) {
-        offset[it] += current_pos_rad[it];
-    }
-}*/
-
-
-/*void setZeroCallback(const std_msgs::Bool::ConstPtr& msg) {
-    set_zero_position();
-}*/
 
 
 void stateCommandCallback(const sensor_msgs::JointState::ConstPtr& msg) {
@@ -281,57 +260,12 @@ void stop(vector<xcontrol::Epos4Extended*> chain) {
 }
 
 
-/*double petit(size_t it, double distance) {
-    static const double critical_angle[MAX_MOTOR_COUNT] = {0.087, 0.087, 10.0, 0.087, 0.087, 0.087, 0.087};
-    distance = abs(distance);
-    double speed = 0.5;
-    if (distance > critical_angle[it]) return speed;
-    double k = speed/critical_angle[it];
-    return distance*k;
-}*/
-
-
-/*
-updates target positions and velocities in order to lead the motor to its home (zero) position
-*/
-/*void reset_position(vector<xcontrol::Epos4Extended*> chain) {
-    last_command_time = chrono::steady_clock::now();
-    for (size_t it=0; it<chain.size(); ++it) {
-        if (chain[it]->get_has_motor()) {
-            switch (control_mode) {
-                case Epos4::position_CSP:
-                    // TODO:
-                    break;
-
-                case Epos4::velocity_CSV:
-                    if ((current_pos[it] > -security_angle(target_vel[it], it) && target_vel[it] > 0) || (current_pos[it] < security_angle(target_vel[it], it) && target_vel[it] < 0)) {
-                        target_vel[it] = 0;
-                        cout << "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ" << endl;
-                    }
-                    else {
-                        cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl;
-                        double dir = 1.0;
-                        double distance = current_pos[it];
-                        if (current_pos[it] > 0) dir = -1.0;
-                        target_vel[it] = dir*petit(it, distance)*max_velocity[it]*reduction[it];
-                        cout << "IIIIIIIIIIII" << target_vel[it] << "IIIIIIIIIIIIIIIII" << endl;
-                    }
-                    break;
-
-                case Epos4::profile_position_PPM:
-                    // TODO:
-                    break; 
-            }
-        }
-    }
-    cout << "IIIIIIIIIIII" << target_vel[0] << "IIIIIIIIIIIIIIIII" << endl;
-}*/
-
-
 void account_for_home_loss(vector<xcontrol::Epos4Extended*> chain) {
     double max_jump_treshold;
     for (size_t it=0; it<chain.size(); ++it) {
-        max_jump_treshold = (it < 7 ? full_circle[it]/4 : 10000);
+        if (it < 6) max_jump_treshold = full_circle[it]/4;
+        else max_jump_treshold = 100000;
+        //max_jump_treshold = (it < 7 ? full_circle[it]/4 : 10000);
         if (fabs(previous_pos_qc[it]-current_pos_qc[it]) > max_jump_treshold) {
             ROS_ERROR_STREAM("Joint " << it+1 << " jumped from " << previous_pos_qc[it] << " qc to " << current_pos_qc[it]);
             must_shutdown[it] = true;
@@ -471,7 +405,7 @@ void enable_op(vector<xcontrol::Epos4Extended*> chain) {
 
 int main(int argc, char **argv) {
 
-    std::string network_interface_name("eth0");
+    std::string network_interface_name("eth3");
     ros::init(argc, argv, "hd_controller_motors");
     ros::NodeHandle n;
     ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
