@@ -31,7 +31,7 @@ using namespace ethercatcpp;
 using namespace pid;
 //using namespace xcontrol;
 
-#define MOTOR_COUNT 7
+int MOTOR_COUNT = 3;
 #define MAX_MOTOR_COUNT 8
 #define PRINT_STATE true
 #define QC_SPEED_CONVERSION 4000
@@ -51,7 +51,7 @@ double current_pos_qc[MAX_MOTOR_COUNT] = {0};
 double previous_pos_qc[MAX_MOTOR_COUNT] = {0};
 double target_pos[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0};
 double target_vel[MAX_MOTOR_COUNT] = {0,0};
-double max_current[MAX_MOTOR_COUNT] = {0.155};
+bool must_shutdown[MAX_MOTOR_COUNT] = {0};
 Epos4::control_mode_t control_mode(Epos4::velocity_CSV);
 
 //double offset[MAX_MOTOR_COUNT] = {0};   // TODO: makes the max/min angles unusable -> correct that
@@ -157,6 +157,13 @@ void manualCommandCallback(const std_msgs::Float32MultiArray::ConstPtr& msg) {
 
     if (!empty_command) {
         control_mode = direct_control_mode;
+    }
+}
+
+
+void shutdownCallback(const std_msgs::Bool::ConstPtr& msg) {
+    for (size_t it=0; it<MOTOR_COUNT; ++it) {
+        must_shutdown[it] = msg->data;
     }
 }
 
@@ -321,9 +328,14 @@ updates target positions and velocities in order to lead the motor to its home (
 }*/
 
 
-void account_for_joint2_home_loss(vector<xcontrol::Epos4Extended*> chain) {
-    if (fabs(previous_pos_qc[1]-current_pos_qc[1]) > 20000) {
-        ROS_ERROR_STREAM("Joint 2 jumped from " << previous_pos_qc[1] << " qc to " << current_pos_qc[1]);
+void account_for_home_loss(vector<xcontrol::Epos4Extended*> chain) {
+    double max_jump_treshold;
+    for (size_t it=0; it<chain.size(); ++it) {
+        max_jump_treshold = (it < 7 ? full_circle[it]/4 : 10000);
+        if (fabs(previous_pos_qc[it]-current_pos_qc[it]) > max_jump_treshold) {
+            ROS_ERROR_STREAM("Joint " << it+1 << " jumped from " << previous_pos_qc[it] << " qc to " << current_pos_qc[it]);
+            must_shutdown[it] = true;
+        }
     }
 
     int32_t pos = chain[1]->get_Actual_Position_In_Qc();
@@ -371,7 +383,7 @@ void set_goals(vector<xcontrol::Epos4Extended*> chain) {
         }
     }
     
-    account_for_joint2_home_loss(chain);
+    account_for_home_loss(chain);
 
     enforce_limits(chain);
 
@@ -440,13 +452,31 @@ void definitive_stop(vector<xcontrol::Epos4Extended*> chain, size_t it) {
 }
 
 
+void enable_op(vector<xcontrol::Epos4Extended*> chain) {
+    for (size_t it=0; it<chain.size(); ++it) {
+        if (must_shutdown[it]) {
+            chain[it]->set_Device_State_Control_Word(Epos4::shutdown);
+        }
+        else {
+            if (chain[it]->get_Device_State_In_String() == "Switch on disable") {
+                chain[it]->set_Device_State_Control_Word(Epos4::shutdown);
+            }
+            if (chain[it]->get_Device_State_In_String() == "Ready to switch ON") {
+                chain[it]->set_Device_State_Control_Word(Epos4::switch_on_and_enable_op);
+            }
+        }
+    }
+}
+
+
 int main(int argc, char **argv) {
 
-    std::string network_interface_name("eth2");
+    std::string network_interface_name("eth0");
     ros::init(argc, argv, "hd_controller_motors");
     ros::NodeHandle n;
     ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
     ros::Subscriber man_cmd_sub = n.subscribe<std_msgs::Float32MultiArray>("/arm_control/manual_direct_cmd", 10, manualCommandCallback);
+    ros::Subscriber shutdown_sub = n.subscribe<std_msgs::Bool>("/arm_control/set_shutdown", 10, shutdownCallback);
     //ros::Subscriber reset_sub = n.subscribe<std_msgs::Bool>("/arm_control/reset_arm_pos", 10, resetCallback);
     //ros::Subscriber set_zero_sub = n.subscribe<std_msgs::Bool>("/arm_control/set_zero_arm_pos", 10, setZeroCallback);
     ros::Subscriber state_cmd_sub = n.subscribe<sensor_msgs::JointState>("/arm_control/joint_cmd", 10, stateCommandCallback);
@@ -465,6 +495,8 @@ int main(int argc, char **argv) {
         control_mode = Epos4::velocity_CSV;
     else 
         return EXIT_FAILURE;
+    
+    nh.param<int>("motor_count", MOTOR_COUNT, 7);
 
 
 
@@ -482,19 +514,68 @@ restart :
     //xcontrol::OneAxisSlot epos_2(true);
     //xcontrol::ThreeAxisSlot epos_2(true), epos_3(true), epos_4(true);
     //xcontrol::ThreeAxisSlot epos_5(true), epos_6(true), epos_7(true);
-    vector<xcontrol::Epos4Extended*> chain = {&epos_1, &epos_2, &empty, &epos_3, &epos_4, &epos_6, &epos_7, &epos_5};
+
+    vector<xcontrol::Epos4Extended*> chain;    
+    switch (MOTOR_COUNT) {
+        case 1:
+            chain.push_back(&epos_1);
+            break;
+        case 2:
+            chain.push_back(&epos_1);
+            chain.push_back(&epos_2);
+            break;
+        case 3:
+            chain.push_back(&epos_1);
+            chain.push_back(&epos_2);
+            chain.push_back(&empty);
+            break;
+        case 4:
+            chain.push_back(&epos_1);
+            chain.push_back(&epos_2);
+            chain.push_back(&empty);
+            chain.push_back(&epos_3);
+            break;
+        case 5:
+            chain.push_back(&epos_1);
+            chain.push_back(&epos_2);
+            chain.push_back(&empty);
+            chain.push_back(&epos_3);
+            chain.push_back(&epos_4);
+            break;
+        case 6:
+            chain.push_back(&epos_1);
+            chain.push_back(&epos_2);
+            chain.push_back(&empty);
+            chain.push_back(&epos_3);
+            chain.push_back(&epos_4);
+            chain.push_back(&epos_6);
+            break;
+        case 7:
+            chain.push_back(&epos_1);
+            chain.push_back(&epos_2);
+            chain.push_back(&empty);
+            chain.push_back(&epos_3);
+            chain.push_back(&epos_4);
+            chain.push_back(&epos_6);
+            chain.push_back(&epos_7);
+            chain.push_back(&epos_5);
+            break;
+    }
+    //vector<xcontrol::Epos4Extended*> chain = {&epos_1, &epos_2, &empty, &epos_3, &epos_4, &epos_6, &epos_7, &epos_5};
     //vector<xcontrol::Epos4Extended*> chain = {&epos_1, &epos_2, &empty, &epos_3, &epos_4, &epos_6};
 
     xcontrol::NetworkMaster ethercat_master(chain, network_interface_name);
 
-	std::vector<xcontrol::Epos4Extended*> temp;
-	for (size_t i = 0; i < chain.size(); i++) {
-        temp.push_back(chain[i]);
+    if (MOTOR_COUNT == 7) {
+        std::vector<xcontrol::Epos4Extended*> temp;
+        for (size_t i = 0; i < chain.size(); i++) {
+            temp.push_back(chain[i]);
+        }
+        for (size_t i = 0; i < order.size(); i++) {
+            chain[order[i]-1] = temp[i];
+        }
+        chain.pop_back();   // pop empty motor slot
     }
-	for (size_t i = 0; i < order.size(); i++) {
-        chain[order[i]-1] = temp[i];
-    }
-    chain.pop_back();   // pop empty motor slot
 
     ethercat_master.init_network();
 
@@ -517,14 +598,17 @@ restart :
     ROS_INFO("Ethercat network online");
 
     //sleep(1);
-    auto t = chrono::steady_clock::now();
+    //auto t = chrono::steady_clock::now();
+
+    ros::Time t = ros::Time::now();
 
     while (ros::ok()){
         auto now = chrono::steady_clock::now();
         // check device status
         
         //epos_1.switch_to_enable_op();
-        ethercat_master.switch_motors_to_enable_op();
+        //ethercat_master.switch_motors_to_enable_op();
+        enable_op(chain);
 
         /*if (is_scanning) {
             for (size_t it=0; it<chain.size(); ++it) {
@@ -546,27 +630,30 @@ restart :
                     current_pos_rad[it] = chain[it]->get_Actual_Position_In_Qc()/full_circle[it]*2*PI;
                     if (is_scanning) {
                         target_pos[it] = current_pos_qc[it];
+                        previous_pos_qc[it] = current_pos_qc[it];
                     }
 
-                    if (!((chain[it]->get_Device_State_In_String() == "Operation enable") ||
-                         (chain[it]->get_Device_State_In_String() == "Ready to switch ON")))
-                    {
-                        ROS_WARN_STREAM("Motor " << it);
-                        ROS_WARN_STREAM("State device : " << chain[it]->get_Device_State_In_String());
-                        ROS_WARN_STREAM("Control mode = " << chain[it]->get_Control_Mode_In_String());
-                        ROS_WARN_STREAM("Actual position : " << std::dec << current_pos_qc[it] << " rad");
-                        ROS_WARN_STREAM("Actual velocity : " << std::dec << chain[it]->get_Actual_Average_Velocity_In_Rads()/reduction[it] << " rad/s");
-                        ROS_WARN_STREAM("Actual current value = " << chain[it]->get_Actual_Current_In_A() << "A" << "\n");
+                    if (PRINT_STATE && ros::Time::now() - last_print_time > ros::Duration(0.1)) {
+                        if (!((chain[it]->get_Device_State_In_String() == "Operation enable") ||
+                            (chain[it]->get_Device_State_In_String() == "Ready to switch ON")))
+                        {
+                            ROS_WARN_STREAM("Motor " << it);
+                            ROS_WARN_STREAM("State device : " << chain[it]->get_Device_State_In_String());
+                            ROS_WARN_STREAM("Control mode = " << chain[it]->get_Control_Mode_In_String());
+                            ROS_WARN_STREAM("Actual position : " << std::dec << current_pos_qc[it] << " rad");
+                            ROS_WARN_STREAM("Actual velocity : " << std::dec << chain[it]->get_Actual_Average_Velocity_In_Rads()/reduction[it] << " rad/s");
+                            ROS_WARN_STREAM("Actual current value = " << chain[it]->get_Actual_Current_In_A() << "A" << "\n");
 
-                    }
-                    else if (PRINT_STATE && ros::Time::now() - last_print_time > ros::Duration(0.1)) {
-                        ROS_DEBUG_STREAM("Motor " << it);
-                        ROS_DEBUG_STREAM("State device : " << chain[it]->get_Device_State_In_String());
-                        ROS_DEBUG_STREAM("Control mode = " << chain[it]->get_Control_Mode_In_String());
-                        ROS_DEBUG_STREAM("Actual position : " << std::dec << current_pos_qc[it] << " rad");
-                        ROS_DEBUG_STREAM("Actual velocity : " << std::dec << chain[it]->get_Actual_Average_Velocity_In_Rads()/reduction[it] << " rad/s");
-                        ROS_DEBUG_STREAM("Actual current value = " << chain[it]->get_Actual_Current_In_A() << "A" << "\n");
+                        }
+                        else {
+                            ROS_DEBUG_STREAM("Motor " << it);
+                            ROS_DEBUG_STREAM("State device : " << chain[it]->get_Device_State_In_String());
+                            ROS_DEBUG_STREAM("Control mode = " << chain[it]->get_Control_Mode_In_String());
+                            ROS_DEBUG_STREAM("Actual position : " << std::dec << current_pos_qc[it] << " rad");
+                            ROS_DEBUG_STREAM("Actual velocity : " << std::dec << chain[it]->get_Actual_Average_Velocity_In_Rads()/reduction[it] << " rad/s");
+                            ROS_DEBUG_STREAM("Actual current value = " << chain[it]->get_Actual_Current_In_A() << "A" << "\n");
 
+                        }
                     }
                     if (reset_faults && (chain[it]->get_Device_State_In_String() == "Fault")) {
                         control_mode = Epos4::velocity_CSV;
@@ -601,8 +688,8 @@ restart :
             //sim_msg.position[it] = chain[it]->get_Actual_Position_In_Qc()/reduction[it]*2*PI/ROT_IN_QC;
             //sim_msg.velocity[it] = chain[it]->get_Actual_Velocity_In_Rads()/reduction[it];
         }
-        msg.position[6] = 0;
-        msg.velocity[6] = 0;
+        //msg.position[6] = 0;
+        //msg.velocity[6] = 0;
         msg.position[1] -= joint2_offset/full_circle[1]*2*PI*rotation_dir_for_moveit[1];
         if (chain.size() < 6) {
             // populate the message with zeros if less than 6 actual motors
