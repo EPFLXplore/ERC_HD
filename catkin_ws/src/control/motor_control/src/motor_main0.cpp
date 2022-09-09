@@ -68,12 +68,12 @@ static const double command_expiration = 200;
 static const int period = 25;
 static const float max_angle[MAX_MOTOR_COUNT] = {9.77, 2.3, 411, 9.63, 7.26, INF, 0.395, INF};
 static const float min_angle[MAX_MOTOR_COUNT] = {-9.6, -1.393, -259, -9.54, -0.79, -INF, -0.14, -INF};
-static const double min_qc[MAX_MOTOR_COUNT] = {-160000, -65000, -850, -64536, -100000, -2500, -10000000000};
+static const double min_qc[MAX_MOTOR_COUNT] = {-160000, -650000, -850, -64536, -100000, -2500, -10000000000};
 static const double max_qc[MAX_MOTOR_COUNT] = {160000, 40000, 720, 64536, 120000, 2800, 10000000000};
 static const double max_velocity[MAX_MOTOR_COUNT] = {0.5, 0.5, 200, 5, 6, 12, 1, 0};    // rotations per minute
 //static const double reduction[MAX_MOTOR_COUNT] = {2*231, 480*16, 676.0/49.0, 2*439, 2*439, 2*231, 1*16*700, 0};
 static const double reduction[MAX_MOTOR_COUNT] = {1000, 200, 0.5, 50, 50*1.5, 50*1.5, 10000, 100};
-static const double full_circle[MAX_MOTOR_COUNT] = {2<<17, 2<<17, 2<<12, 2<<17, 2<<18, 2<<12, 1/2*PI};
+static const double full_circle[MAX_MOTOR_COUNT] = {2<<17, 2<<17, 2<<12, 2<<17, 2<<18, 2<<12, 1/2.0*PI};
 static const double rotation_dir_for_moveit[MAX_MOTOR_COUNT] = {1, -1, -1, 1, 1, -1, 1};
 static const double security_angle_coef[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
 static const vector<int> order = {1, 2, 8, 3, 4, 5, 6, 7};
@@ -282,9 +282,7 @@ void stop(vector<xcontrol::Epos4Extended*> chain) {
 void account_for_home_loss(vector<xcontrol::Epos4Extended*> chain) {
     double max_jump_treshold;
     for (size_t it=0; it<chain.size(); ++it) {
-        if (it < 6) max_jump_treshold = full_circle[it]/4;
-        else max_jump_treshold = 100000;
-        //max_jump_treshold = (it < 7 ? full_circle[it]/4 : 10000);
+        max_jump_treshold = (it < 6 ? full_circle[it]/4 : 10000);
         if (fabs(previous_pos_qc[it]-current_pos_qc[it]) > max_jump_treshold) {
             ROS_ERROR_STREAM("Joint " << it+1 << " jumped from " << previous_pos_qc[it] << " qc to " << current_pos_qc[it]);
             must_shutdown[it] = true;
@@ -386,7 +384,7 @@ void set_goals(vector<xcontrol::Epos4Extended*> chain) {
     }
 }
 
- 
+
 void definitive_stop(vector<xcontrol::Epos4Extended*> chain) {
     taking_commands = false;
     stop(chain);
@@ -407,7 +405,7 @@ void definitive_stop(vector<xcontrol::Epos4Extended*> chain, size_t it) {
 
 void enable_op(vector<xcontrol::Epos4Extended*> chain) {
     for (size_t it=0; it<chain.size(); ++it) {
-        if (0 && must_shutdown[it]) {
+        if (it == 1 && must_shutdown[it]) {
             chain[it]->set_Device_State_Control_Word(Epos4::shutdown);
         }
         else {
@@ -424,7 +422,7 @@ void enable_op(vector<xcontrol::Epos4Extended*> chain) {
 
 int main(int argc, char **argv) {
 
-    std::string network_interface_name("eth2");
+    std::string network_interface_name("eth3");
     ros::init(argc, argv, "hd_controller_motors");
     ros::NodeHandle n;
     ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
@@ -450,6 +448,19 @@ int main(int argc, char **argv) {
     else 
         return EXIT_FAILURE;
     
+    int s;
+    nh.param<int>("logger_level", s, 1);
+    switch (s) {
+        case 1:
+            ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
+            break;
+        case 2:
+            ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Info);
+            break;
+        case 3:
+            ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Warn);
+            break;
+    }
     nh.param<int>("motor_count", MOTOR_COUNT, 7);
 
 
