@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include "std_msgs/Int16.h"
+#include "std_msgs/Bool.h"
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 
@@ -30,11 +31,12 @@ static bool show_input_image(1); //for showing the images directly on the jetson
 static bool show_output_image(1);//need to turn it on to activate the corresponding ros topic
 static bool show_depth_image(0);
 #define SAMPLES 30
-#define TAG_SIZE 0.044f
+#define TAG_SIZE 0.05f
+#define  AV_LIGHTS
 
 
 ////////////////////// vectors required for AR tag detection ///////////////////////////////////
-cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_7X7_250);
+cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_ARUCO_ORIGINAL);
 static cv::Mat cameraMatrix ;
 static cv::Mat distCoeffs ;
 static vector<int> ids;
@@ -59,11 +61,13 @@ int main(int argc, char **argv) try {
     image_transport::ImageTransport it(n);
     image_transport::Publisher input_image_pub = it.advertise("intel_D405/color_image", 1);
     image_transport::Publisher output_image_pub =it.advertise("intel_D405/color_image_detection",1);
+    #ifdef AV_LIGHTS 
+    ros::Publisher auto_lights=n.advertise<std_msgs::Bool>("nav_led",1);
     //ros::spin();//this is needed for the calbacks to be actually called its an infinite loop...
-
+    #endif
     //////////// control panel initialisation ////////////
     cntrl_pnl::ControlPanel my_panel;
-    cntrl_pnl::setup_control_panel(my_panel);
+    cntrl_pnl::setup_control_panel(my_panel,11,12,13,14);
     
     ////////// RealSense pipeline initialisation /////////
     //rs2::context ctx;
@@ -80,7 +84,11 @@ int main(int argc, char **argv) try {
     //pipe.start(); // Start streaming with default recommended configuration//maybe should try to optimze the start parameters for bandwidth gains and other stuff when integratingg
     rs2::align align_to_color(RS2_STREAM_COLOR);//expensive keep it outside the loop
 
-
+    #ifdef AV_LIGHTS
+    std_msgs::Bool auto_lights_state;
+    auto_lights_state.data=0;
+    auto_lights.publish(auto_lights_state);
+    #endif
     while (ros::ok()){ // need the loop to keep getting new frames replace the condition with something from the commands i get from the fsm maybe I should add an idle state to this{
         ///////////////get new depth and color frames and align them///////////////////////////
         rs2::frameset data = pipe.wait_for_frames(); // Wait for next set of frames from the camera
@@ -109,25 +117,23 @@ int main(int argc, char **argv) try {
         
         cv::Mat image = frame_to_mat(color);  //using the cv helpers to convert an rs2 frame to a cv mat
         if(show_input_image){
-            imshow("input feed",image);
-            waitKey(1);
+           // imshow("input feed",image);
+            //waitKey(1);
         
        
-        ////////////converion of cv mat to ros image msg and publishig the video feed on the ros network ///////////////
-        //Point pt1(0,0); //contours[k][0];
-        //Point pt2(400,400); //contours[k][2];
-        //rectangle(image,pt1,pt2,Scalar(255,0,0),2);
-        sensor_msgs::ImagePtr input_image_msg;
-        input_image_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8",image).toImageMsg();
-        input_image_pub.publish(input_image_msg);
-        //cv::waitKey(1);
-        //ros::spinOnce();  //not sure cuz there's another one
+            ////////////converion of cv mat to ros image msg and publishig the video feed on the ros network ///////////////
+            //Point pt1(0,0); //contours[k][0];
+            //Point pt2(400,400); //contours[k][2];
+            //rectangle(image,pt1,pt2,Scalar(255,0,0),2);
+            sensor_msgs::ImagePtr input_image_msg;
+            input_image_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8",image).toImageMsg();
+            input_image_pub.publish(input_image_msg);
+            //cv::waitKey(1);
+            //ros::spinOnce();  //not sure cuz there's another one
         }
        
        
         //find_plaque(image,depth,intrinsics);
-       
-
        ////////////////find AR tags ///////////////////////////
         if (get_command()!=-1){
             //apply filters on image to enhance edges and reduce noise ///
@@ -163,6 +169,10 @@ int main(int argc, char **argv) try {
                         objects.detected_objects.push_back(main_switch);
                         //cv::aruco::drawDetectedMarkers(image,corners,ids);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
                 if (get_command()==0 or get_command()==2){
                     vision_no_ros::panel_object switch_1;
@@ -172,6 +182,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(switch_1);
                         objects.detected_objects.push_back(switch_1);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==3){
@@ -182,6 +196,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(switch_2);
                         objects.detected_objects.push_back(switch_2);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==4){
@@ -192,6 +210,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(switch_3);
                         objects.detected_objects.push_back(switch_3);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==5){
@@ -202,6 +224,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(switch_4);
                         objects.detected_objects.push_back(switch_4);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==6){
@@ -212,6 +238,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(switch_5);
                         objects.detected_objects.push_back(switch_5);
                     }
+                   #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==7){
@@ -222,6 +252,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(switch_6);
                         objects.detected_objects.push_back(switch_6);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==8){
@@ -232,6 +266,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(switch_7);
                         objects.detected_objects.push_back(switch_7);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==9){
@@ -242,6 +280,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(switch_8);
                         objects.detected_objects.push_back(switch_8);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==10){
@@ -252,6 +294,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(switch_9);
                         objects.detected_objects.push_back(switch_9);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 //// panel B1
@@ -264,6 +310,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(button);
                         objects.detected_objects.push_back(button);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==12){
@@ -274,6 +324,10 @@ int main(int argc, char **argv) try {
                         offset_to_voltmeter(outlet);
                         objects.detected_objects.push_back(outlet);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 if (get_command()==0 or get_command()==13){
@@ -284,6 +338,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(emagLock);
                         objects.detected_objects.push_back(emagLock);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 //// panel B2
@@ -296,6 +354,10 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(ethernet);
                         objects.detected_objects.push_back(ethernet);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
                 }
 
                 //////////////////// send AR tag positions and corner limits//////////////////
@@ -308,6 +370,15 @@ int main(int argc, char **argv) try {
                         offset_to_fingers(artag_panelA);
                         objects.detected_objects.push_back(artag_panelA);
                     }
+                    #ifdef AV_LIGHTS
+                    auto_lights_state.data=1;
+                    auto_lights.publish(auto_lights_state);
+                    #endif
+                }
+                
+
+                if (get_command()==0 or get_command()==16){
+                    find_plaque(image,depth,intrinsics);
                 }
                 /*
                 if (get_command()==0 or get_command()==16){
@@ -355,7 +426,8 @@ int main(int argc, char **argv) try {
             }else {
                 cout<< "no visible AR tags" <<endl; // no ar tags are visible call the blind functions
             }
-        }ros::spinOnce(); //calls all the callbacks waiting to be called at this time so its needed to use any subscriber callback function
+        }
+        ros::spinOnce(); //calls all the callbacks waiting to be called at this time so its needed to use any subscriber callback function
         //close everything (but then how do you reopen )???
     }
     return EXIT_SUCCESS;

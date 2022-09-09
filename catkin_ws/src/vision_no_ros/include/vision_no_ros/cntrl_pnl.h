@@ -66,7 +66,7 @@ namespace cntrl_pnl {
 
     };
 
-    void setup_control_panel(ControlPanel& control_panel) {
+    void setup_control_panel(ControlPanel& control_panel,int artag_1_id,int artag_2_id,int artag_3_id,int artag_4_id) { //in order, panel A, panel left top, panel left bottom, panel right
 
     // Setup of Panel A
 
@@ -77,7 +77,7 @@ namespace cntrl_pnl {
         PNLA.artg1.pos.x_coor= -Dist2;   //modified panel one for new rules
         PNLA.artg1.pos.y_coor= Dist1;    
         PNLA.artg1.width=Wdth1;
-        PNLA.artg1.id = 0;//this should be 2              // need to put the right Id's!! maybe make a setup function with a camera so we can create the panel with just a picture
+        PNLA.artg1.id = artag_1_id;//this should be 2              // need to put the right Id's!! maybe make a setup function with a camera so we can create the panel with just a picture
  
         /*//this Ar tag no longer exists
         strcpy(PNLA.artg2.name, "ARTG2"); 
@@ -148,13 +148,13 @@ namespace cntrl_pnl {
         PNLB1.artg2.pos.x_coor= Dist3;
         PNLB1.artg2.pos.y_coor= Dist1/2.0;
         PNLB1.artg2.width=Wdth2;
-        PNLB1.artg2.id = 1;
+        PNLB1.artg2.id = artag_2_id;
 
         strcpy(PNLB1.artg3.name, "ARTG3");
         PNLB1.artg3.pos.x_coor= Dist3;
         PNLB1.artg3.pos.y_coor= -Dist1/2.0;
         PNLB1.artg3.width=Wdth2;
-        PNLB1.artg3.id = 0;
+        PNLB1.artg3.id = artag_3_id;
 
         strcpy(PNLB1.outlet.name, "OUTLET");
         PNLB1.outlet.pos.x_coor= 0;
@@ -184,7 +184,7 @@ namespace cntrl_pnl {
         PNLB2.artg4.pos.x_coor= 0;
         PNLB2.artg4.pos.y_coor= -Dist1/2.0;
         PNLB2.artg4.width=Wdth1;
-        PNLB2.artg4.id=3;
+        PNLB2.artg4.id=artag_4_id;
 
         strcpy(PNLB2.ethernet.name, "ETHRN");
         PNLB2.ethernet.pos.x_coor= 0;
