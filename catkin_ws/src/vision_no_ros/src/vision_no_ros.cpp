@@ -32,7 +32,8 @@ static bool show_output_image(1);//need to turn it on to activate the correspond
 static bool show_depth_image(0);
 #define SAMPLES 30
 #define TAG_SIZE 0.05f
-#define  AV_LIGHTS
+//#define  AV_LIGHTS
+#define PROBING_MODE
 
 
 ////////////////////// vectors required for AR tag detection ///////////////////////////////////
@@ -76,9 +77,14 @@ int main(int argc, char **argv) try {
     cfg.enable_device("123622270224"); //devices serial numbers , d405:123622270224, d415:135322062945
     //pipe.start(cfg);
     //setup custom streaming configuration 
-    
-    cfg.enable_stream(RS2_STREAM_DEPTH,1280, 720, RS2_FORMAT_Z16, 5); //this is the best resolutio for the depth stream to be accurate
+    #ifdef PROBING_MODE
+    cfg.enable_stream(RS2_STREAM_COLOR,424, 240, RS2_FORMAT_BGR8, 5);
     cfg.enable_stream(RS2_STREAM_COLOR,1280, 720, RS2_FORMAT_BGR8, 5);
+    #else
+    cfg.enable_stream(RS2_STREAM_DEPTH,1280, 720, RS2_FORMAT_Z16, 30); //this is the best resolutio for the depth stream to be accurate
+    cfg.enable_stream(RS2_STREAM_COLOR,1280, 720, RS2_FORMAT_BGR8, 30);
+    #endif
+    
     pipe.start(cfg);
     
     //pipe.start(); // Start streaming with default recommended configuration//maybe should try to optimze the start parameters for bandwidth gains and other stuff when integratingg
