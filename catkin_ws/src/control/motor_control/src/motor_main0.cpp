@@ -68,12 +68,12 @@ static const double command_expiration = 200;
 static const int period = 25;
 static const float max_angle[MAX_MOTOR_COUNT] = {9.77, 2.3, 411, 9.63, 7.26, INF, 0.395, INF};
 static const float min_angle[MAX_MOTOR_COUNT] = {-9.6, -1.393, -259, -9.54, -0.79, -INF, -0.14, -INF};
-static const double min_qc[MAX_MOTOR_COUNT] = {-(2<<18), -84000, -1250, -1000*((2<<18)/16), -160000, -((2<<13)/2), -10000000000};
-static const double max_qc[MAX_MOTOR_COUNT] = {2<<18, 60000, 1000, 1000*(2<<18)/16, 160000, (2<<13)/2, 10000000000};
-static const double max_velocity[MAX_MOTOR_COUNT] = {3, 0.5, 200, 5, 6, 12, 1, 0};    // rotations per minute
+static const double min_qc[MAX_MOTOR_COUNT] = {-160000, -650000, -850, -64536, -100000, -2500, -10000000000};
+static const double max_qc[MAX_MOTOR_COUNT] = {160000, 40000, 720, 64536, 120000, 2800, 10000000000};
+static const double max_velocity[MAX_MOTOR_COUNT] = {0.5, 0.5, 200, 5, 6, 12, 1, 0};    // rotations per minute
 //static const double reduction[MAX_MOTOR_COUNT] = {2*231, 480*16, 676.0/49.0, 2*439, 2*439, 2*231, 1*16*700, 0};
 static const double reduction[MAX_MOTOR_COUNT] = {1000, 200, 0.5, 50, 50*1.5, 50*1.5, 10000, 100};
-static const double full_circle[MAX_MOTOR_COUNT] = {2<<17, 2<<17, 2<<12, 2<<17, 2<<18, 2<<12, 1/2*PI};
+static const double full_circle[MAX_MOTOR_COUNT] = {2<<17, 2<<17, 2<<12, 2<<17, 2<<18, 2<<12, 1/2.0*PI};
 static const double rotation_dir_for_moveit[MAX_MOTOR_COUNT] = {1, -1, -1, 1, 1, -1, 1};
 static const double security_angle_coef[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
 static const vector<int> order = {1, 2, 8, 3, 4, 5, 6, 7};
@@ -113,7 +113,8 @@ void accountForJoint56Dependency() {
 
 
 vector<double> min_val_per_joint = {0.05, 0.05, 0.05, 0.05, 0.05, 0.05};
-double tau = 0.1;
+double tau = 0.05;
+double omega = 0.85;
 double startval = 0.11;
 
 double interpolate(double x, size_t it) {
@@ -121,8 +122,8 @@ double interpolate(double x, size_t it) {
     if (x < 0) { return -interpolate(-x, it); }
     //vector<double> point_x = {0, tau, tau + 0.00001, startval, 1};
     //vector<double> point_y = {0, 0, min_val_per_joint[it], min_val_per_joint[it], 1};
-    vector<double> point_x = {0, 1};
-    vector<double> point_y = {0, 1};
+    vector<double> point_x = {0, tau, tau+0.0001, omega, omega+0.0001, 1};
+    vector<double> point_y = {0, 0, 0.2, 0.2, 1, 1};
     for (size_t i=0; i < point_x.size(); i++) {
         if (x >= point_x[i] && x <= point_x[i+1]) {
             return point_y[i] + (point_y[i+1]-point_y[i]) * (x-point_x[i])/(point_x[i+1]-point_x[i]);
@@ -143,7 +144,8 @@ void manualCommandCallback(const std_msgs::Float32MultiArray::ConstPtr& msg) {
     bool empty_command = true;
     //cout << "received velocity   :";
     for (size_t it=0; it<MOTOR_COUNT; ++it) {
-        vel = interpolate(msg->data[it], it);    // between -1 and 1
+        vel = msg->data[it], it;    // between -1 and 1
+        if (it == 0) vel = interpolate(vel, it);
         empty_command = empty_command && (vel == 0);
         target_vel[it] = double(vel*max_velocity[it]*reduction[it]*2*PI/60);
         //cout << setw(9) << target_vel[it];
@@ -165,6 +167,23 @@ void shutdownCallback(const std_msgs::Bool::ConstPtr& msg) {
     for (size_t it=0; it<MOTOR_COUNT; ++it) {
         must_shutdown[it] = msg->data;
     }
+}
+
+
+void controlModeCallback(const std_msgs::Int32::ConstPtr& msg) {
+    if (msg->data == 1) {
+        for (size_t it=0; it < MOTOR_COUNT; ++it) {
+            target_pos[it] = 0;
+        }
+        control_mode = Epos4::position_CSP;
+    }
+    else if (msg->data == 2) {
+        for (size_t it=0; it < MOTOR_COUNT; ++it) {
+            target_vel[it] = 0;
+        }
+        control_mode = Epos4::velocity_CSV;
+    }
+
 }
 
 
@@ -263,9 +282,7 @@ void stop(vector<xcontrol::Epos4Extended*> chain) {
 void account_for_home_loss(vector<xcontrol::Epos4Extended*> chain) {
     double max_jump_treshold;
     for (size_t it=0; it<chain.size(); ++it) {
-        if (it < 6) max_jump_treshold = full_circle[it]/4;
-        else max_jump_treshold = 100000;
-        //max_jump_treshold = (it < 7 ? full_circle[it]/4 : 10000);
+        max_jump_treshold = (it < 6 ? full_circle[it]/4 : 10000);
         if (fabs(previous_pos_qc[it]-current_pos_qc[it]) > max_jump_treshold) {
             ROS_ERROR_STREAM("Joint " << it+1 << " jumped from " << previous_pos_qc[it] << " qc to " << current_pos_qc[it]);
             must_shutdown[it] = true;
@@ -367,7 +384,7 @@ void set_goals(vector<xcontrol::Epos4Extended*> chain) {
     }
 }
 
- 
+
 void definitive_stop(vector<xcontrol::Epos4Extended*> chain) {
     taking_commands = false;
     stop(chain);
@@ -388,7 +405,7 @@ void definitive_stop(vector<xcontrol::Epos4Extended*> chain, size_t it) {
 
 void enable_op(vector<xcontrol::Epos4Extended*> chain) {
     for (size_t it=0; it<chain.size(); ++it) {
-        if (must_shutdown[it]) {
+        if (it == 1 && must_shutdown[it]) {
             chain[it]->set_Device_State_Control_Word(Epos4::shutdown);
         }
         else {
@@ -411,6 +428,7 @@ int main(int argc, char **argv) {
     ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
     ros::Subscriber man_cmd_sub = n.subscribe<std_msgs::Float32MultiArray>("/arm_control/manual_direct_cmd", 10, manualCommandCallback);
     ros::Subscriber shutdown_sub = n.subscribe<std_msgs::Bool>("/arm_control/set_shutdown", 10, shutdownCallback);
+    ros::Subscriber control_mode_sub = n.subscribe<std_msgs::Int32>("/arm_control/set_control_mode", 10, controlModeCallback);
     //ros::Subscriber reset_sub = n.subscribe<std_msgs::Bool>("/arm_control/reset_arm_pos", 10, resetCallback);
     //ros::Subscriber set_zero_sub = n.subscribe<std_msgs::Bool>("/arm_control/set_zero_arm_pos", 10, setZeroCallback);
     ros::Subscriber state_cmd_sub = n.subscribe<sensor_msgs::JointState>("/arm_control/joint_cmd", 10, stateCommandCallback);
@@ -422,7 +440,7 @@ int main(int argc, char **argv) {
 
     int cm = 0;
     ros::NodeHandle nh("~");
-    nh.param<int>("control_mode", cm, 0);
+    nh.param<int>("control_mode", cm, 2);
     if (cm == 1)
         control_mode = Epos4::position_CSP;
     else if (cm == 2)
@@ -430,6 +448,19 @@ int main(int argc, char **argv) {
     else 
         return EXIT_FAILURE;
     
+    int s;
+    nh.param<int>("logger_level", s, 1);
+    switch (s) {
+        case 1:
+            ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
+            break;
+        case 2:
+            ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Info);
+            break;
+        case 3:
+            ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Warn);
+            break;
+    }
     nh.param<int>("motor_count", MOTOR_COUNT, 7);
 
 

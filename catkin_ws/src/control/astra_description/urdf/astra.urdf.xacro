@@ -349,7 +349,7 @@
 		<child link="link1"/>
 		<origin xyz="${base_link_attach_point}" />
 		<axis xyz="0 0 1"/>
-		<limit effort="10" velocity="0.2" lower="${(pi*-2)}" upper="${(pi*2)}"/>
+		<limit effort="10" velocity="0.2" lower="${(pi*-3/4)}" upper="${(pi*3/4)}"/>
 	</joint>
 
 	<!-- joint2 -->
@@ -376,7 +376,7 @@
 		<child link="link3"/>
 		<origin xyz="${link2_attach_point}" rpy="0 ${pi/2} 0" />
 		<axis xyz="0 1 0"/>
-		<limit effort="10" velocity="0.2" lower="-0.7" upper="0.6"/>
+		<limit effort="10" velocity="0.2" lower="-1.1" upper="1.3"/>
 	</joint>
 
 	<!-- joint4 -->
@@ -394,7 +394,7 @@
 		<child link="link5"/>
 		<origin xyz="${link4_attach_point}" />
 		<axis xyz="0 1 0"/>
-		<limit effort="10" velocity="0.2" lower="-1.9" upper="1.9"/>
+		<limit effort="10" velocity="0.2" lower="-2.3" upper="2.8"/>
 	</joint>
 
 	<!-- joint6 -->
@@ -403,7 +403,7 @@
 		<child link="gripper_base"/>
 		<origin xyz="${link5_attach_point}" />
 		<axis xyz="0 0 1"/>
-		<limit effort="10" velocity="0.2" lower="${-(pi)}" upper="${pi/2}"/>
+		<limit effort="10" velocity="0.2" lower="${-4.2}" upper="${3.8}"/>
 	</joint>
 
 	<!-- gripper_left_finger_joint -->
