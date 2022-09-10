@@ -394,7 +394,7 @@
 		<child link="link5"/>
 		<origin xyz="${link4_attach_point}" />
 		<axis xyz="0 1 0"/>
-		<limit effort="10" velocity="0.2" lower="-2.3" upper="2.8"/>
+		<limit effort="10" velocity="0.2" lower="-2.8" upper="2.3"/>
 	</joint>
 
 	<!-- joint6 -->

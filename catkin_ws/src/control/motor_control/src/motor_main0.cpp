@@ -74,7 +74,7 @@ static const double max_velocity[MAX_MOTOR_COUNT] = {0.5, 0.5, 200, 5, 6, 12, 1,
 //static const double reduction[MAX_MOTOR_COUNT] = {2*231, 480*16, 676.0/49.0, 2*439, 2*439, 2*231, 1*16*700, 0};
 static const double reduction[MAX_MOTOR_COUNT] = {1000, 200, 0.5, 50, 50*1.5, 50*1.5, 10000, 100};
 static const double full_circle[MAX_MOTOR_COUNT] = {2<<17, 2<<17, 2<<12, 2<<17, 2<<18, 2<<12, 1/2.0*PI};
-static const double rotation_dir_for_moveit[MAX_MOTOR_COUNT] = {1, -1, -1, 1, 1, -1, 1};
+static const double rotation_dir_for_moveit[MAX_MOTOR_COUNT] = {1, -1, -1, 1, -1, -1, 1};
 static const double security_angle_coef[MAX_MOTOR_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
 static const vector<int> order = {1, 2, 8, 3, 4, 5, 6, 7};
 
@@ -282,7 +282,7 @@ void stop(vector<xcontrol::Epos4Extended*> chain) {
 void account_for_home_loss(vector<xcontrol::Epos4Extended*> chain) {
     double max_jump_treshold;
     for (size_t it=0; it<chain.size(); ++it) {
-        max_jump_treshold = (it < 6 ? full_circle[it]/4 : 10000);
+        max_jump_treshold = (it < 6 ? full_circle[it]/4 : 100000);
         if (fabs(previous_pos_qc[it]-current_pos_qc[it]) > max_jump_treshold) {
             ROS_ERROR_STREAM("Joint " << it+1 << " jumped from " << previous_pos_qc[it] << " qc to " << current_pos_qc[it]);
             must_shutdown[it] = true;
