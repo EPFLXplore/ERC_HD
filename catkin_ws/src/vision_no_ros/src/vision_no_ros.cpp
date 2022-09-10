@@ -32,12 +32,17 @@ static bool show_output_image(1);//need to turn it on to activate the correspond
 static bool show_depth_image(0);
 #define SAMPLES 30
 #define TAG_SIZE 0.05f
-//#define  AV_LIGHTS
-#define PROBING_MODE
+#define  AV_LIGHTS
+//#define PROBING_MODE
+#define TESTING_PANEL
 
 
 ////////////////////// vectors required for AR tag detection ///////////////////////////////////
+#ifdef TESTING_PANEL
+cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_250);
+#else
 cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_ARUCO_ORIGINAL);
+#endif
 static cv::Mat cameraMatrix ;
 static cv::Mat distCoeffs ;
 static vector<int> ids;
@@ -68,8 +73,11 @@ int main(int argc, char **argv) try {
     #endif
     //////////// control panel initialisation ////////////
     cntrl_pnl::ControlPanel my_panel;
-    cntrl_pnl::setup_control_panel(my_panel,11,12,13,14);
-    
+    #ifdef TESTING_PANEL
+    cntrl_pnl::setup_control_panel(my_panel,2,1,0,3);
+    #else
+    cntrl_pnl::setup_control_panel(my_panel,11,14,13,15);
+    #endif
     ////////// RealSense pipeline initialisation /////////
     //rs2::context ctx;
     rs2::pipeline pipe;
@@ -78,11 +86,11 @@ int main(int argc, char **argv) try {
     //pipe.start(cfg);
     //setup custom streaming configuration 
     #ifdef PROBING_MODE
-    cfg.enable_stream(RS2_STREAM_COLOR,424, 240, RS2_FORMAT_BGR8, 5);
-    cfg.enable_stream(RS2_STREAM_COLOR,1280, 720, RS2_FORMAT_BGR8, 5);
-    #else
-    cfg.enable_stream(RS2_STREAM_DEPTH,1280, 720, RS2_FORMAT_Z16, 30); //this is the best resolutio for the depth stream to be accurate
+    cfg.enable_stream(RS2_STREAM_COLOR,424, 240, RS2_FORMAT_BGR8, 30);
     cfg.enable_stream(RS2_STREAM_COLOR,1280, 720, RS2_FORMAT_BGR8, 30);
+    #else
+    cfg.enable_stream(RS2_STREAM_DEPTH,1280, 720, RS2_FORMAT_Z16, 10); //this is the best resolutio for the depth stream to be accurate
+    cfg.enable_stream(RS2_STREAM_COLOR,1280, 720, RS2_FORMAT_BGR8, 10);
     #endif
     
     pipe.start(cfg);
@@ -432,6 +440,11 @@ int main(int argc, char **argv) try {
             }else {
                 cout<< "no visible AR tags" <<endl; // no ar tags are visible call the blind functions
             }
+        }else if (get_command()==-1){
+            #ifdef AV_LIGHTS
+            auto_lights_state.data=0;
+            auto_lights.publish(auto_lights_state);
+            #endif
         }
         ros::spinOnce(); //calls all the callbacks waiting to be called at this time so its needed to use any subscriber callback function
         //close everything (but then how do you reopen )???
