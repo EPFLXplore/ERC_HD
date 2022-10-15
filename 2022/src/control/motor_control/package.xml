@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>motor_control</name>
+  <version>0.0.0</version>
+  <description>The motor_control package</description>
+
+  <maintainer email="matthiasshuller92@gmail.com">Matthias Schuller</maintainer>
+
+
+  <license>TODO</license>
+
+
+
+
+
+  <build_depend>message_generation</build_depend>
+
+  <depend>message_runtime</depend>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msg</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>std_msg</build_export_depend>
+  <build_export_depend>message_generation</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msg</exec_depend>
+
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

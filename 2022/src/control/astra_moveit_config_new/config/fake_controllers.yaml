@@ -1,0 +1,18 @@
+controller_list:
+  - name: fake_astra_arm_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+  - name: fake_astra_gripper_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - joint6
+      - gripper_left_finger_joint
+initial:  # Define initial robot poses.
+  - group: astra_arm
+    pose: home
