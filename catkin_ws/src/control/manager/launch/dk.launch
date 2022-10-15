@@ -1,4 +1,0 @@
-<launch>
-    <node name="manager_node" pkg="manager" type="manager.py" />
-    <node name="motor_control" pkg="motor_control" type="motor_control" />
-</launch>
