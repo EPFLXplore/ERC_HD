@@ -1,0 +1,4 @@
+<launch>
+    <node name="trajectory_planner_node" pkg="task_execution" type="trajectory_planner.py" />
+    <node name="HD_control_task_executor" pkg="task_execution" type="task_executor.py" />
+</launch>

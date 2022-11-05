@@ -1,0 +1,1 @@
+panel_object[] detected_objects
