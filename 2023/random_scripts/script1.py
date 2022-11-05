@@ -5,6 +5,22 @@ import matplotlib.pyplot as plt
 
 import pyrealsense2 as rs
 
+def button_centers():
+    HORIZONTAL_SPACING = 84 # in mm 
+    VERTICAL_SPACING = 71 # in mm 
+
+    BUTTON_LAYOUT = (2,3)
+
+    button_centers = np.zeros((BUTTON_LAYOUT[0], BUTTON_LAYOUT[1], 3))
+
+    for i in range(BUTTON_LAYOUT[0]):
+        for j in range(BUTTON_LAYOUT[1]):
+            button_centers[i,j] = np.array([i*HORIZONTAL_SPACING, -j*VERTICAL_SPACING, 0])
+
+    button_centers = button_centers.reshape(-1, *button_centers.shape[-1:])
+
+    return (button_centers / 10).astype(np.float64)
+
 
 # Aruco Setup
 marker_dict_4 = aruco.Dictionary_get(aruco.DICT_4X4_100)
@@ -12,8 +28,13 @@ marker_dict_5 = aruco.Dictionary_get(aruco.DICT_5X5_100)
 
 param_markers = aruco.DetectorParameters_create()
 
-MARKER_REAL_SIZE = 5 #centimeters
-TARGET_POINT = np.array([[7., 0, 0]])
+MARKER_REAL_SIZE = 4.9 #centimeters
+
+
+
+# SWITCH_CENTERS = 
+
+TARGET_POINT = button_centers()#np.array([[7., 0, 0]])
 
 # RealSense Setup
 pipe = rs.pipeline()
@@ -80,8 +101,11 @@ while True:
             print(tVec[i])
 
             [image_points, jacobian] = cv.projectPoints(TARGET_POINT, rVec[i], tVec[i], cam_matrix, coeffs)
+            
+            print(f"jacobian {jacobian}")
 
-            cv.circle(frame, (int(image_points[0][0][0]),int(image_points[0][0][1])), 4, (0, 100, 255), 8)
+            for i in range(image_points.shape[0]):
+                cv.circle(frame, (int(image_points[i][0][0]),int(image_points[i][0][1])), 4, (0, 100, 255), 8)
             target_distance = depth_frame.get_distance(int(image_points[0][0][0]),int(image_points[0][0][1]))
             print("target distance in m:", target_distance)
 
