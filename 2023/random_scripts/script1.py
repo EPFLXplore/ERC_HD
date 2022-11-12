@@ -76,6 +76,8 @@ while True:
     gray_img = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     marker_corners, marker_IDs, rej = aruco.detectMarkers(gray_img, marker_dict_4, parameters=param_markers)
 
+
+
     if marker_corners:
 
         # get rotation and translation vectors
@@ -83,6 +85,9 @@ while True:
 
         total_markers = range(0, marker_IDs.size)
         for ids, corners, i in zip(marker_IDs, marker_corners, total_markers):
+            if ids != 2:
+                continue
+            
             cv.polylines(
                 frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
             )
@@ -94,6 +99,17 @@ while True:
             top_left = corners[1]  # .ravel()
             bottom_right = corners[2]  # .ravel()
             bottom_left = corners[3]  # .ravel()
+
+            cv.putText(
+                frame,
+                f"id: {ids[0]}",
+                top_right,
+                cv.FONT_HERSHEY_PLAIN,
+                1.3,
+                (200, 100, 0),
+                2,
+                cv.LINE_AA,
+            )
 
             # draw the pose of the marker
             point = cv.drawFrameAxes(frame, cam_matrix, coeffs, rVec[i], tVec[i], 4, 4)
@@ -115,4 +131,10 @@ while True:
     cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
     cv.imshow('RealSense Depth', depth)
 
-    cv.waitKey(1)
+
+    if cv.waitKey(1) & 0xFF == ord('q'):
+        break
+    
+    
+
+cv.destroyAllWindows()
