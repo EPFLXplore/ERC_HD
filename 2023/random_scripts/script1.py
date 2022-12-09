@@ -5,8 +5,19 @@ import matplotlib.pyplot as plt
 
 import pyrealsense2 as rs
 
-def button_centers():
-    HORIZONTAL_SPACING = 84 # in mm 
+
+def button_centers_0():
+    HORIZONTAL_SPACING = 62
+    return (np.array([-HORIZONTAL_SPACING, 0., 0.]) / 10).astype(np.float64)
+
+
+def button_centers_1():
+    HORIZONTAL_SPACING = 62
+    return (np.array([-HORIZONTAL_SPACING, 0., 0.]) / 10).astype(np.float64)
+
+
+def button_centers_2():
+    HORIZONTAL_SPACING = 85 # in mm 
     VERTICAL_SPACING = 71 # in mm 
 
     BUTTON_LAYOUT = (2,3)
@@ -18,9 +29,24 @@ def button_centers():
             button_centers[i,j] = np.array([i*HORIZONTAL_SPACING, -j*VERTICAL_SPACING, 0])
 
     button_centers = button_centers.reshape(-1, *button_centers.shape[-1:])
-
+    print(button_centers.shape)
     return (button_centers / 10).astype(np.float64)
 
+def button_centers_3():
+    VERTICAL_SPACING = 71
+    return (np.array([-0, VERTICAL_SPACING, 0.]) / 10).astype(np.float64)
+
+
+
+def select_tag(key, current):
+    OFFSET = 48
+    NB_AR_TAGS = 4
+    tags_set = set([ord(str(x)) for x in range(NB_AR_TAGS)])
+
+    if key in tags_set:
+        return int(key) - OFFSET
+    else:
+        return current
 
 # Aruco Setup
 marker_dict_4 = aruco.Dictionary_get(aruco.DICT_4X4_100)
@@ -28,17 +54,17 @@ marker_dict_5 = aruco.Dictionary_get(aruco.DICT_5X5_100)
 
 param_markers = aruco.DetectorParameters_create()
 
-MARKER_REAL_SIZE = 4.9 #centimeters
+MARKER_REAL_SIZE = [3.2, 3.2, 4.9, 4.9] #centimeters
 
 
 
 # SWITCH_CENTERS = 
 
-TARGET_POINT = button_centers()#np.array([[7., 0, 0]])
+TARGET_POINT = [button_centers_0(), button_centers_1(), button_centers_2(), button_centers_3() ]#np.array([[7., 0, 0]])
 
 # RealSense Setup
 pipe = rs.pipeline()
-cfg = rs.config()
+cfg = rs.config( )  
 
 profile = pipe.start()
 
@@ -60,6 +86,10 @@ cam_matrix = np.array([[fx, 0, ppx],
 print(cam_matrix)
 
 # Skip first 5 frames
+so_far = []
+
+selected_tag = 2
+
 for _ in range(5):
     pipe.wait_for_frames()
 
@@ -81,60 +111,70 @@ while True:
     if marker_corners:
 
         # get rotation and translation vectors
-        rVec, tVec, _ = aruco.estimatePoseSingleMarkers(marker_corners, MARKER_REAL_SIZE, cam_matrix, coeffs)
+        rVec, tVec, _ = aruco.estimatePoseSingleMarkers(marker_corners, MARKER_REAL_SIZE[selected_tag], cam_matrix, coeffs)
 
         total_markers = range(0, marker_IDs.size)
         for ids, corners, i in zip(marker_IDs, marker_corners, total_markers):
-            if ids != 2:
-                continue
+            if ids == selected_tag:
+            #     continue
             
-            cv.polylines(
-                frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
-            )
+                cv.polylines(
+                    frame, [corners.astype(np.int32)], True, (0, 255, 255), 4, cv.LINE_AA
+                )
 
-            corners = corners.reshape(4, 2)
-            corners = corners.astype(int)
+                corners = corners.reshape(4, 2)
+                corners = corners.astype(int)
 
-            top_right = corners[0]  # .ravel()
-            top_left = corners[1]  # .ravel()
-            bottom_right = corners[2]  # .ravel()
-            bottom_left = corners[3]  # .ravel()
+                top_right = corners[0]  # .ravel()
+                top_left = corners[1]  # .ravel()
+                bottom_right = corners[2]  # .ravel()
+                bottom_left = corners[3]  # .ravel()
 
-            cv.putText(
-                frame,
-                f"id: {ids[0]}",
-                top_right,
-                cv.FONT_HERSHEY_PLAIN,
-                1.3,
-                (200, 100, 0),
-                2,
-                cv.LINE_AA,
-            )
+                cv.putText(
+                    frame,
+                    f"id: {ids[0]}",
+                    top_right,
+                    cv.FONT_HERSHEY_PLAIN,
+                    1.3,
+                    (200, 100, 0),
+                    2,
+                    cv.LINE_AA,
+                )
 
-            # draw the pose of the marker
-            point = cv.drawFrameAxes(frame, cam_matrix, coeffs, rVec[i], tVec[i], 4, 4)
-            print(rVec[i])
-            print(tVec[i])
+                # draw the pose of the marker
+                point = cv.drawFrameAxes(frame, cam_matrix, coeffs, rVec[i], tVec[i], 4, 4)
+                # print(rVec[i])
+                # print(tVec[i])
 
-            [image_points, jacobian] = cv.projectPoints(TARGET_POINT, rVec[i], tVec[i], cam_matrix, coeffs)
-            
-            print(f"jacobian {jacobian}")
+                [image_points, jacobian] = cv.projectPoints(TARGET_POINT[selected_tag], rVec[i], tVec[i], cam_matrix, coeffs)
+                # so_far.extend(image_points)
+                # image_points = np.array(so_far)
 
-            for i in range(image_points.shape[0]):
-                cv.circle(frame, (int(image_points[i][0][0]),int(image_points[i][0][1])), 4, (0, 100, 255), 8)
-            target_distance = depth_frame.get_distance(int(image_points[0][0][0]),int(image_points[0][0][1]))
-            print("target distance in m:", target_distance)
+                with open('measures.txt', 'a') as f:
+                    f.write(f"{int(image_points[0][0][0])},{int(image_points[0][0][1])}, {int(image_points[5][0][0])}, {int(image_points[5][0][1])}\n")
+
+
+
+                # print(len(image_points))
+                for i in range(image_points.shape[0]):
+                    cv.circle(frame, (int(image_points[i][0][0]),int(image_points[i][0][1])), 2, (0, 100, 255), 8)
+                target_distance = depth_frame.get_distance(int(image_points[0][0][0]),int(image_points[0][0][1]))
+                # print("target distance in m:", target_distance)
 
     cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
+    # cv.imshow('RealSense Color', cv.resize(frame, (1920,1080)))
     cv.imshow('RealSense Color', frame)
 
     cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
     cv.imshow('RealSense Depth', depth)
 
-
-    if cv.waitKey(1) & 0xFF == ord('q'):
+    key = cv.waitKey(1)
+    print(key)
+    if  key == ord('q'):
         break
-    
+    else:
+        selected_tag = select_tag(key, selected_tag)
     
 
 cv.destroyAllWindows()
+

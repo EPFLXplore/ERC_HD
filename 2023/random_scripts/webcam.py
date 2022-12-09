@@ -59,7 +59,7 @@ while True:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
     edges = cv2.Canny(gray,100,200)
-    lines = cv2.HoughLines(edges, 1, np.pi/180, 200)
+    lines = cv2.HoughLines(edges, 1, np.pi/180, 100)
     draw_lines(lines, frame)
 
     # print(lines)

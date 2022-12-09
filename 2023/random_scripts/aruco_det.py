@@ -2,13 +2,19 @@ import cv2 as cv
 from cv2 import aruco
 import numpy as np
 
-marker_dict_4 = aruco.Dictionary_get(aruco.DICT_4X4_100)
-marker_dict_5 = aruco.Dictionary_get(aruco.DICT_5X5_50)
+
+
+
+
+
+
+marker_dict_4 = aruco.Dictionary_get(aruco.DICT_4X4_50)
+# marker_dict_4 = aruco.Dictionary_get(aruco.DICT_7X7_50)
 
 #create detector parameters
 param_markers = aruco.DetectorParameters_create()
 
-cap_logi = cv.VideoCapture(1)
+cap_logi = cv.VideoCapture(2) # 1 Eylül
 
 while True:
     ret, frame = cap_logi.read()

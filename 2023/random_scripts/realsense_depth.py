@@ -57,12 +57,15 @@ try:
         #         img[x,y] = dist
 
 
-        img = np.ones((height, width))
-        for x in range(height):
-            for y in range(width):
-                dist = depth.get_distance(y,x)
-                img[x,y] = dist
-
+        # img = np.ones((height, width))
+        # for x in range(height):
+        #     for y in range(width):
+        #         dist = depth.get_distance(y,x)
+        #         img[x,y] = dist
+        print(type(depth))
+        print(dir(depth))
+        print(depth.shape)
+        img = depth    
 
 
         img *= 100  # convert from meters to cm
