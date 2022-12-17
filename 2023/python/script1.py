@@ -74,7 +74,7 @@ while True:
                 )
 
                 # draw the pose of the marker
-                point = cv.drawFrameAxes(frame, cam_matrix, coeffs, rVec[i], tVec[i], 4, 4)
+                _ = cv.drawFrameAxes(frame, cam_matrix, coeffs, rVec[i], tVec[i], 4, 4)
 
                 for i in range(image_points.shape[0]):
                     cv.circle(frame, (int(image_points[i][0][0]),int(image_points[i][0][1])), 2, (0, 100, 255), 8)
