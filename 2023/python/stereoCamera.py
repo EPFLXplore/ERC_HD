@@ -8,7 +8,7 @@ class StereoCamera:
         self.intrisic_camera_matrix, self.coeffs =  self.__init_intrinsics(profile)
         pass
 
-    def __init_intrinsics(profile):
+    def __init_intrinsics(self,profile):
         intrinsics =profile.as_video_stream_profile().get_intrinsics() # Downcast to video_stream_profile and fetch intrinsics
 
         fx = intrinsics.fx
@@ -28,4 +28,4 @@ class StereoCamera:
         return self.intrisic_camera_matrix
 
     def get_coeffs(self):
-        return self.get_coeffs
+        return self.coeffs

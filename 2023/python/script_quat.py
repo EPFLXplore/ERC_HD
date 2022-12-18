@@ -3,6 +3,8 @@ import numpy as np
 from numpy import sqrt
 import cv2 as cv
 
+
+# https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
 def quaternion_from_rotation_matrix(rotation_matrix):
 
     # practical

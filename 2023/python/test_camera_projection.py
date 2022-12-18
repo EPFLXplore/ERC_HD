@@ -3,12 +3,13 @@ import cv2 as cv
 from cv2 import aruco
 import pyrealsense2 as rs
 from camera_projection import camera_projection
+from print_utils import print_rvec, print_tvec
 
 
 # aruco setup
 marker_dict_4 = aruco.Dictionary_get(aruco.DICT_4X4_100)
 param_markers = aruco.DetectorParameters_create()
-MARKER_REAL_SIZE = 5 #centimeters
+MARKER_REAL_SIZE = 4.85 #centimeters
 
 # RealSense Setup
 pipe = rs.pipeline()
@@ -83,22 +84,33 @@ while True:
             [image_points, jacobian] = cv.projectPoints(TARGET_AR, rVec[i], tVec[i], cam_matrix, coeffs)
 
 
-            cv.circle(frame, (int(image_points[0, 0, 0]), int(image_points[0, 0, 1])), 1, (0, 100, 255), 2)
+            cv.circle(frame, (int(image_points[0, 0, 0]), int(image_points[0, 0, 1])), 8, (250, 0, 250), -1)
 
             point_cam = camera_projection(TARGET_AR, rVec[i], tVec[i])
+            
+            # print(rVec.shape)
+            # print("                                                                         ", end='\r')
+            # # print("Point in AR tag coordinates: ", TARGET_AR)
+            # print("Point in camera coordinates: ", point_cam.round(2), end='\r')
+            rvec_string = print_rvec(rVec[i][0], in_degrees=True, decimals=0, on_same_line=True, returns_string=True)
+            tvec_string = print_tvec(tVec[i][0] , decimals=0, on_same_line=True, returns_string=True)
 
-            print("Point in AR tag coordinates: ", TARGET_AR)
-            print("Point in camera coordinates: ", point_cam)
-            print("Rotation vector rVec:        ", rVec[i])
 
+            # rot_matrix, jacobian = cv.Rodrigues(rVec)
+            # print(rot_matrix)
+
+            print(rvec_string + tvec_string, end='\r')
 
     cv.circle(frame, (frame.shape[1]//2, frame.shape[0]//2), 5, (255,0,0), 2)
 
     cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
     cv.imshow('RealSense Color', frame)
 
-    cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
-    cv.imshow('RealSense Depth', depth)
+    # cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
+    # cv.imshow('RealSense Depth', depth)
 
-    cv.waitKey(1)
+    if  cv.waitKey(1) == ord('q'):
+        break
 
+
+cv.destroyAllWindows()

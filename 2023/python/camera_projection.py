@@ -1,6 +1,10 @@
 import numpy as np
 import cv2 as cv
 
+
+"""
+    https://www.cse.psu.edu/~rtc12/CSE486/lecture12.pdf slide 19 
+"""
 def camera_projection(point, rVec, tVec):
     """""
     point: [x, y, z] point to be projected to the camera frame, (x,y,z) are relative to the AR tag's coordinate frame
@@ -26,11 +30,7 @@ def camera_projection(point, rVec, tVec):
     # -tVec appended to identity
     M = np.hstack((id3, [[-tVec[0, 0]], [-tVec[0, 1]], [-tVec[0, 2]], [1]]))
 
-    print(R.shape)
-    print(M.shape)
-    print(point.shape)
-
     x, y, z, n = R @ M @ point.T
 
-    return [x/n, y/n, z/n]
+    return np.array([x, y, z]) / n
 

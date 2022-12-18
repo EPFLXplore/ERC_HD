@@ -32,6 +32,9 @@ cam_matrix = camera.get_intrinsic_camera_matrix()
 coeffs = camera.get_coeffs()
 intr = profile1.as_video_stream_profile().get_intrinsics() # Downcast to video_stream_profile and fetch intrinsics
 
+
+
+
 selected_tag = 2
 
 while True:
@@ -84,11 +87,11 @@ while True:
                 # print("target distance in m:", target_distance)
 
     cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
-    # cv.imshow('RealSense Color', cv.resize(frame, (1920,1080)))
-    cv.imshow('RealSense Color', frame)
+    cv.imshow('RealSense Color', cv.resize(frame, (1920,1080)))
+    # cv.imshow('RealSense Color', frame)
 
-    cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
-    cv.imshow('RealSense Depth', depth)
+    # cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
+    # cv.imshow('RealSense Depth', depth)
 
     key = cv.waitKey(1)
     print(key)
