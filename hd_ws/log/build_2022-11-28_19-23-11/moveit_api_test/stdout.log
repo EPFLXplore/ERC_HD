@@ -1,0 +1,21 @@
+[ 50%] [32mBuilding CXX object CMakeFiles/moveit_test.dir/src/test.cpp.o[0m
+[100%] [32m[1mLinking CXX executable moveit_test[0m
+[100%] Built target moveit_test
+-- Install configuration: ""
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test
+-- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test" to ""
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/package_run_dependencies/moveit_api_test
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/parent_prefix_path/moveit_api_test
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/ament_prefix_path.sh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/ament_prefix_path.dsv
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/path.sh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/path.dsv
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.bash
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.sh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.zsh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.dsv
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.dsv
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/packages/moveit_api_test
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/cmake/moveit_api_testConfig.cmake
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/cmake/moveit_api_testConfig-version.cmake
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.xml

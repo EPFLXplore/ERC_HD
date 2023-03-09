@@ -1,0 +1,25 @@
+[0.022s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/matthias/xplore2023/hd_ws/src/control/astra_interfaces -DCMAKE_INSTALL_PREFIX=/home/matthias/xplore2023/hd_ws/install/astra_interfaces
+[0.135s] -- The C compiler identification is GNU 11.3.0
+[0.217s] -- The CXX compiler identification is GNU 11.3.0
+[0.229s] -- Detecting C compiler ABI info
+[0.294s] -- Detecting C compiler ABI info - done
+[0.298s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.299s] -- Detecting C compile features
+[0.299s] -- Detecting C compile features - done
+[0.303s] -- Detecting CXX compiler ABI info
+[0.370s] -- Detecting CXX compiler ABI info - done
+[0.377s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.377s] -- Detecting CXX compile features
+[0.377s] -- Detecting CXX compile features - done
+[0.384s] -- Found ament_cmake: 1.3.2 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.536s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.6") found components: Interpreter 
+[0.628s] -- Found ament_lint_auto: 0.12.4 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[0.708s] -- Added test 'lint_cmake' to check CMake code style
+[0.709s] -- Added test 'xmllint' to check XML markup files
+[0.711s] [31mCMake Error at CMakeLists.txt:30 (rosidl_generate_interfaces):
+[0.711s]   Unknown CMake command "rosidl_generate_interfaces".
+[0.711s] 
+[0.711s] [0m
+[0.711s] -- Configuring incomplete, errors occurred!
+[0.711s] See also "/home/matthias/xplore2023/hd_ws/build/astra_interfaces/CMakeFiles/CMakeOutput.log".
+[0.715s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces' returned '1': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/matthias/xplore2023/hd_ws/src/control/astra_interfaces -DCMAKE_INSTALL_PREFIX=/home/matthias/xplore2023/hd_ws/install/astra_interfaces

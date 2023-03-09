@@ -1,0 +1,55 @@
+[0.029s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12
+[0.058s] -- Found ament_cmake: 1.3.3 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.223s] -- Found rclcpp: 16.0.2 (/opt/ros/humble/share/rclcpp/cmake)
+[0.273s] -- Found rosidl_generator_c: 3.1.4 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.277s] -- Found rosidl_adapter: 3.1.4 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.287s] -- Found rosidl_generator_cpp: 3.1.4 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.303s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.324s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.400s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.403s] -- Found rmw_fastrtps_cpp: 6.2.2 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.573s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.747s] -- Found moveit_core: 2.5.3 (/opt/ros/humble/share/moveit_core/cmake)
+[0.770s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[0.783s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[0.885s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[1.209s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[2.568s] -- Found moveit_ros_planning_interface: 2.5.3 (/opt/ros/humble/share/moveit_ros_planning_interface/cmake)
+[2.573s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: date_time filesystem program_options system thread 
+[2.677s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread chrono 
+[3.200s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: thread system filesystem regex date_time program_options 
+[3.443s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread 
+[3.869s] -- Found ament_lint_auto: 0.12.4 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[3.966s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[3.966s] -- Configured cppcheck include dirs: 
+[3.967s] -- Configured cppcheck exclude dirs and/or files: 
+[3.968s] -- Added test 'flake8' to check Python code syntax and style conventions
+[3.970s] -- Added test 'lint_cmake' to check CMake code style
+[3.971s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[3.974s] -- Added test 'uncrustify' to check C / C++ code style
+[3.974s] -- Configured uncrustify additional arguments: 
+[3.975s] -- Added test 'xmllint' to check XML markup files
+[3.979s] -- Configuring done
+[4.179s] -- Generating done
+[4.187s] -- Build files have been written to: /home/matthias/xplore2023/hd_ws/build/moveit_api_test
+[4.278s] [35m[1mConsolidate compiler generated dependencies of target moveit_test[0m
+[4.279s] [35m[1mConsolidate compiler generated dependencies of target moveit_test2[0m
+[4.310s] [ 16%] [32mBuilding CXX object CMakeFiles/moveit_test3.dir/src/test3.cpp.o[0m
+[4.363s] [ 50%] Built target moveit_test
+[4.371s] [ 83%] Built target moveit_test2
+[15.868s] [100%] [32m[1mLinking CXX executable moveit_test3[0m
+[16.737s] /usr/bin/ld: CMakeFiles/moveit_test3.dir/src/test3.cpp.o: in function `main':
+[16.737s] test3.cpp:(.text+0x3b5): undefined reference to `rviz_visual_tools::RvizVisualTools::loadRemoteControl()'
+[16.737s] /usr/bin/ld: test3.cpp:(.text+0x3c4): undefined reference to `rviz_visual_tools::RvizVisualTools::deleteAllMarkers()'
+[16.737s] /usr/bin/ld: test3.cpp:(.text+0x566): undefined reference to `rviz_visual_tools::RvizVisualTools::prompt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+[16.738s] /usr/bin/ld: test3.cpp:(.text+0xa3d): undefined reference to `rviz_visual_tools::RvizVisualTools::prompt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+[16.738s] /usr/bin/ld: test3.cpp:(.text+0x1268): undefined reference to `rviz_visual_tools::RvizVisualTools::prompt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+[16.738s] /usr/bin/ld: test3.cpp:(.text+0x14d7): undefined reference to `rviz_visual_tools::RvizVisualTools::prompt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+[16.738s] /usr/bin/ld: test3.cpp:(.text+0x16c4): undefined reference to `rviz_visual_tools::RvizVisualTools::prompt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+[16.740s] /usr/bin/ld: CMakeFiles/moveit_test3.dir/src/test3.cpp.o: in function `rviz_visual_tools::RvizVisualTools::RvizVisualTools<std::shared_ptr<rclcpp::Node> >(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::shared_ptr<rclcpp::Node>, std::shared_ptr<rviz_visual_tools::RemoteControl> const&)':
+[16.740s] test3.cpp:(.text._ZN17rviz_visual_tools15RvizVisualToolsC2ISt10shared_ptrIN6rclcpp4NodeEEEERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_T_RKS2_INS_13RemoteControlEE[_ZN17rviz_visual_tools15RvizVisualToolsC5ISt10shared_ptrIN6rclcpp4NodeEEEERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESD_T_RKS2_INS_13RemoteControlEE]+0x114): undefined reference to `rviz_visual_tools::RvizVisualTools::RvizVisualTools(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::shared_ptr<rclcpp::node_interfaces::NodeBaseInterface> const&, std::shared_ptr<rclcpp::node_interfaces::NodeTopicsInterface> const&, std::shared_ptr<rclcpp::node_interfaces::NodeGraphInterface> const&, std::shared_ptr<rclcpp::node_interfaces::NodeClockInterface> const&, std::shared_ptr<rclcpp::node_interfaces::NodeLoggingInterface> const&, std::shared_ptr<rviz_visual_tools::RemoteControl> const&)'
+[16.767s] collect2: error: ld returned 1 exit status
+[16.769s] gmake[2]: *** [CMakeFiles/moveit_test3.dir/build.make:342: moveit_test3] Error 1
+[16.769s] gmake[1]: *** [CMakeFiles/Makefile2:193: CMakeFiles/moveit_test3.dir/all] Error 2
+[16.769s] gmake: *** [Makefile:146: all] Error 2
+[16.772s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12

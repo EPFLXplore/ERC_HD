@@ -1,0 +1,66 @@
+[0.029s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12
+[0.100s] -- Found ament_cmake: 1.3.3 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.383s] -- Found rclcpp: 16.0.2 (/opt/ros/humble/share/rclcpp/cmake)
+[0.444s] -- Found rosidl_generator_c: 3.1.4 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.448s] -- Found rosidl_adapter: 3.1.4 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.459s] -- Found rosidl_generator_cpp: 3.1.4 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.475s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.495s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.575s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.577s] -- Found rmw_fastrtps_cpp: 6.2.2 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.715s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.894s] -- Found moveit_core: 2.5.3 (/opt/ros/humble/share/moveit_core/cmake)
+[0.917s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[0.930s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[1.024s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[1.350s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[2.490s] -- Found moveit_ros_planning_interface: 2.5.3 (/opt/ros/humble/share/moveit_ros_planning_interface/cmake)
+[2.494s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: date_time filesystem program_options system thread 
+[2.600s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread chrono 
+[3.114s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: thread system filesystem regex date_time program_options 
+[3.347s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread 
+[3.763s] -- Found ament_lint_auto: 0.12.4 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[3.848s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[3.848s] -- Configured cppcheck include dirs: 
+[3.848s] -- Configured cppcheck exclude dirs and/or files: 
+[3.849s] -- Added test 'flake8' to check Python code syntax and style conventions
+[3.851s] -- Added test 'lint_cmake' to check CMake code style
+[3.852s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[3.854s] -- Added test 'uncrustify' to check C / C++ code style
+[3.854s] -- Configured uncrustify additional arguments: 
+[3.855s] -- Added test 'xmllint' to check XML markup files
+[3.858s] -- Configuring done
+[4.008s] -- Generating done
+[4.016s] -- Build files have been written to: /home/matthias/xplore2023/hd_ws/build/moveit_api_test
+[4.093s] [35m[1mConsolidate compiler generated dependencies of target moveit_test[0m
+[4.123s] [ 25%] [32mBuilding CXX object CMakeFiles/moveit_test2.dir/src/test2.cpp.o[0m
+[4.200s] [ 50%] [32mBuilding CXX object CMakeFiles/moveit_test.dir/src/test.cpp.o[0m
+[9.956s] [ 75%] [32m[1mLinking CXX executable moveit_test[0m
+[10.450s] [ 75%] Built target moveit_test
+[11.200s] [100%] [32m[1mLinking CXX executable moveit_test2[0m
+[11.670s] [100%] Built target moveit_test2
+[11.679s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12
+[11.705s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/moveit_api_test
+[11.713s] -- Install configuration: ""
+[11.714s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test
+[11.715s] -- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test" to ""
+[11.715s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test2
+[11.716s] -- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test2" to ""
+[11.716s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/launch
+[11.716s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/launch/test.launch.py
+[11.716s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/package_run_dependencies/moveit_api_test
+[11.716s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/parent_prefix_path/moveit_api_test
+[11.717s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/ament_prefix_path.sh
+[11.717s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/ament_prefix_path.dsv
+[11.717s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/path.sh
+[11.717s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/path.dsv
+[11.717s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.bash
+[11.718s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.sh
+[11.718s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.zsh
+[11.718s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.dsv
+[11.718s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.dsv
+[11.718s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/packages/moveit_api_test
+[11.719s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/cmake/moveit_api_testConfig.cmake
+[11.719s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/cmake/moveit_api_testConfig-version.cmake
+[11.719s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.xml
+[11.723s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/moveit_api_test

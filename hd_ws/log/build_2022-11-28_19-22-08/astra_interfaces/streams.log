@@ -1,0 +1,102 @@
+[0.030s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_interfaces -- -j12 -l12
+[0.051s] -- Found ament_cmake: 1.3.3 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.194s] -- Found geometry_msgs: 4.2.2 (/opt/ros/humble/share/geometry_msgs/cmake)
+[0.222s] -- Found rosidl_generator_c: 3.1.4 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.224s] -- Found rosidl_adapter: 3.1.4 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.230s] -- Found rosidl_generator_cpp: 3.1.4 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.242s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.257s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.381s] -- Found rosidl_default_generators: 1.2.0 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[0.657s] -- Found ament_cmake_ros: 0.10.0 (/opt/ros/humble/share/ament_cmake_ros/cmake)
+[1.028s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.175s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.195s] -- Found python_cmake_module: 0.10.0 (/opt/ros/humble/share/python_cmake_module/cmake)
+[1.217s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[1.217s] -- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.10
+[1.217s] -- Using PYTHON_LIBRARIES: /usr/lib/x86_64-linux-gnu/libpython3.10.so
+[1.258s] -- Found ament_lint_auto: 0.12.4 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[1.269s] -- Added test 'lint_cmake' to check CMake code style
+[1.270s] -- Added test 'xmllint' to check XML markup files
+[1.274s] -- Configuring done
+[1.320s] -- Generating done
+[1.324s] -- Build files have been written to: /home/matthias/xplore2023/hd_ws/build/astra_interfaces
+[1.345s] [  2%] [34m[1mGenerating C code for ROS interfaces[0m
+[1.354s] [  4%] [34m[1mGenerating C++ code for ROS interfaces[0m
+[1.362s] [  4%] Built target ament_cmake_python_copy_astra_interfaces
+[1.614s] running egg_info
+[1.614s] writing astra_interfaces.egg-info/PKG-INFO
+[1.614s] writing dependency_links to astra_interfaces.egg-info/dependency_links.txt
+[1.614s] writing top-level names to astra_interfaces.egg-info/top_level.txt
+[1.616s] reading manifest file 'astra_interfaces.egg-info/SOURCES.txt'
+[1.617s] writing manifest file 'astra_interfaces.egg-info/SOURCES.txt'
+[1.647s] [  4%] Built target ament_cmake_python_build_astra_interfaces_egg
+[1.680s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_generator_c[0m
+[1.680s] [  4%] Built target astra_interfaces__cpp
+[1.688s] [  6%] [34m[1mGenerating C++ type support dispatch for ROS interfaces[0m
+[1.689s] [  8%] [34m[1mGenerating C++ type support for eProsima Fast-RTPS[0m
+[1.690s] [ 10%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_generator_c.dir/rosidl_generator_c/astra_interfaces/msg/detail/object__functions.c.o[0m
+[1.690s] [ 12%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_generator_c.dir/rosidl_generator_c/astra_interfaces/msg/detail/cmd_outcome__functions.c.o[0m
+[1.690s] [ 14%] [34m[1mGenerating C++ introspection for ROS interfaces[0m
+[1.693s] [ 17%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_generator_c.dir/rosidl_generator_c/astra_interfaces/msg/detail/task__functions.c.o[0m
+[1.791s] [ 19%] [32m[1mLinking C shared library libastra_interfaces__rosidl_generator_c.so[0m
+[1.824s] [ 19%] Built target astra_interfaces__rosidl_generator_c
+[1.833s] [ 23%] [34m[1mGenerating C type support for eProsima Fast-RTPS[0m
+[1.833s] [ 23%] [34m[1mGenerating C introspection for ROS interfaces[0m
+[1.836s] [ 25%] [34m[1mGenerating C type support dispatch for ROS interfaces[0m
+[1.930s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_typesupport_cpp[0m
+[1.945s] [ 29%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/astra_interfaces/msg/cmd_outcome__type_support.cpp.o[0m
+[1.945s] [ 31%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/astra_interfaces/msg/object__type_support.cpp.o[0m
+[1.946s] [ 29%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/astra_interfaces/msg/task__type_support.cpp.o[0m
+[1.966s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_typesupport_introspection_cpp[0m
+[1.982s] [ 34%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/astra_interfaces/msg/detail/object__type_support.cpp.o[0m
+[1.983s] [ 36%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/astra_interfaces/msg/detail/cmd_outcome__type_support.cpp.o[0m
+[1.983s] [ 38%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/astra_interfaces/msg/detail/task__type_support.cpp.o[0m
+[2.034s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_typesupport_fastrtps_cpp[0m
+[2.054s] [ 40%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/astra_interfaces/msg/detail/dds_fastrtps/cmd_outcome__type_support.cpp.o[0m
+[2.055s] [ 42%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/astra_interfaces/msg/detail/dds_fastrtps/object__type_support.cpp.o[0m
+[2.061s] [ 44%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/astra_interfaces/msg/detail/dds_fastrtps/task__type_support.cpp.o[0m
+[2.372s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_typesupport_c[0m
+[2.392s] [ 46%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/astra_interfaces/msg/cmd_outcome__type_support.cpp.o[0m
+[2.394s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_typesupport_introspection_c[0m
+[2.418s] [ 48%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/astra_interfaces/msg/detail/cmd_outcome__type_support.c.o[0m
+[2.427s] [ 51%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/astra_interfaces/msg/object__type_support.cpp.o[0m
+[2.431s] [ 53%] [32m[1mLinking CXX shared library libastra_interfaces__rosidl_typesupport_cpp.so[0m
+[2.437s] [ 55%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/astra_interfaces/msg/task__type_support.cpp.o[0m
+[2.449s] [ 57%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/astra_interfaces/msg/detail/object__type_support.c.o[0m
+[2.451s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_typesupport_fastrtps_c[0m
+[2.475s] [ 59%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/astra_interfaces/msg/detail/cmd_outcome__type_support_c.cpp.o[0m
+[2.479s] [ 61%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/astra_interfaces/msg/detail/task__type_support.c.o[0m
+[2.490s] [ 63%] [32m[1mLinking CXX shared library libastra_interfaces__rosidl_typesupport_c.so[0m
+[2.493s] [ 65%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/astra_interfaces/msg/detail/object__type_support_c.cpp.o[0m
+[2.506s] [ 65%] Built target astra_interfaces__rosidl_typesupport_cpp
+[2.510s] [ 68%] [32mBuilding CXX object CMakeFiles/astra_interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/astra_interfaces/msg/detail/task__type_support_c.cpp.o[0m
+[2.536s] [ 70%] [32m[1mLinking C shared library libastra_interfaces__rosidl_typesupport_introspection_c.so[0m
+[2.558s] [ 70%] Built target astra_interfaces__rosidl_typesupport_c
+[2.583s] [ 70%] Built target astra_interfaces__rosidl_typesupport_introspection_c
+[2.680s] [ 72%] [32m[1mLinking CXX shared library libastra_interfaces__rosidl_typesupport_introspection_cpp.so[0m
+[2.740s] [ 74%] [32m[1mLinking CXX shared library libastra_interfaces__rosidl_typesupport_fastrtps_cpp.so[0m
+[2.752s] [ 74%] Built target astra_interfaces__rosidl_typesupport_introspection_cpp
+[2.819s] [ 74%] Built target astra_interfaces__rosidl_typesupport_fastrtps_cpp
+[2.899s] [ 76%] [32m[1mLinking CXX shared library libastra_interfaces__rosidl_typesupport_fastrtps_c.so[0m
+[2.981s] [ 76%] Built target astra_interfaces__rosidl_typesupport_fastrtps_c
+[3.030s] [ 76%] Built target astra_interfaces
+[3.084s] [ 78%] [34m[1mGenerating Python code for ROS interfaces[0m
+[3.648s] [ 78%] Built target astra_interfaces__py
+[3.657s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_generator_py[0m
+[3.670s] [ 82%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_generator_py.dir/rosidl_generator_py/astra_interfaces/msg/_object_s.c.o[0m
+[3.670s] [ 82%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_generator_py.dir/rosidl_generator_py/astra_interfaces/msg/_cmd_outcome_s.c.o[0m
+[3.670s] [ 85%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_generator_py.dir/rosidl_generator_py/astra_interfaces/msg/_task_s.c.o[0m
+[3.922s] [ 87%] [32m[1mLinking C shared library rosidl_generator_py/astra_interfaces/libastra_interfaces__rosidl_generator_py.so[0m
+[4.054s] [ 87%] Built target astra_interfaces__rosidl_generator_py
+[4.085s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_typesupport_introspection_c__pyext[0m
+[4.086s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_typesupport_fastrtps_c__pyext[0m
+[4.086s] [35m[1mConsolidate compiler generated dependencies of target astra_interfaces__rosidl_typesupport_c__pyext[0m
+[4.125s] [ 89%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/astra_interfaces/_astra_interfaces_s.ep.rosidl_typesupport_introspection_c.c.o[0m
+[4.126s] [ 93%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/astra_interfaces/_astra_interfaces_s.ep.rosidl_typesupport_c.c.o[0m
+[4.126s] [ 93%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/astra_interfaces/_astra_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c.o[0m
+[4.262s] [ 97%] [32m[1mLinking C shared library rosidl_generator_py/astra_interfaces/astra_interfaces_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so[0m
+[4.262s] [ 97%] [32m[1mLinking C shared library rosidl_generator_py/astra_interfaces/astra_interfaces_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so[0m
+[4.263s] [100%] [32m[1mLinking C shared library rosidl_generator_py/astra_interfaces/astra_interfaces_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so[0m
+[4.307s] [100%] Built target astra_interfaces__rosidl_typesupport_fastrtps_c__pyext
+[4.307s] [100%] Built target astra_interfaces__rosidl_typesupport_introspection_c__pyext
+[4.308s] [100%] Built target astra_interfaces__rosidl_typesupport_c__pyext

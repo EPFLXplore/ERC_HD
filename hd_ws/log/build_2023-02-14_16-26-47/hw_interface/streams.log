@@ -1,0 +1,20 @@
+[0.039s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/hw_interface': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/hw_interface -- -j12 -l12
+[0.410s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/hw_interface' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/hw_interface -- -j12 -l12
+[0.439s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/hw_interface': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/hw_interface
+[0.452s] -- Install configuration: ""
+[0.452s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/ament_index/resource_index/package_run_dependencies/hw_interface
+[0.453s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/ament_index/resource_index/parent_prefix_path/hw_interface
+[0.454s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/environment/ament_prefix_path.sh
+[0.455s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/environment/ament_prefix_path.dsv
+[0.455s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/environment/path.sh
+[0.456s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/environment/path.dsv
+[0.456s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/local_setup.bash
+[0.458s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/local_setup.sh
+[0.458s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/local_setup.zsh
+[0.458s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/local_setup.dsv
+[0.459s] -- Installing: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/package.dsv
+[0.461s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/ament_index/resource_index/packages/hw_interface
+[0.461s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/cmake/hw_interfaceConfig.cmake
+[0.462s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/cmake/hw_interfaceConfig-version.cmake
+[0.463s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/hw_interface/share/hw_interface/package.xml
+[0.467s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/hw_interface' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/hw_interface

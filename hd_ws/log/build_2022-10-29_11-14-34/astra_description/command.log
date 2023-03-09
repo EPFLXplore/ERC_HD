@@ -1,0 +1,3 @@
+Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/matthias/xplore2023/hd_ws/src/control/astra_description -DCMAKE_INSTALL_PREFIX=/home/matthias/xplore2023/hd_ws/install/astra_description
+Invoked command in '/home/matthias/xplore2023/hd_ws/build/astra_description' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/matthias/xplore2023/hd_ws/src/control/astra_description -DCMAKE_INSTALL_PREFIX=/home/matthias/xplore2023/hd_ws/install/astra_description
+Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_description': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_description -- -j12 -l12

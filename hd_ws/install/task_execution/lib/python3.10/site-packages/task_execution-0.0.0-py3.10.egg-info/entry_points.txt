@@ -1,0 +1,3 @@
+[console_scripts]
+test = task_execution.moveit_test:main
+

@@ -1,0 +1,28 @@
+[ 50%] [32mBuilding CXX object CMakeFiles/moveit_test.dir/src/test.cpp.o[0m
+[01m[K/home/matthias/xplore2023/hd_ws/src/control/moveit_api_test/src/test.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[K/home/matthias/xplore2023/hd_ws/src/control/moveit_api_test/src/test.cpp:6:14:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kargc[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+    6 | int main([01;35m[Kint argc[m[K, char** argv)
+      |          [01;35m[K~~~~^~~~[m[K
+[01m[K/home/matthias/xplore2023/hd_ws/src/control/moveit_api_test/src/test.cpp:6:27:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kargv[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+    6 | int main(int argc, [01;35m[Kchar** argv[m[K)
+      |                    [01;35m[K~~~~~~~^~~~[m[K
+[100%] [32m[1mLinking CXX executable moveit_test[0m
+[100%] Built target moveit_test
+-- Install configuration: ""
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test
+-- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test" to ""
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/package_run_dependencies/moveit_api_test
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/parent_prefix_path/moveit_api_test
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/ament_prefix_path.sh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/ament_prefix_path.dsv
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/path.sh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/path.dsv
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.bash
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.sh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.zsh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.dsv
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.dsv
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/packages/moveit_api_test
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/cmake/moveit_api_testConfig.cmake
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/cmake/moveit_api_testConfig-version.cmake
+-- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.xml

@@ -1,0 +1,12 @@
+gmake[2]: *** No rule to make target '/opt/ros/humble/lib/libmoveit_move_group_interface.so.2.5.3', needed by 'moveit_test'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:145: CMakeFiles/moveit_test.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+gmake[2]: *** No rule to make target '/opt/ros/humble/lib/libmoveit_move_group_interface.so.2.5.3', needed by 'moveit_test2'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:171: CMakeFiles/moveit_test2.dir/all] Error 2
+gmake[2]: *** No rule to make target '/opt/ros/humble/lib/libmoveit_move_group_interface.so.2.5.3', needed by 'moveit_test3'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:197: CMakeFiles/moveit_test3.dir/all] Error 2
+gmake[2]: *** No rule to make target '/opt/ros/humble/lib/libmoveit_move_group_interface.so.2.5.3', needed by 'move_group_interface_test'.  Stop.
+gmake[2]: *** No rule to make target '/opt/ros/humble/lib/libmoveit_move_group_interface.so.2.5.3', needed by 'motion_planning_test'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:249: CMakeFiles/move_group_interface_test.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:223: CMakeFiles/motion_planning_test.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

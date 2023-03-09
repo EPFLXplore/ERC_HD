@@ -1,0 +1,29 @@
+[0.033s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12
+[0.318s] [ 50%] Built target moveit_test
+[0.322s] [ 75%] [32mBuilding CXX object CMakeFiles/moveit_test2.dir/src/test2.cpp.o[0m
+[8.000s] [100%] [32m[1mLinking CXX executable moveit_test2[0m
+[9.036s] [100%] Built target moveit_test2
+[9.049s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12
+[9.091s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/moveit_api_test
+[9.105s] -- Install configuration: ""
+[9.107s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test
+[9.109s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test2
+[9.113s] -- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/moveit_api_test/moveit_test2" to ""
+[9.113s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/launch
+[9.114s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/launch/test.launch.py
+[9.115s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/package_run_dependencies/moveit_api_test
+[9.115s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/parent_prefix_path/moveit_api_test
+[9.115s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/ament_prefix_path.sh
+[9.116s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/ament_prefix_path.dsv
+[9.116s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/path.sh
+[9.116s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/environment/path.dsv
+[9.117s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.bash
+[9.117s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.sh
+[9.117s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.zsh
+[9.118s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/local_setup.dsv
+[9.118s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.dsv
+[9.118s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/ament_index/resource_index/packages/moveit_api_test
+[9.119s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/cmake/moveit_api_testConfig.cmake
+[9.119s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/cmake/moveit_api_testConfig-version.cmake
+[9.119s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.xml
+[9.135s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/moveit_api_test

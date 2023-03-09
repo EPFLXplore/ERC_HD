@@ -1,0 +1,102 @@
+[0.042s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake /home/matthias/xplore2023/hd_ws/src/control/moveit_api_test2 -DCMAKE_INSTALL_PREFIX=/home/matthias/xplore2023/hd_ws/install/moveit_api_test2
+[0.475s] -- The C compiler identification is GNU 11.3.0
+[0.475s] -- The CXX compiler identification is GNU 11.3.0
+[0.475s] -- Detecting C compiler ABI info
+[0.475s] -- Detecting C compiler ABI info - done
+[0.476s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.476s] -- Detecting C compile features
+[0.476s] -- Detecting C compile features - done
+[0.476s] -- Detecting CXX compiler ABI info
+[0.499s] -- Detecting CXX compiler ABI info - done
+[0.513s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.513s] -- Detecting CXX compile features
+[0.513s] -- Detecting CXX compile features - done
+[0.517s] -- Found ament_cmake: 1.3.3 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.696s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.6") found components: Interpreter 
+[0.799s] -- Found rclcpp: 16.0.3 (/opt/ros/humble/share/rclcpp/cmake)
+[0.885s] -- Found rosidl_generator_c: 3.1.4 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.899s] -- Found rosidl_adapter: 3.1.4 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.930s] -- Found rosidl_generator_cpp: 3.1.4 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.983s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.058s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.214s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[1.219s] -- Found rmw_fastrtps_cpp: 6.2.2 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[1.320s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[1.348s] -- Found FastRTPS: /opt/ros/humble/include  
+[1.395s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.409s] -- Looking for pthread.h
+[1.475s] -- Looking for pthread.h - found
+[1.475s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[1.535s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[1.536s] -- Found Threads: TRUE  
+[1.713s] -- Found moveit_core: 2.5.4 (/opt/ros/humble/share/moveit_core/cmake)
+[1.760s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[1.779s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[1.924s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[2.357s] -- Found Eigen3: TRUE (found version "3.4.0") 
+[2.357s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[3.725s] -- Found moveit_ros_planning_interface: 2.5.4 (/opt/ros/humble/share/moveit_ros_planning_interface/cmake)
+[3.729s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: date_time filesystem program_options system thread 
+[3.829s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread chrono 
+[4.346s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: thread system filesystem regex date_time program_options 
+[4.581s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread 
+[5.001s] -- Found rviz_visual_tools: 4.1.4 (/opt/ros/humble/share/rviz_visual_tools/cmake)
+[5.136s] -- Setting OGRE_DIR to: '/opt/ros/humble/share/rviz_ogre_vendor/cmake/../../../opt/rviz_ogre_vendor/lib/OGRE/cmake'
+[5.138s] -- Found OGRE
+[5.138s] --   static     : OFF
+[5.138s] --   components : HLMS;MeshLodGenerator;Overlay;Paging;Property;RTShaderSystem;Terrain;Volume
+[5.139s] --   plugins    : Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI
+[5.139s] --   media      : /opt/ros/humble/opt/rviz_ogre_vendor/share/OGRE/Media
+[5.139s] -- OGRE_LIBRARIES: OgreHLMS;OgreMeshLodGenerator;OgreOverlay;OgrePaging;OgreProperty;OgreRTShaderSystem;OgreTerrain;OgreVolume;OgreMain
+[5.139s] -- OGRE_LIBRARY_DIRS: /opt/ros/humble/opt/rviz_ogre_vendor/lib
+[5.139s] -- OGRE_PLUGINS: Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI
+[5.139s] -- OGRE_PLUGIN_DIR: /opt/ros/humble/opt/rviz_ogre_vendor/lib/OGRE
+[5.139s] -- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so
+[5.139s] -- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so
+[5.139s] -- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so
+[5.139s] -- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so
+[5.140s] -- Could not find freeimage library
+[5.158s] -- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") 
+[5.163s] -- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so   
+[5.243s] -- Found X11: /usr/include   
+[5.243s] -- Looking for XOpenDisplay in /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so
+[5.385s] -- Looking for XOpenDisplay in /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so - found
+[5.385s] -- Looking for gethostbyname
+[5.569s] -- Looking for gethostbyname - found
+[5.569s] -- Looking for connect
+[5.752s] -- Looking for connect - found
+[5.753s] -- Looking for remove
+[5.937s] -- Looking for remove - found
+[5.937s] -- Looking for shmat
+[6.120s] -- Looking for shmat - found
+[6.120s] -- Looking for IceConnectionNumber in ICE
+[6.305s] -- Looking for IceConnectionNumber in ICE - found
+[6.311s] -- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_RELEASE: _render_system_gl_static_library_abs-NOTFOUND
+[6.311s] -- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_DEBUG: _render_system_gl_static_library_abs-NOTFOUND
+[7.243s] -- Found moveit_visual_tools: 4.1.0 (/opt/ros/humble/share/moveit_visual_tools/cmake)
+[7.748s] -- Found ament_lint_auto: 0.12.5 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[7.855s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[7.856s] -- Configured cppcheck include dirs: 
+[7.856s] -- Configured cppcheck exclude dirs and/or files: 
+[7.857s] -- Added test 'flake8' to check Python code syntax and style conventions
+[7.860s] -- Added test 'lint_cmake' to check CMake code style
+[7.862s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[7.865s] -- Added test 'uncrustify' to check C / C++ code style
+[7.865s] -- Configured uncrustify additional arguments: 
+[7.867s] -- Added test 'xmllint' to check XML markup files
+[7.872s] -- Configuring done
+[7.890s] [31mCMake Error at CMakeLists.txt:22 (add_executable):
+[7.890s]   Cannot find source file:
+[7.891s] 
+[7.891s]     src/move_group_interface_test.cpp
+[7.891s] 
+[7.891s]   Tried extensions .c .C .c++ .cc .cpp .cxx .cu .mpp .m .M .mm .ixx .cppm .h
+[7.891s]   .hh .h++ .hm .hpp .hxx .in .txx .f .F .for .f77 .f90 .f95 .f03 .hip .ispc
+[7.891s] 
+[7.892s] [0m
+[7.904s] [31mCMake Error at CMakeLists.txt:22 (add_executable):
+[7.905s]   No SOURCES given to target: move_group_interface_test
+[7.905s] 
+[7.905s] [0m
+[7.905s] [0mCMake Generate step failed.  Build files cannot be regenerated correctly.[0m
+[7.937s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake /home/matthias/xplore2023/hd_ws/src/control/moveit_api_test2 -DCMAKE_INSTALL_PREFIX=/home/matthias/xplore2023/hd_ws/install/moveit_api_test2

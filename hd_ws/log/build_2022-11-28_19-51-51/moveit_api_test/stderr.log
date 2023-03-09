@@ -1,0 +1,8 @@
+/usr/bin/ld: CMakeFiles/moveit_test.dir/src/test.cpp.o: in function `main':
+test.cpp:(.text+0x1af): undefined reference to `robot_model_loader::RobotModelLoader::RobotModelLoader(std::shared_ptr<rclcpp::Node> const&, robot_model_loader::RobotModelLoader::Options const&)'
+/usr/bin/ld: test.cpp:(.text+0x1559): undefined reference to `robot_model_loader::RobotModelLoader::~RobotModelLoader()'
+/usr/bin/ld: test.cpp:(.text+0x186a): undefined reference to `robot_model_loader::RobotModelLoader::~RobotModelLoader()'
+collect2: error: ld returned 1 exit status
+gmake[2]: *** [CMakeFiles/moveit_test.dir/build.make:313: moveit_test] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/moveit_test.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

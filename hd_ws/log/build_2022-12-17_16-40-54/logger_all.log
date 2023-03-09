@@ -1,0 +1,310 @@
+[1.479s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[1.480s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=12, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7fa0196aca30>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7fa019ffc130>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7fa019ffc130>>, mixin_verb=('build',))
+[1.596s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[1.596s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[1.596s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[1.596s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[1.596s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[1.597s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[1.597s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/matthias/xplore2023/hd_ws'
+[1.597s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[1.597s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[1.598s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[1.598s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[1.598s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[1.598s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[1.598s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[1.599s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[1.599s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[1.644s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[1.644s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[1.644s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[1.645s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[1.645s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[1.645s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[1.646s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[1.646s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[1.646s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[1.647s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[1.647s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[1.647s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[1.648s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[1.648s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[1.648s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[1.648s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[1.649s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[1.649s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[1.649s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[1.649s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[1.649s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[1.650s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[1.650s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[1.650s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[1.650s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[1.650s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[1.651s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[1.651s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[1.651s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['ignore', 'ignore_ament_install']
+[1.651s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'ignore'
+[1.652s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'ignore_ament_install'
+[1.652s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['colcon_pkg']
+[1.652s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'colcon_pkg'
+[1.652s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['colcon_meta']
+[1.652s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'colcon_meta'
+[1.652s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['ros']
+[1.653s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'ros'
+[1.653s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['cmake', 'python']
+[1.653s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'cmake'
+[1.653s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'python'
+[1.653s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['python_setup_py']
+[1.654s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'python_setup_py'
+[1.654s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extensions ['ignore', 'ignore_ament_install']
+[1.654s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'ignore'
+[1.654s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'ignore_ament_install'
+[1.655s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extensions ['colcon_pkg']
+[1.655s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'colcon_pkg'
+[1.655s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extensions ['colcon_meta']
+[1.655s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'colcon_meta'
+[1.655s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extensions ['ros']
+[1.655s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'ros'
+[1.667s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/astra_description' with type 'ros.ament_cmake' and name 'astra_description'
+[1.667s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extensions ['ignore', 'ignore_ament_install']
+[1.668s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'ignore'
+[1.668s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'ignore_ament_install'
+[1.668s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extensions ['colcon_pkg']
+[1.668s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'colcon_pkg'
+[1.669s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extensions ['colcon_meta']
+[1.669s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'colcon_meta'
+[1.669s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extensions ['ros']
+[1.669s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'ros'
+[1.672s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/astra_interfaces' with type 'ros.ament_cmake' and name 'astra_interfaces'
+[1.673s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extensions ['ignore', 'ignore_ament_install']
+[1.673s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'ignore'
+[1.673s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'ignore_ament_install'
+[1.673s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extensions ['colcon_pkg']
+[1.674s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'colcon_pkg'
+[1.674s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extensions ['colcon_meta']
+[1.674s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'colcon_meta'
+[1.674s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extensions ['ros']
+[1.674s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'ros'
+[1.677s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/astra_moveit_config' with type 'ros.ament_cmake' and name 'astra_moveit_config'
+[1.678s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/hw_interface) by extensions ['ignore', 'ignore_ament_install']
+[1.678s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/hw_interface) by extension 'ignore'
+[1.678s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/hw_interface) by extension 'ignore_ament_install'
+[1.679s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/hw_interface) by extensions ['colcon_pkg']
+[1.679s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/hw_interface) by extension 'colcon_pkg'
+[1.679s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/hw_interface) by extensions ['colcon_meta']
+[1.679s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/hw_interface) by extension 'colcon_meta'
+[1.679s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/hw_interface) by extensions ['ros']
+[1.679s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/hw_interface) by extension 'ros'
+[1.681s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/hw_interface' with type 'ros.ament_cmake' and name 'hw_interface'
+[1.682s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extensions ['ignore', 'ignore_ament_install']
+[1.682s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'ignore'
+[1.682s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'ignore_ament_install'
+[1.682s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extensions ['colcon_pkg']
+[1.682s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'colcon_pkg'
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extensions ['colcon_meta']
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'colcon_meta'
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extensions ['ros']
+[1.683s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'ros'
+[1.685s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/manager' with type 'ros.ament_python' and name 'manager'
+[1.686s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_api_test) by extensions ['ignore', 'ignore_ament_install']
+[1.686s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_api_test) by extension 'ignore'
+[1.686s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_api_test) by extension 'ignore_ament_install'
+[1.687s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_api_test) by extensions ['colcon_pkg']
+[1.687s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_api_test) by extension 'colcon_pkg'
+[1.687s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_api_test) by extensions ['colcon_meta']
+[1.687s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_api_test) by extension 'colcon_meta'
+[1.687s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_api_test) by extensions ['ros']
+[1.687s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_api_test) by extension 'ros'
+[1.690s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/moveit_api_test' with type 'ros.ament_cmake' and name 'moveit_api_test'
+[1.690s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extensions ['ignore', 'ignore_ament_install']
+[1.690s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'ignore'
+[1.691s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'ignore_ament_install'
+[1.691s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extensions ['colcon_pkg']
+[1.691s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'colcon_pkg'
+[1.691s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extensions ['colcon_meta']
+[1.691s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'colcon_meta'
+[1.692s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extensions ['ros']
+[1.692s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'ros'
+[1.693s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/task_execution' with type 'ros.ament_python' and name 'task_execution'
+[1.694s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extensions ['ignore', 'ignore_ament_install']
+[1.694s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'ignore'
+[1.695s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'ignore_ament_install'
+[1.695s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extensions ['colcon_pkg']
+[1.695s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'colcon_pkg'
+[1.695s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extensions ['colcon_meta']
+[1.695s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'colcon_meta'
+[1.695s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extensions ['ros']
+[1.696s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'ros'
+[1.697s] DEBUG:colcon.colcon_core.package_identification:Package 'tttt' with type 'ros.ament_cmake' and name 'tttt'
+[1.698s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[1.698s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[1.698s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[1.698s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[1.698s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[1.797s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[1.797s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[1.809s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 7 installed packages in /home/matthias/xplore2023/hd_ws/install
+[1.817s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 336 installed packages in /opt/ros/humble
+[1.822s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[2.032s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_args' from command line to 'None'
+[2.032s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_target' from command line to 'None'
+[2.032s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.032s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_clean_cache' from command line to 'False'
+[2.032s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_clean_first' from command line to 'False'
+[2.032s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_force_configure' from command line to 'False'
+[2.032s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'ament_cmake_args' from command line to 'None'
+[2.032s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'catkin_cmake_args' from command line to 'None'
+[2.032s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.033s] DEBUG:colcon.colcon_core.verb:Building package 'astra_description' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matthias/xplore2023/hd_ws/build/astra_description', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matthias/xplore2023/hd_ws/install/astra_description', 'merge_install': False, 'path': '/home/matthias/xplore2023/hd_ws/src/control/astra_description', 'symlink_install': False, 'test_result_base': None}
+[2.034s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_args' from command line to 'None'
+[2.034s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_target' from command line to 'None'
+[2.034s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.034s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_clean_cache' from command line to 'False'
+[2.034s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_clean_first' from command line to 'False'
+[2.034s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_force_configure' from command line to 'False'
+[2.034s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'ament_cmake_args' from command line to 'None'
+[2.034s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'catkin_cmake_args' from command line to 'None'
+[2.034s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.034s] DEBUG:colcon.colcon_core.verb:Building package 'astra_interfaces' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matthias/xplore2023/hd_ws/build/astra_interfaces', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matthias/xplore2023/hd_ws/install/astra_interfaces', 'merge_install': False, 'path': '/home/matthias/xplore2023/hd_ws/src/control/astra_interfaces', 'symlink_install': False, 'test_result_base': None}
+[2.035s] Level 5:colcon.colcon_core.verb:set package 'hw_interface' build argument 'cmake_args' from command line to 'None'
+[2.035s] Level 5:colcon.colcon_core.verb:set package 'hw_interface' build argument 'cmake_target' from command line to 'None'
+[2.035s] Level 5:colcon.colcon_core.verb:set package 'hw_interface' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.035s] Level 5:colcon.colcon_core.verb:set package 'hw_interface' build argument 'cmake_clean_cache' from command line to 'False'
+[2.035s] Level 5:colcon.colcon_core.verb:set package 'hw_interface' build argument 'cmake_clean_first' from command line to 'False'
+[2.035s] Level 5:colcon.colcon_core.verb:set package 'hw_interface' build argument 'cmake_force_configure' from command line to 'False'
+[2.035s] Level 5:colcon.colcon_core.verb:set package 'hw_interface' build argument 'ament_cmake_args' from command line to 'None'
+[2.035s] Level 5:colcon.colcon_core.verb:set package 'hw_interface' build argument 'catkin_cmake_args' from command line to 'None'
+[2.035s] Level 5:colcon.colcon_core.verb:set package 'hw_interface' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.035s] DEBUG:colcon.colcon_core.verb:Building package 'hw_interface' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matthias/xplore2023/hd_ws/build/hw_interface', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matthias/xplore2023/hd_ws/install/hw_interface', 'merge_install': False, 'path': '/home/matthias/xplore2023/hd_ws/src/control/hw_interface', 'symlink_install': False, 'test_result_base': None}
+[2.036s] Level 5:colcon.colcon_core.verb:set package 'moveit_api_test' build argument 'cmake_args' from command line to 'None'
+[2.036s] Level 5:colcon.colcon_core.verb:set package 'moveit_api_test' build argument 'cmake_target' from command line to 'None'
+[2.036s] Level 5:colcon.colcon_core.verb:set package 'moveit_api_test' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.036s] Level 5:colcon.colcon_core.verb:set package 'moveit_api_test' build argument 'cmake_clean_cache' from command line to 'False'
+[2.036s] Level 5:colcon.colcon_core.verb:set package 'moveit_api_test' build argument 'cmake_clean_first' from command line to 'False'
+[2.036s] Level 5:colcon.colcon_core.verb:set package 'moveit_api_test' build argument 'cmake_force_configure' from command line to 'False'
+[2.036s] Level 5:colcon.colcon_core.verb:set package 'moveit_api_test' build argument 'ament_cmake_args' from command line to 'None'
+[2.036s] Level 5:colcon.colcon_core.verb:set package 'moveit_api_test' build argument 'catkin_cmake_args' from command line to 'None'
+[2.036s] Level 5:colcon.colcon_core.verb:set package 'moveit_api_test' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.036s] DEBUG:colcon.colcon_core.verb:Building package 'moveit_api_test' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matthias/xplore2023/hd_ws/build/moveit_api_test', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matthias/xplore2023/hd_ws/install/moveit_api_test', 'merge_install': False, 'path': '/home/matthias/xplore2023/hd_ws/src/control/moveit_api_test', 'symlink_install': False, 'test_result_base': None}
+[2.037s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_args' from command line to 'None'
+[2.037s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_target' from command line to 'None'
+[2.037s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.037s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_clean_cache' from command line to 'False'
+[2.037s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_clean_first' from command line to 'False'
+[2.037s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_force_configure' from command line to 'False'
+[2.037s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'ament_cmake_args' from command line to 'None'
+[2.038s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'catkin_cmake_args' from command line to 'None'
+[2.038s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.038s] DEBUG:colcon.colcon_core.verb:Building package 'task_execution' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matthias/xplore2023/hd_ws/build/task_execution', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matthias/xplore2023/hd_ws/install/task_execution', 'merge_install': False, 'path': '/home/matthias/xplore2023/hd_ws/src/control/task_execution', 'symlink_install': False, 'test_result_base': None}
+[2.039s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_args' from command line to 'None'
+[2.039s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_target' from command line to 'None'
+[2.039s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.039s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_clean_cache' from command line to 'False'
+[2.039s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_clean_first' from command line to 'False'
+[2.039s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_force_configure' from command line to 'False'
+[2.039s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'ament_cmake_args' from command line to 'None'
+[2.039s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'catkin_cmake_args' from command line to 'None'
+[2.039s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.039s] DEBUG:colcon.colcon_core.verb:Building package 'tttt' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matthias/xplore2023/hd_ws/build/tttt', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matthias/xplore2023/hd_ws/install/tttt', 'merge_install': False, 'path': '/home/matthias/xplore2023/hd_ws/tttt', 'symlink_install': False, 'test_result_base': None}
+[2.040s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_args' from command line to 'None'
+[2.040s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_target' from command line to 'None'
+[2.040s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.040s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_clean_cache' from command line to 'False'
+[2.040s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_clean_first' from command line to 'False'
+[2.040s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_force_configure' from command line to 'False'
+[2.040s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'ament_cmake_args' from command line to 'None'
+[2.040s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'catkin_cmake_args' from command line to 'None'
+[2.040s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.040s] DEBUG:colcon.colcon_core.verb:Building package 'astra_moveit_config' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matthias/xplore2023/hd_ws/build/astra_moveit_config', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matthias/xplore2023/hd_ws/install/astra_moveit_config', 'merge_install': False, 'path': '/home/matthias/xplore2023/hd_ws/src/control/astra_moveit_config', 'symlink_install': False, 'test_result_base': None}
+[2.041s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_args' from command line to 'None'
+[2.041s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_target' from command line to 'None'
+[2.041s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[2.041s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_clean_cache' from command line to 'False'
+[2.041s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_clean_first' from command line to 'False'
+[2.041s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_force_configure' from command line to 'False'
+[2.041s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'ament_cmake_args' from command line to 'None'
+[2.041s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'catkin_cmake_args' from command line to 'None'
+[2.041s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'catkin_skip_building_tests' from command line to 'False'
+[2.041s] DEBUG:colcon.colcon_core.verb:Building package 'manager' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matthias/xplore2023/hd_ws/build/manager', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matthias/xplore2023/hd_ws/install/manager', 'merge_install': False, 'path': '/home/matthias/xplore2023/hd_ws/src/control/manager', 'symlink_install': False, 'test_result_base': None}
+[2.042s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[2.045s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[2.046s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/matthias/xplore2023/hd_ws/src/control/astra_description' with build type 'ament_cmake'
+[2.046s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/matthias/xplore2023/hd_ws/src/control/astra_description'
+[2.053s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[2.053s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.053s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.058s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/matthias/xplore2023/hd_ws/src/control/astra_interfaces' with build type 'ament_cmake'
+[2.058s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/matthias/xplore2023/hd_ws/src/control/astra_interfaces'
+[2.059s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.059s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.063s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/matthias/xplore2023/hd_ws/src/control/hw_interface' with build type 'ament_cmake'
+[2.063s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/matthias/xplore2023/hd_ws/src/control/hw_interface'
+[2.065s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.065s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.069s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/matthias/xplore2023/hd_ws/src/control/moveit_api_test' with build type 'ament_cmake'
+[2.069s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/matthias/xplore2023/hd_ws/src/control/moveit_api_test'
+[2.070s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.070s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.075s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/matthias/xplore2023/hd_ws/src/control/task_execution' with build type 'ament_python'
+[2.075s] Level 1:colcon.colcon_core.shell:create_environment_hook('task_execution', 'ament_prefix_path')
+[2.076s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matthias/xplore2023/hd_ws/install/task_execution/share/task_execution/hook/ament_prefix_path.ps1'
+[2.077s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/matthias/xplore2023/hd_ws/install/task_execution/share/task_execution/hook/ament_prefix_path.dsv'
+[2.077s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matthias/xplore2023/hd_ws/install/task_execution/share/task_execution/hook/ament_prefix_path.sh'
+[2.079s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.079s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.083s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/matthias/xplore2023/hd_ws/tttt' with build type 'ament_cmake'
+[2.083s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/matthias/xplore2023/hd_ws/tttt'
+[2.085s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.085s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.093s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_description -- -j12 -l12
+[2.100s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_interfaces -- -j12 -l12
+[2.102s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matthias/xplore2023/hd_ws/build/hw_interface': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/hw_interface -- -j12 -l12
+[2.108s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12
+[2.492s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/matthias/xplore2023/hd_ws/src/control/task_execution'
+[2.494s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.494s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.507s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matthias/xplore2023/hd_ws/build/tttt': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/tttt -- -j12 -l12
+[2.507s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matthias/xplore2023/hd_ws/build/hw_interface' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/hw_interface -- -j12 -l12
+[2.511s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matthias/xplore2023/hd_ws/build/astra_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_description -- -j12 -l12
+[2.513s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12
+[2.567s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matthias/xplore2023/hd_ws/build/hw_interface': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/hw_interface
+[2.571s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/astra_description
+[2.583s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(moveit_api_test)
+[2.586s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matthias/xplore2023/hd_ws/build/tttt' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_description:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/tttt -- -j12 -l12
+[2.592s] Level 1:colcon.colcon_core.environment:checking '/home/matthias/xplore2023/hd_ws/install/moveit_api_test' for CMake module files
+[2.593s] Level 1:colcon.colcon_core.environment:checking '/home/matthias/xplore2023/hd_ws/install/moveit_api_test' for CMake config files
+[2.594s] Level 1:colcon.colcon_core.shell:create_environment_hook('moveit_api_test', 'cmake_prefix_path')
+[2.596s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/hook/cmake_prefix_path.ps1'
+[2.596s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/hook/cmake_prefix_path.dsv'
+[2.596s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/hook/cmake_prefix_path.sh'
+[2.597s] Level 1:colcon.colcon_core.environment:checking '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib'
+[2.597s] Level 1:colcon.colcon_core.environment:checking '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/bin'
+[2.597s] Level 1:colcon.colcon_core.environment:checking '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/pkgconfig/moveit_api_test.pc'
+[2.597s] Level 1:colcon.colcon_core.environment:checking '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/lib/python3.10/site-packages'
+[2.597s] Level 1:colcon.colcon_core.environment:checking '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/bin'
+[2.599s] INFO:colcon.colcon_core.shell:Creating package script '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.ps1'
+[2.600s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.dsv'
+[2.600s] INFO:colcon.colcon_core.shell:Creating package script '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.sh'
+[2.601s] INFO:colcon.colcon_core.shell:Creating package script '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.bash'
+[2.602s] INFO:colcon.colcon_core.shell:Creating package script '/home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/moveit_api_test/package.zsh'
+[2.603s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/matthias/xplore2023/hd_ws/install/moveit_api_test/share/colcon-core/packages/moveit_api_test)
+[3.626s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[3.626s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[3.626s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '2'
+[3.626s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[3.650s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[3.651s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[3.651s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[3.711s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[3.716s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/matthias/xplore2023/hd_ws/install/local_setup.ps1'
+[3.719s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/matthias/xplore2023/hd_ws/install/_local_setup_util_ps1.py'
+[3.724s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/matthias/xplore2023/hd_ws/install/setup.ps1'
+[3.730s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/matthias/xplore2023/hd_ws/install/local_setup.sh'
+[3.732s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/matthias/xplore2023/hd_ws/install/_local_setup_util_sh.py'
+[3.734s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/matthias/xplore2023/hd_ws/install/setup.sh'
+[3.740s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/matthias/xplore2023/hd_ws/install/local_setup.bash'
+[3.741s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/matthias/xplore2023/hd_ws/install/setup.bash'
+[3.747s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/matthias/xplore2023/hd_ws/install/local_setup.zsh'
+[3.749s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/matthias/xplore2023/hd_ws/install/setup.zsh'

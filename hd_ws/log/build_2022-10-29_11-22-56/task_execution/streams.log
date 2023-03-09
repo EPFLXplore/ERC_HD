@@ -1,0 +1,48 @@
+[0.727s] Invoking command in '/home/matthias/xplore2023/hd_ws/src/control/task_execution': PYTHONPATH=/home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/matthias/xplore2023/hd_ws/build/task_execution/build install --prefix /home/matthias/xplore2023/hd_ws/install/task_execution --record /home/matthias/xplore2023/hd_ws/build/task_execution/install.log --single-version-externally-managed
+[0.965s] running egg_info
+[0.965s] creating ../../../build/task_execution/task_execution.egg-info
+[0.965s] writing ../../../build/task_execution/task_execution.egg-info/PKG-INFO
+[0.965s] writing dependency_links to ../../../build/task_execution/task_execution.egg-info/dependency_links.txt
+[0.965s] writing entry points to ../../../build/task_execution/task_execution.egg-info/entry_points.txt
+[0.966s] writing requirements to ../../../build/task_execution/task_execution.egg-info/requires.txt
+[0.966s] writing top-level names to ../../../build/task_execution/task_execution.egg-info/top_level.txt
+[0.966s] writing manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[0.988s] listing git files failed - pretending there aren't any
+[1.109s] reading manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[1.110s] writing manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[1.110s] running build
+[1.110s] running build_py
+[1.110s] creating /home/matthias/xplore2023/hd_ws/build/task_execution/build
+[1.110s] creating /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib
+[1.110s] creating /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution
+[1.110s] copying task_execution/planner_test.py -> /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution
+[1.110s] copying task_execution/trajectory_planner.py -> /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution
+[1.110s] copying task_execution/__init__.py -> /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution
+[1.110s] copying task_execution/task_executor.py -> /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution
+[1.111s] copying task_execution/vision_test.py -> /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution
+[1.111s] running install
+[1.111s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[1.111s]   warnings.warn(
+[1.111s] running install_lib
+[1.112s] creating /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution
+[1.112s] copying /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution/planner_test.py -> /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution
+[1.112s] copying /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution/trajectory_planner.py -> /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution
+[1.112s] copying /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution/__init__.py -> /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution
+[1.112s] copying /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution/task_executor.py -> /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution
+[1.112s] copying /home/matthias/xplore2023/hd_ws/build/task_execution/build/lib/task_execution/vision_test.py -> /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution
+[1.113s] byte-compiling /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution/planner_test.py to planner_test.cpython-310.pyc
+[1.113s] byte-compiling /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution/trajectory_planner.py to trajectory_planner.cpython-310.pyc
+[1.115s] byte-compiling /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution/__init__.py to __init__.cpython-310.pyc
+[1.115s] byte-compiling /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution/task_executor.py to task_executor.cpython-310.pyc
+[1.116s] byte-compiling /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution/vision_test.py to vision_test.cpython-310.pyc
+[1.117s] running install_data
+[1.117s] creating /home/matthias/xplore2023/hd_ws/install/task_execution/share/ament_index
+[1.118s] creating /home/matthias/xplore2023/hd_ws/install/task_execution/share/ament_index/resource_index
+[1.118s] creating /home/matthias/xplore2023/hd_ws/install/task_execution/share/ament_index/resource_index/packages
+[1.118s] copying resource/task_execution -> /home/matthias/xplore2023/hd_ws/install/task_execution/share/ament_index/resource_index/packages
+[1.118s] copying package.xml -> /home/matthias/xplore2023/hd_ws/install/task_execution/share/task_execution
+[1.118s] running install_egg_info
+[1.118s] Copying ../../../build/task_execution/task_execution.egg-info to /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution-0.0.0-py3.10.egg-info
+[1.119s] running install_scripts
+[1.134s] writing list of installed files to '/home/matthias/xplore2023/hd_ws/build/task_execution/install.log'
+[1.159s] Invoked command in '/home/matthias/xplore2023/hd_ws/src/control/task_execution' returned '0': PYTHONPATH=/home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/matthias/xplore2023/hd_ws/build/task_execution/build install --prefix /home/matthias/xplore2023/hd_ws/install/task_execution --record /home/matthias/xplore2023/hd_ws/build/task_execution/install.log --single-version-externally-managed

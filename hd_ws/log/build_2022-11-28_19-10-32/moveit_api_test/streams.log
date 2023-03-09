@@ -1,0 +1,37 @@
+[0.025s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12
+[0.043s] -- Found ament_cmake: 1.3.2 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.190s] -- Found rclcpp: 16.0.1 (/opt/ros/humble/share/rclcpp/cmake)
+[0.224s] -- Found rosidl_generator_c: 3.1.3 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.226s] -- Found rosidl_adapter: 3.1.3 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.232s] -- Found rosidl_generator_cpp: 3.1.3 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.244s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.259s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.318s] -- Found rmw_implementation_cmake: 6.1.0 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.319s] -- Found rmw_fastrtps_cpp: 6.2.1 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.457s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.614s] -- Found moveit_core: 2.5.3 (/opt/ros/humble/share/moveit_core/cmake)
+[0.798s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[0.816s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[0.966s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[1.301s] -- Found Eigen3: TRUE (found version "3.4.0") 
+[1.301s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[2.470s] -- Found ament_lint_auto: 0.12.4 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[2.544s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[2.544s] -- Configured cppcheck include dirs: 
+[2.544s] -- Configured cppcheck exclude dirs and/or files: 
+[2.545s] -- Added test 'lint_cmake' to check CMake code style
+[2.546s] -- Added test 'uncrustify' to check C / C++ code style
+[2.546s] -- Configured uncrustify additional arguments: 
+[2.547s] -- Added test 'xmllint' to check XML markup files
+[2.548s] -- Configuring done
+[2.625s] -- Generating done
+[2.632s] -- Build files have been written to: /home/matthias/xplore2023/hd_ws/build/moveit_api_test
+[2.742s] [ 50%] [32mBuilding CXX object CMakeFiles/moveit_test.dir/src/test.cpp.o[0m
+[9.624s] [100%] [32m[1mLinking CXX executable moveit_test[0m
+[11.961s] /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+[11.961s] (.text+0x1b): undefined reference to `main'
+[11.965s] collect2: error: ld returned 1 exit status
+[11.967s] gmake[2]: *** [CMakeFiles/moveit_test.dir/build.make:313: moveit_test] Error 1
+[11.967s] gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/moveit_test.dir/all] Error 2
+[11.967s] gmake: *** [Makefile:146: all] Error 2
+[11.969s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12

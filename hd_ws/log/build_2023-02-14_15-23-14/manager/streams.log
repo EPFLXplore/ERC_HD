@@ -1,0 +1,23 @@
+[0.722s] Invoking command in '/home/matthias/xplore2023/hd_ws/src/control/manager': CMAKE_PREFIX_PATH=/home/matthias/xplore2023/hd_ws/install/astra_interfaces:/home/matthias/xplore2023/hd_ws/install/tttt:/home/matthias/xplore2023/hd_ws/install/moveit_api_test2:/home/matthias/xplore2023/hd_ws/install/moveit_api_test:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_moveit_config:/home/matthias/xplore2023/hd_ws/install/astra_description PYTHONPATH=/home/matthias/xplore2023/hd_ws/build/manager/prefix_override:/home/matthias/xplore2023/hd_ws/install/manager/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/manager build --build-base /home/matthias/xplore2023/hd_ws/build/manager/build install --record /home/matthias/xplore2023/hd_ws/build/manager/install.log --single-version-externally-managed
+[0.953s] running egg_info
+[0.953s] writing ../../../build/manager/manager.egg-info/PKG-INFO
+[0.953s] writing dependency_links to ../../../build/manager/manager.egg-info/dependency_links.txt
+[0.953s] writing entry points to ../../../build/manager/manager.egg-info/entry_points.txt
+[0.954s] writing requirements to ../../../build/manager/manager.egg-info/requires.txt
+[0.954s] writing top-level names to ../../../build/manager/manager.egg-info/top_level.txt
+[0.955s] reading manifest file '../../../build/manager/manager.egg-info/SOURCES.txt'
+[0.956s] writing manifest file '../../../build/manager/manager.egg-info/SOURCES.txt'
+[0.956s] running build
+[0.956s] running build_py
+[0.956s] running install
+[0.956s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[0.956s]   warnings.warn(
+[0.957s] running install_lib
+[0.958s] running install_data
+[0.958s] running install_egg_info
+[0.959s] removing '/home/matthias/xplore2023/hd_ws/install/manager/lib/python3.10/site-packages/manager-0.0.0-py3.10.egg-info' (and everything under it)
+[0.959s] Copying ../../../build/manager/manager.egg-info to /home/matthias/xplore2023/hd_ws/install/manager/lib/python3.10/site-packages/manager-0.0.0-py3.10.egg-info
+[0.960s] running install_scripts
+[0.977s] Installing manager script to /home/matthias/xplore2023/hd_ws/install/manager/lib/manager
+[0.977s] writing list of installed files to '/home/matthias/xplore2023/hd_ws/build/manager/install.log'
+[0.998s] Invoked command in '/home/matthias/xplore2023/hd_ws/src/control/manager' returned '0': CMAKE_PREFIX_PATH=/home/matthias/xplore2023/hd_ws/install/astra_interfaces:/home/matthias/xplore2023/hd_ws/install/tttt:/home/matthias/xplore2023/hd_ws/install/moveit_api_test2:/home/matthias/xplore2023/hd_ws/install/moveit_api_test:/home/matthias/xplore2023/hd_ws/install/hw_interface:/home/matthias/xplore2023/hd_ws/install/astra_moveit_config:/home/matthias/xplore2023/hd_ws/install/astra_description PYTHONPATH=/home/matthias/xplore2023/hd_ws/build/manager/prefix_override:/home/matthias/xplore2023/hd_ws/install/manager/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/manager build --build-base /home/matthias/xplore2023/hd_ws/build/manager/build install --record /home/matthias/xplore2023/hd_ws/build/manager/install.log --single-version-externally-managed

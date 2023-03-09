@@ -1,0 +1,194 @@
+[0.041s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_interfaces -- -j12 -l12
+[0.219s] [  2%] Built target astra_interfaces__cpp
+[0.239s] [ 12%] Built target astra_interfaces__rosidl_generator_c
+[0.253s] [ 12%] Built target ament_cmake_python_copy_astra_interfaces
+[0.313s] [ 23%] Built target astra_interfaces__rosidl_typesupport_fastrtps_cpp
+[0.315s] [ 34%] Built target astra_interfaces__rosidl_typesupport_cpp
+[0.318s] [ 44%] Built target astra_interfaces__rosidl_typesupport_c
+[0.318s] [ 55%] Built target astra_interfaces__rosidl_typesupport_introspection_cpp
+[0.319s] [ 65%] Built target astra_interfaces__rosidl_typesupport_introspection_c
+[0.322s] [ 76%] Built target astra_interfaces__rosidl_typesupport_fastrtps_c
+[0.345s] [ 76%] Built target astra_interfaces
+[0.365s] [ 78%] Built target astra_interfaces__py
+[0.390s] [ 85%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_generator_py.dir/rosidl_generator_py/astra_interfaces/msg/_object_s.c.o[0m
+[0.390s] [ 85%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_generator_py.dir/rosidl_generator_py/astra_interfaces/msg/_task_s.c.o[0m
+[0.390s] [ 85%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_generator_py.dir/rosidl_generator_py/astra_interfaces/msg/_cmd_outcome_s.c.o[0m
+[0.568s] running egg_info
+[0.569s] writing astra_interfaces.egg-info/PKG-INFO
+[0.569s] writing dependency_links to astra_interfaces.egg-info/dependency_links.txt
+[0.569s] writing top-level names to astra_interfaces.egg-info/top_level.txt
+[0.575s] reading manifest file 'astra_interfaces.egg-info/SOURCES.txt'
+[0.576s] writing manifest file 'astra_interfaces.egg-info/SOURCES.txt'
+[0.606s] [ 85%] Built target ament_cmake_python_build_astra_interfaces_egg
+[0.627s] [ 87%] [32m[1mLinking C shared library rosidl_generator_py/astra_interfaces/libastra_interfaces__rosidl_generator_py.so[0m
+[0.680s] [ 87%] Built target astra_interfaces__rosidl_generator_py
+[0.701s] [ 91%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/astra_interfaces/_astra_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c.o[0m
+[0.702s] [ 91%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/astra_interfaces/_astra_interfaces_s.ep.rosidl_typesupport_c.c.o[0m
+[0.702s] [ 93%] [32mBuilding C object CMakeFiles/astra_interfaces__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/astra_interfaces/_astra_interfaces_s.ep.rosidl_typesupport_introspection_c.c.o[0m
+[0.808s] [ 95%] [32m[1mLinking C shared library rosidl_generator_py/astra_interfaces/astra_interfaces_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so[0m
+[0.812s] [ 97%] [32m[1mLinking C shared library rosidl_generator_py/astra_interfaces/astra_interfaces_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so[0m
+[0.815s] [100%] [32m[1mLinking C shared library rosidl_generator_py/astra_interfaces/astra_interfaces_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so[0m
+[0.848s] [100%] Built target astra_interfaces__rosidl_typesupport_c__pyext
+[0.849s] [100%] Built target astra_interfaces__rosidl_typesupport_fastrtps_c__pyext
+[0.853s] [100%] Built target astra_interfaces__rosidl_typesupport_introspection_c__pyext
+[0.863s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_interfaces -- -j12 -l12
+[0.947s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/astra_interfaces
+[0.957s] -- Install configuration: ""
+[0.957s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/ament_index/resource_index/rosidl_interfaces/astra_interfaces
+[0.958s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces
+[0.958s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg
+[0.958s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/task.h
+[0.958s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail
+[0.959s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__type_support.h
+[0.959s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__functions.c
+[0.959s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__type_support.h
+[0.959s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__struct.h
+[0.959s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__type_support.h
+[0.960s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__struct.h
+[0.960s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__functions.h
+[0.960s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__struct.h
+[0.960s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__functions.h
+[0.960s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__functions.c
+[0.960s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__functions.c
+[0.961s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__functions.h
+[0.961s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/rosidl_generator_c__visibility_control.h
+[0.961s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/object.h
+[0.961s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/cmd_outcome.h
+[0.961s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/environment/library_path.sh
+[0.962s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/environment/library_path.dsv
+[0.962s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/lib/libastra_interfaces__rosidl_generator_c.so
+[0.962s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces
+[0.962s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg
+[0.962s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail
+[0.963s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__rosidl_typesupport_fastrtps_c.h
+[0.963s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__rosidl_typesupport_fastrtps_c.h
+[0.963s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__rosidl_typesupport_fastrtps_c.h
+[0.963s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+[0.963s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/lib/libastra_interfaces__rosidl_typesupport_fastrtps_c.so
+[0.964s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces
+[0.964s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg
+[0.964s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/object.hpp
+[0.964s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail
+[0.965s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__struct.hpp
+[0.965s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__struct.hpp
+[0.965s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__builder.hpp
+[0.965s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__builder.hpp
+[0.965s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__traits.hpp
+[0.965s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__struct.hpp
+[0.966s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__builder.hpp
+[0.966s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__traits.hpp
+[0.966s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__traits.hpp
+[0.966s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/task.hpp
+[0.966s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/cmd_outcome.hpp
+[0.966s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces
+[0.967s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg
+[0.967s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail
+[0.967s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__rosidl_typesupport_fastrtps_cpp.hpp
+[0.967s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/dds_fastrtps
+[0.967s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__rosidl_typesupport_fastrtps_cpp.hpp
+[0.968s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__rosidl_typesupport_fastrtps_cpp.hpp
+[0.968s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+[0.968s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/lib/libastra_interfaces__rosidl_typesupport_fastrtps_cpp.so
+[0.968s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces
+[0.968s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg
+[0.968s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail
+[0.969s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__type_support.c
+[0.969s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__type_support.c
+[0.969s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__rosidl_typesupport_introspection_c.h
+[0.969s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__rosidl_typesupport_introspection_c.h
+[0.969s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__rosidl_typesupport_introspection_c.h
+[0.970s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__type_support.c
+[0.970s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/rosidl_typesupport_introspection_c__visibility_control.h
+[0.970s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/lib/libastra_interfaces__rosidl_typesupport_introspection_c.so
+[0.970s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/lib/libastra_interfaces__rosidl_typesupport_c.so
+[0.970s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces
+[0.970s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg
+[0.971s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail
+[0.971s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__type_support.cpp
+[0.971s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__rosidl_typesupport_introspection_cpp.hpp
+[0.971s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/task__type_support.cpp
+[0.971s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__type_support.cpp
+[0.971s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/object__rosidl_typesupport_introspection_cpp.hpp
+[0.971s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/include/astra_interfaces/astra_interfaces/msg/detail/cmd_outcome__rosidl_typesupport_introspection_cpp.hpp
+[0.972s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/lib/libastra_interfaces__rosidl_typesupport_introspection_cpp.so
+[0.972s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/lib/libastra_interfaces__rosidl_typesupport_cpp.so
+[0.972s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/environment/pythonpath.sh
+[0.972s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/environment/pythonpath.dsv
+[0.972s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces-0.0.0-py3.10.egg-info
+[0.972s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces-0.0.0-py3.10.egg-info/PKG-INFO
+[0.973s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces-0.0.0-py3.10.egg-info/dependency_links.txt
+[0.973s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces-0.0.0-py3.10.egg-info/top_level.txt
+[0.973s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces-0.0.0-py3.10.egg-info/SOURCES.txt
+[0.974s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces
+[0.974s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/astra_interfaces_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so
+[0.974s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/__init__.py
+[0.974s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/_astra_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c
+[0.975s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/astra_interfaces_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so
+[0.975s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/_astra_interfaces_s.ep.rosidl_typesupport_c.c
+[0.975s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/astra_interfaces_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so
+[0.975s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/_astra_interfaces_s.ep.rosidl_typesupport_introspection_c.c
+[0.975s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/libastra_interfaces__rosidl_generator_py.so
+[0.976s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/msg
+[0.976s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/msg/_object.py
+[0.976s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/msg/_object_s.c
+[0.976s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/msg/__init__.py
+[0.977s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/msg/_cmd_outcome_s.c
+[0.977s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/msg/_cmd_outcome.py
+[0.977s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/msg/_task.py
+[0.977s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/msg/_task_s.c
+[1.081s] Listing '/home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces'...
+[1.082s] Listing '/home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/msg'...
+[1.097s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/astra_interfaces_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so
+[1.100s] -- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/astra_interfaces_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so" to ""
+[1.101s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/astra_interfaces_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so
+[1.103s] -- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/astra_interfaces_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so" to ""
+[1.104s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/astra_interfaces_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so
+[1.105s] -- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/astra_interfaces/local/lib/python3.10/dist-packages/astra_interfaces/astra_interfaces_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so" to ""
+[1.107s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/lib/libastra_interfaces__rosidl_generator_py.so
+[1.108s] -- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/astra_interfaces/lib/libastra_interfaces__rosidl_generator_py.so" to ""
+[1.109s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/msg/CmdOutcome.idl
+[1.110s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/msg/Object.idl
+[1.111s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/msg/Task.idl
+[1.111s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/msg/CmdOutcome.msg
+[1.112s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/msg/Object.msg
+[1.112s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/msg/Task.msg
+[1.112s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/ament_index/resource_index/package_run_dependencies/astra_interfaces
+[1.113s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/ament_index/resource_index/parent_prefix_path/astra_interfaces
+[1.113s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/environment/ament_prefix_path.sh
+[1.113s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/environment/ament_prefix_path.dsv
+[1.113s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/environment/path.sh
+[1.114s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/environment/path.dsv
+[1.114s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/local_setup.bash
+[1.114s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/local_setup.sh
+[1.115s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/local_setup.zsh
+[1.115s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/local_setup.dsv
+[1.115s] -- Installing: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/package.dsv
+[1.115s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/ament_index/resource_index/packages/astra_interfaces
+[1.116s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/export_astra_interfaces__rosidl_generator_cExport.cmake
+[1.116s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/export_astra_interfaces__rosidl_generator_cExport-noconfig.cmake
+[1.116s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/export_astra_interfaces__rosidl_typesupport_fastrtps_cExport.cmake
+[1.117s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/export_astra_interfaces__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+[1.118s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/export_astra_interfaces__rosidl_generator_cppExport.cmake
+[1.119s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/export_astra_interfaces__rosidl_typesupport_fastrtps_cppExport.cmake
+[1.120s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/export_astra_interfaces__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+[1.121s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfaces__rosidl_typesupport_introspection_cExport.cmake
+[1.121s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfaces__rosidl_typesupport_introspection_cExport-noconfig.cmake
+[1.123s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfaces__rosidl_typesupport_cExport.cmake
+[1.123s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfaces__rosidl_typesupport_cExport-noconfig.cmake
+[1.124s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfaces__rosidl_typesupport_introspection_cppExport.cmake
+[1.124s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfaces__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+[1.125s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfaces__rosidl_typesupport_cppExport.cmake
+[1.126s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfaces__rosidl_typesupport_cppExport-noconfig.cmake
+[1.127s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/export_astra_interfaces__rosidl_generator_pyExport.cmake
+[1.127s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/export_astra_interfaces__rosidl_generator_pyExport-noconfig.cmake
+[1.128s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/rosidl_cmake-extras.cmake
+[1.129s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/ament_cmake_export_dependencies-extras.cmake
+[1.129s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/ament_cmake_export_include_directories-extras.cmake
+[1.130s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/ament_cmake_export_libraries-extras.cmake
+[1.130s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/ament_cmake_export_targets-extras.cmake
+[1.131s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+[1.131s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+[1.132s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfacesConfig.cmake
+[1.132s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/cmake/astra_interfacesConfig-version.cmake
+[1.133s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_interfaces/share/astra_interfaces/package.xml
+[1.143s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/astra_interfaces

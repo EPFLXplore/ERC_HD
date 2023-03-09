@@ -1,0 +1,80 @@
+[0.042s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test2 -- -j12 -l12
+[0.613s] -- Found ament_cmake: 1.3.3 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.614s] -- Found rclcpp: 16.0.3 (/opt/ros/humble/share/rclcpp/cmake)
+[0.647s] -- Found rosidl_generator_c: 3.1.4 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.650s] -- Found rosidl_adapter: 3.1.4 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.668s] -- Found rosidl_generator_cpp: 3.1.4 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.714s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.789s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.951s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.956s] -- Found rmw_fastrtps_cpp: 6.2.2 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[1.166s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.366s] -- Found moveit_core: 2.5.4 (/opt/ros/humble/share/moveit_core/cmake)
+[1.389s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[1.403s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[1.504s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[1.851s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[3.120s] -- Found moveit_ros_planning_interface: 2.5.4 (/opt/ros/humble/share/moveit_ros_planning_interface/cmake)
+[3.125s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: date_time filesystem program_options system thread 
+[3.230s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread chrono 
+[3.817s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: thread system filesystem regex date_time program_options 
+[4.075s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread 
+[4.508s] -- Found rviz_visual_tools: 4.1.4 (/opt/ros/humble/share/rviz_visual_tools/cmake)
+[4.623s] -- Setting OGRE_DIR to: '/opt/ros/humble/share/rviz_ogre_vendor/cmake/../../../opt/rviz_ogre_vendor/lib/OGRE/cmake'
+[4.624s] -- Found OGRE
+[4.624s] --   static     : OFF
+[4.624s] --   components : HLMS;MeshLodGenerator;Overlay;Paging;Property;RTShaderSystem;Terrain;Volume
+[4.624s] --   plugins    : Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI
+[4.624s] --   media      : /opt/ros/humble/opt/rviz_ogre_vendor/share/OGRE/Media
+[4.625s] -- OGRE_LIBRARIES: OgreHLMS;OgreMeshLodGenerator;OgreOverlay;OgrePaging;OgreProperty;OgreRTShaderSystem;OgreTerrain;OgreVolume;OgreMain
+[4.625s] -- OGRE_LIBRARY_DIRS: /opt/ros/humble/opt/rviz_ogre_vendor/lib
+[4.625s] -- OGRE_PLUGINS: Plugin_BSPSceneManager;Plugin_OctreeSceneManager;Plugin_PCZSceneManager;Plugin_ParticleFX;RenderSystem_GL;RenderSystem_GL3Plus;Codec_STBI
+[4.625s] -- OGRE_PLUGIN_DIR: /opt/ros/humble/opt/rviz_ogre_vendor/lib/OGRE
+[4.625s] -- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so
+[4.625s] -- rviz_ogre_vendor::OgreOverlay for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreOverlay.so
+[4.625s] -- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_RELEASE: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so
+[4.625s] -- rviz_ogre_vendor::OgreMain for IMPORTED_LOCATION_DEBUG: /opt/ros/humble/opt/rviz_ogre_vendor/lib/libOgreMain.so
+[4.626s] -- Could not find freeimage library
+[4.667s] -- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_RELEASE: _render_system_gl_static_library_abs-NOTFOUND
+[4.667s] -- rviz_ogre_vendor::RenderSystem_GL for IMPORTED_LOCATION_DEBUG: _render_system_gl_static_library_abs-NOTFOUND
+[5.300s] -- Found moveit_visual_tools: 4.1.0 (/opt/ros/humble/share/moveit_visual_tools/cmake)
+[5.832s] -- Found ament_lint_auto: 0.12.5 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[5.900s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[5.900s] -- Configured cppcheck include dirs: 
+[5.900s] -- Configured cppcheck exclude dirs and/or files: 
+[5.901s] -- Added test 'flake8' to check Python code syntax and style conventions
+[5.901s] -- Added test 'lint_cmake' to check CMake code style
+[5.902s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[5.903s] -- Added test 'uncrustify' to check C / C++ code style
+[5.903s] -- Configured uncrustify additional arguments: 
+[5.903s] -- Added test 'xmllint' to check XML markup files
+[5.904s] -- Configuring done
+[5.958s] -- Generating done
+[5.961s] -- Build files have been written to: /home/matthias/xplore2023/hd_ws/build/moveit_api_test2
+[5.991s] [35m[1mConsolidate compiler generated dependencies of target move_group_interface_test[0m
+[6.061s] [ 50%] [32mBuilding CXX object CMakeFiles/move_group_interface_test.dir/src/move_group_interface.cpp.o[0m
+[20.066s] [100%] [32m[1mLinking CXX executable move_group_interface_test[0m
+[21.115s] [100%] Built target move_group_interface_test
+[21.286s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test2 -- -j12 -l12
+[21.368s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/moveit_api_test2
+[21.375s] -- Install configuration: ""
+[21.375s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/lib/moveit_api_test2/move_group_interface_test
+[21.376s] -- Set runtime path of "/home/matthias/xplore2023/hd_ws/install/moveit_api_test2/lib/moveit_api_test2/move_group_interface_test" to ""
+[21.377s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/launch
+[21.377s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/launch/move_group_interface.launch.py
+[21.379s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/ament_index/resource_index/package_run_dependencies/moveit_api_test2
+[21.385s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/ament_index/resource_index/parent_prefix_path/moveit_api_test2
+[21.387s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/environment/ament_prefix_path.sh
+[21.388s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/environment/ament_prefix_path.dsv
+[21.388s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/environment/path.sh
+[21.388s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/environment/path.dsv
+[21.389s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/local_setup.bash
+[21.389s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/local_setup.sh
+[21.389s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/local_setup.zsh
+[21.390s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/local_setup.dsv
+[21.390s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/package.dsv
+[21.391s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/ament_index/resource_index/packages/moveit_api_test2
+[21.391s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/cmake/moveit_api_test2Config.cmake
+[21.392s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/cmake/moveit_api_test2Config-version.cmake
+[21.392s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/package.xml
+[21.411s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/moveit_api_test2

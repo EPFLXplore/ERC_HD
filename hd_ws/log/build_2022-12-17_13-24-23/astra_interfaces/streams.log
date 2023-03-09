@@ -1,0 +1,23 @@
+[0.030s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_interfaces -- -j12 -l12
+[0.079s] [  2%] Built target astra_interfaces__cpp
+[0.080s] [ 12%] Built target astra_interfaces__rosidl_generator_c
+[0.100s] [ 12%] Built target ament_cmake_python_copy_astra_interfaces
+[0.110s] [ 23%] Built target astra_interfaces__rosidl_typesupport_fastrtps_cpp
+[0.111s] [ 42%] Built target astra_interfaces__rosidl_typesupport_introspection_cpp
+[0.111s] [ 55%] Built target astra_interfaces__rosidl_typesupport_cpp
+[0.111s] [ 55%] Built target astra_interfaces__rosidl_typesupport_c
+[0.113s] [ 65%] Built target astra_interfaces__rosidl_typesupport_introspection_c
+[0.114s] [ 76%] Built target astra_interfaces__rosidl_typesupport_fastrtps_c
+[0.132s] [ 76%] Built target astra_interfaces
+[0.151s] [ 78%] Built target astra_interfaces__py
+[0.171s] [ 87%] Built target astra_interfaces__rosidl_generator_py
+[0.191s] [ 93%] Built target astra_interfaces__rosidl_typesupport_c__pyext
+[0.191s] [100%] Built target astra_interfaces__rosidl_typesupport_introspection_c__pyext
+[0.191s] [ 97%] Built target astra_interfaces__rosidl_typesupport_fastrtps_c__pyext
+[0.373s] running egg_info
+[0.375s] writing astra_interfaces.egg-info/PKG-INFO
+[0.375s] writing dependency_links to astra_interfaces.egg-info/dependency_links.txt
+[0.376s] writing top-level names to astra_interfaces.egg-info/top_level.txt
+[0.378s] reading manifest file 'astra_interfaces.egg-info/SOURCES.txt'
+[0.383s] writing manifest file 'astra_interfaces.egg-info/SOURCES.txt'
+[0.411s] [100%] Built target ament_cmake_python_build_astra_interfaces_egg

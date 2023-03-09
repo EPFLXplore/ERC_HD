@@ -1,0 +1,1 @@
+Invoking command in '/home/matthias/xplore2023/hd_ws/build/tttt': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake /home/matthias/xplore2023/hd_ws/tttt -DCMAKE_INSTALL_PREFIX=/home/matthias/xplore2023/hd_ws/install/tttt

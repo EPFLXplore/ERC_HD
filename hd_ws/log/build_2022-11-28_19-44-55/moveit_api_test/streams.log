@@ -1,0 +1,12 @@
+[0.025s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12
+[0.082s] [ 50%] [32mBuilding CXX object CMakeFiles/moveit_test.dir/src/test.cpp.o[0m
+[5.062s] [100%] [32m[1mLinking CXX executable moveit_test[0m
+[5.472s] /usr/bin/ld: CMakeFiles/moveit_test.dir/src/test.cpp.o: in function `main':
+[5.472s] test.cpp:(.text+0x1af): undefined reference to `robot_model_loader::RobotModelLoader::RobotModelLoader(std::shared_ptr<rclcpp::Node> const&, robot_model_loader::RobotModelLoader::Options const&)'
+[5.472s] /usr/bin/ld: test.cpp:(.text+0x1559): undefined reference to `robot_model_loader::RobotModelLoader::~RobotModelLoader()'
+[5.473s] /usr/bin/ld: test.cpp:(.text+0x186a): undefined reference to `robot_model_loader::RobotModelLoader::~RobotModelLoader()'
+[5.490s] collect2: error: ld returned 1 exit status
+[5.491s] gmake[2]: *** [CMakeFiles/moveit_test.dir/build.make:313: moveit_test] Error 1
+[5.492s] gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/moveit_test.dir/all] Error 2
+[5.492s] gmake: *** [Makefile:146: all] Error 2
+[5.494s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test -- -j12 -l12

@@ -1,0 +1,8 @@
+[01m[K/home/matthias/xplore2023/hd_ws/src/control/moveit_api_test/src/motion_planning.cpp:10:10:[m[K [01;31m[Kfatal error: [m[Kmoveit_visual_tools/moveit_visual_tools.h: No such file or directory
+   10 | #include [01;31m[K<moveit_visual_tools/moveit_visual_tools.h>[m[K
+      |          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+compilation terminated.
+gmake[2]: *** [CMakeFiles/motion_planning.dir/build.make:76: CMakeFiles/motion_planning.dir/src/motion_planning.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:221: CMakeFiles/motion_planning.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+gmake: *** [Makefile:146: all] Error 2

@@ -1,0 +1,24 @@
+[0.034s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test2 -- -j12 -l12
+[0.340s] [100%] Built target move_group_interface_test
+[0.349s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/moveit_api_test2 -- -j12 -l12
+[0.375s] Invoking command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/moveit_api_test2
+[0.385s] -- Install configuration: ""
+[0.385s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/lib/moveit_api_test2/move_group_interface_test
+[0.386s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/launch
+[0.386s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/launch/move_group_interface.launch.py
+[0.386s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/ament_index/resource_index/package_run_dependencies/moveit_api_test2
+[0.386s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/ament_index/resource_index/parent_prefix_path/moveit_api_test2
+[0.387s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/environment/ament_prefix_path.sh
+[0.387s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/environment/ament_prefix_path.dsv
+[0.387s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/environment/path.sh
+[0.387s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/environment/path.dsv
+[0.387s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/local_setup.bash
+[0.388s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/local_setup.sh
+[0.388s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/local_setup.zsh
+[0.388s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/local_setup.dsv
+[0.388s] -- Installing: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/package.dsv
+[0.388s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/ament_index/resource_index/packages/moveit_api_test2
+[0.389s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/cmake/moveit_api_test2Config.cmake
+[0.389s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/cmake/moveit_api_test2Config-version.cmake
+[0.389s] -- Up-to-date: /home/matthias/xplore2023/hd_ws/install/moveit_api_test2/share/moveit_api_test2/package.xml
+[0.413s] Invoked command in '/home/matthias/xplore2023/hd_ws/build/moveit_api_test2' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/matthias/xplore2023/hd_ws/install/task_execution:/home/matthias/xplore2023/hd_ws/install/manager:/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/moveit_api_test2

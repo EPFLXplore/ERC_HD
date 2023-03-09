@@ -1,0 +1,30 @@
+-- Found ament_cmake: 1.3.3 (/opt/ros/humble/share/ament_cmake/cmake)
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/matthias/xplore2023/hd_ws/build/astra_moveit_config0
+-- Install configuration: ""
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/ament_index/resource_index/package_run_dependencies/astra_moveit_config0
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/ament_index/resource_index/parent_prefix_path/astra_moveit_config0
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/environment/ament_prefix_path.sh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/environment/path.sh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/environment/path.dsv
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/local_setup.bash
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/local_setup.sh
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/local_setup.zsh
+-- Installing: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/local_setup.dsv
+-- Installing: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.dsv
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/ament_index/resource_index/packages/astra_moveit_config0
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/cmake/astra_moveit_config0Config.cmake
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/cmake/astra_moveit_config0Config-version.cmake
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.xml
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/launch
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/launch/spawn_controllers.launch.py
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/launch/demo.launch.py
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/launch/rsp.launch.py
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/launch/setup_assistant.launch.py
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/launch/static_virtual_joint_tfs.launch.py
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/launch/moveit_rviz.launch.py
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/launch/warehouse_db.launch.py
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/launch/move_group.launch.py
+-- Up-to-date: /home/matthias/xplore2023/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/.setup_assistant

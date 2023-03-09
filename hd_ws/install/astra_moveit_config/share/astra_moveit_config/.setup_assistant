@@ -1,0 +1,27 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: astra_description
+    relative_path: urdf/astra.urdf.xacro
+  srdf:
+    relative_path: config/astra.srdf
+  package_settings:
+    author_name: Matthias Schuller
+    author_email: matthiasshuller92@gmail.com
+    generated_timestamp: 1668207535
+  control_xacro:
+    command:
+      - position
+      - velocity
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+      - velocity
+    state:
+      - position
+      - velocity

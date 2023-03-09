@@ -1,0 +1,23 @@
+[1.147s] Invoking command in '/home/matthias/xplore2023/hd_ws/src/control/task_execution': PYTHONPATH=/home/matthias/xplore2023/hd_ws/build/task_execution/prefix_override:/home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/matthias/xplore2023/hd_ws/build/task_execution/build install --record /home/matthias/xplore2023/hd_ws/build/task_execution/install.log --single-version-externally-managed
+[1.517s] running egg_info
+[1.517s] writing ../../../build/task_execution/task_execution.egg-info/PKG-INFO
+[1.518s] writing dependency_links to ../../../build/task_execution/task_execution.egg-info/dependency_links.txt
+[1.518s] writing entry points to ../../../build/task_execution/task_execution.egg-info/entry_points.txt
+[1.518s] writing requirements to ../../../build/task_execution/task_execution.egg-info/requires.txt
+[1.518s] writing top-level names to ../../../build/task_execution/task_execution.egg-info/top_level.txt
+[1.520s] reading manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[1.521s] writing manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[1.521s] running build
+[1.521s] running build_py
+[1.521s] running install
+[1.521s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[1.521s]   warnings.warn(
+[1.522s] running install_lib
+[1.523s] running install_data
+[1.523s] running install_egg_info
+[1.525s] removing '/home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution-0.0.0-py3.10.egg-info' (and everything under it)
+[1.525s] Copying ../../../build/task_execution/task_execution.egg-info to /home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages/task_execution-0.0.0-py3.10.egg-info
+[1.526s] running install_scripts
+[1.544s] Installing test script to /home/matthias/xplore2023/hd_ws/install/task_execution/lib/task_execution
+[1.545s] writing list of installed files to '/home/matthias/xplore2023/hd_ws/build/task_execution/install.log'
+[1.569s] Invoked command in '/home/matthias/xplore2023/hd_ws/src/control/task_execution' returned '0': PYTHONPATH=/home/matthias/xplore2023/hd_ws/build/task_execution/prefix_override:/home/matthias/xplore2023/hd_ws/install/task_execution/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/matthias/xplore2023/hd_ws/build/task_execution/build install --record /home/matthias/xplore2023/hd_ws/build/task_execution/install.log --single-version-externally-managed
