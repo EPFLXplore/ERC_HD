@@ -1,7 +1,0 @@
-[01m[K/home/matthias/xplore2023/hd_ws/src/control/moveit_api_test/src/test.cpp:2:10:[m[K [01;31m[Kfatal error: [m[Kmoveit/robot_model_loader/robot_model_loader.h: No such file or directory
-    2 | #include [01;31m[K<moveit/robot_model_loader/robot_model_loader.h>[m[K
-      |          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-compilation terminated.
-gmake[2]: *** [CMakeFiles/moveit_test.dir/build.make:76: CMakeFiles/moveit_test.dir/src/test.cpp.o] Error 1
-gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/moveit_test.dir/all] Error 2
-gmake: *** [Makefile:146: all] Error 2

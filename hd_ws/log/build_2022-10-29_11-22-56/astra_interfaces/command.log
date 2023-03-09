@@ -1,6 +1,0 @@
-Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/matthias/xplore2023/hd_ws/src/control/astra_interfaces -DCMAKE_INSTALL_PREFIX=/home/matthias/xplore2023/hd_ws/install/astra_interfaces
-Invoked command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/matthias/xplore2023/hd_ws/src/control/astra_interfaces -DCMAKE_INSTALL_PREFIX=/home/matthias/xplore2023/hd_ws/install/astra_interfaces
-Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_interfaces -- -j12 -l12
-Invoked command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/matthias/xplore2023/hd_ws/build/astra_interfaces -- -j12 -l12
-Invoking command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/astra_interfaces
-Invoked command in '/home/matthias/xplore2023/hd_ws/build/astra_interfaces' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/matthias/xplore2023/hd_ws/build/astra_interfaces

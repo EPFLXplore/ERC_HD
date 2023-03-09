@@ -1,8 +1,0 @@
-{
-  "package_name": "astra_interfaces",
-  "non_idl_tuples": [
-    "/home/matthias/xplore2023/hd_ws/src/control/astra_interfaces:msg/CmdOutcome.msg",
-    "/home/matthias/xplore2023/hd_ws/src/control/astra_interfaces:msg/Object.msg",
-    "/home/matthias/xplore2023/hd_ws/src/control/astra_interfaces:msg/Task.msg"
-  ]
-}

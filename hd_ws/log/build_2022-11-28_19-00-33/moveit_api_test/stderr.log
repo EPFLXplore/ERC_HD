@@ -1,8 +1,0 @@
-[31mCMake Error at CMakeLists.txt:17 (ament_target_dependecies):
-  Unknown CMake command "ament_target_dependecies".
-
-[0m
-[31mCMake Error at CMakeLists.txt:16 (add_executable):
-  The target name "test" is reserved when CTest testing is enabled.
-
-[0m
