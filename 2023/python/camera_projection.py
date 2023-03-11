@@ -30,7 +30,7 @@ def camera_projection(point, rVec, tVec):
     # -tVec appended to identity
     M = np.hstack((id3, [[-tVec[0, 0]], [-tVec[0, 1]], [-tVec[0, 2]], [1]]))
 
-    x, y, z, n = R @ M @ point.T
+    y, x, z, n = R @ M @ point.T
 
-    return np.array([x, y, z]) / n
+    return np.array([-x, -y, z]) / n
 
