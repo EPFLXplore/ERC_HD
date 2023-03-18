@@ -92,6 +92,7 @@ while True:
             print("Point in AR tag coordinates: ", TARGET_AR)
             print("Point in camera coordinates: ", point_cam)
             print("Rotation matrix rVec:        ", rVec[i])
+            
             print("Rotation around x axis: ", angles[0])
             print("Rotation around y axis: ", angles[1])
             print("Rotation around z axis: ", angles[2])
