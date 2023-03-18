@@ -87,15 +87,20 @@ while True:
             point_cam = camera_projection(TARGET_AR, rVec[i], tVec[i])
 
             r = R.from_rotvec(rVec[i])
-            angles = r.as_euler('xyz', degrees=True).flatten()
+            rot_mat = r.as_matrix()
+            print(rot_mat.shape)
+            rot_mat = rot_mat.T.reshape((3,3))
+            print(rot_mat.shape)
+            r2 = R.from_matrix(rot_mat)
+            angles = r2.as_euler('xyz', degrees=True).flatten()
 
             print("Point in AR tag coordinates: ", TARGET_AR)
             print("Point in camera coordinates: ", point_cam)
             print("Rotation matrix rVec:        ", rVec[i])
-            
-            print("Rotation around x axis: ", angles[0])
-            print("Rotation around y axis: ", angles[1])
-            print("Rotation around z axis: ", angles[2])
+
+            print("Rotation around x axis: ", (180 - angles[0])
+            print("Rotation around y axis: ", -angles[1])
+            print("Rotation around z axis: ", -angles[2])
 
 
     cv.circle(frame, (frame.shape[1]//2, frame.shape[0]//2), 5, (255,0,0), 2)
