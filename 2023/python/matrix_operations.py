@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+import math
 
 def compute_projection_matrix(intrinsics, rVec, tVec):
 
@@ -39,4 +40,21 @@ def get_homography_matrix(perspective_matrix: np.array)-> np.array:
     H, status = cv.findHomography(pts_src_cart, pts_dst_cart)
 
     return H
+
+def rotation_matrix_to_Euler_angles(R) :
+ 
+    sy = math.sqrt(R[0,0] * R[0,0] +  R[1,0] * R[1,0])
+ 
+    singular = sy < 1e-6
+ 
+    if  not singular :
+        x = math.atan2(R[2,1] , R[2,2])
+        y = math.atan2(-R[2,0], sy)
+        z = math.atan2(R[1,0], R[0,0])
+    else :
+        x = math.atan2(-R[1,2], R[1,1])
+        y = math.atan2(-R[2,0], sy)
+        z = 0
+ 
+    return np.array([x, y, z])
 
