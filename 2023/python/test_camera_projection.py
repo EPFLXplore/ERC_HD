@@ -3,6 +3,7 @@ import cv2 as cv
 from cv2 import aruco
 import pyrealsense2 as rs
 from camera_projection import camera_projection
+from matrix_operations import rotation_matrix_to_Euler_angles
 
 
 # aruco setup
@@ -84,10 +85,15 @@ while True:
             cv.circle(frame, (int(image_points[0, 0, 0]), int(image_points[0, 0, 1])), 1, (0, 100, 255), 2)
 
             point_cam = camera_projection(TARGET_AR, rVec[i], tVec[i])
+            rot_mat = cv.Rodrigues(rVec[i])
+            angles = rotation_matrix_to_Euler_angles(rot_mat)
 
             print("Point in AR tag coordinates: ", TARGET_AR)
             print("Point in camera coordinates: ", point_cam)
             print("Rotation vector rVec:        ", rVec[i])
+            print("Rotation around x axis: ", angles[0])
+            print("Rotation around y axis: ", angles[1])
+            print("Rotation around z axis: ", angles[2])
 
 
     cv.circle(frame, (frame.shape[1]//2, frame.shape[0]//2), 5, (255,0,0), 2)
