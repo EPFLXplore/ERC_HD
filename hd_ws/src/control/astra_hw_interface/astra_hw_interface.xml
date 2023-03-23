@@ -1,0 +1,9 @@
+<library path="astra_hw_interface">
+    <class name="astra_hw_interface/AstraArmInterface"
+            type="astra_hw_interface::AstraArmInterface"
+            base_class_type="hardware_interface::SystemInterface">
+        <description>
+            Hardware interface for the arm of the Astra rover.
+        </description>
+    </class>
+</library>
