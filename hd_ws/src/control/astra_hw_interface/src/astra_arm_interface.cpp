@@ -18,7 +18,7 @@ hardware_interface::CallbackReturn AstraArmInterface::on_init(const hardware_int
 
     for (const hardware_interface::ComponentInfo & joint : info_.joints) {
         // Astra arm has exactly two state interfaces and one command interface on each joint
-        if (joint.command_interfaces.size() != 1) {
+        if (joint.command_interfaces.size() != 2) {
             RCLCPP_FATAL(
                 rclcpp::get_logger("AstraArmInterface"),
                 "Joint '%s' has %zu command interfaces found. 1 expected.", joint.name.c_str(),
@@ -31,6 +31,14 @@ hardware_interface::CallbackReturn AstraArmInterface::on_init(const hardware_int
                 rclcpp::get_logger("AstraArmInterface"),
                 "Joint '%s' has %s command interfaces found. '%s' expected.", joint.name.c_str(),
                 joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
+            return hardware_interface::CallbackReturn::ERROR;
+        }
+
+        if (joint.command_interfaces[1].name != hardware_interface::HW_IF_VELOCITY) {
+            RCLCPP_FATAL(
+                rclcpp::get_logger("AstraArmInterface"),
+                "Joint '%s' has %s command interfaces found. '%s' expected.", joint.name.c_str(),
+                joint.command_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
             return hardware_interface::CallbackReturn::ERROR;
         }
 
@@ -50,11 +58,11 @@ hardware_interface::CallbackReturn AstraArmInterface::on_init(const hardware_int
             return hardware_interface::CallbackReturn::ERROR;
         }
 
-        if (joint.state_interfaces[0].name != hardware_interface::HW_IF_VELOCITY) {
+        if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY) {
             RCLCPP_FATAL(
                 rclcpp::get_logger("AstraArmInterface"),
                 "Joint '%s' has %s state interface. '%s' expected.", joint.name.c_str(),
-                joint.state_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
+                joint.state_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
             return hardware_interface::CallbackReturn::ERROR;
         }
     }

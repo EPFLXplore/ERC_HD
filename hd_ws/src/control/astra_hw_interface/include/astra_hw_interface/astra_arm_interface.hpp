@@ -20,7 +20,7 @@ namespace astra_hw_interface {
 
 class AstraArmInterface : public hardware_interface::SystemInterface {
 public:
-    AstraArmInterface();
+    //AstraArmInterface();
     hardware_interface::CallbackReturn on_configure(const rclcpp_lifecycle::State &previous_state) override;
     hardware_interface::CallbackReturn on_activate(const rclcpp_lifecycle::State &previous_state) override;
     hardware_interface::CallbackReturn on_deactivate(const rclcpp_lifecycle::State &previous_state) override;
@@ -36,6 +36,7 @@ public:
 private:
     // Store the command for the simulated robot
     std::vector<double> hw_position_commands_;
+    std::vector<double> hw_velocity_commands_;
     std::vector<double> hw_position_states_;
     std::vector<double> hw_velocity_states_;
 };
