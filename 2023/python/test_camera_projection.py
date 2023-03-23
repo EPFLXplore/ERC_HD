@@ -98,7 +98,7 @@ while True:
             print("Point in camera coordinates: ", point_cam)
             print("Rotation matrix rVec:        ", rVec[i])
 
-            print("Rotation around x axis: ", (180 - angles[0])
+            print("Rotation around x axis: ", (180 - angles[0]))
             print("Rotation around y axis: ", -angles[1])
             print("Rotation around z axis: ", -angles[2])
 
