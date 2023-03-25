@@ -23,7 +23,7 @@ astra_arm_controller:
       - joint6
     command_interfaces:
       - position
-      - velocity
+      #- velocity
     state_interfaces:
       - position
       - velocity
@@ -39,7 +39,7 @@ astra_arm_moveit_controller:
       - joint6
     command_interfaces:
       - position
-      - velocity
+      #- velocity
     state_interfaces:
       - position
       - velocity

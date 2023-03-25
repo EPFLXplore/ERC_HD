@@ -18,7 +18,7 @@ hardware_interface::CallbackReturn AstraArmInterface::on_init(const hardware_int
 
     for (const hardware_interface::ComponentInfo & joint : info_.joints) {
         // Astra arm has exactly two state interfaces and one command interface on each joint
-        if (joint.command_interfaces.size() != 2) {
+        if (joint.command_interfaces.size() != 1) {
             RCLCPP_FATAL(
                 rclcpp::get_logger("AstraArmInterface"),
                 "Joint '%s' has %zu command interfaces found. 1 expected.", joint.name.c_str(),
@@ -31,14 +31,6 @@ hardware_interface::CallbackReturn AstraArmInterface::on_init(const hardware_int
                 rclcpp::get_logger("AstraArmInterface"),
                 "Joint '%s' has %s command interfaces found. '%s' expected.", joint.name.c_str(),
                 joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
-            return hardware_interface::CallbackReturn::ERROR;
-        }
-
-        if (joint.command_interfaces[1].name != hardware_interface::HW_IF_VELOCITY) {
-            RCLCPP_FATAL(
-                rclcpp::get_logger("AstraArmInterface"),
-                "Joint '%s' has %s command interfaces found. '%s' expected.", joint.name.c_str(),
-                joint.command_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
             return hardware_interface::CallbackReturn::ERROR;
         }
 
@@ -131,6 +123,7 @@ hardware_interface::CallbackReturn AstraArmInterface::on_deactivate(const rclcpp
 
 hardware_interface::return_type AstraArmInterface::read(const rclcpp::Time & time, const rclcpp::Duration & period) {
     // get states from hardware and store them to internal variables defined in export_state_interfaces
+    std::cout << "READING" << std::endl;
     for (uint i = 0; i < hw_position_states_.size(); i++) {
         hw_position_states_[i] = hw_position_commands_[i];
     }
