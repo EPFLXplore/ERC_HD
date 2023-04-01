@@ -30,7 +30,6 @@ profile1 = profile.get_stream(rs.stream.depth)
 camera = StereoCamera(profile1)
 cam_matrix = camera.get_intrinsic_camera_matrix()
 coeffs = camera.get_coeffs()
-intr = profile1.as_video_stream_profile().get_intrinsics() # Downcast to video_stream_profile and fetch intrinsics
 
 
 
