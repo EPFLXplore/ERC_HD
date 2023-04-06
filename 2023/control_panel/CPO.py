@@ -2,13 +2,26 @@
 # super class representing a control panel object
 
 class CPO:
+    """
+    position 0 --- 1
+             |     |
+             2 --- 3
+    """
     # Constructor method that initializes a new instance of the class with a given position.
     def __init__(self, position):
         self._position = position  # sets the position attribute to the provided position.
+        self._width = position[1][0] - position[0][0]
+        self._height = position[2][1] - position[0][1]
 
     # Getter method for the position attribute.
     def get_position(self):
         return self._position  # returns the position attribute.
+    
+    def get_width(self):
+        return self._width
+    
+    def get_height(self):
+        return self._height
 
     # A method to draw the point on the screen.
     # Currently, this method does nothing because it only contains a 'pass' statement.
