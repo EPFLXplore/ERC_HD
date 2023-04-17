@@ -1,0 +1,44 @@
+[0.291s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools -- -j8 -l8
+[1.303s] [ 66%] Built target moveit_visual_tools
+[1.307s] [100%] Built target moveit_visual_tools_demo
+[1.316s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools -- -j8 -l8
+[1.645s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools
+[1.699s] -- Install configuration: "Release"
+[1.699s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/environment/library_path.sh
+[1.700s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/environment/library_path.dsv
+[1.700s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib/libmoveit_visual_tools.so
+[1.701s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib/moveit_visual_tools/moveit_visual_tools_demo
+[1.708s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/include
+[1.710s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/include/moveit_visual_tools
+[1.710s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/include/moveit_visual_tools/imarker_end_effector.h
+[1.710s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/include/moveit_visual_tools/moveit_visual_tools.h
+[1.711s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/include/moveit_visual_tools/imarker_robot_state.h
+[1.711s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/launch
+[1.713s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/launch/demo.rviz
+[1.714s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/launch/demo_rviz.launch.py
+[1.717s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/resources
+[1.718s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/resources/rrbot.srdf
+[1.718s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/resources/demo_mesh.stl
+[1.719s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/resources/screenshot.png
+[1.719s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/resources/demo.png
+[1.720s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/resources/rrbot.urdf
+[1.720s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/ament_index/resource_index/package_run_dependencies/moveit_visual_tools
+[1.721s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/ament_index/resource_index/parent_prefix_path/moveit_visual_tools
+[1.721s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/environment/ament_prefix_path.sh
+[1.722s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/environment/ament_prefix_path.dsv
+[1.733s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/environment/path.sh
+[1.736s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/environment/path.dsv
+[1.737s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/local_setup.bash
+[1.738s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/local_setup.sh
+[1.739s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/local_setup.zsh
+[1.741s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/local_setup.dsv
+[1.742s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.dsv
+[1.742s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/ament_index/resource_index/packages/moveit_visual_tools
+[1.743s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/cmake/export_moveit_visual_toolsExport.cmake
+[1.744s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/cmake/export_moveit_visual_toolsExport-release.cmake
+[1.745s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/cmake/ament_cmake_export_targets-extras.cmake
+[1.746s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/cmake/ament_cmake_export_dependencies-extras.cmake
+[1.748s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/cmake/moveit_visual_toolsConfig.cmake
+[1.748s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/cmake/moveit_visual_toolsConfig-version.cmake
+[1.759s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.xml
+[1.922s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools

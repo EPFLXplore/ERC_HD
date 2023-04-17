@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.8)
 project(astra_moveit_config_new)
 
 find_package(ament_cmake REQUIRED)

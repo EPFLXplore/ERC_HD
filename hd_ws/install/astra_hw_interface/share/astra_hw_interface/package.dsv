@@ -1,0 +1,11 @@
+source;share/astra_hw_interface/hook/cmake_prefix_path.ps1
+source;share/astra_hw_interface/hook/cmake_prefix_path.dsv
+source;share/astra_hw_interface/hook/cmake_prefix_path.sh
+source;share/astra_hw_interface/hook/ld_library_path_lib.ps1
+source;share/astra_hw_interface/hook/ld_library_path_lib.dsv
+source;share/astra_hw_interface/hook/ld_library_path_lib.sh
+source;share/astra_hw_interface/local_setup.bash
+source;share/astra_hw_interface/local_setup.dsv
+source;share/astra_hw_interface/local_setup.ps1
+source;share/astra_hw_interface/local_setup.sh
+source;share/astra_hw_interface/local_setup.zsh

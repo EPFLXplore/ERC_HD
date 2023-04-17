@@ -1,0 +1,49 @@
+[3.017s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/task_execution': PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/prefix_override:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build install --record /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/install.log --single-version-externally-managed
+[3.921s] running egg_info
+[3.921s] creating ../../../build/task_execution/task_execution.egg-info
+[3.922s] writing ../../../build/task_execution/task_execution.egg-info/PKG-INFO
+[3.922s] writing dependency_links to ../../../build/task_execution/task_execution.egg-info/dependency_links.txt
+[3.922s] writing entry points to ../../../build/task_execution/task_execution.egg-info/entry_points.txt
+[3.923s] writing requirements to ../../../build/task_execution/task_execution.egg-info/requires.txt
+[3.923s] writing top-level names to ../../../build/task_execution/task_execution.egg-info/top_level.txt
+[3.923s] writing manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[4.046s] reading manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[4.048s] writing manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[4.049s] running build
+[4.050s] running build_py
+[4.052s] creating /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build
+[4.052s] creating /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib
+[4.052s] creating /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution
+[4.053s] copying task_execution/__init__.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution
+[4.053s] copying task_execution/moveit_test.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution
+[4.054s] copying task_execution/vision_test.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution
+[4.054s] copying task_execution/planner_test.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution
+[4.055s] copying task_execution/task_executor.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution
+[4.055s] copying task_execution/trajectory_planner.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution
+[4.055s] running install
+[4.059s] running install_lib
+[4.063s] creating /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution
+[4.082s] copying /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution/__init__.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution
+[4.086s] copying /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution/moveit_test.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution
+[4.086s] copying /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution/vision_test.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution
+[4.089s] copying /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution/planner_test.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution
+[4.090s] copying /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution/task_executor.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution
+[4.090s] copying /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build/lib/task_execution/trajectory_planner.py -> /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution
+[4.091s] byte-compiling /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution/__init__.py to __init__.cpython-38.pyc
+[4.103s] byte-compiling /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution/moveit_test.py to moveit_test.cpython-38.pyc
+[4.104s] byte-compiling /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution/vision_test.py to vision_test.cpython-38.pyc
+[4.105s] byte-compiling /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution/planner_test.py to planner_test.cpython-38.pyc
+[4.106s] byte-compiling /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution/task_executor.py to task_executor.cpython-38.pyc
+[4.108s] byte-compiling /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution/trajectory_planner.py to trajectory_planner.cpython-38.pyc
+[4.109s] running install_data
+[4.110s] creating /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/ament_index
+[4.111s] creating /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/ament_index/resource_index
+[4.112s] creating /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/ament_index/resource_index/packages
+[4.113s] copying resource/task_execution -> /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/ament_index/resource_index/packages
+[4.114s] copying package.xml -> /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution
+[4.115s] running install_egg_info
+[4.117s] Copying ../../../build/task_execution/task_execution.egg-info to /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution-0.0.0-py3.8.egg-info
+[4.118s] running install_scripts
+[4.181s] Installing test script to /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/task_execution
+[4.182s] writing list of installed files to '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/install.log'
+[4.297s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/task_execution' returned '0': PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/prefix_override:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build install --record /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/install.log --single-version-externally-managed

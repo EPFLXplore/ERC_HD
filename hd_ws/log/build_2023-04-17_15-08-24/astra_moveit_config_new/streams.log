@@ -1,0 +1,63 @@
+[0.136s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake /home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config_new -DCMAKE_INSTALL_PREFIX=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new
+[0.438s] -- The C compiler identification is GNU 9.4.0
+[0.702s] -- The CXX compiler identification is GNU 9.4.0
+[0.728s] -- Check for working C compiler: /usr/bin/cc
+[1.080s] -- Check for working C compiler: /usr/bin/cc -- works
+[1.083s] -- Detecting C compiler ABI info
+[1.395s] -- Detecting C compiler ABI info - done
+[1.438s] -- Detecting C compile features
+[1.439s] -- Detecting C compile features - done
+[1.449s] -- Check for working CXX compiler: /usr/bin/c++
+[1.807s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[1.813s] -- Detecting CXX compiler ABI info
+[2.179s] -- Detecting CXX compiler ABI info - done
+[2.220s] -- Detecting CXX compile features
+[2.222s] -- Detecting CXX compile features - done
+[2.234s] -- Found ament_cmake: 0.9.11 (/opt/ros/foxy/share/ament_cmake/cmake)
+[2.337s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[2.338s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[3.395s] -- Configuring done
+[3.405s] -- Generating done
+[3.409s] -- Build files have been written to: /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new
+[3.431s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake /home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config_new -DCMAKE_INSTALL_PREFIX=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new
+[3.448s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new -- -j8 -l8
+[3.640s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new -- -j8 -l8
+[3.869s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new
+[3.922s] -- Install configuration: ""
+[3.923s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/ament_index/resource_index/package_run_dependencies/astra_moveit_config_new
+[3.924s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/ament_index/resource_index/parent_prefix_path/astra_moveit_config_new
+[3.924s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/environment/ament_prefix_path.sh
+[3.925s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/environment/ament_prefix_path.dsv
+[3.926s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/environment/path.sh
+[3.927s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/environment/path.dsv
+[3.928s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/local_setup.bash
+[3.928s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/local_setup.sh
+[3.928s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/local_setup.zsh
+[3.929s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/local_setup.dsv
+[3.936s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.dsv
+[3.937s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/ament_index/resource_index/packages/astra_moveit_config_new
+[3.937s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/cmake/astra_moveit_config_newConfig.cmake
+[3.938s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/cmake/astra_moveit_config_newConfig-version.cmake
+[3.938s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.xml
+[3.942s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/launch
+[3.942s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/launch/moveit_rviz.launch.py
+[3.943s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/launch/setup_assistant.launch.py
+[3.944s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/launch/move_group.launch.py
+[3.944s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/launch/static_virtual_joint_tfs.launch.py
+[3.945s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/launch/demo.launch.py
+[3.945s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/launch/warehouse_db.launch.py
+[3.946s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/launch/spawn_controllers.launch.py
+[3.946s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/launch/rsp.launch.py
+[3.947s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config
+[3.947s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/ros2_controllers.yaml
+[3.948s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/astra.srdf
+[3.948s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/joint_limits.yaml
+[3.949s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/pilz_cartesian_limits.yaml
+[3.956s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/initial_positions.yaml
+[3.956s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/kinematics.yaml
+[3.958s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/moveit.rviz
+[3.958s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/astra.urdf.xacro
+[3.959s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/moveit_controllers.yaml
+[3.960s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/config/astra.ros2_control.xacro
+[3.960s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/.setup_assistant
+[4.102s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new

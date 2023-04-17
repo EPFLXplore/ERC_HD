@@ -1,0 +1,789 @@
+[1.192s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[1.193s] DEBUG:colcon:Parsed command line arguments: Namespace(allow_overriding=[], ament_cmake_args=None, base_paths=['.'], build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=None, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0xffff8227ebb0>>, merge_install=False, metas=['./colcon.meta'], mixin=None, mixin_files=None, mixin_verb=('build',), packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, parallel_workers=8, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0xffff8227ebb0>, verb_name='build', verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0xffff821ef1c0>)
+[1.307s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[1.308s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[1.308s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[1.308s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[1.308s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[1.308s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[1.309s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/xplore/Desktop/main_HD_workspace/hd_ws'
+[1.309s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[1.309s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[1.309s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[1.310s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[1.310s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[1.310s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[1.310s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[1.310s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[1.310s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[1.346s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[1.347s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[1.347s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[1.347s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[1.347s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[1.348s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[1.348s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[1.348s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[1.349s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[1.349s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[1.349s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[1.349s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[1.350s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[1.350s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[1.350s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[1.350s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[1.350s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[1.351s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[1.351s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[1.351s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[1.351s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[1.351s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[1.351s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[1.352s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[1.352s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[1.352s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[1.352s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[1.352s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[1.352s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['ignore', 'ignore_ament_install']
+[1.353s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'ignore'
+[1.353s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'ignore_ament_install'
+[1.353s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['colcon_pkg']
+[1.353s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'colcon_pkg'
+[1.353s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['colcon_meta']
+[1.353s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'colcon_meta'
+[1.354s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['ros']
+[1.354s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'ros'
+[1.354s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['cmake', 'python']
+[1.354s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'cmake'
+[1.354s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'python'
+[1.354s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extensions ['python_setup_py']
+[1.354s] Level 1:colcon.colcon_core.package_identification:_identify(src/control) by extension 'python_setup_py'
+[1.355s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extensions ['ignore', 'ignore_ament_install']
+[1.355s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'ignore'
+[1.355s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'ignore_ament_install'
+[1.355s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extensions ['colcon_pkg']
+[1.355s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'colcon_pkg'
+[1.356s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extensions ['colcon_meta']
+[1.356s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'colcon_meta'
+[1.356s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extensions ['ros']
+[1.356s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_description) by extension 'ros'
+[1.363s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/astra_description' with type 'ros.ament_cmake' and name 'astra_description'
+[1.363s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_hw_interface) by extensions ['ignore', 'ignore_ament_install']
+[1.364s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_hw_interface) by extension 'ignore'
+[1.364s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_hw_interface) by extension 'ignore_ament_install'
+[1.364s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_hw_interface) by extensions ['colcon_pkg']
+[1.364s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_hw_interface) by extension 'colcon_pkg'
+[1.364s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_hw_interface) by extensions ['colcon_meta']
+[1.364s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_hw_interface) by extension 'colcon_meta'
+[1.365s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_hw_interface) by extensions ['ros']
+[1.365s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_hw_interface) by extension 'ros'
+[1.367s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/astra_hw_interface' with type 'ros.ament_cmake' and name 'astra_hw_interface'
+[1.368s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extensions ['ignore', 'ignore_ament_install']
+[1.368s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'ignore'
+[1.369s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'ignore_ament_install'
+[1.369s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extensions ['colcon_pkg']
+[1.369s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'colcon_pkg'
+[1.369s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extensions ['colcon_meta']
+[1.369s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'colcon_meta'
+[1.369s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extensions ['ros']
+[1.369s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_interfaces) by extension 'ros'
+[1.371s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/astra_interfaces' with type 'ros.ament_cmake' and name 'astra_interfaces'
+[1.372s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extensions ['ignore', 'ignore_ament_install']
+[1.372s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'ignore'
+[1.372s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'ignore_ament_install'
+[1.372s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extensions ['colcon_pkg']
+[1.372s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'colcon_pkg'
+[1.373s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extensions ['colcon_meta']
+[1.373s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'colcon_meta'
+[1.373s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extensions ['ros']
+[1.373s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config) by extension 'ros'
+[1.376s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/astra_moveit_config' with type 'ros.ament_cmake' and name 'astra_moveit_config'
+[1.377s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config0) by extensions ['ignore', 'ignore_ament_install']
+[1.377s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config0) by extension 'ignore'
+[1.377s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config0) by extension 'ignore_ament_install'
+[1.377s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config0) by extensions ['colcon_pkg']
+[1.377s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config0) by extension 'colcon_pkg'
+[1.378s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config0) by extensions ['colcon_meta']
+[1.378s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config0) by extension 'colcon_meta'
+[1.378s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config0) by extensions ['ros']
+[1.378s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config0) by extension 'ros'
+[1.381s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/astra_moveit_config0' with type 'ros.ament_cmake' and name 'astra_moveit_config0'
+[1.381s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config_new) by extensions ['ignore', 'ignore_ament_install']
+[1.381s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config_new) by extension 'ignore'
+[1.381s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config_new) by extension 'ignore_ament_install'
+[1.382s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config_new) by extensions ['colcon_pkg']
+[1.382s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config_new) by extension 'colcon_pkg'
+[1.382s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config_new) by extensions ['colcon_meta']
+[1.382s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config_new) by extension 'colcon_meta'
+[1.382s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config_new) by extensions ['ros']
+[1.382s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/astra_moveit_config_new) by extension 'ros'
+[1.385s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/astra_moveit_config_new' with type 'ros.ament_cmake' and name 'astra_moveit_config_new'
+[1.386s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extensions ['ignore', 'ignore_ament_install']
+[1.386s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'ignore'
+[1.386s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'ignore_ament_install'
+[1.387s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extensions ['colcon_pkg']
+[1.387s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'colcon_pkg'
+[1.387s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extensions ['colcon_meta']
+[1.387s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'colcon_meta'
+[1.387s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extensions ['ros']
+[1.387s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/manager) by extension 'ros'
+[1.389s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/manager' with type 'ros.ament_python' and name 'manager'
+[1.390s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit2_tutorials) by extensions ['ignore', 'ignore_ament_install']
+[1.390s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit2_tutorials) by extension 'ignore'
+[1.390s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit2_tutorials) by extension 'ignore_ament_install'
+[1.390s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit2_tutorials) by extensions ['colcon_pkg']
+[1.391s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit2_tutorials) by extension 'colcon_pkg'
+[1.391s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit2_tutorials) by extensions ['colcon_meta']
+[1.391s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit2_tutorials) by extension 'colcon_meta'
+[1.391s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit2_tutorials) by extensions ['ros']
+[1.391s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit2_tutorials) by extension 'ros'
+[1.398s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/moveit2_tutorials' with type 'ros.ament_cmake' and name 'moveit2_tutorials'
+[1.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_visual_tools) by extensions ['ignore', 'ignore_ament_install']
+[1.399s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_visual_tools) by extension 'ignore'
+[1.399s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_visual_tools) by extension 'ignore_ament_install'
+[1.399s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_visual_tools) by extensions ['colcon_pkg']
+[1.399s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_visual_tools) by extension 'colcon_pkg'
+[1.399s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_visual_tools) by extensions ['colcon_meta']
+[1.399s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_visual_tools) by extension 'colcon_meta'
+[1.399s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_visual_tools) by extensions ['ros']
+[1.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/moveit_visual_tools) by extension 'ros'
+[1.404s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/moveit_visual_tools' with type 'ros.ament_cmake' and name 'moveit_visual_tools'
+[1.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extensions ['ignore', 'ignore_ament_install']
+[1.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'ignore'
+[1.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'ignore_ament_install'
+[1.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extensions ['colcon_pkg']
+[1.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'colcon_pkg'
+[1.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extensions ['colcon_meta']
+[1.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'colcon_meta'
+[1.406s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extensions ['ros']
+[1.406s] Level 1:colcon.colcon_core.package_identification:_identify(src/control/task_execution) by extension 'ros'
+[1.407s] DEBUG:colcon.colcon_core.package_identification:Package 'src/control/task_execution' with type 'ros.ament_python' and name 'task_execution'
+[1.408s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extensions ['ignore', 'ignore_ament_install']
+[1.408s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'ignore'
+[1.408s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'ignore_ament_install'
+[1.408s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extensions ['colcon_pkg']
+[1.408s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'colcon_pkg'
+[1.408s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extensions ['colcon_meta']
+[1.409s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'colcon_meta'
+[1.409s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extensions ['ros']
+[1.409s] Level 1:colcon.colcon_core.package_identification:_identify(tttt) by extension 'ros'
+[1.410s] DEBUG:colcon.colcon_core.package_identification:Package 'tttt' with type 'ros.ament_cmake' and name 'tttt'
+[1.410s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[1.411s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[1.411s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[1.411s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[1.411s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[1.491s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[1.491s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[1.505s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 11 installed packages in /home/xplore/Desktop/main_HD_workspace/hd_ws/install
+[1.515s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 374 installed packages in /opt/ros/foxy
+[1.524s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[1.786s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_args' from command line to 'None'
+[1.787s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_target' from command line to 'None'
+[1.787s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.787s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_clean_cache' from command line to 'False'
+[1.787s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_clean_first' from command line to 'False'
+[1.787s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'cmake_force_configure' from command line to 'False'
+[1.787s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'ament_cmake_args' from command line to 'None'
+[1.787s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'catkin_cmake_args' from command line to 'None'
+[1.787s] Level 5:colcon.colcon_core.verb:set package 'astra_description' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.788s] DEBUG:colcon.colcon_core.verb:Building package 'astra_description' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_description', 'symlink_install': False, 'test_result_base': None}
+[1.793s] Level 5:colcon.colcon_core.verb:set package 'astra_hw_interface' build argument 'cmake_args' from command line to 'None'
+[1.793s] Level 5:colcon.colcon_core.verb:set package 'astra_hw_interface' build argument 'cmake_target' from command line to 'None'
+[1.793s] Level 5:colcon.colcon_core.verb:set package 'astra_hw_interface' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.793s] Level 5:colcon.colcon_core.verb:set package 'astra_hw_interface' build argument 'cmake_clean_cache' from command line to 'False'
+[1.793s] Level 5:colcon.colcon_core.verb:set package 'astra_hw_interface' build argument 'cmake_clean_first' from command line to 'False'
+[1.793s] Level 5:colcon.colcon_core.verb:set package 'astra_hw_interface' build argument 'cmake_force_configure' from command line to 'False'
+[1.793s] Level 5:colcon.colcon_core.verb:set package 'astra_hw_interface' build argument 'ament_cmake_args' from command line to 'None'
+[1.793s] Level 5:colcon.colcon_core.verb:set package 'astra_hw_interface' build argument 'catkin_cmake_args' from command line to 'None'
+[1.794s] Level 5:colcon.colcon_core.verb:set package 'astra_hw_interface' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.794s] DEBUG:colcon.colcon_core.verb:Building package 'astra_hw_interface' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_hw_interface', 'symlink_install': False, 'test_result_base': None}
+[1.798s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_args' from command line to 'None'
+[1.799s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_target' from command line to 'None'
+[1.799s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.799s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_clean_cache' from command line to 'False'
+[1.799s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_clean_first' from command line to 'False'
+[1.799s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'cmake_force_configure' from command line to 'False'
+[1.799s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'ament_cmake_args' from command line to 'None'
+[1.799s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'catkin_cmake_args' from command line to 'None'
+[1.799s] Level 5:colcon.colcon_core.verb:set package 'astra_interfaces' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.799s] DEBUG:colcon.colcon_core.verb:Building package 'astra_interfaces' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_interfaces', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_interfaces', 'symlink_install': False, 'test_result_base': None}
+[1.804s] Level 5:colcon.colcon_core.verb:set package 'moveit_visual_tools' build argument 'cmake_args' from command line to 'None'
+[1.804s] Level 5:colcon.colcon_core.verb:set package 'moveit_visual_tools' build argument 'cmake_target' from command line to 'None'
+[1.805s] Level 5:colcon.colcon_core.verb:set package 'moveit_visual_tools' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.805s] Level 5:colcon.colcon_core.verb:set package 'moveit_visual_tools' build argument 'cmake_clean_cache' from command line to 'False'
+[1.805s] Level 5:colcon.colcon_core.verb:set package 'moveit_visual_tools' build argument 'cmake_clean_first' from command line to 'False'
+[1.805s] Level 5:colcon.colcon_core.verb:set package 'moveit_visual_tools' build argument 'cmake_force_configure' from command line to 'False'
+[1.805s] Level 5:colcon.colcon_core.verb:set package 'moveit_visual_tools' build argument 'ament_cmake_args' from command line to 'None'
+[1.805s] Level 5:colcon.colcon_core.verb:set package 'moveit_visual_tools' build argument 'catkin_cmake_args' from command line to 'None'
+[1.805s] Level 5:colcon.colcon_core.verb:set package 'moveit_visual_tools' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.805s] DEBUG:colcon.colcon_core.verb:Building package 'moveit_visual_tools' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/moveit_visual_tools', 'symlink_install': False, 'test_result_base': None}
+[1.810s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_args' from command line to 'None'
+[1.810s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_target' from command line to 'None'
+[1.811s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.811s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_clean_cache' from command line to 'False'
+[1.811s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_clean_first' from command line to 'False'
+[1.811s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'cmake_force_configure' from command line to 'False'
+[1.811s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'ament_cmake_args' from command line to 'None'
+[1.811s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'catkin_cmake_args' from command line to 'None'
+[1.811s] Level 5:colcon.colcon_core.verb:set package 'task_execution' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.811s] DEBUG:colcon.colcon_core.verb:Building package 'task_execution' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/task_execution', 'symlink_install': False, 'test_result_base': None}
+[1.816s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_args' from command line to 'None'
+[1.816s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_target' from command line to 'None'
+[1.816s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.816s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_clean_cache' from command line to 'False'
+[1.816s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_clean_first' from command line to 'False'
+[1.816s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'cmake_force_configure' from command line to 'False'
+[1.817s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'ament_cmake_args' from command line to 'None'
+[1.817s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'catkin_cmake_args' from command line to 'None'
+[1.817s] Level 5:colcon.colcon_core.verb:set package 'tttt' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.817s] DEBUG:colcon.colcon_core.verb:Building package 'tttt' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/tttt', 'symlink_install': False, 'test_result_base': None}
+[1.822s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config0' build argument 'cmake_args' from command line to 'None'
+[1.822s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config0' build argument 'cmake_target' from command line to 'None'
+[1.822s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config0' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.822s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config0' build argument 'cmake_clean_cache' from command line to 'False'
+[1.822s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config0' build argument 'cmake_clean_first' from command line to 'False'
+[1.822s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config0' build argument 'cmake_force_configure' from command line to 'False'
+[1.822s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config0' build argument 'ament_cmake_args' from command line to 'None'
+[1.822s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config0' build argument 'catkin_cmake_args' from command line to 'None'
+[1.823s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config0' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.823s] DEBUG:colcon.colcon_core.verb:Building package 'astra_moveit_config0' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config0', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config0', 'symlink_install': False, 'test_result_base': None}
+[1.827s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config_new' build argument 'cmake_args' from command line to 'None'
+[1.827s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config_new' build argument 'cmake_target' from command line to 'None'
+[1.828s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config_new' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.828s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config_new' build argument 'cmake_clean_cache' from command line to 'False'
+[1.828s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config_new' build argument 'cmake_clean_first' from command line to 'False'
+[1.828s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config_new' build argument 'cmake_force_configure' from command line to 'False'
+[1.828s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config_new' build argument 'ament_cmake_args' from command line to 'None'
+[1.828s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config_new' build argument 'catkin_cmake_args' from command line to 'None'
+[1.828s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config_new' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.828s] DEBUG:colcon.colcon_core.verb:Building package 'astra_moveit_config_new' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config_new', 'symlink_install': False, 'test_result_base': None}
+[1.833s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_args' from command line to 'None'
+[1.833s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_target' from command line to 'None'
+[1.833s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.833s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_clean_cache' from command line to 'False'
+[1.833s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_clean_first' from command line to 'False'
+[1.834s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'cmake_force_configure' from command line to 'False'
+[1.834s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'ament_cmake_args' from command line to 'None'
+[1.834s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'catkin_cmake_args' from command line to 'None'
+[1.834s] Level 5:colcon.colcon_core.verb:set package 'manager' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.834s] DEBUG:colcon.colcon_core.verb:Building package 'manager' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/manager', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/manager', 'symlink_install': False, 'test_result_base': None}
+[1.839s] Level 5:colcon.colcon_core.verb:set package 'moveit2_tutorials' build argument 'cmake_args' from command line to 'None'
+[1.839s] Level 5:colcon.colcon_core.verb:set package 'moveit2_tutorials' build argument 'cmake_target' from command line to 'None'
+[1.839s] Level 5:colcon.colcon_core.verb:set package 'moveit2_tutorials' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.839s] Level 5:colcon.colcon_core.verb:set package 'moveit2_tutorials' build argument 'cmake_clean_cache' from command line to 'False'
+[1.839s] Level 5:colcon.colcon_core.verb:set package 'moveit2_tutorials' build argument 'cmake_clean_first' from command line to 'False'
+[1.839s] Level 5:colcon.colcon_core.verb:set package 'moveit2_tutorials' build argument 'cmake_force_configure' from command line to 'False'
+[1.839s] Level 5:colcon.colcon_core.verb:set package 'moveit2_tutorials' build argument 'ament_cmake_args' from command line to 'None'
+[1.839s] Level 5:colcon.colcon_core.verb:set package 'moveit2_tutorials' build argument 'catkin_cmake_args' from command line to 'None'
+[1.839s] Level 5:colcon.colcon_core.verb:set package 'moveit2_tutorials' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.840s] DEBUG:colcon.colcon_core.verb:Building package 'moveit2_tutorials' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit2_tutorials', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/moveit2_tutorials', 'symlink_install': False, 'test_result_base': None}
+[1.844s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_args' from command line to 'None'
+[1.844s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_target' from command line to 'None'
+[1.845s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[1.845s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_clean_cache' from command line to 'False'
+[1.845s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_clean_first' from command line to 'False'
+[1.845s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'cmake_force_configure' from command line to 'False'
+[1.845s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'ament_cmake_args' from command line to 'None'
+[1.845s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'catkin_cmake_args' from command line to 'None'
+[1.845s] Level 5:colcon.colcon_core.verb:set package 'astra_moveit_config' build argument 'catkin_skip_building_tests' from command line to 'False'
+[1.845s] DEBUG:colcon.colcon_core.verb:Building package 'astra_moveit_config' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config', 'merge_install': False, 'path': '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config', 'symlink_install': False, 'test_result_base': None}
+[1.849s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[1.869s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[1.870s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_description' with build type 'ament_cmake'
+[1.870s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_description'
+[1.890s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[1.891s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.891s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.923s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/moveit_visual_tools' with build type 'ament_cmake'
+[1.925s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/moveit_visual_tools'
+[1.944s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.944s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.979s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_interfaces' with build type 'ament_cmake'
+[1.981s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_interfaces'
+[1.995s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.995s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.030s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_hw_interface' with build type 'ament_cmake'
+[2.033s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_hw_interface'
+[2.047s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.047s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.083s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/task_execution' with build type 'ament_python'
+[2.086s] Level 1:colcon.colcon_core.shell:create_environment_hook('task_execution', 'ament_prefix_path')
+[2.099s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/hook/ament_prefix_path.ps1'
+[2.102s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/hook/ament_prefix_path.dsv'
+[2.104s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/hook/ament_prefix_path.sh'
+[2.115s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.116s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.147s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/tttt' with build type 'ament_cmake'
+[2.149s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/tttt'
+[2.164s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[2.164s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[2.224s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description -- -j8 -l8
+[2.260s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools -- -j8 -l8
+[2.289s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_interfaces -- -j8 -l8
+[2.304s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface -- -j8 -l8
+[3.154s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/task_execution'
+[3.168s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[3.169s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[3.230s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt -- -j8 -l8
+[3.296s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description -- -j8 -l8
+[3.300s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools -- -j8 -l8
+[3.302s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface -- -j8 -l8
+[3.311s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_interfaces -- -j8 -l8
+[3.417s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description
+[3.429s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt -- -j8 -l8
+[3.458s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface
+[3.499s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools
+[3.509s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_description)
+[3.550s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description
+[3.581s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description' for CMake module files
+[3.586s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description' for CMake config files
+[3.592s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_description', 'cmake_prefix_path')
+[3.605s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/hook/cmake_prefix_path.ps1'
+[3.608s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/hook/cmake_prefix_path.dsv'
+[3.611s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/hook/cmake_prefix_path.sh'
+[3.614s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/bin'
+[3.615s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/lib/pkgconfig/astra_description.pc'
+[3.616s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/lib/python3.8/site-packages'
+[3.616s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/bin'
+[3.626s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.ps1'
+[3.630s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.dsv'
+[3.633s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.sh'
+[3.636s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.bash'
+[3.638s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.zsh'
+[3.641s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/colcon-core/packages/astra_description)
+[3.660s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_hw_interface)
+[3.682s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface' for CMake module files
+[3.683s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface
+[3.686s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface' for CMake config files
+[3.689s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_hw_interface', 'cmake_prefix_path')
+[3.699s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/cmake_prefix_path.ps1'
+[3.702s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/cmake_prefix_path.dsv'
+[3.704s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/cmake_prefix_path.sh'
+[3.707s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib'
+[3.708s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_hw_interface', 'ld_library_path_lib')
+[3.722s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/ld_library_path_lib.ps1'
+[3.725s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/ld_library_path_lib.dsv'
+[3.727s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/ld_library_path_lib.sh'
+[3.729s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/bin'
+[3.730s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib/pkgconfig/astra_hw_interface.pc'
+[3.731s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib/python3.8/site-packages'
+[3.732s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/bin'
+[3.746s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.ps1'
+[3.749s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.dsv'
+[3.751s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.sh'
+[3.753s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.bash'
+[3.754s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.zsh'
+[3.755s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/colcon-core/packages/astra_hw_interface)
+[3.784s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt
+[3.787s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(moveit_visual_tools)
+[3.804s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit_visual_tools
+[3.810s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools' for CMake module files
+[3.814s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools' for CMake config files
+[3.816s] Level 1:colcon.colcon_core.shell:create_environment_hook('moveit_visual_tools', 'cmake_prefix_path')
+[3.827s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/cmake_prefix_path.ps1'
+[3.830s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/cmake_prefix_path.dsv'
+[3.832s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/cmake_prefix_path.sh'
+[3.834s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib'
+[3.835s] Level 1:colcon.colcon_core.shell:create_environment_hook('moveit_visual_tools', 'ld_library_path_lib')
+[3.846s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/ld_library_path_lib.ps1'
+[3.848s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/ld_library_path_lib.dsv'
+[3.850s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/ld_library_path_lib.sh'
+[3.851s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/bin'
+[3.852s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib/pkgconfig/moveit_visual_tools.pc'
+[3.853s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib/python3.8/site-packages'
+[3.853s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/bin'
+[3.864s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.ps1'
+[3.867s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.dsv'
+[3.869s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.sh'
+[3.871s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.bash'
+[3.873s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.zsh'
+[3.875s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/colcon-core/packages/moveit_visual_tools)
+[3.924s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_description)
+[3.941s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description' for CMake module files
+[3.946s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description' for CMake config files
+[3.951s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_interfaces': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_interfaces
+[3.952s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_description', 'cmake_prefix_path')
+[3.962s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/hook/cmake_prefix_path.ps1'
+[3.965s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/hook/cmake_prefix_path.dsv'
+[3.966s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/hook/cmake_prefix_path.sh'
+[3.969s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/bin'
+[3.970s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/lib/pkgconfig/astra_description.pc'
+[3.971s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/lib/python3.8/site-packages'
+[3.971s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/bin'
+[3.981s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.ps1'
+[3.983s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.dsv'
+[3.985s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.sh'
+[3.990s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.bash'
+[3.991s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.zsh'
+[3.993s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/colcon-core/packages/astra_description)
+[3.996s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(tttt)
+[4.010s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt' for CMake module files
+[4.015s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt
+[4.016s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt' for CMake config files
+[4.017s] Level 1:colcon.colcon_core.shell:create_environment_hook('tttt', 'cmake_prefix_path')
+[4.026s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/hook/cmake_prefix_path.ps1'
+[4.028s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/hook/cmake_prefix_path.dsv'
+[4.031s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/hook/cmake_prefix_path.sh'
+[4.033s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/bin'
+[4.033s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/lib/pkgconfig/tttt.pc'
+[4.034s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/lib/python3.8/site-packages'
+[4.035s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/bin'
+[4.044s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.ps1'
+[4.046s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.dsv'
+[4.048s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.sh'
+[4.050s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.bash'
+[4.051s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.zsh'
+[4.052s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/colcon-core/packages/tttt)
+[4.065s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config0' with build type 'ament_cmake'
+[4.068s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config0'
+[4.093s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[4.093s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[4.179s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config_new' with build type 'ament_cmake'
+[4.182s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config_new'
+[4.196s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[4.197s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[4.271s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_hw_interface)
+[4.284s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface' for CMake module files
+[4.287s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface' for CMake config files
+[4.288s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_hw_interface', 'cmake_prefix_path')
+[4.296s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/cmake_prefix_path.ps1'
+[4.299s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/cmake_prefix_path.dsv'
+[4.300s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/cmake_prefix_path.sh'
+[4.303s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib'
+[4.303s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_hw_interface', 'ld_library_path_lib')
+[4.312s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/ld_library_path_lib.ps1'
+[4.314s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/ld_library_path_lib.dsv'
+[4.315s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/hook/ld_library_path_lib.sh'
+[4.316s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/bin'
+[4.317s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib/pkgconfig/astra_hw_interface.pc'
+[4.318s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib/python3.8/site-packages'
+[4.318s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/bin'
+[4.327s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.ps1'
+[4.330s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.dsv'
+[4.332s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.sh'
+[4.334s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.bash'
+[4.337s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.zsh'
+[4.339s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/colcon-core/packages/astra_hw_interface)
+[4.348s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_interfaces)
+[4.363s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces' for CMake module files
+[4.364s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_interfaces' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_interfaces
+[4.367s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces' for CMake config files
+[4.368s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_interfaces', 'cmake_prefix_path')
+[4.377s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/cmake_prefix_path.ps1'
+[4.378s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/cmake_prefix_path.dsv'
+[4.380s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/cmake_prefix_path.sh'
+[4.382s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib'
+[4.382s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_interfaces', 'ld_library_path_lib')
+[4.391s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/ld_library_path_lib.ps1'
+[4.393s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/ld_library_path_lib.dsv'
+[4.394s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/ld_library_path_lib.sh'
+[4.395s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/bin'
+[4.395s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib/pkgconfig/astra_interfaces.pc'
+[4.396s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib/python3.8/site-packages'
+[4.396s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_interfaces', 'pythonpath')
+[4.405s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/pythonpath.ps1'
+[4.406s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/pythonpath.dsv'
+[4.408s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/pythonpath.sh'
+[4.409s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/bin'
+[4.418s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.ps1'
+[4.421s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.dsv'
+[4.422s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.sh'
+[4.424s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.bash'
+[4.425s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.zsh'
+[4.426s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/colcon-core/packages/astra_interfaces)
+[4.454s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(moveit_visual_tools)
+[4.468s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools' for CMake module files
+[4.471s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools' for CMake config files
+[4.472s] Level 1:colcon.colcon_core.shell:create_environment_hook('moveit_visual_tools', 'cmake_prefix_path')
+[4.483s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/cmake_prefix_path.ps1'
+[4.486s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/cmake_prefix_path.dsv'
+[4.487s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/cmake_prefix_path.sh'
+[4.490s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib'
+[4.490s] Level 1:colcon.colcon_core.shell:create_environment_hook('moveit_visual_tools', 'ld_library_path_lib')
+[4.499s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/ld_library_path_lib.ps1'
+[4.501s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/ld_library_path_lib.dsv'
+[4.502s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/hook/ld_library_path_lib.sh'
+[4.504s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/bin'
+[4.504s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib/pkgconfig/moveit_visual_tools.pc'
+[4.505s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib/python3.8/site-packages'
+[4.506s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/bin'
+[4.515s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.ps1'
+[4.517s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.dsv'
+[4.519s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.sh'
+[4.521s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.bash'
+[4.522s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/moveit_visual_tools/package.zsh'
+[4.524s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/share/colcon-core/packages/moveit_visual_tools)
+[4.536s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(tttt)
+[4.550s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt' for CMake module files
+[4.553s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt' for CMake config files
+[4.554s] Level 1:colcon.colcon_core.shell:create_environment_hook('tttt', 'cmake_prefix_path')
+[4.563s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/hook/cmake_prefix_path.ps1'
+[4.565s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/hook/cmake_prefix_path.dsv'
+[4.566s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/hook/cmake_prefix_path.sh'
+[4.569s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/bin'
+[4.569s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/lib/pkgconfig/tttt.pc'
+[4.570s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/lib/python3.8/site-packages'
+[4.570s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/bin'
+[4.580s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.ps1'
+[4.582s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.dsv'
+[4.584s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.sh'
+[4.586s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.bash'
+[4.588s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.zsh'
+[4.593s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/colcon-core/packages/tttt)
+[4.594s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/moveit2_tutorials' with build type 'ament_cmake'
+[4.595s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/moveit2_tutorials'
+[4.605s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[4.605s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[4.674s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config0 -- -j8 -l8
+[4.709s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new -- -j8 -l8
+[4.740s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit2_tutorials': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit2_tutorials -- -j8 -l8
+[4.844s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/task_execution': PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/prefix_override:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build install --record /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/install.log --single-version-externally-managed
+[4.850s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config0' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config0 -- -j8 -l8
+[4.880s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_interfaces)
+[4.899s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces' for CMake module files
+[4.902s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces' for CMake config files
+[4.904s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_interfaces', 'cmake_prefix_path')
+[4.920s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/cmake_prefix_path.ps1'
+[4.923s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/cmake_prefix_path.dsv'
+[4.925s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/cmake_prefix_path.sh'
+[4.928s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib'
+[4.928s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_interfaces', 'ld_library_path_lib')
+[4.942s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/ld_library_path_lib.ps1'
+[4.944s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/ld_library_path_lib.dsv'
+[4.967s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/ld_library_path_lib.sh'
+[4.970s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/bin'
+[4.971s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib/pkgconfig/astra_interfaces.pc'
+[4.972s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib/python3.8/site-packages'
+[4.976s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_interfaces', 'pythonpath')
+[4.995s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/pythonpath.ps1'
+[4.999s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/pythonpath.dsv'
+[5.001s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/hook/pythonpath.sh'
+[5.004s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/bin'
+[5.015s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.ps1'
+[5.019s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.dsv'
+[5.022s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.sh'
+[5.025s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.bash'
+[5.028s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/astra_interfaces/package.zsh'
+[5.030s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/share/colcon-core/packages/astra_interfaces)
+[5.038s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/manager' with build type 'ament_python'
+[5.040s] Level 1:colcon.colcon_core.shell:create_environment_hook('manager', 'ament_prefix_path')
+[5.051s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/hook/ament_prefix_path.ps1'
+[5.062s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/hook/ament_prefix_path.dsv'
+[5.065s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/hook/ament_prefix_path.sh'
+[5.087s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[5.087s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[5.178s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new -- -j8 -l8
+[5.209s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config0
+[6.012s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/manager'
+[6.026s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[6.026s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[6.071s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_moveit_config0)
+[6.090s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config0' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config0
+[6.091s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0' for CMake module files
+[6.095s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0' for CMake config files
+[6.096s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_moveit_config0', 'cmake_prefix_path')
+[6.104s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/hook/cmake_prefix_path.ps1'
+[6.107s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/hook/cmake_prefix_path.dsv'
+[6.108s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/hook/cmake_prefix_path.sh'
+[6.110s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/bin'
+[6.110s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/lib/pkgconfig/astra_moveit_config0.pc'
+[6.111s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/lib/python3.8/site-packages'
+[6.112s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/bin'
+[6.121s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.ps1'
+[6.123s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.dsv'
+[6.124s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.sh'
+[6.126s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.bash'
+[6.127s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.zsh'
+[6.128s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/colcon-core/packages/astra_moveit_config0)
+[6.142s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit2_tutorials' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit2_tutorials -- -j8 -l8
+[6.171s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new
+[6.194s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution' for CMake module files
+[6.195s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/task_execution' returned '0': PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/prefix_override:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build install --record /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/install.log --single-version-externally-managed
+[6.198s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution' for CMake config files
+[6.201s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib'
+[6.202s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/bin'
+[6.202s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/pkgconfig/task_execution.pc'
+[6.203s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages'
+[6.203s] Level 1:colcon.colcon_core.shell:create_environment_hook('task_execution', 'pythonpath')
+[6.213s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/hook/pythonpath.ps1'
+[6.216s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/hook/pythonpath.dsv'
+[6.218s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/hook/pythonpath.sh'
+[6.220s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/bin'
+[6.220s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(task_execution)
+[6.230s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/package.ps1'
+[6.233s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/package.dsv'
+[6.235s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/package.sh'
+[6.237s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/package.bash'
+[6.238s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/task_execution/package.zsh'
+[6.240s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/share/colcon-core/packages/task_execution)
+[6.271s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_moveit_config_new)
+[6.290s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new' for CMake module files
+[6.295s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new' for CMake config files
+[6.302s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_moveit_config_new', 'cmake_prefix_path')
+[6.312s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/hook/cmake_prefix_path.ps1'
+[6.317s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/hook/cmake_prefix_path.dsv'
+[6.320s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/hook/cmake_prefix_path.sh'
+[6.324s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config_new
+[6.324s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/bin'
+[6.325s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/lib/pkgconfig/astra_moveit_config_new.pc'
+[6.326s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/lib/python3.8/site-packages'
+[6.327s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/bin'
+[6.336s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.ps1'
+[6.338s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.dsv'
+[6.340s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.sh'
+[6.342s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.bash'
+[6.343s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.zsh'
+[6.344s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/colcon-core/packages/astra_moveit_config_new)
+[6.370s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_moveit_config0)
+[6.384s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0' for CMake module files
+[6.386s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0' for CMake config files
+[6.387s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_moveit_config0', 'cmake_prefix_path')
+[6.396s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/hook/cmake_prefix_path.ps1'
+[6.401s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/hook/cmake_prefix_path.dsv'
+[6.403s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/hook/cmake_prefix_path.sh'
+[6.405s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/bin'
+[6.406s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/lib/pkgconfig/astra_moveit_config0.pc'
+[6.407s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/lib/python3.8/site-packages'
+[6.407s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/bin'
+[6.417s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.ps1'
+[6.419s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.dsv'
+[6.421s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.sh'
+[6.423s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.bash'
+[6.425s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/astra_moveit_config0/package.zsh'
+[6.427s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0/share/colcon-core/packages/astra_moveit_config0)
+[6.450s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit2_tutorials': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit2_tutorials
+[6.472s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_moveit_config_new)
+[6.488s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new' for CMake module files
+[6.495s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new' for CMake config files
+[6.501s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_moveit_config_new', 'cmake_prefix_path')
+[6.514s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/hook/cmake_prefix_path.ps1'
+[6.518s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/hook/cmake_prefix_path.dsv'
+[6.521s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/hook/cmake_prefix_path.sh'
+[6.524s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/bin'
+[6.525s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/lib/pkgconfig/astra_moveit_config_new.pc'
+[6.526s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/lib/python3.8/site-packages'
+[6.527s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/bin'
+[6.537s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.ps1'
+[6.541s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.dsv'
+[6.544s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.sh'
+[6.547s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.bash'
+[6.550s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/astra_moveit_config_new/package.zsh'
+[6.552s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new/share/colcon-core/packages/astra_moveit_config_new)
+[6.557s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(moveit2_tutorials)
+[6.570s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials' for CMake module files
+[6.574s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials' for CMake config files
+[6.577s] Level 1:colcon.colcon_core.shell:create_environment_hook('moveit2_tutorials', 'cmake_prefix_path')
+[6.586s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/hook/cmake_prefix_path.ps1'
+[6.589s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/hook/cmake_prefix_path.dsv'
+[6.590s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit2_tutorials' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/moveit2_tutorials
+[6.592s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/hook/cmake_prefix_path.sh'
+[6.593s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib'
+[6.594s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/bin'
+[6.594s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/pkgconfig/moveit2_tutorials.pc'
+[6.595s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/python3.8/site-packages'
+[6.595s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/bin'
+[6.605s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.ps1'
+[6.607s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.dsv'
+[6.609s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.sh'
+[6.611s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.bash'
+[6.612s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.zsh'
+[6.613s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/colcon-core/packages/moveit2_tutorials)
+[6.742s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(moveit2_tutorials)
+[6.755s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials' for CMake module files
+[6.758s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials' for CMake config files
+[6.759s] Level 1:colcon.colcon_core.shell:create_environment_hook('moveit2_tutorials', 'cmake_prefix_path')
+[6.768s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/hook/cmake_prefix_path.ps1'
+[6.770s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/hook/cmake_prefix_path.dsv'
+[6.771s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/hook/cmake_prefix_path.sh'
+[6.774s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib'
+[6.774s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/bin'
+[6.774s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/pkgconfig/moveit2_tutorials.pc'
+[6.775s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/python3.8/site-packages'
+[6.776s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/bin'
+[6.785s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.ps1'
+[6.787s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.dsv'
+[6.788s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.sh'
+[6.790s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.bash'
+[6.792s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.zsh'
+[6.793s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/colcon-core/packages/moveit2_tutorials)
+[6.796s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config' with build type 'ament_cmake'
+[6.796s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_moveit_config'
+[6.806s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[6.806s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[6.884s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config': AMENT_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config -- -j8 -l8
+[7.583s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/manager': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/build/manager/prefix_override:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/lib/python3.8/site-packages:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib/python3.8/site-packages:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages /usr/bin/python3 setup.py egg_info --egg-base ../../../build/manager build --build-base /home/xplore/Desktop/main_HD_workspace/hd_ws/build/manager/build install --record /home/xplore/Desktop/main_HD_workspace/hd_ws/build/manager/install.log --single-version-externally-managed
+[8.621s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager' for CMake module files
+[8.621s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/manager' returned '0': CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/build/manager/prefix_override:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/lib/python3.8/site-packages:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib/python3.8/site-packages:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages /usr/bin/python3 setup.py egg_info --egg-base ../../../build/manager build --build-base /home/xplore/Desktop/main_HD_workspace/hd_ws/build/manager/build install --record /home/xplore/Desktop/main_HD_workspace/hd_ws/build/manager/install.log --single-version-externally-managed
+[8.624s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager' for CMake config files
+[8.627s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/lib'
+[8.628s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/bin'
+[8.628s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/lib/pkgconfig/manager.pc'
+[8.629s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/lib/python3.8/site-packages'
+[8.630s] Level 1:colcon.colcon_core.shell:create_environment_hook('manager', 'pythonpath')
+[8.640s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/hook/pythonpath.ps1'
+[8.643s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/hook/pythonpath.dsv'
+[8.644s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/hook/pythonpath.sh'
+[8.646s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/bin'
+[8.647s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(manager)
+[8.656s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/package.ps1'
+[8.659s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/package.dsv'
+[8.661s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/package.sh'
+[8.663s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/package.bash'
+[8.665s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/manager/package.zsh'
+[8.667s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager/share/colcon-core/packages/manager)
+[29.068s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config' returned '0': AMENT_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config -- -j8 -l8
+[29.172s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config': AMENT_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config
+[29.220s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_moveit_config)
+[29.237s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config' returned '0': AMENT_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config_new:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config0:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit_visual_tools/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_interfaces/lib:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_moveit_config
+[29.240s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config' for CMake module files
+[29.243s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config' for CMake config files
+[29.244s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_moveit_config', 'cmake_prefix_path')
+[29.253s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/hook/cmake_prefix_path.ps1'
+[29.255s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/hook/cmake_prefix_path.dsv'
+[29.257s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/hook/cmake_prefix_path.sh'
+[29.259s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/bin'
+[29.259s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/lib/pkgconfig/astra_moveit_config.pc'
+[29.260s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/lib/python3.8/site-packages'
+[29.261s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/bin'
+[29.269s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.ps1'
+[29.271s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.dsv'
+[29.272s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.sh'
+[29.274s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.bash'
+[29.275s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.zsh'
+[29.277s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/colcon-core/packages/astra_moveit_config)
+[29.384s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(astra_moveit_config)
+[29.402s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config' for CMake module files
+[29.404s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config' for CMake config files
+[29.405s] Level 1:colcon.colcon_core.shell:create_environment_hook('astra_moveit_config', 'cmake_prefix_path')
+[29.413s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/hook/cmake_prefix_path.ps1'
+[29.416s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/hook/cmake_prefix_path.dsv'
+[29.417s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/hook/cmake_prefix_path.sh'
+[29.419s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/bin'
+[29.419s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/lib/pkgconfig/astra_moveit_config.pc'
+[29.420s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/lib/python3.8/site-packages'
+[29.421s] Level 1:colcon.colcon_core.environment:checking '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/bin'
+[29.430s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.ps1'
+[29.432s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.dsv'
+[29.434s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.sh'
+[29.436s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.bash'
+[29.437s] INFO:colcon.colcon_core.shell:Creating package script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/astra_moveit_config/package.zsh'
+[29.439s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_moveit_config/share/colcon-core/packages/astra_moveit_config)
+[29.440s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[29.441s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[29.442s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[29.443s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[29.466s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[29.466s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[29.466s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[29.526s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[29.536s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/local_setup.ps1'
+[29.540s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/_local_setup_util_ps1.py'
+[29.543s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/setup.ps1'
+[29.551s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/local_setup.sh'
+[29.553s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/_local_setup_util_sh.py'
+[29.554s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/setup.sh'
+[29.562s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/local_setup.bash'
+[29.564s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/setup.bash'
+[29.571s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/local_setup.zsh'
+[29.573s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/setup.zsh'

@@ -1,0 +1,20 @@
+[1.073s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt -- -j8 -l8
+[1.264s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt -- -j8 -l8
+[1.687s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt
+[1.749s] -- Install configuration: ""
+[1.751s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/ament_index/resource_index/package_run_dependencies/tttt
+[1.752s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/ament_index/resource_index/parent_prefix_path/tttt
+[1.754s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/environment/ament_prefix_path.sh
+[1.755s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/environment/ament_prefix_path.dsv
+[1.755s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/environment/path.sh
+[1.756s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/environment/path.dsv
+[1.756s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/local_setup.bash
+[1.757s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/local_setup.sh
+[1.757s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/local_setup.zsh
+[1.758s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/local_setup.dsv
+[1.759s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.dsv
+[1.772s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/ament_index/resource_index/packages/tttt
+[1.774s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/cmake/ttttConfig.cmake
+[1.775s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/cmake/ttttConfig-version.cmake
+[1.776s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/tttt/share/tttt/package.xml
+[2.140s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt

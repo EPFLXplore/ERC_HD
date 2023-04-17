@@ -1,0 +1,21 @@
+[2.785s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/task_execution': PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/prefix_override:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build install --record /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/install.log --single-version-externally-managed
+[3.626s] running egg_info
+[3.629s] writing ../../../build/task_execution/task_execution.egg-info/PKG-INFO
+[3.629s] writing dependency_links to ../../../build/task_execution/task_execution.egg-info/dependency_links.txt
+[3.630s] writing entry points to ../../../build/task_execution/task_execution.egg-info/entry_points.txt
+[3.630s] writing requirements to ../../../build/task_execution/task_execution.egg-info/requires.txt
+[3.631s] writing top-level names to ../../../build/task_execution/task_execution.egg-info/top_level.txt
+[3.755s] reading manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[3.758s] writing manifest file '../../../build/task_execution/task_execution.egg-info/SOURCES.txt'
+[3.759s] running build
+[3.759s] running build_py
+[3.761s] running install
+[3.764s] running install_lib
+[3.769s] running install_data
+[3.771s] running install_egg_info
+[3.776s] removing '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution-0.0.0-py3.8.egg-info' (and everything under it)
+[3.777s] Copying ../../../build/task_execution/task_execution.egg-info to /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages/task_execution-0.0.0-py3.8.egg-info
+[3.781s] running install_scripts
+[3.840s] Installing test script to /home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/task_execution
+[3.841s] writing list of installed files to '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/install.log'
+[4.405s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/task_execution' returned '0': PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/prefix_override:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/task_execution build --build-base /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/build install --record /home/xplore/Desktop/main_HD_workspace/hd_ws/build/task_execution/install.log --single-version-externally-managed

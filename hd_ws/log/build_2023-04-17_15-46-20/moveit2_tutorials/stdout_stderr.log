@@ -1,0 +1,61 @@
+[ 12%] Built target servo_keyboard_input
+[ 25%] Built target planning_scene_tutorial
+[ 37%] Built target planning_scene_ros_api_tutorial
+[ 50%] Built target moveit_cpp_tutorial
+[ 62%] Built target motion_planning_api_tutorial
+[ 75%] Built target servo_cpp_interface_demo
+[ 87%] Built target robot_model_and_robot_state_tutorial
+[100%] Built target move_group_interface_tutorial
+-- Install configuration: "Release"
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/ament_index/resource_index/package_run_dependencies/moveit2_tutorials
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/ament_index/resource_index/parent_prefix_path/moveit2_tutorials
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/environment/ament_prefix_path.sh
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/environment/path.sh
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/environment/path.dsv
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/local_setup.bash
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/local_setup.sh
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/local_setup.zsh
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/local_setup.dsv
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.dsv
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/ament_index/resource_index/packages/moveit2_tutorials
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/cmake/ament_cmake_export_dependencies-extras.cmake
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/cmake/ament_cmake_export_include_directories-extras.cmake
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/cmake/moveit2_tutorialsConfig.cmake
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/cmake/moveit2_tutorialsConfig-version.cmake
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/package.xml
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/moveit2_tutorials/motion_planning_api_tutorial
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/motion_planning_api_tutorial.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/moveit2_tutorials/move_group_interface_tutorial
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/move_group_interface_tutorial.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/move_group.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/move_group.rviz
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/moveit2_tutorials/moveit_cpp_tutorial
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/moveit_cpp_tutorial.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/moveit_cpp_tutorial.rviz
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/config
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/config/moveit_cpp.yaml
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/moveit2_tutorials/planning_scene_tutorial
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/planning_scene_tutorial.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/moveit2_tutorials/planning_scene_ros_api_tutorial
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/planning_scene_ros_api_tutorial.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/panda_moveit_config_demo_empty.rviz
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/demo.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/panda_moveit_config_demo.rviz
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/moveit2_tutorials/servo_keyboard_input
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/moveit2_tutorials/servo_cpp_interface_demo
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/servo_cpp_interface_demo.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/servo_teleop.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/servo_server_panda.launch.py
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/config
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/config/demo_rviz_config.rviz
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/lib/moveit2_tutorials/robot_model_and_robot_state_tutorial
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch
+-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/launch/robot_model_and_robot_state_tutorial.launch.py

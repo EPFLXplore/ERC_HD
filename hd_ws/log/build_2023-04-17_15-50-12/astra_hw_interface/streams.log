@@ -1,0 +1,34 @@
+[0.270s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface -- -j8 -l8
+[1.215s] [100%] Built target astra_hw_interface
+[1.268s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface -- -j8 -l8
+[1.421s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface
+[1.473s] -- Install configuration: ""
+[1.480s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/astra_hw_interface.xml
+[1.485s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/include/astra_hw_interface
+[1.485s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/include/astra_hw_interface/astra_hw_interface
+[1.486s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/include/astra_hw_interface/astra_hw_interface/astra_arm_interface.hpp
+[1.486s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/include/astra_hw_interface/astra_hw_interface/visibility_control.h
+[1.487s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib/libastra_hw_interface.so
+[1.487s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/library_path.sh
+[1.487s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/library_path.dsv
+[1.494s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/ament_index/resource_index/package_run_dependencies/astra_hw_interface
+[1.496s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/ament_index/resource_index/parent_prefix_path/astra_hw_interface
+[1.498s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/ament_prefix_path.sh
+[1.499s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/ament_prefix_path.dsv
+[1.500s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/path.sh
+[1.500s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/path.dsv
+[1.501s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/local_setup.bash
+[1.504s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/local_setup.sh
+[1.505s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/local_setup.zsh
+[1.505s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/local_setup.dsv
+[1.506s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.dsv
+[1.506s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/ament_index/resource_index/packages/astra_hw_interface
+[1.506s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/ament_index/resource_index/hardware_interface__pluginlib__plugin/astra_hw_interface
+[1.507s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/astra_hw_interfaceExport.cmake
+[1.507s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/astra_hw_interfaceExport-noconfig.cmake
+[1.508s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/ament_cmake_export_targets-extras.cmake
+[1.509s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/ament_cmake_export_dependencies-extras.cmake
+[1.514s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/astra_hw_interfaceConfig.cmake
+[1.514s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/astra_hw_interfaceConfig-version.cmake
+[1.515s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.xml
+[1.648s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface

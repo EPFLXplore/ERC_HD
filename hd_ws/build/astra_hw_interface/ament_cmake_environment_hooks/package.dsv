@@ -1,0 +1,4 @@
+source;share/astra_hw_interface/local_setup.bash
+source;share/astra_hw_interface/local_setup.dsv
+source;share/astra_hw_interface/local_setup.sh
+source;share/astra_hw_interface/local_setup.zsh

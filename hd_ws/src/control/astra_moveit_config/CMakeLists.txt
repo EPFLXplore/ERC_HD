@@ -1,7 +1,22 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.8)
 project(astra_moveit_config)
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
+find_package(moveit2_tutorials REQUIRED)
+
+
+## Install Python modules
+#ament_python_install_package(${PROJECT_NAME})
+
+## Install Python executables
+#install(PROGRAMS
+#  scripts/moveit_configs_utils.py
+#  DESTINATION lib/${PROJECT_NAME}
+#)
+
 
 ament_package()
 

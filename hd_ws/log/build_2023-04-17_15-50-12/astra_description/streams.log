@@ -1,0 +1,23 @@
+[0.347s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description -- -j8 -l8
+[1.416s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --build /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description -- -j8 -l8
+[1.538s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description
+[1.593s] -- Install configuration: ""
+[1.594s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/urdf
+[1.595s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/urdf/astra_generated.urdf
+[1.595s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/urdf/astra.urdf.xacro
+[1.596s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/ament_index/resource_index/package_run_dependencies/astra_description
+[1.596s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/ament_index/resource_index/parent_prefix_path/astra_description
+[1.596s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/environment/ament_prefix_path.sh
+[1.597s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/environment/ament_prefix_path.dsv
+[1.597s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/environment/path.sh
+[1.598s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/environment/path.dsv
+[1.598s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/local_setup.bash
+[1.598s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/local_setup.sh
+[1.599s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/local_setup.zsh
+[1.599s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/local_setup.dsv
+[1.599s] -- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.dsv
+[1.610s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/ament_index/resource_index/packages/astra_description
+[1.613s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/cmake/astra_descriptionConfig.cmake
+[1.618s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/cmake/astra_descriptionConfig-version.cmake
+[1.619s] -- Up-to-date: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_description/share/astra_description/package.xml
+[1.673s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/task_execution:/home/xplore/Desktop/main_HD_workspace/hd_ws/install/manager:/opt/ros/foxy /usr/bin/cmake --install /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description

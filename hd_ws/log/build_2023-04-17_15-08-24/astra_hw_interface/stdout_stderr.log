@@ -1,0 +1,82 @@
+-- The C compiler identification is GNU 9.4.0
+-- The CXX compiler identification is GNU 9.4.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found ament_cmake: 0.9.11 (/opt/ros/foxy/share/ament_cmake/cmake)
+-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+-- Using PYTHON_EXECUTABLE: /usr/bin/python3
+-- Found hardware_interface: 0.11.0 (/opt/ros/foxy/share/hardware_interface/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Found rosidl_adapter: 1.3.0 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+-- Found OpenSSL: /usr/lib/aarch64-linux-gnu/libcrypto.so (found version "1.1.1f")  
+-- Found FastRTPS: /opt/ros/foxy/include  
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found rclcpp: 2.4.2 (/opt/ros/foxy/share/rclcpp/cmake)
+-- Found rmw_implementation_cmake: 1.0.4 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)
+-- Using RMW implementation 'rmw_cyclonedds_cpp' as default
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found rclcpp_lifecycle: 2.4.2 (/opt/ros/foxy/share/rclcpp_lifecycle/cmake)
+-- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+-- Found ament_cmake_gmock: 0.9.11 (/opt/ros/foxy/share/ament_cmake_gmock/cmake)
+-- Added test 'cppcheck' to perform static code analysis on C / C++ code
+-- Configured cppcheck include dirs: $<BUILD_INTERFACE:/home/xplore/Desktop/main_HD_workspace/hd_ws/src/control/astra_hw_interface/include>
+-- Configured cppcheck exclude dirs and/or files: 
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'uncrustify' to check C / C++ code style
+-- Configured uncrustify additional arguments: 
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_hw_interface
+[35m[1mScanning dependencies of target astra_hw_interface[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/astra_hw_interface.dir/src/astra_arm_interface.cpp.o[0m
+[100%] [32m[1mLinking CXX shared library libastra_hw_interface.so[0m
+[100%] Built target astra_hw_interface
+-- Install configuration: ""
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/astra_hw_interface.xml
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/include/astra_hw_interface
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/include/astra_hw_interface/astra_hw_interface
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/include/astra_hw_interface/astra_hw_interface/astra_arm_interface.hpp
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/include/astra_hw_interface/astra_hw_interface/visibility_control.h
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib/libastra_hw_interface.so
+-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/lib/libastra_hw_interface.so" to ""
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/library_path.sh
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/library_path.dsv
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/ament_index/resource_index/package_run_dependencies/astra_hw_interface
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/ament_index/resource_index/parent_prefix_path/astra_hw_interface
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/ament_prefix_path.sh
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/ament_prefix_path.dsv
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/path.sh
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/environment/path.dsv
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/local_setup.bash
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/local_setup.sh
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/local_setup.zsh
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/local_setup.dsv
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.dsv
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/ament_index/resource_index/packages/astra_hw_interface
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/ament_index/resource_index/hardware_interface__pluginlib__plugin/astra_hw_interface
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/astra_hw_interfaceExport.cmake
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/astra_hw_interfaceExport-noconfig.cmake
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/ament_cmake_export_targets-extras.cmake
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/ament_cmake_export_dependencies-extras.cmake
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/astra_hw_interfaceConfig.cmake
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/cmake/astra_hw_interfaceConfig-version.cmake
+-- Installing: /home/xplore/Desktop/main_HD_workspace/hd_ws/install/astra_hw_interface/share/astra_hw_interface/package.xml

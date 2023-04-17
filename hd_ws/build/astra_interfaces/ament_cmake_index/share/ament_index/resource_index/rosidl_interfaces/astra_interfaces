@@ -1,0 +1,6 @@
+msg/CmdOutcome.idl
+msg/CmdOutcome.msg
+msg/Object.idl
+msg/Object.msg
+msg/Task.idl
+msg/Task.msg
