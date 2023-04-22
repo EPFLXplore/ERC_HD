@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(astra_description)
+project(trajectory_planner)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -7,14 +7,20 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(moveit_ros_planning_interface REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
 
-# INSTALL
-install(DIRECTORY urdf
-  DESTINATION share/${PROJECT_NAME})
+add_executable(trajectory_planner src/trajectory_planner.cpp)
+target_include_directories(trajectory_planner include/trajectory_planner)
+ament_target_dependencies(trajectory_planner rclcpp std_msgs moveit_ros_planning_interface)
+
+install(TARGETS
+trajectory_planner
+  DESTINATION lib/${PROJECT_NAME})
 
 
 if(BUILD_TESTING)
