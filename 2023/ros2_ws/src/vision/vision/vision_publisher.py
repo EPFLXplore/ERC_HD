@@ -13,11 +13,11 @@ class VisionPublisher(Node):
         super().__init__('vision_distance_publisher')
         self.publisher_=self.create_publisher(PanelObject, 'distance_topic', 10)
         timer_period = 1
-        #self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.timer = self.create_timer(timer_period, self.timer_callback)
         #self.projector = projector
-        #self.i = 0
+        self.i = 0
 
-    ''''
+    
     def timer_callback(self):
         msg = PanelObject()
 
@@ -41,32 +41,7 @@ class VisionPublisher(Node):
 
         self.i += 1
 
-    '''
-    def create_panelobject_message(self, id, pos_x, pos_y, pos_z, or_x, or_y, or_z, or_w):
-        msg = PanelObject()
 
-        msg.id = id
-
-        msg.pose = Pose()
-
-        msg.pose.position.x = pos_x
-        msg.pose.position.y = pos_y
-        msg.pose.position.z = pos_z
-
-        msg.pose.orientation.x = or_x
-        msg.pose.orientation.y = or_y
-        msg.pose.orientation.z = or_z
-        msg.pose.orientation.w = or_w
-
-        return msg
-    
-    def publish_inform(self, msg):
-        self.publisher_.publish(msg)
-        self.get_logger().info('Publishing msg with id: "%d"' % msg.id)
-        self.get_logger().info('Publishing msg with orientation x : "%d"' % msg.pose.orientation.x)
-
-
-'''
 def main(args=None):
     rclpy.init(args=args)
 
@@ -77,5 +52,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
-'''
