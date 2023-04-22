@@ -86,7 +86,7 @@ hardware_interface::return_type AstraArmInterface::start() {
 }
 
 
-hardware_interface::return_type stop() {
+hardware_interface::return_type AstraArmInterface::stop() {
     return hardware_interface::return_type::OK;
 }
 

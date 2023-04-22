@@ -5,7 +5,9 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
-find_package(moveit2_tutorials REQUIRED)
+#find_package(moveit2_tutorials REQUIRED)
+find_package(manager)
+find_package(moveit_configs_utils)
 
 
 ## Install Python modules

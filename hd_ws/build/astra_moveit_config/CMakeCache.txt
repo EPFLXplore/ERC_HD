@@ -608,7 +608,7 @@ ZLIB_LIBRARY_DEBUG:FILEPATH=ZLIB_LIBRARY_DEBUG-NOTFOUND
 ZLIB_LIBRARY_RELEASE:FILEPATH=/usr/lib/aarch64-linux-gnu/libz.so
 
 //Path to a library.
-_lib:FILEPATH=/opt/ros/foxy/lib/librealtime_tools.a
+_lib:FILEPATH=/opt/ros/foxy/lib/librosgraph_msgs__rosidl_typesupport_fastrtps_cpp.so
 
 //Path to a library.
 _ogre_main_static_library_abs:FILEPATH=/opt/ros/foxy/opt/rviz_ogre_vendor/lib/libOgreMain.so
@@ -793,6 +793,9 @@ libstatistics_collector_DIR:PATH=/opt/ros/foxy/share/libstatistics_collector/cma
 //The directory containing a CMake configuration file for libyaml_vendor.
 libyaml_vendor_DIR:PATH=/opt/ros/foxy/share/libyaml_vendor/cmake
 
+//The directory containing a CMake configuration file for manager.
+manager_DIR:PATH=manager_DIR-NOTFOUND
+
 //The directory containing a CMake configuration file for map_msgs.
 map_msgs_DIR:PATH=/opt/ros/foxy/share/map_msgs/cmake
 
@@ -801,6 +804,9 @@ message_filters_DIR:PATH=/opt/ros/foxy/share/message_filters/cmake
 
 //The directory containing a CMake configuration file for moveit2_tutorials.
 moveit2_tutorials_DIR:PATH=/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/cmake
+
+//The directory containing a CMake configuration file for moveit_configs_utils.
+moveit_configs_utils_DIR:PATH=moveit_configs_utils_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for moveit_core.
 moveit_core_DIR:PATH=/opt/ros/foxy/share/moveit_core/cmake
@@ -1259,6 +1265,8 @@ FIND_PACKAGE_MESSAGE_DETAILS_FastRTPS:INTERNAL=[/opt/ros/foxy/include][/opt/ros/
 FIND_PACKAGE_MESSAGE_DETAILS_OpenGL:INTERNAL=[/usr/lib/aarch64-linux-gnu/libOpenGL.so][/usr/lib/aarch64-linux-gnu/libGLX.so][/usr/include][c ][v()]
 //Details about finding OpenSSL
 FIND_PACKAGE_MESSAGE_DETAILS_OpenSSL:INTERNAL=[/usr/lib/aarch64-linux-gnu/libcrypto.so][/usr/include][c ][v1.1.1f()]
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.29.1()]
 //Details about finding PythonInterp
 FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[/usr/bin/python3][v3.8.10(3)]
 //Details about finding Threads
@@ -1279,6 +1287,31 @@ FREETYPE_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 Fontconfig_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: Fontconfig_LIBRARY
 Fontconfig_LIBRARY-ADVANCED:INTERNAL=1
+MANAGER_CFLAGS:INTERNAL=
+MANAGER_CFLAGS_I:INTERNAL=
+MANAGER_CFLAGS_OTHER:INTERNAL=
+MANAGER_FOUND:INTERNAL=
+MANAGER_INCLUDEDIR:INTERNAL=
+MANAGER_LIBDIR:INTERNAL=
+MANAGER_LIBS:INTERNAL=
+MANAGER_LIBS_L:INTERNAL=
+MANAGER_LIBS_OTHER:INTERNAL=
+MANAGER_LIBS_PATHS:INTERNAL=
+MANAGER_MODULE_NAME:INTERNAL=
+MANAGER_PREFIX:INTERNAL=
+MANAGER_STATIC_CFLAGS:INTERNAL=
+MANAGER_STATIC_CFLAGS_I:INTERNAL=
+MANAGER_STATIC_CFLAGS_OTHER:INTERNAL=
+MANAGER_STATIC_LIBDIR:INTERNAL=
+MANAGER_STATIC_LIBS:INTERNAL=
+MANAGER_STATIC_LIBS_L:INTERNAL=
+MANAGER_STATIC_LIBS_OTHER:INTERNAL=
+MANAGER_STATIC_LIBS_PATHS:INTERNAL=
+MANAGER_VERSION:INTERNAL=
+MANAGER_manager_INCLUDEDIR:INTERNAL=
+MANAGER_manager_LIBDIR:INTERNAL=
+MANAGER_manager_PREFIX:INTERNAL=
+MANAGER_manager_VERSION:INTERNAL=
 //ADVANCED property for variable: OPENGL_EGL_INCLUDE_DIR
 OPENGL_EGL_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: OPENGL_GLX_INCLUDE_DIR
@@ -1584,5 +1617,5 @@ pkgcfg_lib_PKG_FONTCONFIG_freetype-ADVANCED:INTERNAL=1
 pkgcfg_lib__OPENSSL_crypto-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib__OPENSSL_ssl
 pkgcfg_lib__OPENSSL_ssl-ADVANCED:INTERNAL=1
-prefix_result:INTERNAL=/usr/lib/aarch64-linux-gnu
+prefix_result:INTERNAL=SSL;IPv6;UnixSockets;libz;brotli;AsynchDNS;IDN;GSS-API;PSL;SPNEGO;Kerberos;NTLM;NTLM_WB;TLS-SRP;HTTP2;HTTPS-proxy
 
