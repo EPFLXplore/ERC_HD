@@ -1,4 +1,4 @@
-import CPO
+from controlpanel.cpo import CPO
 import cv2 as cv
 
 """
@@ -8,13 +8,15 @@ position 0 --- 1
 """
 
 class Button(CPO):
-    def __init__(self, position, id, value, length) -> None:
+    def __init__(self, top_left_corner, id, value, height, width) -> None:
+        position = get_coords(top_left_corner, height, width)
         super().__init__(position)
         self._isOn = False
         self._id = id
         self._value = value
-        self._top_center = position[0] + (self.get_width/2, self.get_height/4)
-        self._bottom_center = position[0] + (self._width/2, 3 * (self._height/4))
+        self.coords = position
+        # self._top_center = position[0] + (self.get_width/2, self.get_height/4)
+        # self._bottom_center = position[0] + (self._width/2, 3 * (self._height/4))
 
     def get_id(self):
         return self._id
@@ -57,3 +59,8 @@ class Button(CPO):
         cv.circle(frame, point, 2, (0, 100, 255), 8)
 
     
+def get_coords(top_left, height, width):
+    top_right = (top_left[0] + width, top_left[1])
+    bottom_left = (top_left[0], top_left[1] + height)
+    bottom_right = (top_left[0] + width, top_left[1] + height)
+    return [top_left, top_right, bottom_left, bottom_right ]

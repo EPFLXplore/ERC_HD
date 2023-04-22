@@ -7,7 +7,7 @@ from scipy.spatial.transform import Rotation as R
 
 
 # aruco setup
-marker_dict_4 = aruco.Dictionary_get(aruco.DICT_7X7_250)
+marker_dict_4 = aruco.Dictionary_get(aruco.DICT_4X4_50)
 param_markers = aruco.DetectorParameters_create()
 MARKER_REAL_SIZE = 4.5 #centimeters
 
