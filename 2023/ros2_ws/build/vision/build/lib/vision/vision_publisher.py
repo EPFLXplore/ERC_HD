@@ -1,13 +1,17 @@
 import rclpy
 from rclpy.node import Node
 
+from interfaces.msg import PanelObject
+
 from std_msgs.msg import String
+import geometry_msgs
+from geometry_msgs.msg import Pose
 
 class VisionPublisher(Node):
 
     def __init__(self):
         super().__init__('vision_distance_publisher')
-        self.publisher_=self.create_publisher(String, 'distance_topic', 10)
+        self.publisher_=self.create_publisher(PanelObject, 'distance_topic', 10)
         timer_period = 1
         self.timer = self.create_timer(timer_period, self.timer_callback)
         #self.projector = projector
@@ -15,10 +19,26 @@ class VisionPublisher(Node):
 
     
     def timer_callback(self):
-        msg = String()
-        msg.data = 'Distance from Panel: %d ' % self.i
+        msg = PanelObject()
+
+        msg.id = 1
+
+        msg.pose = Pose()
+        msg.pose.position.x = 1.0
+        msg.pose.position.y = 1.0
+        msg.pose.position.z = 1.0
+
+        msg.pose.orientation.x = 2.0
+        msg.pose.orientation.y = 1.0
+        msg.pose.orientation.z = 1.0
+        msg.pose.orientation.w = 1.0
+
+
+
         self.publisher_.publish(msg)
-        self.get_logger().info('Publishing: "%s"' % msg.data)
+        self.get_logger().info('Publishing: "%d"' % msg.id)
+        self.get_logger().info('Publishing: "%d"' % msg.pose.orientation.x)
+
         self.i += 1
 
 

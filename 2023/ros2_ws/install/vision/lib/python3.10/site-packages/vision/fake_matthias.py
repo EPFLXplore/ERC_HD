@@ -1,6 +1,8 @@
 import rclpy
 from rclpy.node import Node
 
+from interfaces.msg import PanelObject
+
 from std_msgs.msg import String
 
 class VisionSubscriber(Node):
@@ -8,14 +10,15 @@ class VisionSubscriber(Node):
     def __init__(self):
         super().__init__('vision_distance_subscriber')
         self.subscription = self.create_subscription(
-            String,
+            PanelObject,
             'distance_topic',
             self.listener_callback,
             10)
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
-        self.get_logger().info('I heard: "%s"' % msg.data)
+        self.get_logger().info('I heard: "%d"' % msg.id)
+        self.get_logger().info('Orientation x: "%d"' % msg.pose.orientation.x)
 
 
 def main(args=None):
