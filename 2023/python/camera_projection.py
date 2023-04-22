@@ -34,3 +34,4 @@ def camera_projection(point, rVec, tVec):
 
     return np.array([-x, -y, z]) / n
 
+

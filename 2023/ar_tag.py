@@ -4,11 +4,12 @@ import cv2 as cv
 
 class ARTag:
 
-        def __init__(self, marker_dict, marker_size, camera_matrix, dist_coeffs):
+        def __init__(self, marker_dict, marker_size, marker_id, camera_matrix, dist_coeffs):
             self.marker_dict = marker_dict
             self.marker_size = marker_size
             self.camera_matrix = camera_matrix
             self.dist_coeffs = dist_coeffs
+            self.marker_id = marker_id
 
         def detect(self, frame):
             gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -23,3 +24,17 @@ class ARTag:
                         marker_size={self.marker_size},\
                         camera_matrix={self.camera_matrix},\
                         dist_coeffs={self.dist_coeffs})"
+        
+        # Draw the pose of the marker object
+        def draw_pose(self, frame, rvec, tvec, length=4, thickness=4):
+            cv.drawFrameAxes(frame, self.cam_matrix, self.coeffs, rvec, tvec, length, thickness)
+
+        # Projects the given point onto this marker's coordinate frame, 
+        def project_to_marker(self, points_real_world, rvec, tvec):
+            [image_point, jacobian] = cv.projectPoints(points_real_world, rvec, tvec, self.camera_matrix, self.coeffs)
+            cv.circle(self.frame, (int(image_point[0, 0]),int(image_point[0,1])), 2, (0, 100, 255), 8)
+            return image_point
+
+
+             
+
