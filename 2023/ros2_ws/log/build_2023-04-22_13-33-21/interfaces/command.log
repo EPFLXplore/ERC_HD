@@ -1,2 +1,0 @@
-Invoking command in '/home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/eylul/main_HD_workspace/2023/ros2_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/eylul/main_HD_workspace/2023/ros2_ws/install/interfaces
-Invoked command in '/home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces' returned '1': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/eylul/main_HD_workspace/2023/ros2_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/eylul/main_HD_workspace/2023/ros2_ws/install/interfaces
