@@ -31,7 +31,10 @@ while True:
     
     cv.putText(frame, control_panel.selected_panel, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
 
-    # control_panel.draw(frame)
+    control_panel.draw(frame)
+    test = np.array([[10,10],[10,200], [200,200], [200, 10]])
+    print(test.shape)
+    cv.polylines(frame, [test], True, (0, 0, 255), 2)
     show(frame, depth)
 
     key = cv.waitKey(1)

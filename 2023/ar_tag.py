@@ -1,6 +1,8 @@
 from cv2 import aruco
 import cv2 as cv
 
+from controlpanel.cpo import CPO
+
 
 class ARTag:
 

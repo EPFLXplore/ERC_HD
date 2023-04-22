@@ -30,8 +30,8 @@ class PanelA( Panel):
                                    for id, corner  in enumerate(self.buttons_top_left)]
         
 
-    # def draw(self, frame):
-    #     self.ar_tag.draw(frame)
-    #     for button in self.buttons:
-    #         button.draw(frame)
-    #     return frame
+    def draw(self, frame):
+        # self.ar_tag.draw(frame)
+        for button in self.buttons:
+            button.draw(frame)
+        

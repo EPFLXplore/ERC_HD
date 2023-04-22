@@ -60,7 +60,7 @@ class Button(CPO):
 
     
 def get_coords(top_left, height, width):
-    top_right = (top_left[0] + width, top_left[1])
-    bottom_left = (top_left[0], top_left[1] + height)
-    bottom_right = (top_left[0] + width, top_left[1] + height)
-    return [top_left, top_right, bottom_left, bottom_right ]
+    top_right = [top_left[0] + width, top_left[1]]
+    bottom_left = [top_left[0], top_left[1] + height]
+    bottom_right = [top_left[0] + width, top_left[1] + height]
+    return [top_left, top_right, bottom_right, bottom_left ]
