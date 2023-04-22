@@ -1,0 +1,136 @@
+[0.000000] (-) TimerEvent: {}
+[0.000246] (-) JobUnselected: {'identifier': 'vision'}
+[0.000304] (interfaces) JobQueued: {'identifier': 'interfaces', 'dependencies': OrderedDict()}
+[0.000453] (interfaces) JobStarted: {'identifier': 'interfaces'}
+[0.087356] (interfaces) JobProgress: {'identifier': 'interfaces', 'progress': 'cmake'}
+[0.111282] (interfaces) Command: {'cmd': ['/usr/bin/cmake', '/home/eylul/main_HD_workspace/2023/ros2_ws/src/interfaces', '-DCMAKE_INSTALL_PREFIX=/home/eylul/main_HD_workspace/2023/ros2_ws/install/interfaces'], 'cwd': '/home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'eylul'), ('LC_TIME', 'de_CH.UTF-8'), ('XDG_SESSION_TYPE', 'wayland'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/eylul'), ('OLDPWD', '/home/eylul/main_HD_workspace/2023/ros2_ws/src'), ('DESKTOP_SESSION', 'ubuntu'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('LC_MONETARY', 'de_CH.UTF-8'), ('SYSTEMD_EXEC_PID', '1532'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('IM_CONFIG_PHASE', '1'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'eylul'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'eylul'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '1'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/eylulx:@/tmp/.ICE-unix/1498,unix/eylulx:/tmp/.ICE-unix/1498'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'de_CH.UTF-8'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/b777966d_71ff_4dd8_aeae_c15d553c30dd'), ('GNOME_SETUP_DISPLAY', ':1'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('LC_TELEPHONE', 'de_CH.UTF-8'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/.mutter-Xwaylandauth.N05131'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.93'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('ROS_DOMAIN_ID', '77'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('SHELL', '/bin/bash'), ('LC_NAME', 'de_CH.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'de_CH.UTF-8'), ('LC_IDENTIFICATION', 'de_CH.UTF-8'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'de_CH.UTF-8'), ('LC_PAPER', 'de_CH.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/opt/ros/humble')]), 'shell': False}
+[0.204933] (-) TimerEvent: {}
+[0.327299] (-) TimerEvent: {}
+[0.432775] (-) TimerEvent: {}
+[0.542205] (-) TimerEvent: {}
+[0.700741] (-) TimerEvent: {}
+[0.813187] (-) TimerEvent: {}
+[0.931112] (-) TimerEvent: {}
+[1.075083] (-) TimerEvent: {}
+[1.189191] (-) TimerEvent: {}
+[1.290403] (-) TimerEvent: {}
+[1.401157] (-) TimerEvent: {}
+[1.536486] (-) TimerEvent: {}
+[1.655658] (-) TimerEvent: {}
+[1.764871] (-) TimerEvent: {}
+[1.852973] (interfaces) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.3.0\n'}
+[1.865289] (-) TimerEvent: {}
+[1.971408] (-) TimerEvent: {}
+[2.074206] (-) TimerEvent: {}
+[2.177098] (-) TimerEvent: {}
+[2.296334] (-) TimerEvent: {}
+[2.400404] (-) TimerEvent: {}
+[2.507737] (-) TimerEvent: {}
+[2.611548] (-) TimerEvent: {}
+[2.718101] (-) TimerEvent: {}
+[2.770567] (interfaces) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.3.0\n'}
+[2.826530] (-) TimerEvent: {}
+[2.863276] (interfaces) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[2.927398] (-) TimerEvent: {}
+[3.028907] (-) TimerEvent: {}
+[3.129680] (-) TimerEvent: {}
+[3.239058] (-) TimerEvent: {}
+[3.249762] (interfaces) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[3.264820] (interfaces) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[3.269118] (interfaces) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[3.282624] (interfaces) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[3.313215] (interfaces) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[3.339524] (-) TimerEvent: {}
+[3.441025] (-) TimerEvent: {}
+[3.542417] (-) TimerEvent: {}
+[3.555303] (interfaces) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[3.568163] (interfaces) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[3.568857] (interfaces) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[3.575162] (interfaces) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[3.621290] (interfaces) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.3 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[3.644152] (-) TimerEvent: {}
+[3.745919] (-) TimerEvent: {}
+[3.849621] (-) TimerEvent: {}
+[3.959525] (-) TimerEvent: {}
+[4.078328] (-) TimerEvent: {}
+[4.179879] (-) TimerEvent: {}
+[4.205870] (interfaces) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3.10 (found version "3.10.6") found components: Interpreter \n'}
+[4.284493] (-) TimerEvent: {}
+[4.386683] (-) TimerEvent: {}
+[4.495202] (-) TimerEvent: {}
+[4.596145] (-) TimerEvent: {}
+[4.698754] (-) TimerEvent: {}
+[4.806665] (interfaces) StdoutLine: {'line': b'-- Found geometry_msgs: 4.2.3 (/opt/ros/humble/share/geometry_msgs/cmake)\n'}
+[4.806956] (-) TimerEvent: {}
+[4.909857] (-) TimerEvent: {}
+[5.014657] (-) TimerEvent: {}
+[5.136394] (-) TimerEvent: {}
+[5.242420] (-) TimerEvent: {}
+[5.283592] (interfaces) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.4 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[5.327483] (interfaces) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.4 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[5.350556] (-) TimerEvent: {}
+[5.460516] (-) TimerEvent: {}
+[5.512390] (interfaces) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.4 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[5.575271] (-) TimerEvent: {}
+[5.687618] (-) TimerEvent: {}
+[5.796201] (-) TimerEvent: {}
+[5.836430] (interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[5.900812] (-) TimerEvent: {}
+[6.015984] (-) TimerEvent: {}
+[6.032452] (interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[6.117528] (-) TimerEvent: {}
+[6.222363] (-) TimerEvent: {}
+[6.347884] (-) TimerEvent: {}
+[6.462718] (-) TimerEvent: {}
+[6.563944] (-) TimerEvent: {}
+[6.588531] (interfaces) StdoutLine: {'line': b'-- Found rosidl_default_generators: 1.2.0 (/opt/ros/humble/share/rosidl_default_generators/cmake)\n'}
+[6.664304] (-) TimerEvent: {}
+[6.765688] (-) TimerEvent: {}
+[6.868438] (-) TimerEvent: {}
+[6.977435] (-) TimerEvent: {}
+[7.079637] (-) TimerEvent: {}
+[7.098446] (interfaces) StderrLine: {'line': b'\x1b[31mCMake Error at /opt/ros/humble/share/rosidl_adapter/cmake/rosidl_adapt_interfaces.cmake:59 (message):\n'}
+[7.098749] (interfaces) StderrLine: {'line': b'  execute_process(/usr/bin/python3.10 -m rosidl_adapter --package-name\n'}
+[7.099455] (interfaces) StderrLine: {'line': b'  interfaces --arguments-file\n'}
+[7.099731] (interfaces) StderrLine: {'line': b'  /home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces/rosidl_adapter__arguments__interfaces.json\n'}
+[7.099870] (interfaces) StderrLine: {'line': b'  --output-dir\n'}
+[7.100002] (interfaces) StderrLine: {'line': b'  /home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces/rosidl_adapter/interfaces\n'}
+[7.100109] (interfaces) StderrLine: {'line': b'  --output-file\n'}
+[7.100211] (interfaces) StderrLine: {'line': b'  /home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces/rosidl_adapter/interfaces.idls)\n'}
+[7.100311] (interfaces) StderrLine: {'line': b'  returned error code 1:\n'}
+[7.100411] (interfaces) StderrLine: {'line': b'\n'}
+[7.100507] (interfaces) StderrLine: {'line': b'  Traceback (most recent call last):\n'}
+[7.100605] (interfaces) StderrLine: {'line': b'\n'}
+[7.100700] (interfaces) StderrLine: {'line': b'    File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main\n'}
+[7.100796] (interfaces) StderrLine: {'line': b'      return _run_code(code, main_globals, None,\n'}
+[7.100946] (interfaces) StderrLine: {'line': b'    File "/usr/lib/python3.10/runpy.py", line 86, in _run_code\n'}
+[7.101052] (interfaces) StderrLine: {'line': b'      exec(code, run_globals)\n'}
+[7.101150] (interfaces) StderrLine: {'line': b'    File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/__main__.py", line 19, in <module>\n'}
+[7.101253] (interfaces) StderrLine: {'line': b'      sys.exit(main())\n'}
+[7.101395] (interfaces) StderrLine: {'line': b'    File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/main.py", line 53, in main\n'}
+[7.101515] (interfaces) StderrLine: {'line': b'      abs_idl_file = convert_to_idl(\n'}
+[7.101613] (interfaces) StderrLine: {'line': b'    File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/__init__.py", line 19, in convert_to_idl\n'}
+[7.101711] (interfaces) StderrLine: {'line': b'      return convert_msg_to_idl(\n'}
+[7.101806] (interfaces) StderrLine: {'line': b'    File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/msg/__init__.py", line 28, in convert_msg_to_idl\n'}
+[7.101968] (interfaces) StderrLine: {'line': b'      msg = parse_message_string(package_name, input_file.stem, content)\n'}
+[7.102076] (interfaces) StderrLine: {'line': b'    File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/parser.py", line 544, in parse_message_string\n'}
+[7.102174] (interfaces) StderrLine: {'line': b'      msg = MessageSpecification(pkg_name, msg_name, fields, constants)\n'}
+[7.102278] (interfaces) StderrLine: {'line': b'    File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/parser.py", line 388, in __init__\n'}
+[7.102374] (interfaces) StderrLine: {'line': b'      self.base_type = BaseType(\n'}
+[7.102469] (interfaces) StderrLine: {'line': b'    File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/parser.py", line 205, in __init__\n'}
+[7.102581] (interfaces) StderrLine: {'line': b'      raise InvalidResourceName(\n'}
+[7.102677] (interfaces) StderrLine: {'line': b'\n'}
+[7.102770] (interfaces) StderrLine: {'line': b"  rosidl_adapter.parser.InvalidResourceName: 'panel_object' is an invalid\n"}
+[7.102893] (interfaces) StderrLine: {'line': b"  message name.  It should have the pattern '^[A-Z][A-Za-z0-9]*$'\n"}
+[7.103030] (interfaces) StderrLine: {'line': b'\n'}
+[7.103130] (interfaces) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[7.103226] (interfaces) StderrLine: {'line': b'  /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:130 (rosidl_adapt_interfaces)\n'}
+[7.103322] (interfaces) StderrLine: {'line': b'  CMakeLists.txt:16 (rosidl_generate_interfaces)\n'}
+[7.103417] (interfaces) StderrLine: {'line': b'\n'}
+[7.103510] (interfaces) StderrLine: {'line': b'\x1b[0m\n'}
+[7.103697] (interfaces) StdoutLine: {'line': b'-- Configuring incomplete, errors occurred!\n'}
+[7.103815] (interfaces) StdoutLine: {'line': b'See also "/home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces/CMakeFiles/CMakeOutput.log".\n'}
+[7.117114] (interfaces) CommandEnded: {'returncode': 1}
+[7.184439] (-) TimerEvent: {}
+[7.224155] (interfaces) JobEnded: {'identifier': 'interfaces', 'rc': 1}
+[7.299754] (-) EventReactorShutdown: {}

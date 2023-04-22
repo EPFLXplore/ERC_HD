@@ -1,0 +1,64 @@
+[0.204s] Invoking command in '/home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/eylul/main_HD_workspace/2023/ros2_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/eylul/main_HD_workspace/2023/ros2_ws/install/interfaces
+[1.853s] -- The C compiler identification is GNU 11.3.0
+[2.771s] -- The CXX compiler identification is GNU 11.3.0
+[2.863s] -- Detecting C compiler ABI info
+[3.250s] -- Detecting C compiler ABI info - done
+[3.265s] -- Check for working C compiler: /usr/bin/cc - skipped
+[3.269s] -- Detecting C compile features
+[3.282s] -- Detecting C compile features - done
+[3.313s] -- Detecting CXX compiler ABI info
+[3.555s] -- Detecting CXX compiler ABI info - done
+[3.568s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[3.570s] -- Detecting CXX compile features
+[3.575s] -- Detecting CXX compile features - done
+[3.621s] -- Found ament_cmake: 1.3.3 (/opt/ros/humble/share/ament_cmake/cmake)
+[4.206s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.6") found components: Interpreter 
+[4.806s] -- Found geometry_msgs: 4.2.3 (/opt/ros/humble/share/geometry_msgs/cmake)
+[5.283s] -- Found rosidl_generator_c: 3.1.4 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[5.335s] -- Found rosidl_adapter: 3.1.4 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[5.512s] -- Found rosidl_generator_cpp: 3.1.4 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[5.849s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[6.032s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[6.588s] -- Found rosidl_default_generators: 1.2.0 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[7.098s] [31mCMake Error at /opt/ros/humble/share/rosidl_adapter/cmake/rosidl_adapt_interfaces.cmake:59 (message):
+[7.098s]   execute_process(/usr/bin/python3.10 -m rosidl_adapter --package-name
+[7.099s]   interfaces --arguments-file
+[7.099s]   /home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces/rosidl_adapter__arguments__interfaces.json
+[7.099s]   --output-dir
+[7.100s]   /home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces/rosidl_adapter/interfaces
+[7.100s]   --output-file
+[7.100s]   /home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces/rosidl_adapter/interfaces.idls)
+[7.100s]   returned error code 1:
+[7.100s] 
+[7.100s]   Traceback (most recent call last):
+[7.100s] 
+[7.100s]     File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+[7.100s]       return _run_code(code, main_globals, None,
+[7.101s]     File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+[7.101s]       exec(code, run_globals)
+[7.101s]     File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/__main__.py", line 19, in <module>
+[7.101s]       sys.exit(main())
+[7.101s]     File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/main.py", line 53, in main
+[7.101s]       abs_idl_file = convert_to_idl(
+[7.101s]     File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/__init__.py", line 19, in convert_to_idl
+[7.101s]       return convert_msg_to_idl(
+[7.101s]     File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/msg/__init__.py", line 28, in convert_msg_to_idl
+[7.102s]       msg = parse_message_string(package_name, input_file.stem, content)
+[7.102s]     File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/parser.py", line 544, in parse_message_string
+[7.102s]       msg = MessageSpecification(pkg_name, msg_name, fields, constants)
+[7.102s]     File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/parser.py", line 388, in __init__
+[7.102s]       self.base_type = BaseType(
+[7.102s]     File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_adapter/parser.py", line 205, in __init__
+[7.102s]       raise InvalidResourceName(
+[7.102s] 
+[7.102s]   rosidl_adapter.parser.InvalidResourceName: 'panel_object' is an invalid
+[7.103s]   message name.  It should have the pattern '^[A-Z][A-Za-z0-9]*$'
+[7.103s] 
+[7.103s] Call Stack (most recent call first):
+[7.103s]   /opt/ros/humble/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:130 (rosidl_adapt_interfaces)
+[7.103s]   CMakeLists.txt:16 (rosidl_generate_interfaces)
+[7.103s] 
+[7.103s] [0m
+[7.103s] -- Configuring incomplete, errors occurred!
+[7.103s] See also "/home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces/CMakeFiles/CMakeOutput.log".
+[7.117s] Invoked command in '/home/eylul/main_HD_workspace/2023/ros2_ws/build/interfaces' returned '1': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/eylul/main_HD_workspace/2023/ros2_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/eylul/main_HD_workspace/2023/ros2_ws/install/interfaces

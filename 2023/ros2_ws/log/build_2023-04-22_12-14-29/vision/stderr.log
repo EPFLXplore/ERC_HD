@@ -1,0 +1,12 @@
+/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+  File "/home/eylul/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.10/site-packages/vision/fake_matthias.py", line 20
+    '''
+    ^
+SyntaxError: unterminated triple-quoted string literal (detected at line 26)
+
+  File "/home/eylul/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.10/site-packages/vision/vision_publisher.py", line 26
+    '''
+    ^
+SyntaxError: unterminated triple-quoted string literal (detected at line 29)
+
