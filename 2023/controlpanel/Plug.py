@@ -1,6 +1,6 @@
-import CPO
+import controlpanel.cpo as cpo
 
-class Plug(CPO):
+class Plug(cpo):
     def __init__(self, position) -> None:
         super().__init__(position)
         self._is_plugged_in = False

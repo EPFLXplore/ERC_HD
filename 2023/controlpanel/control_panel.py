@@ -11,8 +11,8 @@ class ControlPanel:
                 ord('a'): 'A'
                 }
 
-    def __init__(self, camera_matrix, dist_coeffs, values):
-        self.panels = {'A': PanelA(camera_matrix, dist_coeffs, values),
+    def __init__(self, camera_matrix, dist_coeffs, button_values):
+        self.panels = {'A': PanelA(camera_matrix, dist_coeffs, button_values),
                         'B1': PanelB1(),
                         'B2': PanelB2()}
 

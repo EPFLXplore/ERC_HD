@@ -7,7 +7,7 @@ class CPO:
     """
     position 0 --- 1
              |     |
-             3 --- 2
+             3 --- 2p
     """
     # Constructor method that initializes a new instance of the class with a given position.
     def __init__(self, position):
