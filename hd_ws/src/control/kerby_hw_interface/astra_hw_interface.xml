@@ -1,0 +1,9 @@
+<library path="kerby_hw_interface">
+    <class name="kerby_hw_interface/KerbyArmInterface"
+            type="kerby_hw_interface::KerbyArmInterface"
+            base_class_type="hardware_interface::SystemInterface">
+        <description>
+            Hardware interface for the arm of the Kerby rover.
+        </description>
+    </class>
+</library>
