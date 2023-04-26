@@ -1,14 +1,17 @@
 # MoveIt uses this configuration for controller management
 
-#moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
-moveit_controller_manager: moveit_ros_control_interface/MoveItControllerManager
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+#moveit_controller_manager: moveit_ros_control_interface/MoveItControllerManager
 
-moveit_ros_control_interface:
+
+moveit_simple_controller_manager:
   controller_names:
     - astra_arm_moveit_controller
 
   astra_arm_moveit_controller:
+    action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
+    default: true
     joints:
       - joint1
       - joint2
@@ -16,5 +19,3 @@ moveit_ros_control_interface:
       - joint4
       - joint5
       - joint6
-    action_ns: follow_joint_trajectory
-    default: true

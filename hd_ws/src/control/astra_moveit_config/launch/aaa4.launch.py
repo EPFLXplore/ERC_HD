@@ -60,6 +60,7 @@ def generate_launch_description():
         'trajectory_execution.allowed_goal_duration_margin': 0.5,
         'trajectory_execution.allowed_start_tolerance': 0.01
     }
+    trajectory_execution.update(load_yaml(moveit_controllers_file))
     planning_scene_monitor_config = {
         'publish_planning_scene': True,
         'publish_geometry_updates': True,

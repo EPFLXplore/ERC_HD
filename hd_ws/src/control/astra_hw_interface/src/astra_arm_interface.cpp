@@ -115,7 +115,7 @@ std::vector<hardware_interface::CommandInterface> AstraArmInterface::export_comm
 hardware_interface::return_type AstraArmInterface::read() {
     // get states from hardware and store them to internal variables defined in export_state_interfaces
     for (uint i = 0; i < hw_position_states_.size(); i++) {
-        hw_position_states_[i] = hw_position_commands_[i];
+        hw_position_states_[i] = 2*hw_position_commands_[i];
     }
 
     return hardware_interface::return_type::OK;
