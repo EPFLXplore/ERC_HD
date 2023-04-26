@@ -1,4 +1,0 @@
-source;share/astra_moveit_config_new/local_setup.bash
-source;share/astra_moveit_config_new/local_setup.dsv
-source;share/astra_moveit_config_new/local_setup.sh
-source;share/astra_moveit_config_new/local_setup.zsh

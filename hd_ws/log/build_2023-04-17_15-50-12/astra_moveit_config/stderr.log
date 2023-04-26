@@ -1,9 +1,0 @@
-CMake Warning at /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/cmake/ament_cmake_export_include_directories-extras.cmake:11 (message):
-  Package 'moveit2_tutorials' exports the include directory
-  '/home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/cmake/../../../include'
-  which doesn't exist
-Call Stack (most recent call first):
-  /home/xplore/Desktop/main_HD_workspace/hd_ws/install/moveit2_tutorials/share/moveit2_tutorials/cmake/moveit2_tutorialsConfig.cmake:41 (include)
-  CMakeLists.txt:8 (find_package)
-
-

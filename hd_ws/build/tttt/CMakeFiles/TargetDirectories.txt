@@ -1,9 +1,0 @@
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt/CMakeFiles/install/strip.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt/CMakeFiles/install.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt/CMakeFiles/list_install_components.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt/CMakeFiles/rebuild_cache.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt/CMakeFiles/edit_cache.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt/CMakeFiles/test.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt/CMakeFiles/install/local.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt/CMakeFiles/tttt_uninstall.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/tttt/CMakeFiles/uninstall.dir

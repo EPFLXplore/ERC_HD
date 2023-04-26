@@ -3,7 +3,7 @@ import threading
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray, Int8MultiArray, Float32, Int8, Bool, Int16
-from astra_interfaces.msg import Task
+from kerby_interfaces.msg import Task
 
 
 VERBOSE = True

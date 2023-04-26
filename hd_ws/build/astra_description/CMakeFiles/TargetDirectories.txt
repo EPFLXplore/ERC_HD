@@ -1,9 +1,0 @@
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description/CMakeFiles/install/strip.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description/CMakeFiles/install/local.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description/CMakeFiles/install.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description/CMakeFiles/list_install_components.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description/CMakeFiles/rebuild_cache.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description/CMakeFiles/edit_cache.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description/CMakeFiles/test.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description/CMakeFiles/astra_description_uninstall.dir
-/home/xplore/Desktop/main_HD_workspace/hd_ws/build/astra_description/CMakeFiles/uninstall.dir

@@ -1,8 +1,0 @@
-source;share/astra_moveit_config_new/hook/cmake_prefix_path.ps1
-source;share/astra_moveit_config_new/hook/cmake_prefix_path.dsv
-source;share/astra_moveit_config_new/hook/cmake_prefix_path.sh
-source;share/astra_moveit_config_new/local_setup.bash
-source;share/astra_moveit_config_new/local_setup.dsv
-source;share/astra_moveit_config_new/local_setup.ps1
-source;share/astra_moveit_config_new/local_setup.sh
-source;share/astra_moveit_config_new/local_setup.zsh
