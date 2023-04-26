@@ -1,4 +1,0 @@
-<launch>
-    <node name="motor_control" pkg="motor_control" type="motor_control" />
-    <include file="$(find hw_interface)/launch/hw_main.launch"/>
-</launch>

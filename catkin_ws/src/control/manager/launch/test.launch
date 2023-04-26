@@ -1,4 +1,0 @@
-<launch>
-    <node name="manager_node" pkg="manager" type="manager.py" />
-    <!--<node name="CS_sim_node" pkg="manager" type="CS_sim.py" output="screen" />  -->
-</launch>
