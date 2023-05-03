@@ -20,6 +20,8 @@ find_package(ament_cmake REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(moveit_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(moveit_visual_tools)
 
 
@@ -30,19 +32,35 @@ install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 
 # executables
 
-# add_executable(planner src/planner.cpp)
-# target_include_directories(planner PUBLIC
-#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#   $<INSTALL_INTERFACE:include>)
-# ament_target_dependencies(
-#   planner
-#   "moveit_ros_planning_interface"
-#   "rclcpp"
-# )
+add_executable(planner src/planner_main.cpp src/planner.cpp)
+target_include_directories(planner PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(
+  planner
+  "moveit_ros_planning_interface"
+  "rclcpp"
+  "std_msgs"
+)
 
-# install(TARGETS planner
-#   DESTINATION lib/${PROJECT_NAME})
+install(TARGETS planner
+  DESTINATION lib/${PROJECT_NAME})
 
+
+add_executable(test_planner src/test.cpp)
+target_include_directories(test_planner PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(
+  test_planner
+  "rclcpp"
+  "std_msgs"
+  "geometry_msgs"
+)
+
+install(TARGETS test_planner
+  DESTINATION lib/${PROJECT_NAME})
+  
 
 add_executable(test_demo src/test_demo.cpp)
 target_include_directories(test_demo PUBLIC
