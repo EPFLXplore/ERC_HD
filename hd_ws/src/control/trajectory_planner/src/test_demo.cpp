@@ -98,9 +98,9 @@ int main(int argc, char** argv)
   // end-effector.
   geometry_msgs::msg::Pose target_pose1;
   target_pose1.orientation.w = 1.0;
-  target_pose1.position.x = 0.28;
-  target_pose1.position.y = -0.2;
-  target_pose1.position.z = 0.5;
+  target_pose1.position.x = 0.2;
+  target_pose1.position.y = 0;
+  target_pose1.position.z = 0.8;
   move_group.setPoseTarget(target_pose1);
 
   // Now, we call the planner to compute the plan and visualize it.

@@ -15,17 +15,10 @@ int main(int argc, char * argv[])
     geometry_msgs::msg::Pose msg1;
     msg1.orientation.w = 1.0;
     msg1.position.x = 0.2;
-    msg1.position.y = -0.2;
-    msg1.position.z = 0.3;
+    msg1.position.y = 0.0;
+    msg1.position.z = 0.8;
 
     pose_target_pub->publish(msg1);
-
-    while(true) {
-        pose_target_pub->publish(msg1);
-        //rclcpp::Context::sleep_for(std::chrono::nanoseconds(3));
-        
-    }
-
-    //rclcpp::shutdown();
+    
     return 0;
 }
