@@ -1,19 +1,27 @@
 #include "trajectory_planner/planner.h"
 
 
+using namespace std::chrono_literals;
+
+
 Planner::Planner(rclcpp::NodeOptions node_options) : 
     Node("trajectory_planner", node_options)
 {
     m_pose_target_sub = this->create_subscription<geometry_msgs::msg::Pose>("/kinematics/pose_goal", 10, std::bind(&Planner::poseTargetCallback, this, _1));
     m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
     m_cartesian_path_sub = this->create_subscription<geometry_msgs::msg::Pose>("/kinematics/cartesian_path", 10, std::bind(&Planner::cartesianPathCallback, this, _1));
+
+    m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/kinematics/eef_pose", 10);
+
+    auto sleep = 100ms;
+    //m_timer = this->create_wall_timer(sleep, std::bind(&Planner::loopBody, this));
 }
 
 void Planner::config() {
     m_move_group = new moveit::planning_interface::MoveGroupInterface(shared_from_this(), m_planning_group);
     m_planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
     // TODO: see why I get an error when trying to get the current state
-    //m_joint_model_group = m_move_group->getCurrentState()->getJointModelGroup(m_planning_group);
+    m_joint_model_group = m_move_group->getCurrentState()->getJointModelGroup(m_planning_group);
 
     setScalingFactors(1, 1);
 }
@@ -85,6 +93,22 @@ void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msg
     m_planning_scene_interface->addCollisionObjects(collision_objects);
 }
 
+void Planner::loopBody() {
+    publishEEFPose();
+}
+
+void Planner::spin1() {
+    rclcpp::spin(shared_from_this());
+}
+
+void Planner::spin2() {
+    while (rclcpp::ok()) {
+        loopBody();
+        // TODO: add some sleep here
+        //rclcpp::spin_some(shared_from_this());
+    }
+}
+
 void Planner::poseTargetCallback(const geometry_msgs::msg::Pose::SharedPtr msg) {
     RCLCPP_INFO(this->get_logger(), "Received pose goal");
     reachTargetPose(*msg);
@@ -98,4 +122,9 @@ void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::Shared
 void Planner::cartesianPathCallback(const geometry_msgs::msg::Pose::SharedPtr msg) {
     RCLCPP_INFO(this->get_logger(), "Received cartesian path goal");
     computeCartesianPath(*msg);
+}
+
+void Planner::publishEEFPose() {
+    geometry_msgs::msg::Pose msg = m_move_group->getCurrentPose().pose;
+    m_eef_pose_pub->publish(msg);
 }

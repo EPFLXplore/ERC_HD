@@ -97,11 +97,15 @@ def generate_launch_description():
             robot_description,
             robot_description_semantic,
             kinematics_yaml,
-            ompl_planning_pipeline_config,
+            #ompl_planning_pipeline_config,
             trajectory_execution,
-            moveit_controllers,
+            #moveit_controllers,
             planning_scene_monitor_parameters,
-        ]
+            robot_description_kinematics
+        ],
+        # remappings=[
+        #     ("/robot/joint_states", "/joint_states")
+        # ]
     )
 
     return LaunchDescription(

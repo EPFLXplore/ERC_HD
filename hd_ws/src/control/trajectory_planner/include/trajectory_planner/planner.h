@@ -1,3 +1,8 @@
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <string>
+
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 
@@ -43,10 +48,17 @@ public:
 
     void addBoxToWorld(const std::vector<double> &dim, const geometry_msgs::msg::Pose &pose);
 
+    void loopBody();
+
+    void spin1();
+
+    void spin2();
+
 private:
     void poseTargetCallback(const geometry_msgs::msg::Pose::SharedPtr msg);
     void jointTargetCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
     void cartesianPathCallback(const geometry_msgs::msg::Pose::SharedPtr msg);
+    void publishEEFPose();
 
     const std::string                                                   m_planning_group = "kerby_arm_group";
     moveit::planning_interface::MoveGroupInterface*                     m_move_group;
@@ -56,4 +68,6 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr           m_pose_target_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_joint_target_sub;
     rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr           m_cartesian_path_sub;
+    rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr              m_eef_pose_pub;
+    rclcpp::TimerBase::SharedPtr                                        m_timer;
 };

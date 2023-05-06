@@ -17,8 +17,10 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(moveit_ros_planning_interface REQUIRED)
+find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
+find_package(moveit_ros_planning_interface REQUIRED)
 find_package(moveit_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -29,18 +31,21 @@ find_package(moveit_visual_tools)
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 
 
+# include Cpp "include" directory
+include_directories(include)
+
+
 
 # executables
 
 add_executable(planner src/planner_main.cpp src/planner.cpp)
-target_include_directories(planner PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(
-  planner
-  "moveit_ros_planning_interface"
-  "rclcpp"
-  "std_msgs"
+# target_include_directories(planner PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(planner
+  moveit_ros_planning_interface
+  rclcpp
+  std_msgs
 )
 
 install(TARGETS planner
@@ -48,14 +53,13 @@ install(TARGETS planner
 
 
 add_executable(test_planner src/test.cpp)
-target_include_directories(test_planner PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(
-  test_planner
-  "rclcpp"
-  "std_msgs"
-  "geometry_msgs"
+# target_include_directories(test_planner PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(test_planner
+  rclcpp
+  std_msgs
+  geometry_msgs
 )
 
 install(TARGETS test_planner
@@ -76,6 +80,21 @@ ament_target_dependencies(
 
 install(TARGETS test_demo
   DESTINATION lib/${PROJECT_NAME})
+
+
+
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
+# Install Python executables
+install(PROGRAMS
+  scripts/task_executor.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS
+  scripts/vision_test.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 
 
 
