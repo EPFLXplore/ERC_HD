@@ -1,23 +1,16 @@
-import rospy
 import time
 import math
 import copy
-import geometry_msgs.msg
-from std_msgs.msg import Float32MultiArray
-from task_execution.srv import PoseGoal, JointGoal
-from task_execution.msg import Object
-import task_execution.quaternion_arithmetic as qa
-import task_execution.pose_tracker as pt
-
-
-#pose_goal_pub = rospy.Publisher("/arm_control/pose_goal", PoseGoal, queue_size=5)
-#joint_goal_pub = rospy.Publisher("/arm_control/joint_goal", JointGoal, queue_size=5)
-add_object_pub = rospy.Publisher("/arm_control/add_object", Object, queue_size=5)
+from geometry_msgs.msg import Pose
+from kerby_interfaces.msg import Object
+import trajectory_planner.quaternion_arithmetic as qa
+import trajectory_planner.pose_tracker as pt
 
 
 class Command(object):
     """abstract class representing a command"""
-    def __init__(self):
+    def __init__(self, executor):
+        self.executor = executor
         self.execute_count = 0
 
     def execute(self):
@@ -31,36 +24,29 @@ class Command(object):
 class PoseCommand(Command):
     """moves the arm to a requested pose (position + orientation of the end effector)"""
 
-    def __init__(self, pose=None, cartesian=False):
-        super(PoseCommand, self).__init__()
-        self.pose = pose    # geometry_msgs.msg.Pose
+    def __init__(self, executor, pose=None, cartesian=False):
+        super().__init__(executor)
+        self.pose = pose    # Pose
         self.cartesian = cartesian
         self.finished = False
 
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
-        super(PoseCommand, self).execute()
-        rospy.wait_for_service('/arm_control/pose_goal')
-        try:
-            proxy = rospy.ServiceProxy('/arm_control/pose_goal', PoseGoal)
-            cmd_id = 0  # TODO: increment id at each command
-            resp = proxy(cmd_id, self.pose, self.cartesian)
-            self.finished = resp.ok
-        except rospy.ServiceException as e:
-            # TODO: handle the exception (maybe)
-            print("Service call failed: %s"%e)
+        super().execute()
+        self.executor.sendPoseGoal(self.pose, self.cartesian)
+        self.finished = self.executor.wait_for_service()
 
 
 class StraightMoveCommand(Command):
     """moves the end effector in a straight line by a certain distance in a certain direction without affecting its orientation"""
 
-    def __init__(self, axis=(1,0,0), distance=0):
-        super(StraightMoveCommand, self).__init__()
+    def __init__(self, executor, axis=(1,0,0), distance=0):
+        super().__init__(executor)
         self.axis = axis
         self.distance = distance
         
     def constructPose(self):
-        self.pose = geometry_msgs.msg.Pose()
+        self.pose = Pose()
         self.pose.orientation = copy.deepcopy(pt.END_EFFECTOR_POSE.orientation)
         p = qa.list_to_point(qa.normalize(self.axis))
         p = qa.mul(self.distance, p)
@@ -68,28 +54,21 @@ class StraightMoveCommand(Command):
 
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
-        super(StraightMoveCommand, self).execute()
-        rospy.wait_for_service('/arm_control/pose_goal')
-        try:
-            proxy = rospy.ServiceProxy('/arm_control/pose_goal', PoseGoal)
-            cmd_id = 0  # TODO: increment id at each command
-            resp = proxy(cmd_id, self.pose, True)
-            self.finished = resp.ok
-        except rospy.ServiceException as e:
-            # TODO: handle the exception (maybe)
-            print("Service call failed: %s"%e)
+        super().execute()
+        self.executor.sendPoseGoal(self.pose, True)
+        self.finished = self.executor.wait_for_service()
 
 
 class GripperRotationCommand(Command):
     """rotates the gripper around the given axis by the given angle without affecting its position"""
 
-    def __init__(self, axis=(0,0,1), angle=0):
-        super(GripperRotationCommand, self).__init__()
+    def __init__(self, executor, axis=(0,0,1), angle=0):
+        super().__init__(executor)
         self.axis = axis
         self.angle = angle
     
     def constructPose(self):
-        self.pose = geometry_msgs.msg.Pose()
+        self.pose = Pose()
         self.pose.position = copy.deepcopy(pt.END_EFFECTOR_POSE.position)
         q = qa.quat(self.axis, self.angle)
         o = qa.mul(q, pt.END_EFFECTOR_POSE.orientation)
@@ -97,68 +76,57 @@ class GripperRotationCommand(Command):
     
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
-        super(GripperRotationCommand, self).execute()
-        rospy.wait_for_service('/arm_control/pose_goal')
-        try:
-            proxy = rospy.ServiceProxy('/arm_control/pose_goal', PoseGoal)
-            cmd_id = 0  # TODO: increment id at each command
-            resp = proxy(cmd_id, self.pose, False)
-            self.finished = resp.ok
-        except rospy.ServiceException as e:
-            # TODO: handle the exception (maybe)
-            print("Service call failed: %s"%e)
+        super().execute()
+        self.executor.sendPoseGoal(self.pose, True)
+        self.finished = self.executor.wait_for_service()
 
 
 class GripperManipulationCommand(Command):
     """opens/closes the gripper to a desired position"""
-    def __init__(self):
-        super(GripperManipulationCommand, self).__init_()
+    def __init__(self, executor):
+        super().__init__(executor)
 
     def execute(self):
         """publishes on /arm_control/joint_cmd topic for the motor controller"""
-        super(GripperManipulationCommand, self).execute()
+        super().execute()
 
 
 class AddObjectCommand(Command):
-    def __init__(self, pose=None, dims=None, type="box", name=""):
-        super(AddObjectCommand, self).__init__()
+    def __init__(self, executor, pose=None, shape=None, type="box", name="gustavo"):
+        super().__init__(executor)
         self.pose = pose
-        self.dims = dims
+        self.shape = shape
         self.type = type
         self.name = name
     
     def execute(self):
-        super(AddObjectCommand, self).execute()
-        msg = Object()
-        msg.type = self.type
-        msg.name = self.name
-        msg.pose = self.pose
-        msg.dims = self.dims
-        msg.dims = Float32MultiArray()
-        msg.dims.data = self.dims
-        add_object_pub.publish(msg)
-        rospy.sleep(.5)
+        super().execute()
+        self.executor.addObjectToWorld(self.shape, self.pose, self.name, self.type)
+        time.sleep(.5)
 
 
 class RequestDetectionCommand(Command):
-    def __init__(self):
-        super(RequestDetectionCommand, self).__init__()
+    def __init__(self, executor):
+        super().__init__(executor)
         self.max_wait_time = 10
     
     def execute(self):
-        super(RequestDetectionCommand, self).execute()
-        rospy.sleep(2)
+        super().execute()
+        time.sleep(2)
         pt.deprecate_detection()
         start = time.time()
+        rate = self.executor.create_rate(25)    # 25 hz rate in order to leave release ressources
         while not pt.DETECTION_UPDATED:
             if time.time()-start > self.max_wait_time:
-                return
+                return  # TODO: indicate that no detection was recorded (command failed)
+            rate.sleep()
 
 
 class Task(object):
     """abstract class representing a task"""
 
-    def __init__(self):
+    def __init__(self, executor):
+        self.executor = executor
         self.cmd_counter = 0
         self.command_chain = []
         self.constructCommandChain()
@@ -215,8 +183,8 @@ class Task(object):
 
 
 class PressButton(Task):
-    def __init__(self, btn_id, pose=None, scan_pose=True):
-        super(PressButton, self).__init__()
+    def __init__(self, executor, btn_id, pose=None, scan_pose=True):
+        super().__init__(executor)
         self.btn_id = btn_id
         self.btn_pose = pose
         self.artag_pose = None
@@ -225,7 +193,7 @@ class PressButton(Task):
         self.pause_time = 2
     
     def scan_for_btn_pose(self):
-        RequestDetectionCommand().execute()
+        # RequestDetectionCommand(self.executor).execute()
         while pt.DETECTED_OBJECTS_LOCKED:
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:
@@ -256,7 +224,7 @@ class PressButton(Task):
         return qa.turn_around(self.btn_pose.orientation)
 
     def setupNextCommand(self):
-        rospy.logwarn("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
+        #self.executor.logwarn("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
         cmd = self.currentCommand()
         if self.cmd_counter == 1:
             if 1 or self.scan_pose:
@@ -267,7 +235,7 @@ class PressButton(Task):
             cmd.dims = [0.2, 0.1, 0.0001]
             cmd.name = "AR_tag"
         elif self.cmd_counter == 2:
-            cmd.pose = geometry_msgs.msg.Pose()
+            cmd.pose = Pose()
             cmd.pose.position = self.getPressPosition(self.artag_pose.position)
             cmd.pose.orientation = self.getPressOrientation()
         elif self.cmd_counter == 4:
@@ -277,7 +245,7 @@ class PressButton(Task):
             cmd.dims = [0.2, 0.1, 0.0001]
             cmd.name = "btn"
         elif self.cmd_counter == 5:
-            cmd.pose = geometry_msgs.msg.Pose()
+            cmd.pose = Pose()
             cmd.pose.position = self.getPressPosition(self.btn_pose.position)
             cmd.pose.orientation = self.getPressOrientation()
         elif self.cmd_counter == 6:
@@ -293,18 +261,18 @@ class PressButton(Task):
         #if self.cmd_counter > 2:
         #    cmd.cartesian = True
         """elif self.cmd_counter == 1:
-            cmd.pose = geometry_msgs.msg.Pose()
+            cmd.pose = Pose()
             cmd.pose.orientation = self.getPressOrientation()
             cmd.pose.position = self.getPressPosition()
             cmd.cartesian = True
         elif self.cmd_counter == 2:
-            cmd.pose = geometry_msgs.msg.Pose()
+            cmd.pose = Pose()
             cmd.pose.position = self.getPressPosition()
             cmd.pose.orientation = self.getPressOrientation()
             cmd.cartesian = True"""
 
         """if self.cmd_counter == 0:
-            cmd.pose = geometry_msgs.msg.Pose()
+            cmd.pose = Pose()
             cmd.pose.position = self.getPressPosition()
             cmd.pose.orientation = self.getPressOrientation()
         elif self.cmd_counter == 1:
@@ -320,14 +288,14 @@ class PressButton(Task):
 
     def constructCommandChain(self):
         self.command_chain = [
-            RequestDetectionCommand(),
-            AddObjectCommand(),
-            PoseCommand(),   # go at a predetermined position in front of the button with gripper facing towards it
-            RequestDetectionCommand(),
-            AddObjectCommand(),
-            PoseCommand(),
-            StraightMoveCommand(),   # go forward enough to press the button
-            StraightMoveCommand()   # go backwards
+            RequestDetectionCommand(self.executor),
+            AddObjectCommand(self.executor),
+            PoseCommand(self.executor),   # go at a predetermined position in front of the button with gripper facing towards it
+            RequestDetectionCommand(self.executor),
+            AddObjectCommand(self.executor),
+            PoseCommand(self.executor),
+            StraightMoveCommand(self.executor),   # go forward enough to press the button
+            StraightMoveCommand(self.executor)   # go backwards
         ]
         self.command_description = [
             "request detection",
@@ -342,8 +310,8 @@ class PressButton(Task):
 
 
 class PressButton2(Task):
-    def __init__(self, btn_id, pose=None, scan_pose=True):
-        super().__init__()
+    def __init__(self, executor, btn_id, pose=None, scan_pose=True):
+        super().__init__(executor)
         self.btn_id = btn_id
         self.btn_pose = pose
         self.artag_pose = None
@@ -352,7 +320,7 @@ class PressButton2(Task):
         self.pause_time = 2
     
     def scan_for_btn_pose(self):
-        RequestDetectionCommand().execute()
+        # RequestDetectionCommand(self.executor).execute()
         while pt.DETECTED_OBJECTS_LOCKED:
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:
@@ -380,7 +348,7 @@ class PressButton2(Task):
         return qa.turn_around(self.btn_pose.orientation)
 
     def setupNextCommand(self):
-        rospy.logwarn("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
+        #self.executor.logwarn("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
         cmd = self.currentCommand()
         if self.cmd_counter == 1:
             if self.scan_pose:
@@ -389,19 +357,15 @@ class PressButton2(Task):
             cmd.dims = [0.2, 0.1, 0.0001]
             cmd.name = "btn"
         elif self.cmd_counter == 2:
-            cmd.pose = geometry_msgs.msg.Pose()
+            cmd.pose = Pose()
             cmd.pose.position = self.getPressPosition(self.btn_pose.position)
             cmd.pose.orientation = self.getPressOrientation()
-        elif self.cmd_counter == 5:
-            cmd.pose = geometry_msgs.msg.Pose()
-            cmd.pose.position = self.getPressPosition(self.btn_pose.position)
-            cmd.pose.orientation = self.getPressOrientation()
-        elif self.cmd_counter == 6:
+        elif self.cmd_counter == 3:
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
             cmd.axis = qa.mul(-1, cmd.axis)
             cmd.constructPose()
-        elif self.cmd_counter == 7:
+        elif self.cmd_counter == 4:
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
             #cmd.axis = qa.mul(-1, cmd.axis)
@@ -409,11 +373,11 @@ class PressButton2(Task):
 
     def constructCommandChain(self):
         self.command_chain = [
-            RequestDetectionCommand(),
-            AddObjectCommand(),
-            PoseCommand(),   # go at a predetermined position in front of the button with gripper facing towards it
-            StraightMoveCommand(),   # go forward enough to press the button
-            StraightMoveCommand()   # go backwards
+            RequestDetectionCommand(self.executor),
+            AddObjectCommand(self.executor),
+            PoseCommand(self.executor),   # go at a predetermined position in front of the button with gripper facing towards it
+            StraightMoveCommand(self.executor),   # go forward enough to press the button
+            StraightMoveCommand(self.executor)   # go backwards
         ]
         self.command_description = [
             "request detection",
@@ -426,10 +390,10 @@ class PressButton2(Task):
 
 class FlipSwitch(Task):
     def constructCommandChain(self):
-        command_chain = [
-            PoseCommand(),   # go at a predetermined position in front of the flip with gripper facing towards it
-            StraightMoveCommand(),   # go forward enough to press the switch
-            StraightMoveCommand()   # go backwards
+        self.command_chain = [
+            PoseCommand(self.executor),   # go at a predetermined position in front of the flip with gripper facing towards it
+            StraightMoveCommand(self.executor),   # go forward enough to press the switch
+            StraightMoveCommand(self.executor)   # go backwards
         ]
 
 """class RotateSwitch(Task):
@@ -456,8 +420,9 @@ class GoToHomePosition(Task):"""
 class PositionManualMotion:
     """special task allowing manual movement of the end effector (gripper) in a certain direction in a straight line with unchanging orientation"""
 
-    def __init__(self, axis=(0,0,0), velocity_scaling=1):
+    def __init__(self, executor, axis=(0,0,0), velocity_scaling=1):
         """calls setNextGoal to set the first goal"""
+        self.executor = executor
         self.axis = axis
         self.velocity_scaling = velocity_scaling
         self.max_step_distance = 0.1
@@ -474,7 +439,7 @@ class PositionManualMotion:
         """executes all commands"""
         while self.pursue:
             self.pursue = False
-            cmd = StraightMoveCommand(axis=self.axis, distance=self.get_distance())
+            cmd = StraightMoveCommand(self.executor, axis=self.axis, distance=self.get_distance())
             cmd.constructPose()
             cmd.execute()
             self.pursue = False
@@ -488,8 +453,9 @@ class PositionManualMotion:
 class OrientationManualMotion:
     """special task allowing manual movement of the end effector (gripper) in a certain direction in a straight line with unchanging orientation"""
 
-    def __init__(self, axis=(0,0,0), velocity_scaling=1):
+    def __init__(self, executor, axis=(0,0,0), velocity_scaling=1):
         """calls setNextGoal to set the first goal"""
+        self.executor = executor
         self.axis = axis
         self.velocity_scaling = velocity_scaling
         self.max_step_angle = 1
@@ -500,10 +466,10 @@ class OrientationManualMotion:
         """executes all commands"""
         while self.pursue:
             self.pursue = False
-            cmd = GripperRotationCommand(axis=self.axis, angle=self.max_step_angle)
+            cmd = GripperRotationCommand(self.executor, axis=self.axis, angle=self.max_step_angle)
             cmd.constructPose()
             cmd.execute()
-            #rospy.sleep(.1)
+            #time.sleep(.1)
         self.finished = True
     
     def abort(self):

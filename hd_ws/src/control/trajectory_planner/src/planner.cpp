@@ -5,14 +5,14 @@ using namespace std::chrono_literals;
 
 
 Planner::Planner(rclcpp::NodeOptions node_options) : 
-    Node("trajectory_planner", node_options)
+    Node("kinematics_trajectory_planner", node_options)
 {
-    m_pose_target_sub = this->create_subscription<geometry_msgs::msg::Pose>("/kinematics/pose_goal", 10, std::bind(&Planner::poseTargetCallback, this, _1));
-    m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
-    m_cartesian_path_sub = this->create_subscription<geometry_msgs::msg::Pose>("/kinematics/cartesian_path", 10, std::bind(&Planner::cartesianPathCallback, this, _1));
+    m_pose_target_sub = this->create_subscription<kerby_interfaces::msg::PoseGoal>("/HD/kinematics/pose_goal", 10, std::bind(&Planner::poseTargetCallback, this, _1));
+    m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
+    m_add_object_sub = this->create_subscription<kerby_interfaces::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
 
-    m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/kinematics/eef_pose", 10);
-    m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/kinematics/traj_feedback", 10);
+    m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/HD/kinematics/eef_pose", 10);
+    m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/traj_feedback", 10);
 }
 
 void Planner::config() {
@@ -79,13 +79,13 @@ void Planner::setScalingFactors(double vel, double accel) {
     m_move_group->setMaxAccelerationScalingFactor(accel);
 }
 
-void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msgs::msg::Pose &pose) {
+void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msgs::msg::Pose &pose, std::string &name) {
     // TODO: make this function better
 
     moveit_msgs::msg::CollisionObject collision_object;
     collision_object.header.frame_id = m_move_group->getPlanningFrame();
 
-    collision_object.id = "box1";
+    collision_object.id = name;
 
     // Define the box to add to the world.
     shape_msgs::msg::SolidPrimitive primitive;
@@ -122,23 +122,28 @@ void Planner::spin2() {
     }
 }
 
-void Planner::poseTargetCallback(const geometry_msgs::msg::Pose::SharedPtr msg) {
+void Planner::poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg) {
     RCLCPP_INFO(this->get_logger(), "Received pose goal");
-    m_pose_target = *msg;
-    std::thread executer(&Planner::reachTargetPose, this, *msg);
-    executer.detach();
+    //m_pose_target = *msg;
+    if (msg->cartesian) {
+        std::thread executor(&Planner::computeCartesianPath, this, msg->goal);
+        executor.detach();
+    }
+    else {
+        std::thread executor(&Planner::reachTargetPose, this, msg->goal);
+        executor.detach();
+    }
 }
 
 void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
     RCLCPP_INFO(this->get_logger(), "Received joint goal");
-    m_joints_target = msg->data;
-    std::thread executer(&Planner::reachTargetJointValues, this, msg->data);
-    executer.detach();
+    //m_joints_target = msg->data;
+    std::thread executor(&Planner::reachTargetJointValues, this, msg->data);
+    executor.detach();
 }
 
-void Planner::cartesianPathCallback(const geometry_msgs::msg::Pose::SharedPtr msg) {
-    RCLCPP_INFO(this->get_logger(), "Received cartesian path goal");
-    computeCartesianPath(*msg);
+void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg) {
+    if (msg->type == "box") addBoxToWorld(msg->shape.data, msg->pose, msg->name);
 }
 
 void Planner::publishEEFPose() {

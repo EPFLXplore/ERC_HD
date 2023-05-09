@@ -89,12 +89,24 @@ install(TARGETS test_demo
 # Install Python modules
 ament_python_install_package(${PROJECT_NAME})
 # Install Python executables
+
 install(PROGRAMS
   scripts/task_executor.py
   DESTINATION lib/${PROJECT_NAME}
 )
+
 install(PROGRAMS
   scripts/vision_test.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(PROGRAMS
+  scripts/fake_vision.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(PROGRAMS
+  scripts/fake_cs_task.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -1,6 +1,5 @@
 from geometry_msgs.msg import Pose
-import task_execution.quaternion_arithmetic as qa
-import rospy
+import trajectory_planner.quaternion_arithmetic as qa
 import math
 import copy
 
@@ -28,7 +27,7 @@ def eef_pose_callback(msg):
     END_EFFECTOR_POSE = msg
 
 
-def detected_objects_pose_callback(msg):
+def detected_object_pose_callback(msg: Pose):
     """listens to detected_elements topic and updates the pose of the detected elements (with respect to the end effector pose)"""
     global DETECTED_OBJECTS_LOCKED
     global DETECTION_UPDATED

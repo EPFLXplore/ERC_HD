@@ -15,8 +15,8 @@
 #include "std_msgs/msg/float64_multi_array.hpp"
 #include "std_msgs/msg/bool.hpp"
 
-#include "kerby_interfaces/srv/joint_goal.hpp"
-#include "kerby_interfaces/srv/pose_goal.hpp"
+#include "kerby_interfaces/msg/pose_goal.hpp"
+#include "kerby_interfaces/msg/object.hpp"
 
 
 using std::placeholders::_1;
@@ -51,7 +51,7 @@ public:
 
     void setScalingFactors(double vel, double accel);
 
-    void addBoxToWorld(const std::vector<double> &dim, const geometry_msgs::msg::Pose &pose);
+    void addBoxToWorld(const std::vector<double> &dim, const geometry_msgs::msg::Pose &pose, std::string &name);
 
     void loopBody();
 
@@ -60,11 +60,11 @@ public:
     void spin2();
 
 private:
-    void poseTargetCallback(const geometry_msgs::msg::Pose::SharedPtr msg);
+    void poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg);
 
     void jointTargetCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
 
-    void cartesianPathCallback(const geometry_msgs::msg::Pose::SharedPtr msg);
+    void addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg);
 
     void publishEEFPose();
 
@@ -80,12 +80,9 @@ private:
     moveit::planning_interface::PlanningSceneInterface*                 m_planning_scene_interface;
     const moveit::core::JointModelGroup*                                m_joint_model_group;
     moveit::planning_interface::MoveGroupInterface::Plan                m_plan;
-    rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr           m_pose_target_sub;
+    rclcpp::Subscription<kerby_interfaces::msg::PoseGoal>::SharedPtr    m_pose_target_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_joint_target_sub;
-    rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr           m_cartesian_path_sub;
+    rclcpp::Subscription<kerby_interfaces::msg::Object>::SharedPtr      m_add_object_sub;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr              m_eef_pose_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   m_traj_feedback_pub;
-
-    geometry_msgs::msg::Pose                                            m_pose_target;
-    std::vector<double>                                                 m_joints_target;
 };

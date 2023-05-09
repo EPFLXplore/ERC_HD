@@ -1,6 +1,5 @@
 from math import sqrt, sin, cos, asin, acos, pi
 from geometry_msgs.msg import Quaternion, Point, Pose
-import rospy
 
 
 def norm(x):
@@ -70,12 +69,12 @@ def reverse_quat(q):
     if sint != 0:
         axis = [q.x/sint, q.y/sint, q.z/sint]
     else:
-        axis = [0, 0, 0]
+        axis = [0.0, 0.0, 0.0]
     angle = 2*reverse_trig(cost, sint)
     return (axis, angle)
 
 
-def turn_around(q, axis=(1,0,0), angle=pi):
+def turn_around(q, axis=(1.0,0.0,0.0), angle=pi):
     axis = point_image(axis, q)
     r = quat(axis, angle)
     return mul(r, q)
@@ -84,13 +83,13 @@ def turn_around(q, axis=(1,0,0), angle=pi):
 def nb_to_quat(x):
     q = Quaternion()
     q.w = x
-    q.x = q.y = q.z = 0
+    q.x = q.y = q.z = 0.0
     return q
 
 
 def point_to_quat(p):
     q = Quaternion()
-    q.w = 0
+    q.w = 0.0
     q.x = p.x
     q.y = p.y
     q.z = p.z
@@ -112,7 +111,7 @@ def list_to_quat(l):
     q.y = l[1]
     q.z = l[2]
     if len(l) < 4:
-        q.w = 0
+        q.w = 0.0
     else:
         q.w = l[3]
 
@@ -135,7 +134,7 @@ def make_quat(x):
         return point_to_quat(x)
     elif isinstance(x, (tuple, list)):
         return list_to_quat(x)
-    rospy.logerror("Invalid expression for making quaternion : " + str(x))
+    #rospy.logerror("Invalid expression for making quaternion : " + str(x))
     raise
 
 
