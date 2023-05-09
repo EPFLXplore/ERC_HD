@@ -12,15 +12,12 @@ Planner::Planner(rclcpp::NodeOptions node_options) :
     m_cartesian_path_sub = this->create_subscription<geometry_msgs::msg::Pose>("/kinematics/cartesian_path", 10, std::bind(&Planner::cartesianPathCallback, this, _1));
 
     m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/kinematics/eef_pose", 10);
-
-    auto sleep = 100ms;
-    //m_timer = this->create_wall_timer(sleep, std::bind(&Planner::loopBody, this));
+    m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/kinematics/traj_feedback", 10);
 }
 
 void Planner::config() {
     m_move_group = new moveit::planning_interface::MoveGroupInterface(shared_from_this(), m_planning_group);
     m_planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
-    // TODO: see why I get an error when trying to get the current state
     m_joint_model_group = m_move_group->getCurrentState()->getJointModelGroup(m_planning_group);
 
     setScalingFactors(1, 1);
@@ -28,29 +25,45 @@ void Planner::config() {
 
 Planner::TrajectoryStatus Planner::reachTargetPose(const geometry_msgs::msg::Pose &target) {
     m_move_group->setPoseTarget(target);
-    if (!plan()) return Planner::TrajectoryStatus::PLANNING_ERROR;
-    if (!execute()) return Planner::TrajectoryStatus::EXECUTION_ERROR;
-    return Planner::TrajectoryStatus::SUCCESS;
+    Planner::TrajectoryStatus status;
+    if (!plan()) status = Planner::TrajectoryStatus::PLANNING_ERROR;
+    else if (!execute()) status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+    status = Planner::TrajectoryStatus::SUCCESS;
+    std_msgs::msg::Bool msg;
+    msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
+    m_traj_feedback_pub->publish(msg);
+    return status;
 }
 
 Planner::TrajectoryStatus Planner::reachTargetJointValues(const std::vector<double> &target) {
     m_move_group->setJointValueTarget(target);
-    if (!plan()) return Planner::TrajectoryStatus::PLANNING_ERROR;
-    if (!execute()) return Planner::TrajectoryStatus::EXECUTION_ERROR;
-    return Planner::TrajectoryStatus::SUCCESS;
+    Planner::TrajectoryStatus status;
+    if (!plan()) status = Planner::TrajectoryStatus::PLANNING_ERROR;
+    else if (!execute()) status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+    status = Planner::TrajectoryStatus::SUCCESS;
+    std_msgs::msg::Bool msg;
+    msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
+    m_traj_feedback_pub->publish(msg);
+    return status;
 }
 
 Planner::TrajectoryStatus Planner::computeCartesianPath(const geometry_msgs::msg::Pose &target) {   // TODO: make this function cleaner
+    Planner::TrajectoryStatus status;
     std::vector<geometry_msgs::msg::Pose> waypoints;
     waypoints.push_back(target);
     moveit_msgs::msg::RobotTrajectory trajectory;
     const double jump_threshold = 0.0;  // TODO: check how to put a real value here
     const double eef_step = 0.01;
     double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
-    if (fraction != 1.0) return Planner::TrajectoryStatus::PLANNING_ERROR;
-    if (m_move_group->execute(trajectory) != moveit::planning_interface::MoveItErrorCode::SUCCESS) 
-        return Planner::TrajectoryStatus::EXECUTION_ERROR;
-    return Planner::TrajectoryStatus::SUCCESS;
+    if (fraction != 1.0) status = Planner::TrajectoryStatus::PLANNING_ERROR;
+    else if (m_move_group->execute(trajectory) != moveit::planning_interface::MoveItErrorCode::SUCCESS) 
+        status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+    status = Planner::TrajectoryStatus::SUCCESS;
+
+    std_msgs::msg::Bool msg;
+    msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
+    m_traj_feedback_pub->publish(msg);
+    return status;
 }
 
 bool Planner::plan() {
@@ -111,12 +124,16 @@ void Planner::spin2() {
 
 void Planner::poseTargetCallback(const geometry_msgs::msg::Pose::SharedPtr msg) {
     RCLCPP_INFO(this->get_logger(), "Received pose goal");
-    reachTargetPose(*msg);
+    m_pose_target = *msg;
+    std::thread executer(&Planner::reachTargetPose, this, *msg);
+    executer.detach();
 }
 
 void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
     RCLCPP_INFO(this->get_logger(), "Received joint goal");
-    reachTargetJointValues(msg->data);
+    m_joints_target = msg->data;
+    std::thread executer(&Planner::reachTargetJointValues, this, msg->data);
+    executer.detach();
 }
 
 void Planner::cartesianPathCallback(const geometry_msgs::msg::Pose::SharedPtr msg) {

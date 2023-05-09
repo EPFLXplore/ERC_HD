@@ -25,6 +25,7 @@ find_package(moveit_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(moveit_visual_tools)
+find_package(kerby_interfaces)
 
 
 # install launch directory
@@ -46,6 +47,7 @@ ament_target_dependencies(planner
   moveit_ros_planning_interface
   rclcpp
   std_msgs
+  kerby_interfaces
 )
 
 install(TARGETS planner
@@ -60,6 +62,7 @@ ament_target_dependencies(test_planner
   rclcpp
   std_msgs
   geometry_msgs
+  kerby_interfaces
 )
 
 install(TARGETS test_planner

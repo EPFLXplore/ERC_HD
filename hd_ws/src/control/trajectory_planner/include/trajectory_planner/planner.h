@@ -13,6 +13,11 @@
 #include <moveit_msgs/msg/collision_object.hpp>
 
 #include "std_msgs/msg/float64_multi_array.hpp"
+#include "std_msgs/msg/bool.hpp"
+
+#include "kerby_interfaces/srv/joint_goal.hpp"
+#include "kerby_interfaces/srv/pose_goal.hpp"
+
 
 using std::placeholders::_1;
 
@@ -56,9 +61,19 @@ public:
 
 private:
     void poseTargetCallback(const geometry_msgs::msg::Pose::SharedPtr msg);
+
     void jointTargetCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
+
     void cartesianPathCallback(const geometry_msgs::msg::Pose::SharedPtr msg);
+
     void publishEEFPose();
+
+    // void poseTargetSrv(const std::shared_ptr<kerby_interfaces::srv::PoseGoal::Request>          request, 
+    //                          std::shared_ptr<kerby_interfaces::srv::PoseGoal::Response>         response);
+
+    // void jointTargetSrv(const std::shared_ptr<kerby_interfaces::srv::JointGoal::Request>        request, 
+    //                           std::shared_ptr<kerby_interfaces::srv::JointGoal::Response>       response);
+
 
     const std::string                                                   m_planning_group = "kerby_arm_group";
     moveit::planning_interface::MoveGroupInterface*                     m_move_group;
@@ -69,5 +84,8 @@ private:
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_joint_target_sub;
     rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr           m_cartesian_path_sub;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr              m_eef_pose_pub;
-    rclcpp::TimerBase::SharedPtr                                        m_timer;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   m_traj_feedback_pub;
+
+    geometry_msgs::msg::Pose                                            m_pose_target;
+    std::vector<double>                                                 m_joints_target;
 };
