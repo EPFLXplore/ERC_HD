@@ -2,9 +2,9 @@ import numpy as np
 import cv2 as cv
 from cv2 import aruco
 import pyrealsense2 as rs
-from camera_projection import camera_projection
+from vision.camera_projection import camera_projection
 from scipy.spatial.transform import Rotation as R
-from vision_publisher import VisionPublisher
+from vision.vision_publisher import VisionPublisher
 
 import rclpy
 from rclpy.node import Node
@@ -16,9 +16,10 @@ import geometry_msgs
 from geometry_msgs.msg import Pose
 
 def main(args=None):
+    rclpy.init(args=args)
 
     # aruco setup
-    marker_dict_4 = aruco.Dictionary_get(aruco.DICT_7X7_250)
+    marker_dict_4 = aruco.Dictionary_get(aruco.DICT_4X4_50)
     param_markers = aruco.DetectorParameters_create()
     MARKER_REAL_SIZE = 4.5 #centimeters
 

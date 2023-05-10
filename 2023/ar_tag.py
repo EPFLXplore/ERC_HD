@@ -1,13 +1,13 @@
 from cv2 import aruco
 import cv2 as cv
-
+import numpy as np
 from controlpanel.cpo import CPO
 
 
 class ARTag:
 
         def __init__(self, marker_dict, marker_size, marker_id, camera_matrix, dist_coeffs):
-            self.marker_dict = marker_dict
+            self.marker_dict = aruco.Dictionary_get(marker_dict)
             self.marker_size = marker_size
             self.camera_matrix = camera_matrix
             self.dist_coeffs = dist_coeffs
@@ -16,10 +16,14 @@ class ARTag:
         def detect(self, frame):
             gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
             corners, ids, _rejectedImgPoints = aruco.detectMarkers(gray, self.marker_dict)
-            if ids is not None:
+            if ids is not None and self.marker_id in ids:
+                tag_idx = np.where(ids == self.marker_id)[0][0]
                 rvecs, tvecs, _objPoints = aruco.estimatePoseSingleMarkers(corners, self.marker_size, self.camera_matrix, self.dist_coeffs)
-                return rvecs, tvecs, ids, corners
-            return None, None, None, None
+                self.rvec = rvecs[tag_idx]
+                self.tvec = tvecs[tag_idx]
+                self.corners = corners[tag_idx]
+                return True
+            return False
         
         def __str__(self) -> str:
              return f"ARTag(marker_dict={self.marker_dict},\
@@ -28,15 +32,14 @@ class ARTag:
                         dist_coeffs={self.dist_coeffs})"
         
         # Draw the pose of the marker object
-        def draw_pose(self, frame, rvec, tvec, length=4, thickness=4):
-            cv.drawFrameAxes(frame, self.cam_matrix, self.coeffs, rvec, tvec, length, thickness)
-
-        # Projects the given point onto this marker's coordinate frame, 
-        def project_to_marker(self, points_real_world, rvec, tvec):
-            [image_point, jacobian] = cv.projectPoints(points_real_world, rvec, tvec, self.camera_matrix, self.coeffs)
-            cv.circle(self.frame, (int(image_point[0, 0]),int(image_point[0,1])), 2, (0, 100, 255), 8)
-            return image_point
+        def draw(self, frame, length=50, thickness=4):
+            cv.drawFrameAxes(frame, self.camera_matrix, self.dist_coeffs, self.rvec, self.tvec, length, thickness)
+            cv.polylines(frame, [self.corners.astype(np.int32)], True, (0, 255, 255), 10)
 
 
+        def project(self, points):
+            [projected, jacobian] = cv.projectPoints(points, self.rvec, self.tvec, self.camera_matrix, self.dist_coeffs)
+            return projected.reshape((projected.shape[0] // 4, 4,  projected.shape[2]))
              
-
+        def self_project(self):
+            self._projected = self.project(self.corners)

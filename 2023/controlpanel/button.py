@@ -1,5 +1,6 @@
 from controlpanel.cpo import CPO
 import cv2 as cv
+from controlpanel.utils import *
 
 """
 position 0 --- 1
@@ -8,15 +9,18 @@ position 0 --- 1
 """
 
 class Button(CPO):
-    def __init__(self, top_left_corner, id, value, height, width) -> None:
+    def __init__(self, top_left_corner, height, width, id=0, value=0) -> None:
         position = get_coords(top_left_corner, height, width)
         super().__init__(position)
-        self._isOn = False
+        self._isOn = False # the on position means we can see the small rectangle looking from the top
         self._id = id
         self._value = value
-        self.coords = position
-        # self._top_center = position[0] + (self.get_width/2, self.get_height/4)
-        # self._bottom_center = position[0] + (self._width/2, 3 * (self._height/4))
+        self.is_target= False
+
+
+        print(f'button coords shape {position.shape}')
+        self.turn_on_target = np.concatenate( ((position[0] + position[1]) // 2 - (0, self._height//4), [0.]))
+        self.turn_off_target = np.concatenate( ((position[2] + position[3]) // 2 + (0, self._height//4), [0.]))
 
     def get_id(self):
         return self._id
@@ -48,19 +52,36 @@ class Button(CPO):
     def get_bottom_center(self):
         return self._bottom_center
     
-    def draw_frame(self, frame):
+    def draw(self, frame):
         if self._isOn:
-            cv.polylines(frame, self._position, 10, (0, 255, 0), 10)
-        else:
-            cv.polylines(frame, self._position, 10, (0, 0, 255), 10)
+            cv.polylines(frame, self._projected_coords, 10, (0, 255, 0), 4)
+        if not self._isOn:
+            cv.polylines(frame, self._projected_coords, 10, (0, 0, 255), 4)
+        if self.is_target:
+            cv.polylines(frame, self._projected_coords, 10, (255, 0, 0), 4)
 
-    # point coordinates need to be a tuple of ints
-    def draw_point(self, frame, point):
-        cv.circle(frame, point, 2, (0, 100, 255), 8)
+        if self.is_target:
+            cv.circle(frame, self.projected_target.astype(int) , 2, (0, 255, 0), 10)
 
+
+    def isTarget(self):
+        return self.is_target
     
-def get_coords(top_left, height, width):
-    top_right = [top_left[0] + width, top_left[1]]
-    bottom_left = [top_left[0], top_left[1] + height]
-    bottom_right = [top_left[0] + width, top_left[1] + height]
-    return [top_left, top_right, bottom_right, bottom_left ]
+    def get_target_point(self):
+        if self._isOn:
+            return self.turn_off_target.reshape(1,3)
+        else:
+            return self.turn_on_target.reshape(1,3)
+        
+
+    def set_projected_coord(self, projected):
+        super().set_projected_coord(projected)
+
+        points = projected[0]
+        if self._isOn:
+            self.projected_target = (points[0] + points[1])//2 + np.array([ 0, (points[3] -points[1])[1]//4]).astype(int)
+        else:
+            self.projected_target =  (points[2] + points[3])//2 - np.array([ 0, (points[3] -points[1])[1]//4]).astype(int)
+        
+
+   

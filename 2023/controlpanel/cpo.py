@@ -14,10 +14,17 @@ class CPO:
         self._position = position  # sets the position attribute to the provided position.
         self._width = position[1][0] - position[0][0]
         self._height = position[2][1] - position[0][1]
+        self._position_3D = np.array([ [coord[0]] + [-coord[1]] + [0.] for coord in position])
+        self._is_target = False
 
     # Getter method for the position attribute.
     def get_position(self):
         return self._position  # returns the position attribute.
+    
+
+    def get_3d_coords(self):
+        return self._position_3D
+
     
     def get_width(self):
         return self._width
@@ -29,11 +36,25 @@ class CPO:
     # Currently, this method does nothing because it only contains a 'pass' statement.
     # This method should be overridden in a subclass that implements the drawing functionality.
     def draw(self, frame):
-        print(self._position)
-        cv.polylines(frame, [np.array(self._position)], True, (0, 255, 0), 10)
+        if self._is_target:
+            cv.polylines(frame, [np.array(self._projected_coords)], True, (255, 0, 0), 4)
+        else:
+            cv.polylines(frame, [np.array(self._projected_coords)], True, (0, 0, 255), 4)
+        
 
     # A special method that returns a string representation of the object.
     # This method is automatically called when the object is converted to a string using the str() function.
     def __str__(self):
         return f"Position: {self._position}"  # returns a string representation of the object.
 
+    def target(self):
+        self.is_target = True
+
+    def untarget(self):
+        self.is_target = False
+
+    def set_projected_coord(self, projected):
+        self._projected_coords = projected.astype(int)
+
+    def get_projected(self):
+        return self._projected_coords

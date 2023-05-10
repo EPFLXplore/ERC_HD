@@ -2,18 +2,9 @@ from python.stereoCamera import StereoCamera
 import cv2 as cv
 import numpy as np
 from controlpanel.control_panel import ControlPanel
+from utils import show
 
 
-def show(frame, depth):
-    depth[ depth > MAX_DIST] = MAX_DIST
-    depth = 255.0 * depth / depth.max()
-
-    depth = depth.astype(np.uint8)
-    depth_3_channel = cv.cvtColor(depth, cv.COLOR_GRAY2BGR)
-
-    numpy_horizontal = np.hstack((frame, depth_3_channel))
-
-    cv.imshow('RealSense', numpy_horizontal) 
 
 camera = StereoCamera()
 
@@ -31,18 +22,25 @@ while True:
     
     cv.putText(frame, control_panel.selected_panel, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
 
-    control_panel.draw(frame)
-    test = np.array([[10,10],[10,200], [200,200], [200, 10]])
-    print(test.shape)
-    cv.polylines(frame, [test], True, (0, 0, 255), 2)
+    if control_panel.detect_ar_tag(frame):
+        control_panel.project()
+        control_panel.draw(frame)
+
+
+    # control_panel.draw(frame)
     show(frame, depth)
 
+    # select panel                                 OK
+    # select target                                OK
+    # compute necessary rotation and translation
+    # draw target on image
+    # control_panel.update(frame)
+
     key = cv.waitKey(1)
-
-
     if key == 27:
         cv.destroyAllWindows()
         break
     elif key in POSSIBLE_PANELS:
-        control_panel.select_panel(key)
+        control_panel.select_panel(key) 
+        control_panel.set_target()
    

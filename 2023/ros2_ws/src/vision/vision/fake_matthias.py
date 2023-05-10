@@ -17,6 +17,7 @@ class VisionSubscriber(Node):
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
+        print('got message')
         self.get_logger().info('I heard: "%d"' % msg.id)
         self.get_logger().info('Orientation x: "%d"' % msg.pose.orientation.x)
 

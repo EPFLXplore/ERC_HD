@@ -78,7 +78,7 @@ while True:
             # draw the pose of the marker
             point = cv.drawFrameAxes(frame, cam_matrix, coeffs, rVec[i], tVec[i], 4, 4)
 
-
+            print(f'target point {TARGET_AR}')  
             [image_points, jacobian] = cv.projectPoints(TARGET_AR, rVec[i], tVec[i], cam_matrix, coeffs)
 
 
@@ -106,10 +106,10 @@ while True:
     cv.circle(frame, (frame.shape[1]//2, frame.shape[0]//2), 5, (255,0,0), 2)
 
     cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
-    cv.imshow('RealSense Color', frame)
+    cv.imshow('RealSense Color', cv.resize(frame, ( frame.shape[1]*2, frame.shape[0]*2)))
 
     cv.namedWindow('RealSense Depth', cv.WINDOW_AUTOSIZE)
-    cv.imshow('RealSense Depth', depth)
+    cv.imshow('RealSense Depth', cv.resize(depth, ( depth.shape[1]*2, depth.shape[0]*2)))
 
     cv.waitKey(1)
 

@@ -2,6 +2,7 @@ from controlpanel.panel import Panel
 from ar_tag import ARTag
 from controlpanel.button import Button
 from cv2 import aruco
+import numpy as np
 
 # Class PanelA represents the central panel containing the buttons
 class PanelA( Panel):
@@ -24,14 +25,37 @@ class PanelA( Panel):
 
     def __init__(self, camera_matrix, dist_coeffs, values):
         super().__init__()
-        self.ar_tag = ARTag(aruco.DICT_4X4_50, self.AR_SIZE , camera_matrix, dist_coeffs)
-        self.buttons = [ Button(corner, id, values,
-                                 self.BUTTON_HEIGHT, self.BUTTON_WIDTH)
+        self.ar_tag = ARTag(aruco.DICT_4X4_50, self.AR_SIZE, 2 , camera_matrix, dist_coeffs)
+        self.buttons = [ Button(corner, 
+                                 self.BUTTON_HEIGHT, self.BUTTON_WIDTH, id, values)
                                    for id, corner  in enumerate(self.buttons_top_left)]
+        self.target = 0
         
+    
+    def get_possible_inputs(self):
+         return 'select one of the buttons going from 0 to 9\ntag   0-1\n2-3   4-5\n6-7   8-9' 
+    
+    def set_target(self, target):
+         self.buttons[self.target].untarget()
+         self.target = target
+         self.buttons[target].target()
 
+
+    def detect_ar_tag(self, frame):
+        result = self.ar_tag.detect(frame)
+        self._detected = result
+        return result
+    
+    # must be called after detect_ar_tag to be sure that the positions are not outdated or None
+    def project(self):
+            for button in self.buttons:
+                projected_button = self.ar_tag.project( button.get_3d_coords() ) 
+                button.set_projected_coord(projected_button)
+                
+
+    # must be called after detect_ar_tag to be sure that the positions are not outdated or None
     def draw(self, frame):
-        # self.ar_tag.draw(frame)
+        self.ar_tag.draw(frame)
         for button in self.buttons:
             button.draw(frame)
-        
+            

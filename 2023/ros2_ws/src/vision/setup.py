@@ -11,6 +11,9 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        # ('vision/' + package_name, [package_name+'/camera_projection.py']), # might not need this
+        # ('vision' + package_name, [package_name+'/vision_publisher.py']),   # might not need this
+        
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -21,7 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'talker = vision.test_ros:main',
+            'talker = vision.vision_publisher:main',
             'listener = vision.fake_matthias:main'
         ],
     },
