@@ -81,6 +81,7 @@ def turn_around(q, axis=(1.0,0.0,0.0), angle=pi):
 
 
 def nb_to_quat(x):
+    x = float(x)
     q = Quaternion()
     q.w = x
     q.x = q.y = q.z = 0.0

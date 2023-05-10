@@ -75,7 +75,10 @@ class Executor(Node):
         msg.type = type
         msg.name = name
         msg.pose = pose
-        msg.shape = shape
+        shape_ = Float64MultiArray()
+        shape_.data = shape
+        msg.shape = shape_
+        self.add_object_pub.publish(msg)
 
     def trajFeedbackUpdate(self, msg: Bool):
         self.traj_feedback_update = True

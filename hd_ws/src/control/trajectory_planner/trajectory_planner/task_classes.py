@@ -34,7 +34,7 @@ class PoseCommand(Command):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
         super().execute()
         self.executor.sendPoseGoal(self.pose, self.cartesian)
-        self.finished = self.executor.wait_for_service()
+        self.finished = self.executor.waitForFeedback()
 
 
 class StraightMoveCommand(Command):
@@ -56,7 +56,7 @@ class StraightMoveCommand(Command):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
         super().execute()
         self.executor.sendPoseGoal(self.pose, True)
-        self.finished = self.executor.wait_for_service()
+        self.finished = self.executor.waitForFeedback()
 
 
 class GripperRotationCommand(Command):
@@ -78,7 +78,7 @@ class GripperRotationCommand(Command):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
         super().execute()
         self.executor.sendPoseGoal(self.pose, True)
-        self.finished = self.executor.wait_for_service()
+        self.finished = self.executor.waitForFeedback()
 
 
 class GripperManipulationCommand(Command):
@@ -197,21 +197,19 @@ class PressButton(Task):
         while pt.DETECTED_OBJECTS_LOCKED:
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:
-            if obj.id == self.btn_id:
+            if 1 or obj.id == self.btn_id:
                 relative_pose = obj.object_pose
                 self.btn_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
-                #self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
-                relative_pose = obj.artag_pose
-                self.artag_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
-                #self.artag_pose.orientation = qa.turn_around(self.btn_pose.orientation)
+                self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
+                self.artage_pose = self.btn_pose
 
     def currentCommand(self):
         return self.command_chain[self.cmd_counter]
 
     def getPressPosition(self, position=None):
         if position is None:
-            position = self.btn_pose.orientation
-        p = qa.point_image([0, 0, 1], self.btn_pose.position)
+            position = self.btn_pose.position
+        p = qa.point_image([0.0, 0.0, 1.0], self.btn_pose.orientation)
         d = 0.001
         if self.cmd_counter != 1:
             d += self.press_distance
@@ -232,7 +230,7 @@ class PressButton(Task):
             #self.artag_pose = copy.deepcopy(self.btn_pose)
             #self.artag_pose.y += 0.15
             cmd.pose = self.artag_pose    # TODO: don't give self.artag_pose if it is None and abort the add object command
-            cmd.dims = [0.2, 0.1, 0.0001]
+            cmd.shape = [0.2, 0.1, 0.0001]
             cmd.name = "AR_tag"
         elif self.cmd_counter == 2:
             cmd.pose = Pose()
@@ -242,7 +240,7 @@ class PressButton(Task):
             if self.scan_pose:
                 self.scan_for_btn_pose()
             cmd.pose = self.btn_pose
-            cmd.dims = [0.2, 0.1, 0.0001]
+            cmd.shape = [0.2, 0.1, 0.0001]
             cmd.name = "btn"
         elif self.cmd_counter == 5:
             cmd.pose = Pose()
@@ -324,18 +322,19 @@ class PressButton2(Task):
         while pt.DETECTED_OBJECTS_LOCKED:
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:
-            if obj.id == self.btn_id:
+            if 1 or obj.id == self.btn_id:
                 relative_pose = obj.object_pose
                 self.btn_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
-                #self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
+                self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
+                self.artage_pose = self.btn_pose
 
     def currentCommand(self):
         return self.command_chain[self.cmd_counter]
 
     def getPressPosition(self, position=None):
         if position is None:
-            position = self.btn_pose.orientation
-        p = qa.point_image([0, 0, 1], self.btn_pose.position)
+            position = self.btn_pose.position
+        p = qa.point_image([0.0, 0.0, 1.0], self.btn_pose.orientation)
         d = 0.001
         if self.cmd_counter != 1:
             d += self.press_distance
@@ -348,13 +347,16 @@ class PressButton2(Task):
         return qa.turn_around(self.btn_pose.orientation)
 
     def setupNextCommand(self):
-        #self.executor.logwarn("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
+        self.executor.loginfo("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
         cmd = self.currentCommand()
-        if self.cmd_counter == 1:
+        if self.cmd_counter == 0:
+             if self.scan_pose:
+                self.scan_for_btn_pose()
+        elif self.cmd_counter == 1:
             if self.scan_pose:
                 self.scan_for_btn_pose()
             cmd.pose = self.btn_pose
-            cmd.dims = [0.2, 0.1, 0.0001]
+            cmd.shape = [0.2, 0.1, 0.0001]
             cmd.name = "btn"
         elif self.cmd_counter == 2:
             cmd.pose = Pose()
@@ -362,12 +364,12 @@ class PressButton2(Task):
             cmd.pose.orientation = self.getPressOrientation()
         elif self.cmd_counter == 3:
             cmd.distance = self.press_distance
-            cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
+            cmd.axis = qa.point_image([0.0, 0.0, 1.0], self.btn_pose.orientation)
             cmd.axis = qa.mul(-1, cmd.axis)
             cmd.constructPose()
         elif self.cmd_counter == 4:
             cmd.distance = self.press_distance
-            cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
+            cmd.axis = qa.point_image([0.0, 0.0, 1.0], self.btn_pose.orientation)
             #cmd.axis = qa.mul(-1, cmd.axis)
             cmd.constructPose()
 

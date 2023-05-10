@@ -143,6 +143,7 @@ void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::Shared
 }
 
 void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg) {
+    RCLCPP_INFO(this->get_logger(), "Received new object");
     if (msg->type == "box") addBoxToWorld(msg->shape.data, msg->pose, msg->name);
 }
 

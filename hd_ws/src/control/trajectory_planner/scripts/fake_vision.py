@@ -23,9 +23,9 @@ def main():
             pose = Pose()
             pose.orientation.w = 1.0
             pose.orientation.x = pose.orientation.y = pose.orientation.z = 0.0
-            pose.position.x = -0.1
+            pose.position.x = -0.05
             pose.position.y = 0.0
-            pose.position.z = 0.3
+            pose.position.z = 0.17
             detected_element_pub.publish(pose)
 
             rate.sleep()
