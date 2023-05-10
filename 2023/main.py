@@ -1,4 +1,4 @@
-from python.stereoCamera import StereoCamera
+from stereo_camera import StereoCamera
 import cv2 as cv
 import numpy as np
 from controlpanel.control_panel import ControlPanel
