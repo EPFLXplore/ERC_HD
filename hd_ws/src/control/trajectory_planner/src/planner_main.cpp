@@ -10,8 +10,6 @@ int main(int argc, char * argv[])
     node_options.automatically_declare_parameters_from_overrides(true);
 
     auto planner = std::make_shared<Planner>(node_options);
-    
-    //rclcpp::spin(planner);
 
     rclcpp::executors::SingleThreadedExecutor executor;
     executor.add_node(planner);
@@ -20,12 +18,6 @@ int main(int argc, char * argv[])
     planner->config();
 
     planner->spin2();
-
-    // std::thread first(&Planner::spin1, planner);
-    // std::thread second(&Planner::spin2, planner);
-
-    // first.join();
-    // second.join();
 
     rclcpp::shutdown();
     return 0;

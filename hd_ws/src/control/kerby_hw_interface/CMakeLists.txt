@@ -12,6 +12,8 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   pluginlib
   rclcpp
   rclcpp_lifecycle
+  std_msgs
+  sensor_msgs
 )
 
 # find dependencies
@@ -21,7 +23,21 @@ foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
 endforeach()
 
 
-## COMPILE
+# executable
+add_executable(state_keeper src/state_keeper.cpp)
+include_directories(include)
+ament_target_dependencies(state_keeper
+  rclcpp
+  std_msgs
+  sensor_msgs
+)
+
+install(TARGETS state_keeper
+  DESTINATION lib/${PROJECT_NAME})
+
+
+
+## COMPILE LIBRARY
 add_library(kerby_hw_interface SHARED
     src/kerby_arm_interface.cpp
 )

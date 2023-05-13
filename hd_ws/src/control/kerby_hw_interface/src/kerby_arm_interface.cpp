@@ -2,6 +2,10 @@
 #include "pluginlib/class_list_macros.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
+#include "kerby_hw_interface/state_keeper.hpp"
+
+
+extern sensor_msgs::msg::JointState STATES;
 
 
 namespace kerby_hw_interface {
@@ -115,7 +119,11 @@ std::vector<hardware_interface::CommandInterface> KerbyArmInterface::export_comm
 hardware_interface::return_type KerbyArmInterface::read() {
     // get states from hardware and store them to internal variables defined in export_state_interfaces
     for (uint i = 0; i < hw_position_states_.size(); i++) {
-        hw_position_states_[i] = hw_position_commands_[i];
+        if (state_keeper::READY)
+            hw_position_states_[i] = state_keeper::STATES.position[i];
+        else
+            hw_position_states_[i] = 0;
+        //hw_position_states_[i] = hw_position_commands_[i];
     }
 
     return hardware_interface::return_type::OK;
@@ -124,6 +132,7 @@ hardware_interface::return_type KerbyArmInterface::read() {
 
 hardware_interface::return_type KerbyArmInterface::write() {
     // command the hardware based onthe values stored in internal varialbes defined in export_command_interfaces
+    state_keeper::write(hw_position_commands_);
 
     return hardware_interface::return_type::OK;
 }
