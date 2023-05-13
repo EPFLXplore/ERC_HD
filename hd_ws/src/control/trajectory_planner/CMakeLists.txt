@@ -14,8 +14,10 @@ find_package(moveit_ros_planning_interface REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 
-add_executable(trajectory_planner src/trajectory_planner.cpp)
-target_include_directories(trajectory_planner include/trajectory_planner)
+add_executable(trajectory_planner src/planner.cpp)
+#target_include_directories(trajectory_planner 
+#  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/trajectory_planner>
+#)
 ament_target_dependencies(trajectory_planner rclcpp std_msgs moveit_ros_planning_interface)
 
 install(TARGETS

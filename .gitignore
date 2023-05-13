@@ -1,3 +1,10 @@
 .vscode/
-catkin_ws/build/
-catkin_ws/devel/
+hd_ws/build/
+hd_ws/install/
+hd_ws/log/
+backup/
+hd_ws/build/
+hd_ws/install/
+hd_ws/log/
+hd_ws/tttt/
+
