@@ -118,9 +118,10 @@ std::vector<hardware_interface::CommandInterface> KerbyArmInterface::export_comm
 
 hardware_interface::return_type KerbyArmInterface::read() {
     // get states from hardware and store them to internal variables defined in export_state_interfaces
+    //std::cout << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB" << std::endl;
     for (uint i = 0; i < hw_position_states_.size(); i++) {
-        if (state_keeper::READY)
-            hw_position_states_[i] = state_keeper::STATES.position[i];
+        if (StateKeeper::ready())
+            hw_position_states_[i] = StateKeeper::m_states.position[i];
         else
             hw_position_states_[i] = 0;
         //hw_position_states_[i] = hw_position_commands_[i];
@@ -132,7 +133,8 @@ hardware_interface::return_type KerbyArmInterface::read() {
 
 hardware_interface::return_type KerbyArmInterface::write() {
     // command the hardware based onthe values stored in internal varialbes defined in export_command_interfaces
-    state_keeper::write(hw_position_commands_);
+    StateKeeper::write(hw_position_commands_);
+    //std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << std::endl;
 
     return hardware_interface::return_type::OK;
 }

@@ -6,7 +6,7 @@ from trajectory_planner.task_classes import PressButton2
 import trajectory_planner.pose_tracker as pt
 from kerby_interfaces.msg import Task, Object, PoseGoal
 from geometry_msgs.msg import Pose
-from std_msgs.msg import Bool, Float64MultiArray
+from std_msgs.msg import Bool, Float64MultiArray, Int8
 import threading
     
 
@@ -15,6 +15,7 @@ class Executor(Node):
         super().__init__("kinematics_task_executor")
         #self.add_obj_pub = rospy.Publisher("arm_control/add_object", Object, queue_size=5)
         self.create_subscription(Task, "/HD/task_assignment", self.taskAssignementCallback, 10)
+        self.create_subscription(Int8, "/ROVER/element_id", self.taskAssignementCallback2, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
         self.create_subscription(Pose, "/HD/detected_element", pt.detected_object_pose_callback, 10)  # TODO: coordinate this with vision (change topic and msg type)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
@@ -93,6 +94,16 @@ class Executor(Node):
             self.loginfo("Button task")
             self.task = PressButton2(self, msg.id, msg.pose, True)
             self.new_task = True
+    
+    def taskAssignementCallback2(self, msg: Int8):
+        """listens to /arm_control/task_assignment topic"""
+        self.loginfo("Task executor received cmd")
+        if self.hasTask():
+            return
+        
+        self.loginfo("Button task")
+        self.task = PressButton2(self, 0, None, True)
+        self.new_task = True
     
     def assignTask(self, task):
         """assigns the task"""
