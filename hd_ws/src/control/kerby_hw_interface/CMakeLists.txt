@@ -22,18 +22,6 @@ foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
 endforeach()
 
 
-# EXECUTABLE
-add_executable(motor_sim src/motor_sim.cpp)
-ament_target_dependencies(motor_sim
-  rclcpp
-  std_msgs
-  sensor_msgs
-)
-install(TARGETS motor_sim
-  DESTINATION lib/${PROJECT_NAME})
-
-
-
 ## COMPILE LIBRARY
 add_library(kerby_hw_interface SHARED
     src/kerby_arm_interface.cpp

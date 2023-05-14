@@ -10,6 +10,10 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(trajectory_planner)
 
 
 # install launch directory
@@ -37,6 +41,21 @@ install(PROGRAMS
 
 install(PROGRAMS
   scripts/fake_motor_control.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(PROGRAMS
+  scripts/fake_cs_task.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(PROGRAMS
+  scripts/fake_vision.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(PROGRAMS
+  scripts/vision_test.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
