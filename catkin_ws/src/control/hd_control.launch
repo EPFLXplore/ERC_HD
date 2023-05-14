@@ -1,4 +1,0 @@
-<launch>
-    <include file="$(find hw_interface)/launch/hw_main.launch"/>
-    <!-- <include file="$(find task_execution)/launch/planner.launch"/> -->
-</launch>
