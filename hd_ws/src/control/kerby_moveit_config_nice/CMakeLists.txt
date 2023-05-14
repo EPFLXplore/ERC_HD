@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(kerby_moveit_description_nice)
+project(kerby_moveit_config_nice)
 
 find_package(ament_cmake REQUIRED)
 

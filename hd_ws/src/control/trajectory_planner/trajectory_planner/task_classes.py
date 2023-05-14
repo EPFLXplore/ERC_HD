@@ -2,9 +2,9 @@ import time
 import math
 import copy
 from geometry_msgs.msg import Pose
-from kerby_interfaces.msg import Object
 import trajectory_planner.quaternion_arithmetic as qa
 import trajectory_planner.pose_tracker as pt
+import trajectory_planner.eef_pose_corrector as epc
 
 
 class Command(object):
@@ -316,16 +316,15 @@ class PressButton2(Task):
         self.scan_pose = scan_pose
         self.press_distance = 0.2
         self.pause_time = 2
-    
+
     def scan_for_btn_pose(self):
-        # RequestDetectionCommand(self.executor).execute()
         while pt.DETECTED_OBJECTS_LOCKED:
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:
             if 1 or obj.id == self.btn_id:
                 relative_pose = obj.object_pose
-                self.btn_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
-                self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
+                self.btn_pose = qa.compose_poses(epc.correct_eef_pose(), relative_pose)
+                #self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
                 self.artage_pose = self.btn_pose
 
     def currentCommand(self):
@@ -362,6 +361,7 @@ class PressButton2(Task):
             cmd.pose = Pose()
             cmd.pose.position = self.getPressPosition(self.btn_pose.position)
             cmd.pose.orientation = self.getPressOrientation()
+            cmd.pose = epc.revert(cmd.pose)
         elif self.cmd_counter == 3:
             cmd.distance = self.press_distance
             cmd.axis = qa.point_image([0.0, 0.0, 1.0], self.btn_pose.orientation)

@@ -24,8 +24,19 @@ def artag_callback(msg):
 
 
 def end_effector_callback(msg):
-    end_effector_pose.position = msg.position
-    end_effector_pose.orientation = msg.orientation
+    pose = Pose()
+    pose.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=2.975)
+    d = 0.1598
+    pose.position = qa.point_image([0.0, 0.0, d], pose.orientation)
+    combined = qa.compose_poses(msg, pose)
+    end_effector_pose.position = combined.position
+    end_effector_pose.orientation = combined.orientation
+
+    # end_effector_pose.orientation = qa.turn_around(msg.orientation, axis=(0.0, 1.0, 0.0), angle=2.975)
+    # p = qa.point_image([0.0, 0.0, 1.0], end_effector_pose.orientation)
+    # d = 0.1598
+    # p = qa.mul(d, p)
+    # end_effector_pose.position = qa.quat_to_point(qa.add(msg.position, p))
 
 
 def get_btn_pose():
