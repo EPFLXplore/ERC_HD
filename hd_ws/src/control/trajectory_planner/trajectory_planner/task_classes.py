@@ -175,9 +175,9 @@ class Task(object):
     def addCommand(self, command: Command, pre_operation: Callable = None, post_operation: Callable = None, description: str = ""):
         """add a new command to the command list"""
         if pre_operation is None:
-            pre_operation = lambda cmd: 0
+            pre_operation = lambda cmd: None
         if post_operation is None:
-            post_operation = lambda cmd: 0
+            post_operation = lambda cmd: None
 
         command.executor = self.executor
         self.command_chain.append(command)
