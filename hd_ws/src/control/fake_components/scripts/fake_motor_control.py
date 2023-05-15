@@ -24,6 +24,8 @@ class Timer:
 class FakeMotorControl(Node):
     MOTOR_COUNT = 6     # number of motors
     MAX_VEL = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]    # max velocity of each motor in rad/s
+    VELOCITY = 0
+    POSITION = 1
 
     def __init__(self):
         super().__init__("fake_motor_control")
@@ -33,12 +35,9 @@ class FakeMotorControl(Node):
         self.create_subscription(JointState, "/HD/kinematics/joint_cmd", self.moveit_cmd_callback, 10)
         self.create_subscription(Float64MultiArray, "/CS/vel_joint_cmd", self.vel_cmd_callback, 10)
 
-        self.mimic = False   # wether to transmit commands from moveit directly to state (perfect motor)
+        self.control_mode = self.POSITION
 
-        self.direct_manual_mode = True
         self.cmd_velocities = [0.0]*self.MOTOR_COUNT
-        #self.cmd_velocities[0] = 1.0
-        #self.cmd_velocities[2] = 1.0
         self.timer = Timer()
 
     def init_state(self):
@@ -47,18 +46,23 @@ class FakeMotorControl(Node):
         self.state.effort = [0.0]*self.MOTOR_COUNT
 
     def moveit_cmd_callback(self, msg: JointState):
-        if self.mimic:
+        if self.control_mode == self.POSITION:
             self.state.position[:len(msg.position)] = msg.position
             self.state.velocity[:len(msg.velocity)] = msg.velocity
             self.state.effort[:len(msg.effort)] = msg.effort
 
     def vel_cmd_callback(self, msg: Float64MultiArray):
+        self.control_mode = self.VELOCITY
         data = list(msg.data) + [0.0]*max(0, self.MOTOR_COUNT-len(msg.data))
         self.cmd_velocities = [max_ * vel for max_, vel in zip(self.MAX_VEL, data)]
 
     def publish_state(self):
         msg = copy.deepcopy(self.state)
         self.state_pub.publish(msg)
+
+    def update(self):
+        if self.control_mode == self.VELOCITY:
+            self.update_from_velocities()
 
     def update_from_velocities(self):
         self.state.velocity = self.cmd_velocities
@@ -68,8 +72,7 @@ class FakeMotorControl(Node):
     def loop(self):
         rate = self.create_rate(25)
         while rclpy.ok():
-            if self.direct_manual_mode:
-                self.update_from_velocities()
+            self.update()
             self.publish_state()
             rate.sleep()
 
