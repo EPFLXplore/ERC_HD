@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.22)
-project(kerby_moveit_config)
+cmake_minimum_required(VERSION 3.10.2)
+project(kerby_moveit_config_ugly)
 
 find_package(ament_cmake REQUIRED)
 

@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>kerby_moveit_config</name>
+  <name>kerby_moveit_config_ugly</name>
   <version>0.3.0</version>
   <description>
-     An automatically generated package with all the configuration and launch files for using the Assemblage with the MoveIt Motion Planning Framework
+     An automatically generated package with all the configuration and launch files for using the kerby with the MoveIt Motion Planning Framework
   </description>
-  <maintainer email="matthias@gmail.com">matthias</maintainer>
+  <maintainer email="matthiasshuller92@gmail.com">Matthias Schuller</maintainer>
 
   <license>BSD</license>
 
@@ -14,7 +14,7 @@
   <url type="bugtracker">https://github.com/ros-planning/moveit2/issues</url>
   <url type="repository">https://github.com/ros-planning/moveit2</url>
 
-  <author email="matthias@gmail.com">matthias</author>
+  <author email="matthiasshuller92@gmail.com">Matthias Schuller</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
@@ -30,7 +30,7 @@
        We don't include them by default to prevent installing gazebo and all its dependencies. -->
   <!-- <exec_depend>joint_trajectory_controller</exec_depend> -->
   <!-- <exec_depend>gazebo_ros_control</exec_depend> -->
-  <exec_depend>Assemblage_description</exec_depend>
+  <exec_depend>kerby_description</exec_depend>
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>moveit_configs_utils</exec_depend>
   <exec_depend>moveit_ros_move_group</exec_depend>

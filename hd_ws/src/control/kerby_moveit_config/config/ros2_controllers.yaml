@@ -3,16 +3,14 @@ controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
 
-    kerby_arm_controller:
-      type: joint_trajectory_controller/JointTrajectoryController
-    kerby_arm_moveit_controller:
+    kerby_arm_group_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-kerby_arm_controller:
+kerby_arm_group_controller:
   ros__parameters:
     joints:
       - joint1
@@ -23,50 +21,6 @@ kerby_arm_controller:
       - joint6
     command_interfaces:
       - position
-      #- velocity
     state_interfaces:
       - position
       - velocity
-
-kerby_arm_moveit_controller:
-  ros__parameters:
-    joints:
-      - joint1
-      - joint2
-      - joint3
-      - joint4
-      - joint5
-      - joint6
-    command_interfaces:
-      - position
-      #- velocity
-    state_interfaces:
-      - position
-      - velocity
-
-
-
-# controller_list:
-#   - name: kerby_arm_controller
-#     action_ns: follow_joint_trajectory
-#     type: FollowJointTrajectory
-#     default: true
-#     joints:
-#         - joint1
-#         - joint2
-#         - joint3
-#         - joint4
-#         - joint5
-#         - joint6
-  
-#   - name: kerby_arm_moveit_controller
-#     action_ns: follow_joint_trajectory
-#     type: FollowJointTrajectory
-#     default: true
-#     joints:
-#         - joint1
-#         - joint2
-#         - joint3
-#         - joint4
-#         - joint5
-#         - joint6

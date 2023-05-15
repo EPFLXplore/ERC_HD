@@ -1,431 +1,561 @@
-<?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="kerby">
-<!-- ======================================================================================================================== -->
-
-
-
-
-	<!-- ==========CONSANTS========== -->
-	<!-- base_link is rover -->
-
-
-
-	<!-- base_link constants -->
-	<xacro:property name="base_link_dim_x" value="0.6" />
-	<xacro:property name="base_link_dim_y" value="0.5" />
-	<xacro:property name="base_link_dim_z" value="0.16125" />
-	<xacro:property name="base_link_dim" value="0.6 0.5 0.16125" />
-	<xacro:property name="base_link_btm_shift_x" value="0" />
-	<xacro:property name="base_link_btm_shift_y" value="0" />
-	<xacro:property name="base_link_btm_shift_z" value="0" />
-	<xacro:property name="base_link_top_shift_x" value="${(0.525-(base_link_dim_x/2))}" />
-	<xacro:property name="base_link_top_shift_y" value="0" />
-	<xacro:property name="base_link_top_shift_z" value="${(base_link_dim_z/2)}" />
-	<xacro:property name="base_link_origin" value="0 0 0" />
-	<xacro:property name="base_link_attach_point" value="${((0.525-(base_link_dim_x/2))+0)} 0 ${((base_link_dim_z/2)+0)}" />
-
-
-
-	<!-- link1 constants -->
-	<xacro:property name="link1_dim_x" value="0.08" />
-	<xacro:property name="link1_dim_y" value="0.1505" />
-	<xacro:property name="link1_dim_z" value="0.138" />
-	<xacro:property name="link1_dim" value="0.08 0.1505 0.138" />
-	<xacro:property name="link1_btm_shift_x" value="0" />
-	<xacro:property name="link1_btm_shift_y" value="${-((0.094-(link1_dim_y/2)))}" />
-	<xacro:property name="link1_btm_shift_z" value="${(link1_dim_z/2)}" />
-	<xacro:property name="link1_top_shift_x" value="0" />
-	<xacro:property name="link1_top_shift_y" value="${(link1_dim_x-0.0565)}" />
-	<xacro:property name="link1_top_shift_z" value="${(0.098-(link1_dim_z/2))}" />
-	<xacro:property name="link1_origin" value="0 ${-((0.094-(link1_dim_y/2)))} ${(link1_dim_z/2)}" />
-	<xacro:property name="link1_attach_point" value="0 ${((link1_dim_x-0.0565)+-((0.094-(link1_dim_y/2))))} ${((0.098-(link1_dim_z/2))+(link1_dim_z/2))}" />
-
-
-
-	<!-- link2 constants -->
-	<xacro:property name="link2_dim_x" value="0.096" />
-	<xacro:property name="link2_dim_y" value="0.07" />
-	<xacro:property name="link2_dim_z" value="0.487225" />
-	<xacro:property name="link2_dim" value="0.096 0.07 0.487225" />
-	<xacro:property name="link2_btm_shift_x" value="0" />
-	<xacro:property name="link2_btm_shift_y" value="0" />
-	<xacro:property name="link2_btm_shift_z" value="${-((0.048-(link2_dim_z/2)))}" />
-	<xacro:property name="link2_top_shift_x" value="${(0.039225-(link2_dim_x/2))}" />
-	<xacro:property name="link2_top_shift_y" value="0" />
-	<xacro:property name="link2_top_shift_z" value="${((link2_dim_z/2)-0.039225)}" />
-	<xacro:property name="link2_origin" value="0 0 ${-((0.048-(link2_dim_z/2)))}" />
-	<xacro:property name="link2_attach_point" value="${((0.039225-(link2_dim_x/2))+0)} 0 ${(((link2_dim_z/2)-0.039225)+-((0.048-(link2_dim_z/2))))}" />
-
-
-
-	<!-- motor_j3 constants -->
-	<xacro:property name="motor_j3_dim_x" value="0.09" />
-	<xacro:property name="motor_j3_dim_y" value="0.07" />
-	<xacro:property name="motor_j3_dim_z" value="0.3" />
-	<xacro:property name="motor_j3_dim" value="0.09 0.07 0.3" />
-	<xacro:property name="motor_j3_btm_shift_x" value="-0.084225" />
-	<xacro:property name="motor_j3_btm_shift_y" value="0" />
-	<xacro:property name="motor_j3_btm_shift_z" value="0.004388" />
-	<xacro:property name="motor_j3_top_shift_x" value="0" />
-	<xacro:property name="motor_j3_top_shift_y" value="0" />
-	<xacro:property name="motor_j3_top_shift_z" value="0" />
-	<xacro:property name="motor_j3_origin" value="-0.084225 0 0.004388" />
-	<xacro:property name="motor_j3_attach_point" value="-0.084225 0 0.004388" />
-
-
-
-	<!-- link3 constants -->
-	<xacro:property name="link3_dim_x" value="0.115" />
-	<xacro:property name="link3_dim_y" value="0.112" />
-	<xacro:property name="link3_dim_z" value="0.387" />
-	<xacro:property name="link3_dim" value="0.115 0.112 0.387" />
-	<xacro:property name="link3_btm_shift_x" value="${(0.02-(link3_dim_x/2))}" />
-	<xacro:property name="link3_btm_shift_y" value="0" />
-	<xacro:property name="link3_btm_shift_z" value="${-((0.087-(link3_dim_z/2)))}" />
-	<xacro:property name="link3_top_shift_x" value="${(0.0415-(link3_dim_x/2))}" />
-	<xacro:property name="link3_top_shift_y" value="0" />
-	<xacro:property name="link3_top_shift_z" value="${(link3_dim_z/2)}" />
-	<xacro:property name="link3_origin" value="${(0.02-(link3_dim_x/2))} 0 ${-((0.087-(link3_dim_z/2)))}" />
-	<xacro:property name="link3_attach_point" value="${((0.0415-(link3_dim_x/2))+(0.02-(link3_dim_x/2)))} 0 ${((link3_dim_z/2)+-((0.087-(link3_dim_z/2))))}" />
-
-
-
-	<!-- link4 constants -->
-	<xacro:property name="link4_dim_x" value="0.08" />
-	<xacro:property name="link4_dim_y" value="0.175" />
-	<xacro:property name="link4_dim_z" value="0.1208" />
-	<xacro:property name="link4_dim" value="0.08 0.175 0.1208" />
-	<xacro:property name="link4_btm_shift_x" value="0" />
-	<xacro:property name="link4_btm_shift_y" value="0" />
-	<xacro:property name="link4_btm_shift_z" value="${(link4_dim_z/2)}" />
-	<xacro:property name="link4_top_shift_x" value="0" />
-	<xacro:property name="link4_top_shift_y" value="0" />
-	<xacro:property name="link4_top_shift_z" value="${((link4_dim_z/2)-0.031)}" />
-	<xacro:property name="link4_origin" value="0 0 ${(link4_dim_z/2)}" />
-	<xacro:property name="link4_attach_point" value="0 0 ${(((link4_dim_z/2)-0.031)+(link4_dim_z/2))}" />
-
-
-
-	<!-- link5 constants -->
-	<xacro:property name="link5_dim_x" value="0.045" />
-	<xacro:property name="link5_dim_y" value="0.045" />
-	<xacro:property name="link5_dim_z" value="0.09455" />
-	<xacro:property name="link5_dim" value="0.045 0.045 0.09455" />
-	<xacro:property name="link5_btm_shift_x" value="0" />
-	<xacro:property name="link5_btm_shift_y" value="0" />
-	<xacro:property name="link5_btm_shift_z" value="${((link5_dim_z/2)-0.0318)}" />
-	<xacro:property name="link5_top_shift_x" value="0" />
-	<xacro:property name="link5_top_shift_y" value="0" />
-	<xacro:property name="link5_top_shift_z" value="${(link5_dim_z/2)}" />
-	<xacro:property name="link5_origin" value="0 0 ${((link5_dim_z/2)-0.0318)}" />
-	<xacro:property name="link5_attach_point" value="0 0 ${    0.103+0.045+    ((link5_dim_z/2)+((link5_dim_z/2)-0.0318))}" />
-
-
-
-	<!-- gripper_base constants -->
-	<xacro:property name="gripper_base_dim_x" value="0.1565" />
-	<xacro:property name="gripper_base_dim_y" value="0.125" />
-	<xacro:property name="gripper_base_dim_z" value="0.103" />
-	<xacro:property name="gripper_base_dim" value="0.1565 0.125 0.103" />
-	<xacro:property name="gripper_base_btm_shift_x" value="${((gripper_base_dim_x/2)-0.076)}" />
-	<xacro:property name="gripper_base_btm_shift_y" value="${-((0.0671-(gripper_base_dim_y/2)))}" />
-	<xacro:property name="gripper_base_btm_shift_z" value="${(gripper_base_dim_z/2)}" />
-	<xacro:property name="gripper_base_top_shift_x" value="${-(((gripper_base_dim_x/2)-0.076))}" />
-	<xacro:property name="gripper_base_top_shift_y" value="${(0.0671-(gripper_base_dim_y/2))}" />
-	<xacro:property name="gripper_base_top_shift_z" value="${(gripper_base_dim_z/2)}" />
-	<xacro:property name="gripper_base_origin" value="${((gripper_base_dim_x/2)-0.076)} ${-((0.0671-(gripper_base_dim_y/2)))} ${(    -0.045-    gripper_base_dim_z/2)}" />
-	<xacro:property name="gripper_base_attach_point" value="${(-(((gripper_base_dim_x/2)-0.076))+((gripper_base_dim_x/2)-0.076))} ${((0.0671-(gripper_base_dim_y/2))+-((0.0671-(gripper_base_dim_y/2))))} ${(    -0.045-    (gripper_base_dim_z/2)+(gripper_base_dim_z/2))}" />
-
-
-
-	<!-- gripper_left_finger constants -->
-	<xacro:property name="gripper_left_finger_dim_x" value="0.0215" />
-	<xacro:property name="gripper_left_finger_dim_y" value="0.016" />
-	<xacro:property name="gripper_left_finger_dim_z" value="0.045" />
-	<xacro:property name="gripper_left_finger_dim" value="0.0215 0.016 0.045" />
-	<xacro:property name="gripper_left_finger_btm_shift_x" value="0" />
-	<xacro:property name="gripper_left_finger_btm_shift_y" value="${(gripper_left_finger_dim_y/2)}" />
-	<xacro:property name="gripper_left_finger_btm_shift_z" value="${(gripper_left_finger_dim_z/2)}" />
-	<xacro:property name="gripper_left_finger_top_shift_x" value="0" />
-	<xacro:property name="gripper_left_finger_top_shift_y" value="0" />
-	<xacro:property name="gripper_left_finger_top_shift_z" value="0" />
-	<xacro:property name="gripper_left_finger_origin" value="0 ${(gripper_left_finger_dim_y/2)} ${(gripper_left_finger_dim_z/2)}" />
-	<xacro:property name="gripper_left_finger_attach_point" value="0 ${((gripper_left_finger_dim_y/2)+0)} ${((gripper_left_finger_dim_z/2)+0)}" />
-
-
-
-	<!-- gripper_right_finger constants -->
-	<xacro:property name="gripper_right_finger_dim_x" value="0.0215" />
-	<xacro:property name="gripper_right_finger_dim_y" value="0.016" />
-	<xacro:property name="gripper_right_finger_dim_z" value="0.045" />
-	<xacro:property name="gripper_right_finger_dim" value="0.0215 0.016 0.045" />
-	<xacro:property name="gripper_right_finger_btm_shift_x" value="0" />
-	<xacro:property name="gripper_right_finger_btm_shift_y" value="${(-(gripper_right_finger_dim_y)/2)}" />
-	<xacro:property name="gripper_right_finger_btm_shift_z" value="${(gripper_right_finger_dim_z/2)}" />
-	<xacro:property name="gripper_right_finger_top_shift_x" value="0" />
-	<xacro:property name="gripper_right_finger_top_shift_y" value="0" />
-	<xacro:property name="gripper_right_finger_top_shift_z" value="0" />
-	<xacro:property name="gripper_right_finger_origin" value="0 ${(-(gripper_right_finger_dim_y)/2)} ${(gripper_right_finger_dim_z/2)}" />
-	<xacro:property name="gripper_right_finger_attach_point" value="0 ${((-(gripper_right_finger_dim_y)/2)+0)} ${((gripper_right_finger_dim_z/2)+0)}" />
-
-	<!-- ======================================================================================================================== -->
-
-
-
-
-	<!-- ==========LINKS========== -->
-
-
-	<!-- base_link -->
-	<link name="base_link">
-		<visual>
-			<geometry>
-				<box size="${base_link_dim}"/>
-			</geometry>
-			<origin xyz="${base_link_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${base_link_dim}"/>
-			</geometry>
-			<origin xyz="${base_link_origin}" />
-		</collision>
-	</link>
-
-	<!-- link1 -->
-	<link name="link1">
-		<visual>
-			<geometry>
-				<box size="${link1_dim}"/>
-			</geometry>
-			<origin xyz="${link1_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${link1_dim}"/>
-			</geometry>
-			<origin xyz="${link1_origin}" />
-		</collision>
-	</link>
-
-	<!-- link2 -->
-	<link name="link2">
-		<visual>
-			<geometry>
-				<box size="${link2_dim}"/>
-			</geometry>
-			<origin xyz="${link2_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${link2_dim}"/>
-			</geometry>
-			<origin xyz="${link2_origin}" />
-		</collision>
-	</link>
-
-	<!-- motor_j3 -->
-	<link name="motor_j3">
-		<visual>
-			<geometry>
-				<box size="${motor_j3_dim}"/>
-			</geometry>
-			<origin xyz="${motor_j3_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${motor_j3_dim}"/>
-			</geometry>
-			<origin xyz="${motor_j3_origin}" />
-		</collision>
-	</link>
-
-	<!-- link3 -->
-	<link name="link3">
-		<visual>
-			<geometry>
-				<box size="${link3_dim}"/>
-			</geometry>
-			<origin xyz="${link3_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${link3_dim}"/>
-			</geometry>
-			<origin xyz="${link3_origin}" />
-		</collision>
-	</link>
-
-	<!-- link4 -->
-	<link name="link4">
-		<visual>
-			<geometry>
-				<box size="${link4_dim}"/>
-			</geometry>
-			<origin xyz="${link4_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${link4_dim}"/>
-			</geometry>
-			<origin xyz="${link4_origin}" />
-		</collision>
-	</link>
-
-	<!-- link5 -->
-	<link name="link5">
-		<visual>
-			<geometry>
-				<box size="${link5_dim}"/>
-			</geometry>
-			<origin xyz="${link5_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${link5_dim}"/>
-			</geometry>
-			<origin xyz="${link5_origin}" />
-		</collision>
-	</link>
-
-	<!-- gripper_base -->
-	<link name="gripper_base">
-		<visual>
-			<geometry>
-				<box size="${gripper_base_dim}"/>
-			</geometry>
-			<origin xyz="${gripper_base_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${gripper_base_dim}"/>
-			</geometry>
-			<origin xyz="${gripper_base_origin}" />
-		</collision>
-	</link>
-
-	<!-- gripper_left_finger -->
-	<link name="gripper_left_finger">
-		<visual>
-			<geometry>
-				<box size="${gripper_left_finger_dim}"/>
-			</geometry>
-			<origin xyz="${gripper_left_finger_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${gripper_left_finger_dim}"/>
-			</geometry>
-			<origin xyz="${gripper_left_finger_origin}" />
-		</collision>
-	</link>
-
-	<!-- gripper_right_finger -->
-	<link name="gripper_right_finger">
-		<visual>
-			<geometry>
-				<box size="${gripper_right_finger_dim}"/>
-			</geometry>
-			<origin xyz="${gripper_right_finger_origin}" />
-		</visual>
-		<collision>
-			<geometry>
-				<box size="${gripper_right_finger_dim}"/>
-			</geometry>
-			<origin xyz="${gripper_right_finger_origin}" />
-		</collision>
-	</link>
-	<!-- ======================================================================================================================== -->
-
-
-
-
-	<!-- ==========JOINTS========== -->
-
-
-	<!-- joint1 -->
-	<joint name="joint1" type="revolute">
-		<parent link="base_link"/>
-		<child link="link1"/>
-		<origin xyz="${base_link_attach_point}" />
-		<axis xyz="0 0 1"/>
-		<limit effort="10" velocity="0.2" lower="${(pi*-3/4)}" upper="${(pi*3/4)}"/>
-	</joint>
-
-	<!-- joint2 -->
-	<joint name="joint2" type="revolute">
-		<parent link="link1"/>
-		<child link="link2"/>
-		<origin xyz="${link1_attach_point}" />
-		<axis xyz="0 1 0"/>
-		<limit effort="10" velocity="0.2" lower="-1.34" upper="2.07"/>
-	</joint>
-
-	<!-- motor_j3_joint -->
-	<joint name="motor_j3_joint" type="fixed">
-		<parent link="link2"/>
-		<child link="motor_j3"/>
-		<origin xyz="${link2_attach_point}" />
-		<axis xyz="1 0 0"/>
-		<limit effort="1" velocity="0.2" lower="${-(pi)}" upper="${pi}"/>
-	</joint>
-
-	<!-- joint3 -->
-	<joint name="joint3" type="revolute">
-		<parent link="link2"/>
-		<child link="link3"/>
-		<origin xyz="${link2_attach_point}" rpy="0 ${pi/2} 0" />
-		<axis xyz="0 1 0"/>
-		<limit effort="10" velocity="0.2" lower="-1.1" upper="1.3"/>
-	</joint>
-
-	<!-- joint4 -->
-	<joint name="joint4" type="revolute">
-		<parent link="link3"/>
-		<child link="link4"/>
-		<origin xyz="${link3_attach_point}" />
-		<axis xyz="0 0 1"/>
-		<limit effort="10" velocity="0.2" lower="${(pi/-2)}" upper="${(pi/2)}"/>
-	</joint>
-
-	<!-- joint5 -->
-	<joint name="joint5" type="revolute">
-		<parent link="link4"/>
-		<child link="link5"/>
-		<origin xyz="${link4_attach_point}" />
-		<axis xyz="0 1 0"/>
-		<limit effort="10" velocity="0.2" lower="-2.8" upper="2.3"/>
-	</joint>
-
-	<!-- joint6 -->
-	<joint name="joint6" type="revolute">
-		<parent link="link5"/>
-		<child link="gripper_base"/>
-		<origin xyz="${link5_attach_point}" />
-		<axis xyz="0 0 1"/>
-		<limit effort="10" velocity="0.2" lower="${-4.2}" upper="${3.8}"/>
-	</joint>
-
-	<!-- gripper_left_finger_joint -->
-	<joint name="gripper_left_finger_joint" type="prismatic">
-		<parent link="gripper_base"/>
-		<child link="gripper_left_finger"/>
-		<origin xyz="${gripper_base_attach_point}" />
-		<axis xyz="0 1 0"/>
-		<limit effort="1" velocity="0.5" lower="0" upper="0.04"/>
-	</joint>
-
-	<!-- gripper_right_finger_joint -->
-	<joint name="gripper_right_finger_joint" type="prismatic">
-		<parent link="gripper_base"/>
-		<child link="gripper_right_finger"/>
-		<origin xyz="${gripper_base_attach_point}" />
-		<axis xyz="0 1 0"/>
-		<limit effort="1" velocity="0.5" lower="0" upper="0.1"/>
-		<mimic joint="gripper_left_finger_joint" multiplier="-1" offset="0"/>
-	</joint>
-
-
-
+<?xml version="1.0" ?>
+<robot name="kerby" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find kerby_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find kerby_description)/urdf/kerby.trans" />
+<xacro:include filename="$(find kerby_description)/urdf/kerby.gazebo" />
+<link name="base_link">
+  <inertial>
+    <origin xyz="0.029969421077976243 0.10500332317031125 -0.11062962842827315" rpy="0 0 0"/>
+    <mass value="49.646028993833724"/>
+    <inertia ixx="1.707273" iyy="2.534956" izz="2.455449" ixy="-0.019527" iyz="-0.055493" ixz="-0.42303"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="blue"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="steering_1">
+  <inertial>
+    <origin xyz="0.0029876037310104797 -0.036027674549748256 -0.21327240320670968" rpy="0 0 0"/>
+    <mass value="0.3543584805415501"/>
+    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.7e-05" iyz="-0.000205" ixz="3.2e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.423307 -0.476325 0.140943" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.423307 -0.476325 0.140943" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="steering_2">
+  <inertial>
+    <origin xyz="-0.0029877917009971666 0.03602790788253926 -0.21327245240653883" rpy="0 0 0"/>
+    <mass value="0.3543584805415501"/>
+    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.7e-05" iyz="0.000205" ixz="-3.2e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.42303 0.272491 0.147921" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.42303 0.272491 0.147921" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="steering_3">
+  <inertial>
+    <origin xyz="-0.0029882539688567133 0.03602790788253865 -0.21327240320671673" rpy="0 0 0"/>
+    <mass value="0.3543584805415501"/>
+    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.7e-05" iyz="0.000205" ixz="-3.2e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.410093 0.272491 0.140943" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.410093 0.272491 0.140943" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="steering_4">
+  <inertial>
+    <origin xyz="0.0029881414631521275 -0.03602767454974787 -0.2132724524065319" rpy="0 0 0"/>
+    <mass value="0.3543584805415501"/>
+    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.7e-05" iyz="-0.000205" ixz="3.2e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.409817 -0.476325 0.147921" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.409817 -0.476325 0.147921" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel3_1">
+  <inertial>
+    <origin xyz="0.0003400707098370481 -0.010197254794898913 3.6630334474541115e-06" rpy="0 0 0"/>
+    <mass value="1.592763813314383"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-2e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.408112 -0.493016 0.417916" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="pink"/>
+  </visual>
+  <collision>
+    <origin xyz="0.408112 -0.493016 0.417916" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel4_1">
+  <inertial>
+    <origin xyz="0.00034053297769459645 -0.010197254794899857 3.712233269614895e-06" rpy="0 0 0"/>
+    <mass value="1.592763813314383"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-2e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.425011 -0.493016 0.410938" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="pink"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.425011 -0.493016 0.410938" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel2_1">
+  <inertial>
+    <origin xyz="-0.0003401832155410234 0.010196488127690972 3.712233261510267e-06" rpy="0 0 0"/>
+    <mass value="1.592763813314383"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="2e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.411798 0.289181 0.410938" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="pink"/>
+  </visual>
+  <collision>
+    <origin xyz="0.411798 0.289181 0.410938" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel1_1">
+  <inertial>
+    <origin xyz="-0.00033972094768197625 0.010196488127692027 3.6630334394605057e-06" rpy="0 0 0"/>
+    <mass value="1.592763813314383"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="2e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.421325 0.289181 0.417916" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="pink"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.421325 0.289181 0.417916" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hd_link2_1">
+  <inertial>
+    <origin xyz="-0.06551545688031782 0.0608390658028839 0.12833264938052846" rpy="0 0 0"/>
+    <mass value="2.4452075265656514"/>
+    <inertia ixx="0.0307" iyy="0.03827" izz="0.011048" ixy="-0.000736" iyz="0.001431" ixz="0.01488"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.228643 -0.044217 -0.046218" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.228643 -0.044217 -0.046218" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hd_link3_1">
+  <inertial>
+    <origin xyz="-0.18835718544023639 -0.028188435052669616 0.002484829044890391" rpy="0 0 0"/>
+    <mass value="0.3993227194340243"/>
+    <inertia ixx="0.000928" iyy="0.00625" izz="0.006285" ixy="4.5e-05" iyz="3e-06" ixz="-0.000722"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.418083 -0.132217 -0.398623" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.418083 -0.132217 -0.398623" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hd_link4_1">
+  <inertial>
+    <origin xyz="-0.02605467768013403 0.0028968395456621804 -0.00492049213285306" rpy="0 0 0"/>
+    <mass value="0.16590781468918114"/>
+    <inertia ixx="0.000204" iyy="0.000349" izz="0.000469" ixy="3.8e-05" iyz="1.2e-05" ixz="-4.4e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.734928 -0.102573 -0.381483" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link4_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.734928 -0.102573 -0.381483" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link4_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hd_link5_1">
+  <inertial>
+    <origin xyz="0.0006595883387678914 0.03846053744230657 -0.0032042955275293217" rpy="0 0 0"/>
+    <mass value="0.06877842327462745"/>
+    <inertia ixx="4.3e-05" iyy="2.9e-05" izz="4.9e-05" ixy="-0.0" iyz="1e-06" ixz="-1e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.827396 -0.060573 -0.36634" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link5_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.827396 -0.060573 -0.36634" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link5_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hd_link6_1">
+  <inertial>
+    <origin xyz="0.006667844950576041 -0.0007677997590191804 -0.03456780245146873" rpy="0 0 0"/>
+    <mass value="0.11153016933793788"/>
+    <inertia ixx="0.000164" iyy="0.000263" izz="0.000119" ixy="-1e-06" iyz="-0.0" ixz="1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.822824 -0.102533 -0.339729" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.822824 -0.102533 -0.339729" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hd_finger2_1">
+  <inertial>
+    <origin xyz="0.7203862006849536 0.09659828189006314 0.26002341296854425" rpy="0 0 0"/>
+    <mass value="0.025342855198124774"/>
+    <inertia ixx="1.7e-05" iyy="1.6e-05" izz="5e-06" ixy="-1e-06" iyz="2e-06" ixz="4e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="1.574668 -0.00212 0.029503" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_finger2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="1.574668 -0.00212 0.029503" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_finger2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hd_finger1_1">
+  <inertial>
+    <origin xyz="0.8454061278845124 0.12710568875536565 0.27256760789282636" rpy="0 0 0"/>
+    <mass value="0.025342855198124774"/>
+    <inertia ixx="1.8e-05" iyy="1.6e-05" izz="4e-06" ixy="0.0" iyz="-2e-06" ixz="1e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="1.618854 0.021073 0.029157" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_finger1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="1.618854 0.021073 0.029157" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_finger1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hd_motor_j3_1">
+  <inertial>
+    <origin xyz="-0.2875958225986405 0.29755094640210267 -0.017659454596450352" rpy="0 0 0"/>
+    <mass value="0.11925838600046076"/>
+    <inertia ixx="0.000465" iyy="0.000525" izz="7.4e-05" ixy="0.0" iyz="-0.0" ixz="0.000165"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.008356 0.196334 -0.326442" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_motor_j3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.008356 0.196334 -0.326442" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_motor_j3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="pivot_droit_1">
+  <inertial>
+    <origin xyz="3.14351229217932e-05 0.11623514902532228 0.01341038188021934" rpy="0 0 0"/>
+    <mass value="1.6615144825592312"/>
+    <inertia ixx="0.006305" iyy="0.220618" izz="0.221436" ixy="1e-06" iyz="-0.000817" ixz="-0.001791"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.006607 -0.332917 0.127932" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.006607 -0.332917 0.127932" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hd_link1_1">
+  <inertial>
+    <origin xyz="0.0001907779404473342 0.014210553405146945 0.03342137346722488" rpy="0 0 0"/>
+    <mass value="0.3391136619658369"/>
+    <inertia ixx="0.001801" iyy="0.001217" izz="0.00078" ixy="1e-05" iyz="-0.000142" ixz="-8e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.228643 -0.101917 0.055782" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.228643 -0.101917 0.055782" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="pivot_gauche_1">
+  <inertial>
+    <origin xyz="-3.208536076750555e-05 -0.1162349156925368 0.01341038188021211" rpy="0 0 0"/>
+    <mass value="1.6615144825592312"/>
+    <inertia ixx="0.006305" iyy="0.220618" izz="0.221436" ixy="1e-06" iyz="0.000817" ixz="0.001791"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.006607 0.129083 0.127932" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.006607 0.129083 0.127932" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="steering1" type="continuous">
+  <origin xyz="0.4167 0.143408 -0.013011" rpy="0 0 0"/>
+  <parent link="pivot_droit_1"/>
+  <child link="steering_1"/>
+  <axis xyz="0.008375 0.0 -0.999965"/>
+</joint>
+
+<joint name="steering2" type="continuous">
+  <origin xyz="0.416423 -0.143408 -0.019989" rpy="0 0 0"/>
+  <parent link="pivot_gauche_1"/>
+  <child link="steering_2"/>
+  <axis xyz="0.008375 -0.0 0.999965"/>
+</joint>
+
+<joint name="steering3" type="continuous">
+  <origin xyz="-0.4167 -0.143408 -0.013011" rpy="0 0 0"/>
+  <parent link="pivot_gauche_1"/>
+  <child link="steering_3"/>
+  <axis xyz="-0.008375 0.0 -0.999965"/>
+</joint>
+
+<joint name="steering4" type="continuous">
+  <origin xyz="-0.416424 0.143408 -0.019989" rpy="0 0 0"/>
+  <parent link="pivot_droit_1"/>
+  <child link="steering_4"/>
+  <axis xyz="-0.008375 -0.0 0.999965"/>
+</joint>
+
+<joint name="driving4" type="continuous">
+  <origin xyz="0.001705 0.016691 -0.269995" rpy="0 0 0"/>
+  <parent link="steering_4"/>
+  <child link="wheel3_1"/>
+  <axis xyz="-0.033329 0.999444 -0.000279"/>
+</joint>
+
+<joint name="driving1" type="continuous">
+  <origin xyz="0.001704 0.016691 -0.269995" rpy="0 0 0"/>
+  <parent link="steering_1"/>
+  <child link="wheel4_1"/>
+  <axis xyz="-0.033329 0.999444 -0.000279"/>
+</joint>
+
+<joint name="driving3" type="continuous">
+  <origin xyz="-0.001705 -0.01669 -0.269995" rpy="0 0 0"/>
+  <parent link="steering_3"/>
+  <child link="wheel2_1"/>
+  <axis xyz="0.033329 -0.999444 -0.000279"/>
+</joint>
+
+<joint name="driving2" type="continuous">
+  <origin xyz="-0.001705 -0.01669 -0.269995" rpy="0 0 0"/>
+  <parent link="steering_2"/>
+  <child link="wheel1_1"/>
+  <axis xyz="0.033329 -0.999444 -0.000279"/>
+</joint>
+
+<joint name="joint2" type="continuous">
+  <origin xyz="0.0 -0.0577 0.102" rpy="0 0 0"/>
+  <parent link="hd_link1_1"/>
+  <child link="hd_link2_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="joint3" type="continuous">
+  <origin xyz="-0.18944 0.088 0.352405" rpy="0 0 0"/>
+  <parent link="hd_link2_1"/>
+  <child link="hd_link3_1"/>
+  <axis xyz="-0.0 1.0 0.0"/>
+</joint>
+
+<joint name="joint4" type="continuous">
+  <origin xyz="-0.316845 -0.029644 -0.01714" rpy="0 0 0"/>
+  <parent link="hd_link3_1"/>
+  <child link="hd_link4_1"/>
+  <axis xyz="0.986854 0.0 0.161617"/>
+</joint>
+
+<joint name="joint5" type="continuous">
+  <origin xyz="-0.092468 -0.042 -0.015143" rpy="0 0 0"/>
+  <parent link="hd_link4_1"/>
+  <child link="hd_link5_1"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="joint6" type="continuous">
+  <origin xyz="0.004572 0.04196 -0.026611" rpy="0 0 0"/>
+  <parent link="hd_link5_1"/>
+  <child link="hd_link6_1"/>
+  <axis xyz="0.169333 -0.0 -0.985559"/>
+</joint>
+
+<joint name="finger1" type="prismatic">
+  <origin xyz="-0.751844 -0.100413 -0.369232" rpy="0 0 0"/>
+  <parent link="hd_link6_1"/>
+  <child link="hd_finger2_1"/>
+  <axis xyz="-0.986688 -0.018348 -0.161587"/>
+  <limit upper="0.0" lower="0.0" effort="100" velocity="100"/>
+</joint>
+
+<joint name="finger2" type="prismatic">
+  <origin xyz="-0.79603 -0.123606 -0.368886" rpy="0 0 0"/>
+  <parent link="hd_link6_1"/>
+  <child link="hd_finger1_1"/>
+  <axis xyz="-0.986688 -0.018348 -0.161587"/>
+  <limit upper="0.0" lower="0.0" effort="100" velocity="100"/>
+</joint>
+
+<joint name="moteurJ3" type="fixed">
+  <origin xyz="0.236999 -0.240551 0.280224" rpy="0 0 0"/>
+  <parent link="hd_link2_1"/>
+  <child link="hd_motor_j3_1"/>
+</joint>
+
+<joint name="pivot_gauche" type="continuous">
+  <origin xyz="0.006607 0.332917 -0.127932" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="pivot_droit_1"/>
+  <axis xyz="0.0 -1.0 -0.0"/>
+</joint>
+
+<joint name="joint1" type="continuous">
+  <origin xyz="-0.228643 0.101917 -0.055782" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="hd_link1_1"/>
+  <axis xyz="0.0 -0.0 1.0"/>
+</joint>
+
+<joint name="pivot_droit" type="continuous">
+  <origin xyz="0.006607 -0.129083 -0.127932" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="pivot_gauche_1"/>
+  <axis xyz="-0.0 -1.0 -0.0"/>
+</joint>
 
 </robot>

@@ -70,97 +70,47 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_finger1_1:
+          gripper_base:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_finger2_1:
+          gripper_left_finger:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link1_1:
+          gripper_right_finger:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link2_1:
+          link1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link3_1:
+          link2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link4_1:
+          link3:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link5_1:
+          link4:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link6_1:
+          link5:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_motor_j3_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          pivot_droit_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          pivot_gauche_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          steering_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          steering_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          steering_3:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          steering_4:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          wheel1_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          wheel2_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          wheel3_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          wheel4_1:
+          motor_j3:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -216,97 +166,47 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_finger1_1:
+          gripper_base:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_finger2_1:
+          gripper_left_finger:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link1_1:
+          gripper_right_finger:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link2_1:
+          link1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link3_1:
+          link2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link4_1:
+          link3:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link5_1:
+          link4:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_link6_1:
+          link5:
             Alpha: 1
             Show Axes: false
             Show Trail: false
             Value: true
-          hd_motor_j3_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          pivot_droit_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          pivot_gauche_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          steering_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          steering_2:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          steering_3:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          steering_4:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          wheel1_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          wheel2_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          wheel3_1:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          wheel4_1:
+          motor_j3:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -334,25 +234,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 3.085257053375244
+      Distance: 2.5088000297546387
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.24662388861179352
-        Y: 0.09510406851768494
-        Z: 0.13327546417713165
+        X: 0.05137650668621063
+        Y: 0.321889191865921
+        Z: 0.15174458920955658
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.16500023007392883
+      Pitch: 0.5799999237060547
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 2.3620030879974365
+      Yaw: 5.525185585021973
     Saved: ~
 Window Geometry:
   Displays:
@@ -366,9 +266,9 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd00000001000000000000021d00000375fc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d00000123000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000166000001910000017d00fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a0056006900650077007301000002fd000000b5000000a400ffffff0000028d0000037500000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002b400000375fc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d00000123000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000166000001910000017d00fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a0056006900650077007301000002fd000000b5000000a400ffffff000001f60000037500000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1200
-  X: 0
-  Y: 68
+  X: 2406
+  Y: 27

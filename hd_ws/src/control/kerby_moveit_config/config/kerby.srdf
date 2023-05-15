@@ -18,11 +18,6 @@
         <joint name="joint5"/>
         <joint name="joint6"/>
     </group>
-    <group name="kerby_gripper_group">
-        <link name="gripper_base"/>
-        <link name="gripper_left_finger"/>
-        <link name="gripper_right_finger"/>
-    </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="home" group="kerby_arm_group">
         <joint name="joint1" value="0"/>
@@ -32,33 +27,96 @@
         <joint name="joint5" value="0"/>
         <joint name="joint6" value="0"/>
     </group_state>
-    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="kerby_end_effector" parent_link="gripper_base" group="kerby_gripper_group"/>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="kerby_virtual_joint" type="fixed" parent_frame="world" child_link="base_link"/>
+    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
+    <passive_joint name="pivot_droit"/>
+    <passive_joint name="steering2"/>
+    <passive_joint name="driving2"/>
+    <passive_joint name="steering3"/>
+    <passive_joint name="driving3"/>
+    <passive_joint name="pivot_gauche"/>
+    <passive_joint name="steering1"/>
+    <passive_joint name="driving1"/>
+    <passive_joint name="steering4"/>
+    <passive_joint name="driving4"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <disable_collisions link1="base_link" link2="link1" reason="Adjacent"/>
-    <disable_collisions link1="gripper_base" link2="gripper_left_finger" reason="Adjacent"/>
-    <disable_collisions link1="gripper_base" link2="gripper_right_finger" reason="Adjacent"/>
-    <disable_collisions link1="gripper_base" link2="link5" reason="Adjacent"/>
-    <disable_collisions link1="gripper_base" link2="motor_j3" reason="Never"/>
-    <disable_collisions link1="gripper_left_finger" link2="gripper_right_finger" reason="Default"/>
-    <disable_collisions link1="gripper_left_finger" link2="link4" reason="Never"/>
-    <disable_collisions link1="gripper_left_finger" link2="link5" reason="Never"/>
-    <disable_collisions link1="gripper_left_finger" link2="motor_j3" reason="Never"/>
-    <disable_collisions link1="gripper_right_finger" link2="link4" reason="Never"/>
-    <disable_collisions link1="gripper_right_finger" link2="link5" reason="Never"/>
-    <disable_collisions link1="gripper_right_finger" link2="motor_j3" reason="Never"/>
-    <disable_collisions link1="link1" link2="link2" reason="Adjacent"/>
-    <disable_collisions link1="link1" link2="link3" reason="Never"/>
-    <disable_collisions link1="link1" link2="motor_j3" reason="Never"/>
-    <disable_collisions link1="link2" link2="link3" reason="Adjacent"/>
-    <disable_collisions link1="link2" link2="link5" reason="Never"/>
-    <disable_collisions link1="link2" link2="motor_j3" reason="Adjacent"/>
-    <disable_collisions link1="link3" link2="link4" reason="Adjacent"/>
-    <disable_collisions link1="link3" link2="link5" reason="Never"/>
-    <disable_collisions link1="link3" link2="motor_j3" reason="Default"/>
-    <disable_collisions link1="link4" link2="link5" reason="Adjacent"/>
-    <disable_collisions link1="link4" link2="motor_j3" reason="Never"/>
-    <disable_collisions link1="link5" link2="motor_j3" reason="Never"/>
+    <disable_collisions link1="base_link" link2="hd_link1_1" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="pivot_droit_1" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="pivot_gauche_1" reason="Adjacent"/>
+    <disable_collisions link1="base_link" link2="steering_1" reason="Never"/>
+    <disable_collisions link1="base_link" link2="steering_2" reason="Never"/>
+    <disable_collisions link1="base_link" link2="steering_3" reason="Never"/>
+    <disable_collisions link1="base_link" link2="steering_4" reason="Never"/>
+    <disable_collisions link1="base_link" link2="wheel1_1" reason="Never"/>
+    <disable_collisions link1="base_link" link2="wheel2_1" reason="Never"/>
+    <disable_collisions link1="hd_finger1_1" link2="hd_finger2_1" reason="Default"/>
+    <disable_collisions link1="hd_finger1_1" link2="hd_link5_1" reason="Never"/>
+    <disable_collisions link1="hd_finger1_1" link2="hd_link6_1" reason="Adjacent"/>
+    <disable_collisions link1="hd_finger2_1" link2="hd_link5_1" reason="Never"/>
+    <disable_collisions link1="hd_finger2_1" link2="hd_link6_1" reason="Adjacent"/>
+    <disable_collisions link1="hd_link1_1" link2="hd_link2_1" reason="Adjacent"/>
+    <disable_collisions link1="hd_link1_1" link2="pivot_droit_1" reason="Never"/>
+    <disable_collisions link1="hd_link1_1" link2="pivot_gauche_1" reason="Never"/>
+    <disable_collisions link1="hd_link1_1" link2="steering_1" reason="Never"/>
+    <disable_collisions link1="hd_link1_1" link2="steering_2" reason="Never"/>
+    <disable_collisions link1="hd_link1_1" link2="steering_3" reason="Never"/>
+    <disable_collisions link1="hd_link1_1" link2="steering_4" reason="Never"/>
+    <disable_collisions link1="hd_link1_1" link2="wheel1_1" reason="Never"/>
+    <disable_collisions link1="hd_link1_1" link2="wheel2_1" reason="Never"/>
+    <disable_collisions link1="hd_link1_1" link2="wheel3_1" reason="Never"/>
+    <disable_collisions link1="hd_link1_1" link2="wheel4_1" reason="Never"/>
+    <disable_collisions link1="hd_link2_1" link2="hd_link3_1" reason="Adjacent"/>
+    <disable_collisions link1="hd_link2_1" link2="hd_motor_j3_1" reason="Adjacent"/>
+    <disable_collisions link1="hd_link3_1" link2="hd_link4_1" reason="Adjacent"/>
+    <disable_collisions link1="hd_link3_1" link2="hd_link5_1" reason="Never"/>
+    <disable_collisions link1="hd_link4_1" link2="hd_link5_1" reason="Adjacent"/>
+    <disable_collisions link1="hd_link5_1" link2="hd_link6_1" reason="Adjacent"/>
+    <disable_collisions link1="hd_link5_1" link2="hd_motor_j3_1" reason="Never"/>
+    <disable_collisions link1="hd_link6_1" link2="hd_motor_j3_1" reason="Never"/>
+    <disable_collisions link1="pivot_droit_1" link2="pivot_gauche_1" reason="Never"/>
+    <disable_collisions link1="pivot_droit_1" link2="steering_1" reason="Adjacent"/>
+    <disable_collisions link1="pivot_droit_1" link2="steering_2" reason="Never"/>
+    <disable_collisions link1="pivot_droit_1" link2="steering_3" reason="Never"/>
+    <disable_collisions link1="pivot_droit_1" link2="steering_4" reason="Adjacent"/>
+    <disable_collisions link1="pivot_droit_1" link2="wheel1_1" reason="Never"/>
+    <disable_collisions link1="pivot_droit_1" link2="wheel2_1" reason="Never"/>
+    <disable_collisions link1="pivot_droit_1" link2="wheel3_1" reason="Never"/>
+    <disable_collisions link1="pivot_droit_1" link2="wheel4_1" reason="Never"/>
+    <disable_collisions link1="pivot_gauche_1" link2="steering_1" reason="Never"/>
+    <disable_collisions link1="pivot_gauche_1" link2="steering_2" reason="Adjacent"/>
+    <disable_collisions link1="pivot_gauche_1" link2="steering_3" reason="Adjacent"/>
+    <disable_collisions link1="pivot_gauche_1" link2="steering_4" reason="Never"/>
+    <disable_collisions link1="pivot_gauche_1" link2="wheel1_1" reason="Never"/>
+    <disable_collisions link1="pivot_gauche_1" link2="wheel2_1" reason="Never"/>
+    <disable_collisions link1="pivot_gauche_1" link2="wheel3_1" reason="Never"/>
+    <disable_collisions link1="pivot_gauche_1" link2="wheel4_1" reason="Never"/>
+    <disable_collisions link1="steering_1" link2="steering_2" reason="Never"/>
+    <disable_collisions link1="steering_1" link2="steering_3" reason="Never"/>
+    <disable_collisions link1="steering_1" link2="steering_4" reason="Never"/>
+    <disable_collisions link1="steering_1" link2="wheel1_1" reason="Never"/>
+    <disable_collisions link1="steering_1" link2="wheel2_1" reason="Never"/>
+    <disable_collisions link1="steering_1" link2="wheel3_1" reason="Never"/>
+    <disable_collisions link1="steering_1" link2="wheel4_1" reason="Adjacent"/>
+    <disable_collisions link1="steering_2" link2="steering_3" reason="Never"/>
+    <disable_collisions link1="steering_2" link2="steering_4" reason="Never"/>
+    <disable_collisions link1="steering_2" link2="wheel1_1" reason="Adjacent"/>
+    <disable_collisions link1="steering_2" link2="wheel2_1" reason="Never"/>
+    <disable_collisions link1="steering_2" link2="wheel3_1" reason="Never"/>
+    <disable_collisions link1="steering_2" link2="wheel4_1" reason="Never"/>
+    <disable_collisions link1="steering_3" link2="steering_4" reason="Never"/>
+    <disable_collisions link1="steering_3" link2="wheel1_1" reason="Never"/>
+    <disable_collisions link1="steering_3" link2="wheel2_1" reason="Adjacent"/>
+    <disable_collisions link1="steering_3" link2="wheel3_1" reason="Never"/>
+    <disable_collisions link1="steering_3" link2="wheel4_1" reason="Never"/>
+    <disable_collisions link1="steering_4" link2="wheel1_1" reason="Never"/>
+    <disable_collisions link1="steering_4" link2="wheel2_1" reason="Never"/>
+    <disable_collisions link1="steering_4" link2="wheel3_1" reason="Adjacent"/>
+    <disable_collisions link1="steering_4" link2="wheel4_1" reason="Never"/>
+    <disable_collisions link1="wheel1_1" link2="wheel2_1" reason="Never"/>
+    <disable_collisions link1="wheel1_1" link2="wheel3_1" reason="Never"/>
+    <disable_collisions link1="wheel1_1" link2="wheel4_1" reason="Never"/>
+    <disable_collisions link1="wheel2_1" link2="wheel3_1" reason="Never"/>
+    <disable_collisions link1="wheel2_1" link2="wheel4_1" reason="Never"/>
+    <disable_collisions link1="wheel3_1" link2="wheel4_1" reason="Never"/>
 </robot>

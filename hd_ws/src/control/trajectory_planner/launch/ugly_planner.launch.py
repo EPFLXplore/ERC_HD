@@ -34,7 +34,7 @@ def generate_launch_description():
     # planning_context
     robot_description_config = xacro.process_file(
         os.path.join(
-            get_package_share_directory("kerby_moveit_config"),
+            get_package_share_directory("kerby_moveit_config_ugly"),
             "config",
             "kerby.urdf.xacro",
         )
@@ -42,20 +42,33 @@ def generate_launch_description():
     robot_description = {"robot_description": robot_description_config.toxml()}
 
     robot_description_semantic_config = load_file(
-        "kerby_moveit_config", "config/kerby.srdf"
+        "kerby_moveit_config_ugly", "config/kerby.srdf"
     )
     robot_description_semantic = {
         "robot_description_semantic": robot_description_semantic_config
     }
 
     kinematics_yaml = load_yaml(
-        "kerby_moveit_config", "config/kinematics.yaml"
+        "kerby_moveit_config_ugly", "config/kinematics.yaml"
     )
     robot_description_kinematics = {"robot_description_kinematics": kinematics_yaml}
 
+    # Planning Functionality
+    ompl_planning_pipeline_config = {
+        "move_group": {
+            "planning_plugin": "ompl_interface/OMPLPlanner",
+            "request_adapters": """default_planner_request_adapters/AddTimeOptimalParameterization default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints""",
+            "start_state_max_bounds_error": 0.1,
+        }
+    }
+    ompl_planning_yaml = load_yaml(
+        "kerby_moveit_config_ugly", "config/ompl_planning.yaml"
+    )
+    ompl_planning_pipeline_config["move_group"].update(ompl_planning_yaml)
+
     # Trajectory Execution Functionality
     moveit_simple_controllers_yaml = load_yaml(
-        "kerby_moveit_config", "config/moveit_controllers.yaml"
+        "kerby_moveit_config_ugly", "config/moveit_controllers.yaml"
     )
     moveit_controllers = {
         "moveit_simple_controller_manager": moveit_simple_controllers_yaml,
