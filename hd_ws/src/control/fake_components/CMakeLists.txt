@@ -17,7 +17,7 @@ find_package(trajectory_planner)
 
 
 # install launch directory
-#install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 
 
 # include Cpp "include" directory

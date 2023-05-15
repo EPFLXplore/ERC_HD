@@ -53,8 +53,8 @@ class FakeMotorControl(Node):
             self.state.effort[:len(msg.effort)] = msg.effort
 
     def vel_cmd_callback(self, msg: Float64MultiArray):
-        data = msg.data + [0.0]*max(0, self.MOTOR_COUNT-len(msg.data))
-        self.state.cmd_velocities = [max_ * vel for max_, vel in zip(self.MAX_VEL, data)]
+        data = list(msg.data) + [0.0]*max(0, self.MOTOR_COUNT-len(msg.data))
+        self.cmd_velocities = [max_ * vel for max_, vel in zip(self.MAX_VEL, data)]
 
     def publish_state(self):
         msg = copy.deepcopy(self.state)

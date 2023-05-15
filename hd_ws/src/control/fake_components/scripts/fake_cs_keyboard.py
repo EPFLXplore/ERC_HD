@@ -21,16 +21,16 @@ class FakeCSKeyboard(Node):
     
     def publish_cmd(self):
         msg = Float64MultiArray()
-        msg.data = [self.vel * c for c in self.cmd]
+        msg.data = [float(self.vel*c) for c in self.cmd]
         self.cmd_pub.publish(msg)
     
     def get_inputs(self):
         self.cmd = [int(keyboard.is_pressed(CONTROL_KEYS[i])) for i in range(MOTOR_COUNT)]
         vel_step = 0.125
         if keyboard.is_pressed("up"):
-            self.vel = min(self.vel + vel_step, 1)
+            self.vel = min(self.vel + vel_step, 1.0)
         if keyboard.is_pressed("down"):
-            self.vel = max(self.vel - vel_step, -1)
+            self.vel = max(self.vel - vel_step, -1.0)
     
     def loop(self):
         rate = self.create_rate(10)
