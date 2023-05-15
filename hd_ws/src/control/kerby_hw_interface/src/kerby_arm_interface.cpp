@@ -73,7 +73,7 @@ hardware_interface::CallbackReturn KerbyArmInterface::on_configure(const rclcpp_
     for (uint i = 0; i < hw_position_states_.size(); i++) {
         hw_position_states_[i] = 0;
         hw_velocity_states_[i] = 0;
-        hw_position_commands_[i] = 0;
+        hw_position_commands_[i] = hw_position_states_[i];
     }
 
     RCLCPP_INFO(rclcpp::get_logger("KerbyArmInterface"), "Successfully configured");
@@ -126,16 +126,14 @@ hardware_interface::CallbackReturn KerbyArmInterface::on_deactivate(const rclcpp
 hardware_interface::return_type KerbyArmInterface::read(const rclcpp::Time & time, const rclcpp::Duration & period) {
     // get states from hardware and store them to internal variables defined in export_state_interfaces
 
-    // for (uint i = 0; i < hw_position_states_.size(); i++) {
-    //     hw_position_states_[i] = hw_position_commands_[i];
-    // }
-
     return hardware_interface::return_type::OK;
 }
 
 
 hardware_interface::return_type KerbyArmInterface::write(const rclcpp::Time & time, const rclcpp::Duration & period) {
     // command the hardware based onthe values stored in internal varialbes defined in export_command_interfaces
+
+    if (scanning_) return hardware_interface::return_type::OK;
 
     sensor_msgs::msg::JointState msg;
     for (uint i = 0; i < hw_position_states_.size(); i++) {
@@ -188,7 +186,11 @@ void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::S
     for (uint i = 0; i < hw_position_states_.size(); i++) {
         hw_position_states_[i] = msg->position[i];
         hw_velocity_states_[i] = msg->velocity[i];
+        if (scanning_) {
+            hw_position_commands_[i] = msg->position[i];
+        }
     }
+    scanning_ = false;
 }
 
 

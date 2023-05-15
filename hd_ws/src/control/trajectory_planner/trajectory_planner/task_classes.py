@@ -1,17 +1,30 @@
 import time
 import math
 import copy
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Quaternion, Point
 import trajectory_planner.quaternion_arithmetic as qa
 import trajectory_planner.pose_tracker as pt
 import trajectory_planner.eef_pose_corrector as epc
+from collections.abc import Callable
 
 
 class Command(object):
     """abstract class representing a command"""
-    def __init__(self, executor):
+    def __init__(self, executor=None):
         self.executor = executor
         self.execute_count = 0
+
+    def createSetter(self, attribute: str):
+        """create a setter for the given attribute"""
+        def setter(val):
+            setattr(self, attribute, val)
+
+        if not hasattr(self, "set" + attribute.capitalize()):
+            setattr(self, "set" + attribute.capitalize(), setter)
+
+    def createSetters(self, *attributes):
+        for attr in attributes:
+            self.createSetter(attr)
 
     def execute(self):
         """attempts to execute command
@@ -24,11 +37,22 @@ class Command(object):
 class PoseCommand(Command):
     """moves the arm to a requested pose (position + orientation of the end effector)"""
 
-    def __init__(self, executor, pose=None, cartesian=False):
+    def __init__(self, executor=None, pose=None, cartesian=False):
         super().__init__(executor)
         self.pose = pose    # Pose
         self.cartesian = cartesian
+        self.createSetters("pose", "cartesian")
         self.finished = False
+
+    def setPose(self, position=None, orientation=None, revert=True):
+        if self.pose is None: 
+            self.pose = Pose()
+        if position is not None: 
+            self.pose.position = position
+        if orientation is not None: 
+            self.pose.orientation = orientation
+        if revert:
+            self.pose = epc.revert(self.pose)
 
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
@@ -40,11 +64,17 @@ class PoseCommand(Command):
 class StraightMoveCommand(Command):
     """moves the end effector in a straight line by a certain distance in a certain direction without affecting its orientation"""
 
-    def __init__(self, executor, axis=(1,0,0), distance=0):
+    def __init__(self, executor=None, axis=(1,0,0), distance=0):
         super().__init__(executor)
         self.axis = axis
         self.distance = distance
-        
+        self.createSetters("axis", "distance")
+    
+    def setAxisFromOrientation(self, orientation: Quaternion, reverse=False):
+        self.axis = qa.point_image([0.0, 0.0, 1.0], orientation)
+        if reverse:
+            self.axis = qa.mul(-1, self.axis)
+
     def constructPose(self):
         self.pose = Pose()
         self.pose.orientation = copy.deepcopy(pt.END_EFFECTOR_POSE.orientation)
@@ -54,6 +84,7 @@ class StraightMoveCommand(Command):
 
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
+        self.constructPose()
         super().execute()
         self.executor.sendPoseGoal(self.pose, True)
         self.finished = self.executor.waitForFeedback()
@@ -62,10 +93,11 @@ class StraightMoveCommand(Command):
 class GripperRotationCommand(Command):
     """rotates the gripper around the given axis by the given angle without affecting its position"""
 
-    def __init__(self, executor, axis=(0,0,1), angle=0):
+    def __init__(self, executor=None, axis=(0,0,1), angle=0):
         super().__init__(executor)
         self.axis = axis
         self.angle = angle
+        self.createSetters("axis", "angle")
     
     def constructPose(self):
         self.pose = Pose()
@@ -92,12 +124,13 @@ class GripperManipulationCommand(Command):
 
 
 class AddObjectCommand(Command):
-    def __init__(self, executor, pose=None, shape=None, type="box", name="gustavo"):
+    def __init__(self, executor=None, pose=None, shape=None, type="box", name="gustavo"):
         super().__init__(executor)
         self.pose = pose
         self.shape = shape
         self.type = type
         self.name = name
+        self.createSetters("pose", "shape", "type", "name")
     
     def execute(self):
         super().execute()
@@ -106,7 +139,7 @@ class AddObjectCommand(Command):
 
 
 class RequestDetectionCommand(Command):
-    def __init__(self, executor):
+    def __init__(self, executor=None):
         super().__init__(executor)
         self.max_wait_time = 10
     
@@ -129,12 +162,28 @@ class Task(object):
         self.executor = executor
         self.cmd_counter = 0
         self.command_chain = []
+        self.pre_command_operation = []
+        self.post_command_operation = []
+        self.command_description = []
         self.constructCommandChain()
         self.aborted = False
         self.pause_time = 0
 
     def constructCommandChain(self):
         """constructs the chain of the commands that constitute the task"""
+
+    def addCommand(self, command: Command, pre_operation: Callable = None, post_operation: Callable = None, description: str = ""):
+        """add a new command to the command list"""
+        if pre_operation is None:
+            pre_operation = lambda cmd: 0
+        if post_operation is None:
+            post_operation = lambda cmd: 0
+
+        command.executor = self.executor
+        self.command_chain.append(command)
+        self.pre_command_operation.append(pre_operation)
+        self.post_command_operation.append(post_operation)
+        self.command_description.append(description)
 
     def finished(self):
         """indicates if task has finished"""
@@ -144,6 +193,17 @@ class Task(object):
 
     def setupNextCommand(self):
         """gives the required information to the next command"""
+        # deprecated
+    
+    def nextPreOperation(self):
+        """execute the pre operation of the current command"""
+        if self.pre_command_operation:
+            self.pre_command_operation[self.cmd_counter](self.currentCommand())
+    
+    def nextPostOperation(self):
+        """execute the post operation of the current command"""
+        if self.post_command_operation:
+            self.post_command_operation[self.cmd_counter](self.currentCommand())
 
     def currentCommandValidated(self):
         """indicates after the request of execution of the command if the outcome is satisfactory and the next command can begin"""
@@ -162,12 +222,15 @@ class Task(object):
     def executeNextCommand(self):
         """attempts to execute next command on the command chain
         returns a bool indicating if it succeeded"""
-        self.setupNextCommand()
+        self.setupNextCommand()     # deprecated
+        self.nextPreOperation()
         if not self.oneCommandLoop():
             return False
         while not self.currentCommandValidated():
             if not self.oneCommandLoop():
                 return False
+        
+        self.nextPostOperation()
         self.cmd_counter += 1
         return True
         
@@ -180,131 +243,6 @@ class Task(object):
     def abort(self):
         """stops all movement"""
         # TODO
-
-
-class PressButton(Task):
-    def __init__(self, executor, btn_id, pose=None, scan_pose=True):
-        super().__init__(executor)
-        self.btn_id = btn_id
-        self.btn_pose = pose
-        self.artag_pose = None
-        self.scan_pose = scan_pose
-        self.press_distance = 0.2
-        self.pause_time = 2
-    
-    def scan_for_btn_pose(self):
-        # RequestDetectionCommand(self.executor).execute()
-        while pt.DETECTED_OBJECTS_LOCKED:
-            pass
-        for obj in pt.DETECTED_OBJECTS_POSE:
-            if 1 or obj.id == self.btn_id:
-                relative_pose = obj.object_pose
-                self.btn_pose = qa.compose_poses(pt.END_EFFECTOR_POSE, relative_pose)
-                self.btn_pose.orientation = qa.turn_around(self.btn_pose.orientation)
-                self.artage_pose = self.btn_pose
-
-    def currentCommand(self):
-        return self.command_chain[self.cmd_counter]
-
-    def getPressPosition(self, position=None):
-        if position is None:
-            position = self.btn_pose.position
-        p = qa.point_image([0.0, 0.0, 1.0], self.btn_pose.orientation)
-        d = 0.001
-        if self.cmd_counter != 1:
-            d += self.press_distance
-        p = qa.mul(d, p)
-        #p = qa.mul(-1, p)   # TODO: direction is reversed for some reason
-        res = qa.quat_to_point(qa.add(position, p))
-        return res
-    
-    def getPressOrientation(self):
-        return qa.turn_around(self.btn_pose.orientation)
-
-    def setupNextCommand(self):
-        #self.executor.logwarn("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
-        cmd = self.currentCommand()
-        if self.cmd_counter == 1:
-            if 1 or self.scan_pose:
-                self.scan_for_btn_pose()
-            #self.artag_pose = copy.deepcopy(self.btn_pose)
-            #self.artag_pose.y += 0.15
-            cmd.pose = self.artag_pose    # TODO: don't give self.artag_pose if it is None and abort the add object command
-            cmd.shape = [0.2, 0.1, 0.0001]
-            cmd.name = "AR_tag"
-        elif self.cmd_counter == 2:
-            cmd.pose = Pose()
-            cmd.pose.position = self.getPressPosition(self.artag_pose.position)
-            cmd.pose.orientation = self.getPressOrientation()
-        elif self.cmd_counter == 4:
-            if self.scan_pose:
-                self.scan_for_btn_pose()
-            cmd.pose = self.btn_pose
-            cmd.shape = [0.2, 0.1, 0.0001]
-            cmd.name = "btn"
-        elif self.cmd_counter == 5:
-            cmd.pose = Pose()
-            cmd.pose.position = self.getPressPosition(self.btn_pose.position)
-            cmd.pose.orientation = self.getPressOrientation()
-        elif self.cmd_counter == 6:
-            cmd.distance = self.press_distance
-            cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
-            cmd.axis = qa.mul(-1, cmd.axis)
-            cmd.constructPose()
-        elif self.cmd_counter == 7:
-            cmd.distance = self.press_distance
-            cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
-            #cmd.axis = qa.mul(-1, cmd.axis)
-            cmd.constructPose()
-        #if self.cmd_counter > 2:
-        #    cmd.cartesian = True
-        """elif self.cmd_counter == 1:
-            cmd.pose = Pose()
-            cmd.pose.orientation = self.getPressOrientation()
-            cmd.pose.position = self.getPressPosition()
-            cmd.cartesian = True
-        elif self.cmd_counter == 2:
-            cmd.pose = Pose()
-            cmd.pose.position = self.getPressPosition()
-            cmd.pose.orientation = self.getPressOrientation()
-            cmd.cartesian = True"""
-
-        """if self.cmd_counter == 0:
-            cmd.pose = Pose()
-            cmd.pose.position = self.getPressPosition()
-            cmd.pose.orientation = self.getPressOrientation()
-        elif self.cmd_counter == 1:
-            cmd.distance = self.press_distance
-            cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
-            cmd.axis = qa.mul(-1, cmd.axis)
-            cmd.constructPose()
-        elif self.cmd_counter == 2:
-            cmd.distance = self.press_distance
-            cmd.axis = qa.point_image([0, 0, 1], self.btn_pose.orientation)
-            #cmd.axis = qa.mul(-1, cmd.axis)
-            cmd.constructPose()"""
-
-    def constructCommandChain(self):
-        self.command_chain = [
-            RequestDetectionCommand(self.executor),
-            AddObjectCommand(self.executor),
-            PoseCommand(self.executor),   # go at a predetermined position in front of the button with gripper facing towards it
-            RequestDetectionCommand(self.executor),
-            AddObjectCommand(self.executor),
-            PoseCommand(self.executor),
-            StraightMoveCommand(self.executor),   # go forward enough to press the button
-            StraightMoveCommand(self.executor)   # go backwards
-        ]
-        self.command_description = [
-            "request detection",
-            "add AR tag to world",
-            "go in front of AR tag",
-            "request detection",
-            "add button to world",
-            "go in front of button",
-            "move straight to button",
-            "move staight away from button"
-        ]
 
 
 class PressButton2(Task):
@@ -341,53 +279,39 @@ class PressButton2(Task):
         #p = qa.mul(-1, p)   # TODO: direction is reversed for some reason
         res = qa.quat_to_point(qa.add(position, p))
         return res
-    
+
     def getPressOrientation(self):
         return qa.turn_around(self.btn_pose.orientation)
 
-    def setupNextCommand(self):
-        self.executor.loginfo("STARTING CMD " + str(self.cmd_counter) + " : " + self.command_description[self.cmd_counter])
-        cmd = self.currentCommand()
-        if self.cmd_counter == 0:
-             if self.scan_pose:
-                self.scan_for_btn_pose()
-        elif self.cmd_counter == 1:
-            if self.scan_pose:
-                self.scan_for_btn_pose()
-            cmd.pose = self.btn_pose
-            cmd.shape = [0.2, 0.1, 0.0001]
-            cmd.name = "btn"
-        elif self.cmd_counter == 2:
-            cmd.pose = Pose()
-            cmd.pose.position = self.getPressPosition(self.btn_pose.position)
-            cmd.pose.orientation = self.getPressOrientation()
-            cmd.pose = epc.revert(cmd.pose)
-        elif self.cmd_counter == 3:
-            cmd.distance = self.press_distance
-            cmd.axis = qa.point_image([0.0, 0.0, 1.0], self.btn_pose.orientation)
-            cmd.axis = qa.mul(-1, cmd.axis)
-            cmd.constructPose()
-        elif self.cmd_counter == 4:
-            cmd.distance = self.press_distance
-            cmd.axis = qa.point_image([0.0, 0.0, 1.0], self.btn_pose.orientation)
-            #cmd.axis = qa.mul(-1, cmd.axis)
-            cmd.constructPose()
-
     def constructCommandChain(self):
-        self.command_chain = [
-            RequestDetectionCommand(self.executor),
-            AddObjectCommand(self.executor),
-            PoseCommand(self.executor),   # go at a predetermined position in front of the button with gripper facing towards it
-            StraightMoveCommand(self.executor),   # go forward enough to press the button
-            StraightMoveCommand(self.executor)   # go backwards
-        ]
-        self.command_description = [
-            "request detection",
-            "add button to world",
-            "go in front of button",
-            "move straight to button",
-            "move staight away from button"
-        ]
+        self.addCommand(
+            RequestDetectionCommand(),
+            post_operation = lambda cmd: self.scan_for_btn_pose(),
+            description = "request detection"
+        )
+        self.addCommand(
+            AddObjectCommand(),
+            pre_operation = lambda cmd: (cmd.setPose(self.btn_pose),
+                                         cmd.setShape([0.2, 0.1, 0.0001]),
+                                         cmd.setName("btn")),
+            description="add button to world"
+        )
+        self.addCommand(
+            PoseCommand(self.executor),
+            pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(self.btn_pose.position),
+                                                    orientation=self.getPressOrientation()),
+            description = "go in front of button"
+        )
+        self.addCommand(
+            StraightMoveCommand(),
+            pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
+                                         cmd.setAxisFromOrientation(self.btn_pose.orientation, reverse=True))
+        )
+        self.addCommand(
+            StraightMoveCommand(),
+            pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
+                                         cmd.setAxisFromOrientation(self.btn_pose.orientation))
+        )
 
 
 class FlipSwitch(Task):
