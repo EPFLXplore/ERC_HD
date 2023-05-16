@@ -36,6 +36,7 @@ class FakeMotorControl(Node):
         self.create_subscription(Float64MultiArray, "/CS/vel_joint_cmd", self.vel_cmd_callback, 10)
 
         self.control_mode = self.POSITION
+        self.last_vel_cmd = time.time()
 
         self.cmd_velocities = [0.0]*self.MOTOR_COUNT
         self.timer = Timer()
@@ -46,13 +47,17 @@ class FakeMotorControl(Node):
         self.state.effort = [0.0]*self.MOTOR_COUNT
 
     def moveit_cmd_callback(self, msg: JointState):
-        if self.control_mode == self.POSITION:
-            self.state.position[:len(msg.position)] = msg.position
-            self.state.velocity[:len(msg.velocity)] = msg.velocity
-            self.state.effort[:len(msg.effort)] = msg.effort
+        if self.control_mode != self.POSITION:
+            return
+        self.state.position[:len(msg.position)] = msg.position
+        self.state.velocity[:len(msg.velocity)] = msg.velocity
+        self.state.effort[:len(msg.effort)] = msg.effort
 
     def vel_cmd_callback(self, msg: Float64MultiArray):
+        self.last_vel_cmd = time.time()
         self.control_mode = self.VELOCITY
+        self.timer.tick()
+
         data = list(msg.data) + [0.0]*max(0, self.MOTOR_COUNT-len(msg.data))
         self.cmd_velocities = [max_ * vel for max_, vel in zip(self.MAX_VEL, data)]
 
@@ -60,7 +65,13 @@ class FakeMotorControl(Node):
         msg = copy.deepcopy(self.state)
         self.state_pub.publish(msg)
 
+    def vel_cmd_deprecated(self):
+        return time.time()-self.last_vel_cmd > 1
+    
     def update(self):
+        if self.vel_cmd_deprecated():
+            self.control_mode = self.POSITION
+
         if self.control_mode == self.VELOCITY:
             self.update_from_velocities()
 
