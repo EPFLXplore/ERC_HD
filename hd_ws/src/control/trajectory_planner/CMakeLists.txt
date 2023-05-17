@@ -54,37 +54,6 @@ install(TARGETS planner
   DESTINATION lib/${PROJECT_NAME})
 
 
-add_executable(test_planner src/test.cpp)
-# target_include_directories(test_planner PUBLIC
-#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#   $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(test_planner
-  rclcpp
-  std_msgs
-  geometry_msgs
-  kerby_interfaces
-)
-
-install(TARGETS test_planner
-  DESTINATION lib/${PROJECT_NAME})
-  
-
-add_executable(test_demo src/test_demo.cpp)
-target_include_directories(test_demo PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(
-  test_demo
-  "moveit_ros_planning_interface"
-  "rclcpp"
-  "moveit_msgs"
-  "moveit_visual_tools"
-)
-
-install(TARGETS test_demo
-  DESTINATION lib/${PROJECT_NAME})
-
-
 
 # Install Python modules
 ament_python_install_package(${PROJECT_NAME})
@@ -94,22 +63,6 @@ install(PROGRAMS
   scripts/task_executor.py
   DESTINATION lib/${PROJECT_NAME}
 )
-
-install(PROGRAMS
-  scripts/vision_test.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
-  scripts/fake_vision.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
-  scripts/fake_cs_task.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
 
 
 

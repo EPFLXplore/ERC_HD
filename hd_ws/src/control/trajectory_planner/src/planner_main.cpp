@@ -17,7 +17,7 @@ int main(int argc, char * argv[])
 
     planner->config();
 
-    planner->spin2();
+    planner->loop();
 
     rclcpp::shutdown();
     return 0;

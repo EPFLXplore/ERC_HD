@@ -4,7 +4,7 @@
   <name>kerby_description</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="matthias.schuller@epfl.ch">matthias</maintainer>
+  <maintainer email="matthias.schuller@ulb.ac.be">matthias</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

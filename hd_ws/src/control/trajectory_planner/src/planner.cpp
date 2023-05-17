@@ -106,19 +106,15 @@ void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msg
     m_planning_scene_interface->addCollisionObjects(collision_objects);
 }
 
-void Planner::loopBody() {
-    publishEEFPose();
-}
-
-void Planner::spin1() {
+void Planner::spin() {
     rclcpp::spin(shared_from_this());
 }
 
-void Planner::spin2() {
+void Planner::loop() {
+    rclcpp::Rate rate(25);
     while (rclcpp::ok()) {
-        loopBody();
-        // TODO: add some sleep here
-        //rclcpp::spin_some(shared_from_this());
+        publishEEFPose();
+        rate.sleep();
     }
 }
 

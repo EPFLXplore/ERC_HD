@@ -149,5 +149,4 @@ def main():
 
 
 if __name__ == "__main__":
-    """init ros and subscribe to task commands from manager"""
     main()

@@ -53,11 +53,9 @@ public:
 
     void addBoxToWorld(const std::vector<double> &dim, const geometry_msgs::msg::Pose &pose, std::string &name);
 
-    void loopBody();
+    void spin();
 
-    void spin1();
-
-    void spin2();
+    void loop();
 
 private:
     void poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg);

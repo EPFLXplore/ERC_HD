@@ -15,6 +15,8 @@
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
 #include "hardware_interface/types/hardware_interface_status_values.hpp"
 #include "visibility_control.h"
+#include "sensor_msgs/msg/joint_state.hpp"
+#include "rclcpp/rclcpp.hpp"
 
 
 
@@ -60,6 +62,17 @@ private:
     std::vector<double> hw_velocity_commands_;
     std::vector<double> hw_position_states_;
     std::vector<double> hw_velocity_states_;
+
+    // communication with the control software of the motors (ugly, maybe change that)
+    void init_communication();
+    void arm_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
+    void communication_spin();
+
+    bool scanning_ = true;
+    rclcpp::Node::SharedPtr communication_node_;
+    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr hd_cmd_pub_;
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr hd_state_sub_;
+    
 };
 
 }   // kerby_hw_interface

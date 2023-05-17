@@ -74,7 +74,7 @@ def reverse_quat(q):
     return (axis, angle)
 
 
-def turn_around(q, axis=(1.0,0.0,0.0), angle=pi):
+def turn_around(q, axis=(1.0, 0.0, 0.0), angle=pi):
     axis = point_image(axis, q)
     r = quat(axis, angle)
     return mul(r, q)
@@ -203,6 +203,17 @@ def point_image(point, q):
     q_ = inv(q)
     p = mul(mul(q, p), q_)
     return quat_to_point(p)
+
+
+def reverse_pose(pose):
+    """return rev_pose such that compose_poses(pose, rev_pose) is the trivial pose"""
+    res = Pose()
+    res.orientation = inv(pose.orientation)
+    res.position = point_image(pose.position, res.orientation)
+    res.position.x = -res.position.x
+    res.position.y = -res.position.y
+    res.position.z = -res.position.z
+    return res
 
 
 def compose_poses(pose1, pose2):

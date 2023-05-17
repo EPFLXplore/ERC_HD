@@ -2,7 +2,6 @@
 #include "pluginlib/class_list_macros.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/rclcpp.hpp"
-#include "kerby_hw_interface/state_keeper.hpp"
 
 
 extern sensor_msgs::msg::JointState STATES;
@@ -63,6 +62,9 @@ hardware_interface::return_type KerbyArmInterface::configure(const hardware_inte
         }
     }
     
+    // setup communication with real motor control code
+    init_communication();
+
     status_ = hardware_interface::status::CONFIGURED;
     return hardware_interface::return_type::OK;
 }
@@ -75,11 +77,6 @@ hardware_interface::return_type KerbyArmInterface::start() {
     for (uint i = 0; i < hw_position_states_.size(); i++) {
         hw_position_states_[i] = 0;
         hw_velocity_states_[i] = 0;
-        hw_position_commands_[i] = 0;
-    }
-
-    // command and state should be equal when starting
-    for (uint i = 0; i < hw_position_states_.size(); i++) {
         hw_position_commands_[i] = hw_position_states_[i];
     }
 
@@ -118,23 +115,21 @@ std::vector<hardware_interface::CommandInterface> KerbyArmInterface::export_comm
 
 hardware_interface::return_type KerbyArmInterface::read() {
     // get states from hardware and store them to internal variables defined in export_state_interfaces
-    //std::cout << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB" << std::endl;
-    for (uint i = 0; i < hw_position_states_.size(); i++) {
-        if (StateKeeper::ready())
-            hw_position_states_[i] = StateKeeper::m_states.position[i];
-        else
-            hw_position_states_[i] = 0;
-        //hw_position_states_[i] = hw_position_commands_[i];
-    }
-
+    // no need to do anything since the communication node callback will populate the state
     return hardware_interface::return_type::OK;
 }
 
 
 hardware_interface::return_type KerbyArmInterface::write() {
     // command the hardware based onthe values stored in internal varialbes defined in export_command_interfaces
-    StateKeeper::write(hw_position_commands_);
-    //std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << std::endl;
+    
+    if (scanning_) return hardware_interface::return_type::OK;
+
+    sensor_msgs::msg::JointState msg;
+    for (uint i = 0; i < hw_position_states_.size(); i++) {
+        msg.position.push_back(hw_position_commands_[i]);
+    }
+    hd_cmd_pub_->publish(msg);
 
     return hardware_interface::return_type::OK;
 }
@@ -156,6 +151,38 @@ hardware_interface::CallbackReturn KerbyArmInterface::on_error(const rclcpp_life
     return CallbackReturn::SUCCESS;
 }
 */
+
+void KerbyArmInterface::communication_spin() {
+    rclcpp::spin(communication_node_);
+}
+
+void KerbyArmInterface::init_communication() {
+    communication_node_ = std::make_shared<rclcpp::Node>("hardware_interface_communication_node");
+
+    hd_cmd_pub_ = communication_node_->create_publisher<sensor_msgs::msg::JointState>("/HD/kinematics/joint_cmd", 10);
+    hd_state_sub_ = communication_node_->create_subscription<sensor_msgs::msg::JointState>("/HD/arm_control/joint_telemetry", 10,
+        //[this](const sensor_msgs::msg::JointState::SharedPtr msg){ arm_state_callback(msg); });
+        std::bind(&KerbyArmInterface::arm_state_callback, this, std::placeholders::_1));
+
+    std::thread first(&KerbyArmInterface::communication_spin, this);
+    first.detach();
+
+    // rclcpp::executors::SingleThreadedExecutor executor;
+    // executor.add_node(communication_node_aaa);
+    // std::thread([&executor]() { executor.spin(); }).detach();
+}
+
+void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
+    for (uint i = 0; i < hw_position_states_.size(); i++) {
+        hw_position_states_[i] = msg->position[i];
+        hw_velocity_states_[i] = msg->velocity[i];
+        if (scanning_) {
+            hw_position_commands_[i] = msg->position[i];
+        }
+    }
+    scanning_ = false;
+}
+
 
 }   // kerby_hw_interface
 
