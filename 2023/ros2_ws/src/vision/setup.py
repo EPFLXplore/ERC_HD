@@ -24,7 +24,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'talker = vision.vision_publisher:main',
+            'talker = vision.test_ros:main',
             'listener = vision.fake_matthias:main'
         ],
     },

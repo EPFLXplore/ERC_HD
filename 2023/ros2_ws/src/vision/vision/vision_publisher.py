@@ -72,7 +72,7 @@ def main(args=None):
 
 
     vision_publisher = VisionPublisher()
-
+    vision_publisher.get_logger().info('BBBBBBBBBBBBBB')
     rclpy.spin(vision_publisher)
 
 if __name__ == '__main__':

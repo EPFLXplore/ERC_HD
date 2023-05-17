@@ -15,6 +15,8 @@ from std_msgs.msg import String
 import geometry_msgs
 from geometry_msgs.msg import Pose
 
+import threading
+
 def main(args=None):
     rclpy.init(args=args)
 
@@ -55,14 +57,19 @@ def main(args=None):
     ############
     publisher = VisionPublisher()
 
-    rclpy.spin(publisher)
-
+    threading.Thread(target=rclpy.spin, args=(publisher,), daemon=True).start()
 
     # Skip first 5 frames
     for _ in range(5):
         pipe.wait_for_frames()
 
+    rate = publisher.create_rate(10)  # 10hz
+    
     while True:
+        msg = publisher.create_panelobject_message(0, 1., 2., 3., 0., 0., 0., 0.)
+        publisher.publish_inform(msg)
+
+
         frameset = pipe.wait_for_frames()
         color_frame = frameset.get_color_frame()
         depth_frame = frameset.get_depth_frame()
@@ -111,11 +118,11 @@ def main(args=None):
                 angles = r2.as_euler('xyz', degrees=True).flatten()
                 quat = r2.as_quat()
 
-                msg = publisher.create_panelobject_message(0, 
-                                                     point_cam[0], point_cam[1], point_cam[2],
-                                                     quat[0], quat[1], quat[2], quat[3])
+                # msg = publisher.create_panelobject_message(0, 
+                #                                      point_cam[0], point_cam[1], point_cam[2],
+                #                                      quat[0], quat[1], quat[2], quat[3])
                 
-                publisher.publish_inform(msg)
+                # publisher.publish_inform(msg)
 
 
 
