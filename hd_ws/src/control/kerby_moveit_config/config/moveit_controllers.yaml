@@ -18,3 +18,4 @@ moveit_simple_controller_manager:
       - joint4
       - joint5
       - joint6
+      - finger1

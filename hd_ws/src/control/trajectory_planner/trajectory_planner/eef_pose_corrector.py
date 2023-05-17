@@ -3,7 +3,7 @@ from geometry_msgs.msg import Pose
 import trajectory_planner.pose_tracker as pt
 
 
-def init_correction():
+def link6_transform():
     eef_correction = Pose()
     eef_correction.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=2.975)
     d = 0.1598
@@ -11,7 +11,22 @@ def init_correction():
     return eef_correction
 
 
-EEFCORRECTION = init_correction()
+def finger1_transform():    # actually joint name is finger1 but the link is hd_finger2_1, will be corrected
+    eef_correction = Pose()
+    eef_correction.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=2.975)
+    vect = [-0.8, 0.1005, -0.0785]
+    eef_correction.position = qa.point_image(vect, eef_correction.orientation)
+    return eef_correction
+
+
+def init_correction(eef):
+    transforms = {"link6": link6_transform, "finger1": finger1_transform}
+    if eef not in transforms:
+        raise ValueError(f"No end effector transform for {eef}")
+    return transforms[eef]()
+
+
+EEFCORRECTION = init_correction("finger1")
 
 
 def correct_eef_pose(pose=None):

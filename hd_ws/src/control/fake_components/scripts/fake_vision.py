@@ -3,7 +3,7 @@
 import rclpy
 from rclpy.node import Node
 import threading
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Quaternion
 import trajectory_planner.quaternion_arithmetic as qa
 
 
@@ -22,10 +22,11 @@ def main():
     try:
         while rclpy.ok():
             pose = Pose()
-            pose.orientation = qa.quat((1.0, 0.0, 0.0), 4)#math.pi)
+            pose.orientation = qa.quat((1.0, 0.0, 0.0), 4.2)#math.pi)
+            #pose.orientation = Quaternion()
             pose.position.x = 0.1
-            pose.position.y = -0.3
-            pose.position.z = 0.17
+            pose.position.y = -0.5
+            pose.position.z = -0.1
             #pose.position.x = pose.position.y = 0.0; pose.position.z = 0.00
             detected_element_pub.publish(pose)
 

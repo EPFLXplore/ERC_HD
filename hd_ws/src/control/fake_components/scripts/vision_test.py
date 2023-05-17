@@ -25,11 +25,6 @@ def artag_callback(msg):
 
 
 def end_effector_callback(msg):
-    # pose = Pose()
-    # pose.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=2.975)
-    # d = 0.1598
-    # pose.position = qa.point_image([0.0, 0.0, d], pose.orientation)
-    # combined = qa.compose_poses(msg, pose)
     combined = epc.correct_eef_pose(msg)
     end_effector_pose.position = combined.position
     end_effector_pose.orientation = combined.orientation

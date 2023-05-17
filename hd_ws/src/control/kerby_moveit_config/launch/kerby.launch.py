@@ -102,7 +102,7 @@ def generate_launch_description():
 
     # Visualization (parameters needed for MoveIt display plugin)
     rviz_base = os.path.join(get_package_share_directory('kerby_moveit_config'), 'config')
-    rviz_full_config = os.path.join(rviz_base, 'kerby_arm.rviz')
+    rviz_full_config = os.path.join(rviz_base, 'moveit.rviz')
     rviz = Node(
         name='rviz',
         package='rviz2',

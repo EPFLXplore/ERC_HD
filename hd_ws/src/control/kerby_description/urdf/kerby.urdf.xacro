@@ -529,6 +529,7 @@
   <child link="hd_finger1_1"/>
   <axis xyz="-0.986688 -0.018348 -0.161587"/>
   <limit upper="0.0" lower="0.0" effort="100" velocity="100"/>
+  <mimic joint="finger1" multiplier="-1" offset="0"/>
 </joint>
 
 <joint name="moteurJ3" type="fixed">

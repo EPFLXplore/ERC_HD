@@ -52,9 +52,9 @@ kerby_arm_moveit_controller:
       - joint4
       - joint5
       - joint6
+      - finger1
     command_interfaces:
       - position
-      #- velocity
     state_interfaces:
       - position
       - velocity

@@ -196,6 +196,25 @@ def mul(q1, q2):
     return ans
 
 
+def scalar_mul(t, v):
+    if isinstance(v, (list, tuple)):
+        return [t*x for x in v]
+    if isinstance(v, Point):
+        res = Point()
+        res.x = t*v.x
+        res.y = t*v.y
+        res.z = t*v.z
+        return res
+    if isinstance(v, Quaternion):
+        res = Quaternion()
+        res.x = t*v.x
+        res.y = t*v.y
+        res.z = t*v.z
+        res.w = t*v.w
+        return res
+    raise
+
+
 def point_image(point, q):
     """calculate the image of the point under the rotation described by the quaternion q"""
     point = make_point(point)

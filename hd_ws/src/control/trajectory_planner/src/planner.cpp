@@ -20,6 +20,7 @@ void Planner::config() {
     m_planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
     m_joint_model_group = m_move_group->getCurrentState()->getJointModelGroup(m_planning_group);
 
+    //m_move_group->setEndEffectorLink("hd_link6_1");
     setScalingFactors(1, 1);
 }
 

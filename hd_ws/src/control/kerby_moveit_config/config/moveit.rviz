@@ -3,9 +3,10 @@ Panels:
     Help Height: 0
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /MotionPlanning1/Planning Request1
       Splitter Ratio: 0.5
-    Tree Height: 230
+    Tree Height: 478
   - Class: rviz_common/Help
     Name: Help
   - Class: rviz_common/Views
@@ -34,7 +35,7 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-    - Acceleration_Scaling_Factor: 0.1
+    - Acceleration_Scaling_Factor: 1
       Class: moveit_rviz_plugin/MotionPlanning
       Enabled: true
       Move Group Namespace: ""
@@ -46,6 +47,8 @@ Visualization Manager:
       MoveIt_Planning_Time: 5
       MoveIt_Use_Cartesian_Path: false
       MoveIt_Use_Constraint_Aware_IK: false
+      MoveIt_Warehouse_Host: 127.0.0.1
+      MoveIt_Warehouse_Port: 33829
       MoveIt_Workspace:
         Center:
           X: 0
@@ -174,7 +177,6 @@ Visualization Manager:
         State Display Time: 0.05 s
         Trail Step Size: 1
         Trajectory Topic: display_planned_path
-        Use Sim Time: false
       Planning Metrics:
         Payload: 1
         Show Joint Torques: false
@@ -206,7 +208,7 @@ Visualization Manager:
       Scene Robot:
         Attached Body Color: 150; 50; 150
         Links:
-          All Links Enabled: true
+          All Links Enabled: false
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
@@ -215,7 +217,7 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
+            Value: false
           hd_finger1_1:
             Alpha: 1
             Show Axes: false
@@ -225,42 +227,42 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
+            Value: false
           hd_link1_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
+            Value: false
           hd_link2_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
+            Value: false
           hd_link3_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
+            Value: false
           hd_link4_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
+            Value: false
           hd_link5_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
+            Value: false
           hd_link6_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
+            Value: false
           hd_motor_j3_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: true
+            Value: false
           pivot_droit_1:
             Alpha: 1
             Show Axes: false
@@ -315,7 +317,130 @@ Visualization Manager:
         Show Robot Collision: false
         Show Robot Visual: true
       Value: true
-      Velocity_Scaling_Factor: 0.1
+      Velocity_Scaling_Factor: 1
+    - Alpha: 1
+      Class: rviz_default_plugins/RobotModel
+      Collision Enabled: false
+      Description File: ""
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_description
+      Enabled: true
+      Links:
+        All Links Enabled: false
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_finger1_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        hd_finger2_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link1_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link2_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link3_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link4_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link5_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link6_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_motor_j3_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pivot_droit_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        pivot_gauche_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        steering_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        steering_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        steering_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        steering_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        wheel1_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        wheel2_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        wheel3_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+        wheel4_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: false
+      Name: RobotModel
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -334,30 +459,30 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 3.085257053375244
+      Distance: 4.154382228851318
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.24662388861179352
-        Y: 0.09510406851768494
-        Z: 0.13327546417713165
+        X: 0.04342518001794815
+        Y: 0.22052712738513947
+        Z: 0.05530598759651184
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.16500023007392883
+      Pitch: 0.25999999046325684
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 2.3620030879974365
+      Yaw: 2.410184383392334
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 975
+  Height: 1016
   Help:
     collapsed: false
   Hide Left Dock: false
@@ -366,9 +491,9 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd00000001000000000000021d00000375fc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d00000123000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000166000001910000017d00fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a0056006900650077007301000002fd000000b5000000a400ffffff0000028d0000037500000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000001f30000039efc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d0000021b000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e0067010000025e0000017d0000017d00fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a00560069006500770073000000031d000000be000000a400ffffff0000053f0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 1200
-  X: 0
-  Y: 68
+  Width: 1848
+  X: 72
+  Y: 27
