@@ -10,17 +10,21 @@ class PanelA( Panel):
     AR_SIZE = 50
     BUTTON_HEIGHT = 50
     BUTTON_WIDTH = 25
-    buttons_top_left = [ [84 - 25, -25],
-                       [84, -25],
-                       [-25, 71 - 25],
-                       [0, 71 - 25],
-                       [ 84 - 25, 71 - 25],
-                       [84, 71 - 25],
-                       [-25, 2 * 71 - 25 ],
-                       [0, 2 * 71 - 25],
-                       [84 - 25, 2 * 71 - 25],
-                       [84, 2 * 71 - 25],
-                          ]
+
+    # origin is in the middle of ar tag
+    rows = {0: 25, 1: 25 - 71, 2: 25 - 2*71 }
+    cols = {0: -25, 1: 0, 2: 84 - 25, 3: 84}
+    buttons_top_left = [ [ cols[2], rows[0]],
+                         [ cols[3], rows[0]],
+                         [ cols[0], rows[1]],
+                         [ cols[1], rows[1]],
+                         [ cols[2], rows[1]],
+                         [ cols[3], rows[1]],
+                         [ cols[0], rows[2]],
+                         [ cols[1], rows[2]],
+                         [ cols[2], rows[2]],
+                         [ cols[3], rows[2]],
+                        ]
     
 
     def __init__(self, camera_matrix, dist_coeffs, values):

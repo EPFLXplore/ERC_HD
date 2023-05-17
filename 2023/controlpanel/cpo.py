@@ -7,14 +7,14 @@ class CPO:
     """
     position 0 --- 1
              |     |
-             3 --- 2p
+             3 --- 2
     """
     # Constructor method that initializes a new instance of the class with a given position.
     def __init__(self, position):
         self._position = position  # sets the position attribute to the provided position.
-        self._width = position[1][0] - position[0][0]
-        self._height = position[2][1] - position[0][1]
-        self._position_3D = np.array([ [coord[0]] + [-coord[1]] + [0.] for coord in position])
+        self._width = abs(position[1][0] - position[0][0])
+        self._height = abs(position[2][1] - position[0][1])
+        self._position_3D = np.array([ [coord[0]] + [coord[1]] + [0.] for coord in position])
         self._is_target = False
 
     # Getter method for the position attribute.
@@ -25,7 +25,7 @@ class CPO:
     def get_3d_coords(self):
         return self._position_3D
 
-    
+        
     def get_width(self):
         return self._width
     

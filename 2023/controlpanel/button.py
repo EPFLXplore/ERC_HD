@@ -5,7 +5,7 @@ from controlpanel.utils import *
 """
 position 0 --- 1
          |     |
-         2 --- 3
+         3 --- 2
 """
 
 class Button(CPO):

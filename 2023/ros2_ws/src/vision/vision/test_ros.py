@@ -66,8 +66,8 @@ def main(args=None):
     rate = publisher.create_rate(10)  # 10hz
     
     while True:
-        msg = publisher.create_panelobject_message(0, 1., 2., 3., 0., 0., 0., 0.)
-        publisher.publish_inform(msg)
+        # msg = publisher.create_panelobject_message(0, 1., 2., 3., 0., 0., 0., 0.)
+        # publisher.publish_inform(msg)
 
 
         frameset = pipe.wait_for_frames()
@@ -111,18 +111,20 @@ def main(args=None):
 
                 r = R.from_rotvec(rVec[i])
                 rot_mat = r.as_matrix()
-                print(rot_mat.shape)
+                # print(rot_mat.shape)
                 rot_mat = rot_mat.T.reshape((3,3))
-                print(rot_mat.shape)
+                # print(rot_mat.shape)
                 r2 = R.from_matrix(rot_mat)
                 angles = r2.as_euler('xyz', degrees=True).flatten()
                 quat = r2.as_quat()
 
-                # msg = publisher.create_panelobject_message(0, 
-                #                                      point_cam[0], point_cam[1], point_cam[2],
-                #                                      quat[0], quat[1], quat[2], quat[3])
+                print('quat: ', quat)
+
+                msg = publisher.create_panelobject_message(0, 
+                                                     point_cam[0], point_cam[1], point_cam[2],
+                                                     quat[0], quat[1], quat[2], quat[3])
                 
-                # publisher.publish_inform(msg)
+                publisher.publish_inform(msg)
 
 
 
