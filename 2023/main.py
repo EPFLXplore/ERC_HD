@@ -19,6 +19,7 @@ while True:
     depth = camera.get_depth()
     frame = camera.get_image()
 
+    # TODO send to cs
     
     cv.putText(frame, control_panel.selected_panel, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
 

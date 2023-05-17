@@ -5,7 +5,7 @@ sys.path.append('/'.join(os.getcwd().split('/')[:-1]))
 import cv2 as cv
 import numpy as np
 
-from python.stereoCamera import StereoCamera
+from stereo_camera import StereoCamera
 
 
 MAX_DIST = 25500 # everything past 2.55 meters is set to 2.55 meters 

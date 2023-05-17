@@ -1,6 +1,6 @@
 import pyrealsense2 as rs
 
-from stereoCamera import StereoCamera
+from stereo_camera import StereoCamera
 
 pipe = rs.pipeline()
 cfg = rs.config()  

@@ -16,6 +16,7 @@ class Button(CPO):
         self._id = id
         self._value = value
         self.is_target= False
+        
 
 
         print(f'button coords shape {position.shape}')

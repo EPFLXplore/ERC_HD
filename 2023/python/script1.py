@@ -8,7 +8,7 @@ from buttons import (button_centers_0,
                      button_centers_1,
                      button_centers_2, 
                      button_centers_3)
-from stereoCamera import StereoCamera
+from stereo_camera import StereoCamera
 from utils import select_tag
 
 # Aruco Setup
