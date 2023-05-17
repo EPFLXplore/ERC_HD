@@ -4,9 +4,11 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
+        - /Status1
         - /MotionPlanning1/Planning Request1
       Splitter Ratio: 0.5
-    Tree Height: 478
+    Tree Height: 467
   - Class: rviz_common/Help
     Name: Help
   - Class: rviz_common/Views
@@ -208,7 +210,7 @@ Visualization Manager:
       Scene Robot:
         Attached Body Color: 150; 50; 150
         Links:
-          All Links Enabled: false
+          All Links Enabled: true
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
@@ -217,7 +219,7 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           hd_finger1_1:
             Alpha: 1
             Show Axes: false
@@ -227,42 +229,42 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           hd_link1_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           hd_link2_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           hd_link3_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           hd_link4_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           hd_link5_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           hd_link6_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           hd_motor_j3_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           pivot_droit_1:
             Alpha: 1
             Show Axes: false
@@ -329,117 +331,17 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /robot_description
-      Enabled: true
+      Enabled: false
       Links:
-        All Links Enabled: false
+        All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hd_finger1_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        hd_finger2_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hd_link1_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hd_link2_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hd_link3_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hd_link4_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hd_link5_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hd_link6_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hd_motor_j3_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        pivot_droit_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        pivot_gauche_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        steering_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        steering_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        steering_3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        steering_4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        wheel1_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        wheel2_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        wheel3_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
-        wheel4_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: false
       Name: RobotModel
       TF Prefix: ""
       Update Interval: 0
-      Value: true
+      Value: false
       Visual Enabled: true
   Enabled: true
   Global Options:
@@ -491,7 +393,7 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000001f30000039efc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d0000021b000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e0067010000025e0000017d0000017d00fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a00560069006500770073000000031d000000be000000a400ffffff0000053f0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000001f30000039efc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d00000210000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000253000001880000018800fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a00560069006500770073000000031d000000be000000a400ffffff0000053f0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1848
