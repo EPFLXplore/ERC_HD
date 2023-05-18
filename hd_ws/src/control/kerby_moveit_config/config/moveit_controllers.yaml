@@ -20,7 +20,7 @@ moveit_simple_controller_manager:
       - joint6
       - finger1
   
-  kerby_left_moveit_controller:
+  kerby_base_moveit_controller:
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: true

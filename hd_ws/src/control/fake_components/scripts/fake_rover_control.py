@@ -24,6 +24,7 @@ class Timer:
 class FakeRoverControl(Node):
     MOTOR_COUNT = 10     # number of motors
     MAX_VEL = [3.0, 1.5, 2.0, 4.0, 2.0, 3.0]    # max velocity of each motor in rad/s
+    MAX_VEL = [x*10 for x in MAX_VEL]
     VELOCITY = 0
     POSITION = 1
 

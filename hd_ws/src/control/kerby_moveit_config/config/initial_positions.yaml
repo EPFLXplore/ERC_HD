@@ -11,3 +11,10 @@ initial_positions:
   pivot_gauche: 0
   steering1: 0
   driving1: 0
+  steering4: 0
+  driving4: 0
+  pivot_droit: 0
+  steering2: 0
+  driving2: 0
+  steering3: 0
+  driving3: 0

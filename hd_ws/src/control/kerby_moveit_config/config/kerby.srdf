@@ -19,7 +19,7 @@
         <joint name="joint6"/>
         <joint name="finger1"/>
     </group>
-    <group name="kerby_left_side">
+    <group name="kerby_base_group">
         <joint name="pivot_gauche"/>
         <joint name="steering1"/>
         <joint name="driving1"/>
