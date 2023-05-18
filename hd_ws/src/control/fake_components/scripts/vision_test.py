@@ -12,6 +12,7 @@ from std_msgs.msg import Bool, Float64MultiArray
 import time
 from math import pi
 import copy
+from interfaces.msg import PanelObject
 
 
 end_effector_pose = Pose()
@@ -20,8 +21,28 @@ artag_pose2 = Pose()
 
 
 def artag_callback(msg):
-    artag_pose.position = msg.position
-    artag_pose.orientation = msg.orientation
+    pose = Pose()
+    pose.position.x = msg.pose.position.x/100
+    pose.position.y = msg.pose.position.y/100
+    pose.position.z = msg.pose.position.z/100
+    pose.orientation = msg.pose.orientation
+
+    transform_pose = Pose()
+    transform_pose.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
+    #qa.turn_around(transform_pose.orientation, [0.0, 0.0, 1.0], pi/2)
+
+    temp = qa.compose_poses(transform_pose, pose)
+    artag_pose.position = temp.position
+    artag_pose.orientation = temp.orientation
+
+    # artag_pose.position.x = pose.position.y
+    # artag_pose.position.y = pose.position.x
+    # artag_pose.position.z = pose.position.z
+
+    # artag_pose.orientation.x = -pose.orientation.y
+    # artag_pose.orientation.y = -pose.orientation.x
+    # artag_pose.orientation.z = -pose.orientation.z
+    # artag_pose.orientation.w = -pose.orientation.w
 
 
 def end_effector_callback(msg):
@@ -54,7 +75,7 @@ def main():
     node = rclpy.create_node("kinematics_vision_test")
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", end_effector_callback, 10)
-    node.create_subscription(Pose, "/HD/detected_element", artag_callback, 10)
+    node.create_subscription(PanelObject, "/HD/distance_topic", artag_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)
     # Spin in a separate thread
