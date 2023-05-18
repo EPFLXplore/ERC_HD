@@ -8,3 +8,6 @@ initial_positions:
   joint5: 0
   joint6: 0
   finger1: 0
+  pivot_gauche: 0
+  steering1: 0
+  driving1: 0

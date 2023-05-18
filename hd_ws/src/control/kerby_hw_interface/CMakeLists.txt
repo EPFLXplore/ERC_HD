@@ -26,6 +26,7 @@ endforeach()
 ## COMPILE LIBRARY
 add_library(kerby_hw_interface SHARED
     src/kerby_arm_interface.cpp
+    src/kerby_base_interface.cpp
 )
 target_compile_features(kerby_hw_interface PUBLIC cxx_std_17)
 # target_include_directories(kerby_hw_interface PUBLIC

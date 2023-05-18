@@ -1,5 +1,5 @@
-#ifndef KERBY_ARM_INTERFACE_HPP_
-#define KERBY_ARM_INTERFACE_HPP_
+#ifndef KERBY_BASE_INTERFACE_HPP_
+#define KERBY_BASE_INTERFACE_HPP_
 
 
 #include <memory>
@@ -22,9 +22,9 @@
 
 namespace kerby_hw_interface {
 
-class KerbyArmInterface : public hardware_interface::BaseInterface<hardware_interface::SystemInterface> {
+class KerbyBaseInterface : public hardware_interface::BaseInterface<hardware_interface::SystemInterface> {
 public:
-    RCLCPP_SHARED_PTR_DEFINITIONS(KerbyArmInterface)
+    RCLCPP_SHARED_PTR_DEFINITIONS(KerbyBaseInterface)
 
     ROS2_KERBY_HARDWARE_PUBLIC
     hardware_interface::return_type configure(const hardware_interface::HardwareInfo & info) override;
@@ -60,7 +60,6 @@ private:
     // Store the command for the simulated robot
     std::vector<double> hw_position_commands_;
     std::vector<double> hw_position_states_;
-    std::vector<double> hw_velocity_states_;
 
     // communication with the control software of the motors (ugly, maybe change that)
     void init_communication();
@@ -77,4 +76,4 @@ private:
 }   // kerby_hw_interface
 
 
-#endif  // KERBY_ARM_INTERFACE_HPP_
+#endif  // KERBY_BASE_INTERFACE_HPP_

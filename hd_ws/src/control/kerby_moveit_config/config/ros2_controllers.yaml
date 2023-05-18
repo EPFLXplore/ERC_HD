@@ -6,6 +6,8 @@ controller_manager:
     kerby_arm_moveit_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
+    kerby_left_moveit_controller:
+      type: position_controllers/JointGroupPositionController
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -26,3 +28,21 @@ kerby_arm_moveit_controller:
     state_interfaces:
       - position
       - velocity
+
+kerby_left_moveit_controller:
+  ros__parameters:
+    joints:
+      - pivot_gauche
+      - steering1
+      - driving1
+      - steering4
+      - driving4
+      - pivot_droit
+      - steering2
+      - driving2
+      - steering3
+      - driving3
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position

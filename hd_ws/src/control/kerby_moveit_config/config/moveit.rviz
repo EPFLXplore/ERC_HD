@@ -3,10 +3,7 @@ Panels:
     Help Height: 0
     Name: Displays
     Property Tree Widget:
-      Expanded:
-        - /Global Options1
-        - /Status1
-        - /MotionPlanning1/Planning Request1
+      Expanded: ~
       Splitter Ratio: 0.5
     Tree Height: 467
   - Class: rviz_common/Help
@@ -174,7 +171,7 @@ Visualization Manager:
         Robot Alpha: 0.5
         Robot Color: 150; 50; 150
         Show Robot Collision: false
-        Show Robot Visual: true
+        Show Robot Visual: false
         Show Trail: false
         State Display Time: 0.05 s
         Trail Step Size: 1
@@ -193,7 +190,7 @@ Visualization Manager:
         Interactive Marker Size: 0
         Joint Violation Color: 255; 0; 255
         Planning Group: kerby_arm_group
-        Query Goal State: true
+        Query Goal State: false
         Query Start State: false
         Show Workspace: false
         Start State Alpha: 1
@@ -317,7 +314,7 @@ Visualization Manager:
             Value: true
         Robot Alpha: 1
         Show Robot Collision: false
-        Show Robot Visual: true
+        Show Robot Visual: false
       Value: true
       Velocity_Scaling_Factor: 1
     - Alpha: 1
@@ -331,17 +328,117 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /robot_description
-      Enabled: false
+      Enabled: true
       Links:
         All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_finger1_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_finger2_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link1_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link2_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link3_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link4_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link5_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_link6_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hd_motor_j3_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pivot_droit_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pivot_gauche_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        steering_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        steering_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        steering_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        steering_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wheel1_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wheel2_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wheel3_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wheel4_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       TF Prefix: ""
       Update Interval: 0
-      Value: false
+      Value: true
       Visual Enabled: true
   Enabled: true
   Global Options:
@@ -376,10 +473,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.25999999046325684
+      Pitch: 0.2949999272823334
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 2.410184383392334
+      Yaw: 2.3551876544952393
     Saved: ~
 Window Geometry:
   Displays:
@@ -393,7 +490,7 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000001f30000039efc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d00000210000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000253000001880000018800fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a00560069006500770073000000031d000000be000000a400ffffff0000053f0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000001f30000039efc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d00000210000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000253000001880000017d00fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a00560069006500770073000000031d000000be000000a400ffffff0000053f0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1848

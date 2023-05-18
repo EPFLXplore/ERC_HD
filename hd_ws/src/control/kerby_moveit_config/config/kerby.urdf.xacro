@@ -9,6 +9,8 @@
     <xacro:include filename="kerby.ros2_control.xacro" />
 
 
-    <xacro:kerby_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
+    <xacro:kerby_arm_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
+    
+    <xacro:kerby_left_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
 
 </robot>

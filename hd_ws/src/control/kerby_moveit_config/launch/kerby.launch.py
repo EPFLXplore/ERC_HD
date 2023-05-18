@@ -128,7 +128,7 @@ def generate_launch_description():
         output="screen",
     )
     # Startup up ROS2 controllers (will exit immediately)
-    controller_names = ['kerby_arm_moveit_controller', 'joint_state_broadcaster']# 'joint_state_controller']
+    controller_names = ['kerby_arm_moveit_controller', 'kerby_left_moveit_controller', 'joint_state_broadcaster']
     spawn_controllers = [
         Node(
             package="controller_manager",
