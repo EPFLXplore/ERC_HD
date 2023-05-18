@@ -126,8 +126,6 @@ def main(args=None):
                 
                 publisher.publish_inform(msg)
 
-        rate.sleep()
-
 
 
         cv.circle(frame, (frame.shape[1]//2, frame.shape[0]//2), 5, (255,0,0), 2)

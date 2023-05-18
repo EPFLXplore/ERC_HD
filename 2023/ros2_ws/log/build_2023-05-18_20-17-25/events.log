@@ -1,0 +1,518 @@
+[0.000000] (-) TimerEvent: {}
+[0.001997] (interfaces) JobQueued: {'identifier': 'interfaces', 'dependencies': OrderedDict()}
+[0.002498] (vision) JobQueued: {'identifier': 'vision', 'dependencies': OrderedDict([('interfaces', '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces')])}
+[0.003543] (interfaces) JobStarted: {'identifier': 'interfaces'}
+[0.075340] (interfaces) JobProgress: {'identifier': 'interfaces', 'progress': 'cmake'}
+[0.076843] (interfaces) Command: {'cmd': ['/usr/bin/cmake', '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/src/interfaces', '-DCMAKE_INSTALL_PREFIX=/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces'], 'cwd': '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/interfaces', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'xplore'), ('SSH_AGENT_PID', '2866'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64:'), ('HOME', '/home/xplore'), ('OLDPWD', '/home/xplore/Desktop/main_HD_workspace/2023'), ('DESKTOP_SESSION', 'ubuntu'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/terminator.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('MANAGERPID', '2692'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator23558193cd9818af7fe4d2c2f5bd9d00f'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3433'), ('IM_CONFIG_PHASE', '1'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'xplore'), ('JOURNAL_STREAM', '7:67854'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'xplore'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/opt/ros/foxy/bin:/usr/local/cuda-11.4/bin:/home/xplore/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/xplore/.local/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2902,unix/ubuntu:/tmp/.ICE-unix/2902'), ('INVOCATION_ID', '2f68c5dd8a474313bd6e053834c7dc9b'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':1'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:ace02359-1c78-42cb-94dd-8c807ec5a488'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/interfaces'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages:/usr/local/lib:/usr/local/lib/python3.8/pyrealsense2:/usr/lib/python2.7/dist-packages/pyrealsense2'), ('COLCON', '1'), ('VTE_VERSION', '6003'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[0.099259] (-) TimerEvent: {}
+[0.201584] (-) TimerEvent: {}
+[0.303127] (-) TimerEvent: {}
+[0.404037] (-) TimerEvent: {}
+[0.484390] (interfaces) StdoutLine: {'line': b'-- The C compiler identification is GNU 9.4.0\n'}
+[0.504341] (-) TimerEvent: {}
+[0.605386] (-) TimerEvent: {}
+[0.706334] (-) TimerEvent: {}
+[0.807319] (-) TimerEvent: {}
+[0.825768] (interfaces) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 9.4.0\n'}
+[0.858348] (interfaces) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc\n'}
+[0.907567] (-) TimerEvent: {}
+[1.008728] (-) TimerEvent: {}
+[1.109997] (-) TimerEvent: {}
+[1.201722] (interfaces) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc -- works\n'}
+[1.210164] (-) TimerEvent: {}
+[1.212407] (interfaces) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[1.310656] (-) TimerEvent: {}
+[1.411612] (-) TimerEvent: {}
+[1.512547] (-) TimerEvent: {}
+[1.574521] (interfaces) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[1.612770] (-) TimerEvent: {}
+[1.632968] (interfaces) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[1.634781] (interfaces) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[1.650791] (interfaces) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++\n'}
+[1.713058] (-) TimerEvent: {}
+[1.814143] (-) TimerEvent: {}
+[1.915525] (-) TimerEvent: {}
+[2.016425] (-) TimerEvent: {}
+[2.038090] (interfaces) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ -- works\n'}
+[2.043777] (interfaces) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[2.116830] (-) TimerEvent: {}
+[2.217902] (-) TimerEvent: {}
+[2.319088] (-) TimerEvent: {}
+[2.417717] (interfaces) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[2.419226] (-) TimerEvent: {}
+[2.472144] (interfaces) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[2.474165] (interfaces) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[2.494605] (interfaces) StdoutLine: {'line': b'-- Found ament_cmake: 0.9.11 (/opt/ros/foxy/share/ament_cmake/cmake)\n'}
+[2.519492] (-) TimerEvent: {}
+[2.614271] (interfaces) StdoutLine: {'line': b'-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") \n'}
+[2.615435] (interfaces) StdoutLine: {'line': b'-- Using PYTHON_EXECUTABLE: /usr/bin/python3\n'}
+[2.619709] (-) TimerEvent: {}
+[2.720511] (-) TimerEvent: {}
+[2.821449] (-) TimerEvent: {}
+[2.922314] (-) TimerEvent: {}
+[3.023166] (-) TimerEvent: {}
+[3.123969] (-) TimerEvent: {}
+[3.224838] (-) TimerEvent: {}
+[3.325804] (-) TimerEvent: {}
+[3.426839] (-) TimerEvent: {}
+[3.469241] (interfaces) StdoutLine: {'line': b'-- Found geometry_msgs: 2.0.5 (/opt/ros/foxy/share/geometry_msgs/cmake)\n'}
+[3.527045] (-) TimerEvent: {}
+[3.599084] (interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[3.627293] (-) TimerEvent: {}
+[3.633878] (interfaces) StdoutLine: {'line': b'-- Found rosidl_adapter: 1.3.0 (/opt/ros/foxy/share/rosidl_adapter/cmake)\n'}
+[3.727596] (-) TimerEvent: {}
+[3.829095] (-) TimerEvent: {}
+[3.930189] (-) TimerEvent: {}
+[4.031123] (-) TimerEvent: {}
+[4.057478] (interfaces) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/aarch64-linux-gnu/libcrypto.so (found version "1.1.1f")  \n'}
+[4.131405] (-) TimerEvent: {}
+[4.165689] (interfaces) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/foxy/include  \n'}
+[4.231611] (-) TimerEvent: {}
+[4.332549] (-) TimerEvent: {}
+[4.433537] (-) TimerEvent: {}
+[4.475085] (interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[4.533816] (-) TimerEvent: {}
+[4.634897] (-) TimerEvent: {}
+[4.735819] (-) TimerEvent: {}
+[4.818651] (interfaces) StdoutLine: {'line': b'-- Found rosidl_default_generators: 1.0.1 (/opt/ros/foxy/share/rosidl_default_generators/cmake)\n'}
+[4.835924] (-) TimerEvent: {}
+[4.936806] (-) TimerEvent: {}
+[4.942936] (interfaces) StdoutLine: {'line': b'-- Found PythonInterp: /usr/bin/python3 (found version "3.8.10") \n'}
+[5.037000] (-) TimerEvent: {}
+[5.137894] (-) TimerEvent: {}
+[5.238776] (-) TimerEvent: {}
+[5.339798] (-) TimerEvent: {}
+[5.441196] (-) TimerEvent: {}
+[5.542213] (-) TimerEvent: {}
+[5.605623] (interfaces) StdoutLine: {'line': b'-- Found ament_cmake_ros: 0.9.2 (/opt/ros/foxy/share/ament_cmake_ros/cmake)\n'}
+[5.642379] (-) TimerEvent: {}
+[5.743231] (-) TimerEvent: {}
+[5.844694] (-) TimerEvent: {}
+[5.945617] (-) TimerEvent: {}
+[6.046581] (-) TimerEvent: {}
+[6.147553] (-) TimerEvent: {}
+[6.248535] (-) TimerEvent: {}
+[6.349503] (-) TimerEvent: {}
+[6.450499] (-) TimerEvent: {}
+[6.498467] (interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[6.550736] (-) TimerEvent: {}
+[6.652853] (-) TimerEvent: {}
+[6.753839] (-) TimerEvent: {}
+[6.854735] (-) TimerEvent: {}
+[6.903714] (interfaces) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[6.954940] (-) TimerEvent: {}
+[6.999106] (interfaces) StdoutLine: {'line': b'-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3.5") \n'}
+[7.008396] (interfaces) StdoutLine: {'line': b'-- Found python_cmake_module: 0.8.1 (/opt/ros/foxy/share/python_cmake_module/cmake)\n'}
+[7.055211] (-) TimerEvent: {}
+[7.121396] (interfaces) StdoutLine: {'line': b'-- Found PythonLibs: /usr/lib/aarch64-linux-gnu/libpython3.8.so (found suitable version "3.8.10", minimum required is "3.5") \n'}
+[7.122521] (interfaces) StdoutLine: {'line': b'-- Using PYTHON_EXECUTABLE: /usr/bin/python3\n'}
+[7.122870] (interfaces) StdoutLine: {'line': b'-- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.8\n'}
+[7.123140] (interfaces) StdoutLine: {'line': b'-- Using PYTHON_LIBRARIES: /usr/lib/aarch64-linux-gnu/libpython3.8.so\n'}
+[7.155394] (-) TimerEvent: {}
+[7.207592] (interfaces) StdoutLine: {'line': b'-- Found PythonExtra: .so  \n'}
+[7.255649] (-) TimerEvent: {}
+[7.356537] (-) TimerEvent: {}
+[7.457636] (-) TimerEvent: {}
+[7.505218] (interfaces) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)\n'}
+[7.557882] (-) TimerEvent: {}
+[7.586485] (interfaces) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[7.591820] (interfaces) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[7.618738] (interfaces) StdoutLine: {'line': b'-- Configuring done\n'}
+[7.658177] (-) TimerEvent: {}
+[7.759185] (-) TimerEvent: {}
+[7.860122] (-) TimerEvent: {}
+[7.898656] (interfaces) StdoutLine: {'line': b'-- Generating done\n'}
+[7.911113] (interfaces) StdoutLine: {'line': b'-- Build files have been written to: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/interfaces\n'}
+[7.943730] (interfaces) CommandEnded: {'returncode': 0}
+[7.948061] (interfaces) JobProgress: {'identifier': 'interfaces', 'progress': 'build'}
+[7.953616] (interfaces) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/interfaces', '--', '-j4', '-l4'], 'cwd': '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/interfaces', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'xplore'), ('SSH_AGENT_PID', '2866'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64:'), ('HOME', '/home/xplore'), ('OLDPWD', '/home/xplore/Desktop/main_HD_workspace/2023'), ('DESKTOP_SESSION', 'ubuntu'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/terminator.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('MANAGERPID', '2692'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator23558193cd9818af7fe4d2c2f5bd9d00f'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3433'), ('IM_CONFIG_PHASE', '1'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'xplore'), ('JOURNAL_STREAM', '7:67854'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'xplore'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/opt/ros/foxy/bin:/usr/local/cuda-11.4/bin:/home/xplore/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/xplore/.local/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2902,unix/ubuntu:/tmp/.ICE-unix/2902'), ('INVOCATION_ID', '2f68c5dd8a474313bd6e053834c7dc9b'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':1'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:ace02359-1c78-42cb-94dd-8c807ec5a488'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/interfaces'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages:/usr/local/lib:/usr/local/lib/python3.8/pyrealsense2:/usr/lib/python2.7/dist-packages/pyrealsense2'), ('COLCON', '1'), ('VTE_VERSION', '6003'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[7.965785] (-) TimerEvent: {}
+[8.069663] (-) TimerEvent: {}
+[8.156365] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__cpp\x1b[0m\n'}
+[8.158580] (interfaces) StdoutLine: {'line': b'[  3%] \x1b[34m\x1b[1mGenerating C code for ROS interfaces\x1b[0m\n'}
+[8.169879] (-) TimerEvent: {}
+[8.209025] (interfaces) StdoutLine: {'line': b'[  6%] \x1b[34m\x1b[1mGenerating C++ code for ROS interfaces\x1b[0m\n'}
+[8.270359] (-) TimerEvent: {}
+[8.371192] (-) TimerEvent: {}
+[8.474001] (-) TimerEvent: {}
+[8.574799] (-) TimerEvent: {}
+[8.675724] (-) TimerEvent: {}
+[8.777899] (-) TimerEvent: {}
+[8.878859] (-) TimerEvent: {}
+[8.982051] (-) TimerEvent: {}
+[9.082972] (-) TimerEvent: {}
+[9.153448] (interfaces) StdoutLine: {'line': b'[  6%] Built target interfaces__cpp\n'}
+[9.183231] (-) TimerEvent: {}
+[9.223796] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_generator_c\x1b[0m\n'}
+[9.226939] (interfaces) StdoutLine: {'line': b'[  9%] \x1b[34m\x1b[1mGenerating C++ introspection for ROS interfaces\x1b[0m\n'}
+[9.229543] (interfaces) StdoutLine: {'line': b'[ 12%] \x1b[34m\x1b[1mGenerating C++ type support for eProsima Fast-RTPS\x1b[0m\n'}
+[9.248511] (interfaces) StdoutLine: {'line': b'[ 16%] \x1b[34m\x1b[1mGenerating C++ type support dispatch for ROS interfaces\x1b[0m\n'}
+[9.283475] (-) TimerEvent: {}
+[9.299633] (interfaces) StdoutLine: {'line': b'[ 19%] \x1b[32mBuilding C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/panel_object__functions.c.o\x1b[0m\n'}
+[9.383727] (-) TimerEvent: {}
+[9.484524] (-) TimerEvent: {}
+[9.583371] (interfaces) StdoutLine: {'line': b'[ 22%] \x1b[32m\x1b[1mLinking C shared library libinterfaces__rosidl_generator_c.so\x1b[0m\n'}
+[9.584667] (-) TimerEvent: {}
+[9.685286] (-) TimerEvent: {}
+[9.786073] (-) TimerEvent: {}
+[9.792043] (interfaces) StdoutLine: {'line': b'[ 22%] Built target interfaces__rosidl_generator_c\n'}
+[9.876251] (interfaces) StdoutLine: {'line': b'[ 25%] \x1b[34m\x1b[1mGenerating C type support dispatch for ROS interfaces\x1b[0m\n'}
+[9.886270] (-) TimerEvent: {}
+[9.987029] (-) TimerEvent: {}
+[10.034198] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_typesupport_cpp\x1b[0m\n'}
+[10.052943] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_typesupport_introspection_cpp\x1b[0m\n'}
+[10.087259] (-) TimerEvent: {}
+[10.112329] (interfaces) StdoutLine: {'line': b'[ 29%] \x1b[32mBuilding CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/panel_object__type_support.cpp.o\x1b[0m\n'}
+[10.123389] (interfaces) StdoutLine: {'line': b'[ 32%] \x1b[32mBuilding CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/panel_object__type_support.cpp.o\x1b[0m\n'}
+[10.124545] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_typesupport_fastrtps_cpp\x1b[0m\n'}
+[10.187527] (-) TimerEvent: {}
+[10.229963] (interfaces) StdoutLine: {'line': b'[ 35%] \x1b[32mBuilding CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/panel_object__type_support.cpp.o\x1b[0m\n'}
+[10.287781] (-) TimerEvent: {}
+[10.388703] (-) TimerEvent: {}
+[10.489527] (-) TimerEvent: {}
+[10.590579] (-) TimerEvent: {}
+[10.614981] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_typesupport_c\x1b[0m\n'}
+[10.681228] (interfaces) StdoutLine: {'line': b'[ 38%] \x1b[32mBuilding CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/panel_object__type_support.cpp.o\x1b[0m\n'}
+[10.690825] (-) TimerEvent: {}
+[10.791691] (-) TimerEvent: {}
+[10.849398] (interfaces) StdoutLine: {'line': b'[ 41%] \x1b[32m\x1b[1mLinking CXX shared library libinterfaces__rosidl_typesupport_c.so\x1b[0m\n'}
+[10.891957] (-) TimerEvent: {}
+[10.993050] (-) TimerEvent: {}
+[11.047841] (interfaces) StdoutLine: {'line': b'[ 41%] Built target interfaces__rosidl_typesupport_c\n'}
+[11.093300] (-) TimerEvent: {}
+[11.102645] (interfaces) StdoutLine: {'line': b'[ 45%] \x1b[34m\x1b[1mGenerating C introspection for ROS interfaces\x1b[0m\n'}
+[11.193519] (-) TimerEvent: {}
+[11.294445] (-) TimerEvent: {}
+[11.395378] (-) TimerEvent: {}
+[11.496282] (-) TimerEvent: {}
+[11.523173] (interfaces) StdoutLine: {'line': b'[ 48%] \x1b[32m\x1b[1mLinking CXX shared library libinterfaces__rosidl_typesupport_introspection_cpp.so\x1b[0m\n'}
+[11.555109] (interfaces) StdoutLine: {'line': b'[ 51%] \x1b[32m\x1b[1mLinking CXX shared library libinterfaces__rosidl_typesupport_cpp.so\x1b[0m\n'}
+[11.596470] (-) TimerEvent: {}
+[11.697551] (-) TimerEvent: {}
+[11.755072] (interfaces) StdoutLine: {'line': b'[ 51%] Built target interfaces__rosidl_typesupport_cpp\n'}
+[11.797785] (-) TimerEvent: {}
+[11.846608] (interfaces) StdoutLine: {'line': b'[ 51%] Built target interfaces__rosidl_typesupport_introspection_cpp\n'}
+[11.898095] (-) TimerEvent: {}
+[11.957106] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_typesupport_introspection_c\x1b[0m\n'}
+[11.998354] (-) TimerEvent: {}
+[12.022097] (interfaces) StdoutLine: {'line': b'[ 54%] \x1b[32mBuilding C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/panel_object__type_support.c.o\x1b[0m\n'}
+[12.098673] (-) TimerEvent: {}
+[12.200119] (-) TimerEvent: {}
+[12.201136] (interfaces) StdoutLine: {'line': b'[ 58%] \x1b[32m\x1b[1mLinking C shared library libinterfaces__rosidl_typesupport_introspection_c.so\x1b[0m\n'}
+[12.295140] (interfaces) StdoutLine: {'line': b'[ 61%] \x1b[32m\x1b[1mLinking CXX shared library libinterfaces__rosidl_typesupport_fastrtps_cpp.so\x1b[0m\n'}
+[12.300324] (-) TimerEvent: {}
+[12.351147] (interfaces) StdoutLine: {'line': b'[ 61%] Built target interfaces__rosidl_typesupport_introspection_c\n'}
+[12.400669] (-) TimerEvent: {}
+[12.501600] (-) TimerEvent: {}
+[12.602641] (-) TimerEvent: {}
+[12.637906] (interfaces) StdoutLine: {'line': b'[ 61%] Built target interfaces__rosidl_typesupport_fastrtps_cpp\n'}
+[12.691182] (interfaces) StdoutLine: {'line': b'[ 64%] \x1b[34m\x1b[1mGenerating C type support for eProsima Fast-RTPS\x1b[0m\n'}
+[12.702864] (-) TimerEvent: {}
+[12.803856] (-) TimerEvent: {}
+[12.904900] (-) TimerEvent: {}
+[13.005935] (-) TimerEvent: {}
+[13.106832] (-) TimerEvent: {}
+[13.207792] (-) TimerEvent: {}
+[13.308735] (-) TimerEvent: {}
+[13.409675] (-) TimerEvent: {}
+[13.448995] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_typesupport_fastrtps_c\x1b[0m\n'}
+[13.509904] (-) TimerEvent: {}
+[13.531080] (interfaces) StdoutLine: {'line': b'[ 67%] \x1b[32mBuilding CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/panel_object__type_support_c.cpp.o\x1b[0m\n'}
+[13.610184] (-) TimerEvent: {}
+[13.711632] (-) TimerEvent: {}
+[13.812789] (-) TimerEvent: {}
+[13.913893] (-) TimerEvent: {}
+[14.014926] (-) TimerEvent: {}
+[14.115947] (-) TimerEvent: {}
+[14.217002] (-) TimerEvent: {}
+[14.317980] (-) TimerEvent: {}
+[14.418926] (-) TimerEvent: {}
+[14.519893] (-) TimerEvent: {}
+[14.620803] (-) TimerEvent: {}
+[14.721759] (-) TimerEvent: {}
+[14.822700] (-) TimerEvent: {}
+[14.923695] (-) TimerEvent: {}
+[15.024852] (-) TimerEvent: {}
+[15.102169] (interfaces) StdoutLine: {'line': b'[ 70%] \x1b[32m\x1b[1mLinking CXX shared library libinterfaces__rosidl_typesupport_fastrtps_c.so\x1b[0m\n'}
+[15.125092] (-) TimerEvent: {}
+[15.226409] (-) TimerEvent: {}
+[15.327461] (-) TimerEvent: {}
+[15.428546] (-) TimerEvent: {}
+[15.464046] (interfaces) StdoutLine: {'line': b'[ 70%] Built target interfaces__rosidl_typesupport_fastrtps_c\n'}
+[15.510913] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces\x1b[0m\n'}
+[15.528893] (-) TimerEvent: {}
+[15.560932] (interfaces) StdoutLine: {'line': b'[ 70%] Built target interfaces\n'}
+[15.609437] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__py\x1b[0m\n'}
+[15.629134] (-) TimerEvent: {}
+[15.663986] (interfaces) StdoutLine: {'line': b'[ 74%] \x1b[34m\x1b[1mGenerating Python code for ROS interfaces\x1b[0m\n'}
+[15.729363] (-) TimerEvent: {}
+[15.830523] (-) TimerEvent: {}
+[15.931398] (-) TimerEvent: {}
+[16.032348] (-) TimerEvent: {}
+[16.133243] (-) TimerEvent: {}
+[16.234168] (-) TimerEvent: {}
+[16.334989] (-) TimerEvent: {}
+[16.435746] (-) TimerEvent: {}
+[16.536646] (-) TimerEvent: {}
+[16.637466] (-) TimerEvent: {}
+[16.738247] (-) TimerEvent: {}
+[16.839034] (-) TimerEvent: {}
+[16.940101] (-) TimerEvent: {}
+[17.041724] (-) TimerEvent: {}
+[17.123822] (interfaces) StdoutLine: {'line': b'[ 74%] Built target interfaces__py\n'}
+[17.141962] (-) TimerEvent: {}
+[17.169211] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__python\x1b[0m\n'}
+[17.242226] (-) TimerEvent: {}
+[17.304342] (interfaces) StdoutLine: {'line': b'[ 77%] \x1b[32mBuilding C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_panel_object_s.c.o\x1b[0m\n'}
+[17.342499] (-) TimerEvent: {}
+[17.444090] (-) TimerEvent: {}
+[17.545261] (-) TimerEvent: {}
+[17.646326] (-) TimerEvent: {}
+[17.747330] (-) TimerEvent: {}
+[17.771368] (interfaces) StdoutLine: {'line': b'[ 80%] \x1b[32m\x1b[1mLinking C shared library rosidl_generator_py/interfaces/libinterfaces__python.so\x1b[0m\n'}
+[17.847575] (-) TimerEvent: {}
+[17.948626] (-) TimerEvent: {}
+[17.970739] (interfaces) StdoutLine: {'line': b'[ 80%] Built target interfaces__python\n'}
+[18.021492] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_typesupport_fastrtps_c__pyext\x1b[0m\n'}
+[18.034271] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_typesupport_c__pyext\x1b[0m\n'}
+[18.036358] (interfaces) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target interfaces__rosidl_typesupport_introspection_c__pyext\x1b[0m\n'}
+[18.048835] (-) TimerEvent: {}
+[18.145101] (interfaces) StdoutLine: {'line': b'[ 83%] \x1b[32mBuilding C object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/interfaces/_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c.o\x1b[0m\n'}
+[18.149048] (-) TimerEvent: {}
+[18.157166] (interfaces) StdoutLine: {'line': b'[ 87%] \x1b[32mBuilding C object CMakeFiles/interfaces__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/interfaces/_interfaces_s.ep.rosidl_typesupport_c.c.o\x1b[0m\n'}
+[18.169199] (interfaces) StdoutLine: {'line': b'[ 90%] \x1b[32mBuilding C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/interfaces/_interfaces_s.ep.rosidl_typesupport_introspection_c.c.o\x1b[0m\n'}
+[18.249286] (-) TimerEvent: {}
+[18.350152] (-) TimerEvent: {}
+[18.451100] (-) TimerEvent: {}
+[18.551988] (-) TimerEvent: {}
+[18.570150] (interfaces) StdoutLine: {'line': b'[ 93%] \x1b[32m\x1b[1mLinking C shared library rosidl_generator_py/interfaces/interfaces_s__rosidl_typesupport_introspection_c.cpython-38-aarch64-linux-gnu.so\x1b[0m\n'}
+[18.612308] (interfaces) StdoutLine: {'line': b'[ 96%] \x1b[32m\x1b[1mLinking C shared library rosidl_generator_py/interfaces/interfaces_s__rosidl_typesupport_c.cpython-38-aarch64-linux-gnu.so\x1b[0m\n'}
+[18.619427] (interfaces) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX shared library rosidl_generator_py/interfaces/interfaces_s__rosidl_typesupport_fastrtps_c.cpython-38-aarch64-linux-gnu.so\x1b[0m\n'}
+[18.652299] (-) TimerEvent: {}
+[18.754445] (-) TimerEvent: {}
+[18.759835] (interfaces) StdoutLine: {'line': b'[100%] Built target interfaces__rosidl_typesupport_introspection_c__pyext\n'}
+[18.812495] (interfaces) StdoutLine: {'line': b'[100%] Built target interfaces__rosidl_typesupport_c__pyext\n'}
+[18.854764] (-) TimerEvent: {}
+[18.938158] (interfaces) StdoutLine: {'line': b'[100%] Built target interfaces__rosidl_typesupport_fastrtps_c__pyext\n'}
+[18.955100] (-) TimerEvent: {}
+[18.990823] (interfaces) CommandEnded: {'returncode': 0}
+[19.055625] (-) TimerEvent: {}
+[19.157525] (-) TimerEvent: {}
+[19.231819] (interfaces) JobProgress: {'identifier': 'interfaces', 'progress': 'install'}
+[19.258471] (-) TimerEvent: {}
+[19.277687] (interfaces) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/interfaces'], 'cwd': '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/interfaces', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'xplore'), ('SSH_AGENT_PID', '2866'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64:'), ('HOME', '/home/xplore'), ('OLDPWD', '/home/xplore/Desktop/main_HD_workspace/2023'), ('DESKTOP_SESSION', 'ubuntu'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/terminator.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('MANAGERPID', '2692'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('TERMINATOR_DBUS_NAME', 'net.tenshu.Terminator23558193cd9818af7fe4d2c2f5bd9d00f'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3433'), ('IM_CONFIG_PHASE', '1'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'xplore'), ('JOURNAL_STREAM', '7:67854'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'xplore'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/opt/ros/foxy/bin:/usr/local/cuda-11.4/bin:/home/xplore/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/xplore/.local/bin'), ('SESSION_MANAGER', 'local/ubuntu:@/tmp/.ICE-unix/2902,unix/ubuntu:/tmp/.ICE-unix/2902'), ('INVOCATION_ID', '2f68c5dd8a474313bd6e053834c7dc9b'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('DISPLAY', ':1'), ('TERMINATOR_DBUS_PATH', '/net/tenshu/Terminator2'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('TERMINATOR_UUID', 'urn:uuid:ace02359-1c78-42cb-94dd-8c807ec5a488'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/interfaces'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages:/usr/local/lib:/usr/local/lib/python3.8/pyrealsense2:/usr/lib/python2.7/dist-packages/pyrealsense2'), ('COLCON', '1'), ('VTE_VERSION', '6003'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[19.331116] (interfaces) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[19.333239] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/ament_index/resource_index/rosidl_interfaces/interfaces\n'}
+[19.334588] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces\n'}
+[19.335174] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg\n'}
+[19.335667] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail\n'}
+[19.336150] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__functions.c\n'}
+[19.336702] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__struct.h\n'}
+[19.337321] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__functions.h\n'}
+[19.337942] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__type_support.h\n'}
+[19.338508] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/rosidl_generator_c__visibility_control.h\n'}
+[19.339033] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/panel_object.h\n'}
+[19.340240] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/environment/library_path.sh\n'}
+[19.341120] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/environment/library_path.dsv\n'}
+[19.342317] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_generator_c.so\n'}
+[19.344704] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_generator_c.so" to ""\n'}
+[19.345484] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces\n'}
+[19.346016] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg\n'}
+[19.346420] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail\n'}
+[19.346688] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__rosidl_typesupport_fastrtps_c.h\n'}
+[19.346940] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/rosidl_typesupport_fastrtps_c__visibility_control.h\n'}
+[19.347562] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_fastrtps_c.so\n'}
+[19.350101] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_fastrtps_c.so" to ""\n'}
+[19.350828] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces\n'}
+[19.351268] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg\n'}
+[19.351790] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h\n'}
+[19.352066] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail\n'}
+[19.352472] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[19.352852] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/dds_fastrtps\n'}
+[19.353343] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_fastrtps_cpp.so\n'}
+[19.355523] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_fastrtps_cpp.so" to ""\n'}
+[19.356027] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces\n'}
+[19.356802] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg\n'}
+[19.357105] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail\n'}
+[19.357640] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__type_support.c\n'}
+[19.358121] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__rosidl_typesupport_introspection_c.h\n'}
+[19.358368] (-) TimerEvent: {}
+[19.359268] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/rosidl_typesupport_introspection_c__visibility_control.h\n'}
+[19.359606] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_introspection_c.so\n'}
+[19.361345] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_introspection_c.so" to ""\n'}
+[19.361861] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_c.so\n'}
+[19.363985] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_c.so" to ""\n'}
+[19.364990] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces\n'}
+[19.365408] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg\n'}
+[19.365897] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail\n'}
+[19.366310] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__traits.hpp\n'}
+[19.366576] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__builder.hpp\n'}
+[19.367060] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__struct.hpp\n'}
+[19.367352] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/panel_object.hpp\n'}
+[19.367723] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces\n'}
+[19.368337] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg\n'}
+[19.368691] (interfaces) StdoutLine: {'line': b'-- Up-to-date: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail\n'}
+[19.369176] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__rosidl_typesupport_introspection_cpp.hpp\n'}
+[19.369440] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/include/interfaces/msg/detail/panel_object__type_support.cpp\n'}
+[19.369955] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_introspection_cpp.so\n'}
+[19.372268] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_introspection_cpp.so" to ""\n'}
+[19.372870] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_cpp.so\n'}
+[19.374907] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__rosidl_typesupport_cpp.so" to ""\n'}
+[19.376392] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/environment/pythonpath.sh\n'}
+[19.377317] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/environment/pythonpath.dsv\n'}
+[19.378618] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/__init__.py\n'}
+[19.458677] (-) TimerEvent: {}
+[19.497753] (interfaces) StdoutLine: {'line': b"Compiling '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/__init__.py'...\n"}
+[19.512777] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/msg\n'}
+[19.514038] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/msg/__init__.py\n'}
+[19.515237] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/msg/_panel_object_s.c\n'}
+[19.516392] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/msg/_panel_object.py\n'}
+[19.518220] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/interfaces_s__rosidl_typesupport_fastrtps_c.cpython-38-aarch64-linux-gnu.so\n'}
+[19.520926] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/interfaces_s__rosidl_typesupport_fastrtps_c.cpython-38-aarch64-linux-gnu.so" to ""\n'}
+[19.521682] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/interfaces_s__rosidl_typesupport_introspection_c.cpython-38-aarch64-linux-gnu.so\n'}
+[19.524138] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/interfaces_s__rosidl_typesupport_introspection_c.cpython-38-aarch64-linux-gnu.so" to ""\n'}
+[19.524890] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/interfaces_s__rosidl_typesupport_c.cpython-38-aarch64-linux-gnu.so\n'}
+[19.527320] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages/interfaces/interfaces_s__rosidl_typesupport_c.cpython-38-aarch64-linux-gnu.so" to ""\n'}
+[19.527806] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__python.so\n'}
+[19.530078] (interfaces) StdoutLine: {'line': b'-- Set runtime path of "/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/libinterfaces__python.so" to ""\n'}
+[19.530759] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/msg/PanelObject.idl\n'}
+[19.531540] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/msg/PanelObject.msg\n'}
+[19.532644] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/ament_index/resource_index/package_run_dependencies/interfaces\n'}
+[19.533625] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/ament_index/resource_index/parent_prefix_path/interfaces\n'}
+[19.534353] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/environment/ament_prefix_path.sh\n'}
+[19.535097] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/environment/ament_prefix_path.dsv\n'}
+[19.535824] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/environment/path.sh\n'}
+[19.536544] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/environment/path.dsv\n'}
+[19.537632] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/local_setup.bash\n'}
+[19.538352] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/local_setup.sh\n'}
+[19.539064] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/local_setup.zsh\n'}
+[19.539731] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/local_setup.dsv\n'}
+[19.540477] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/package.dsv\n'}
+[19.541526] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/ament_index/resource_index/packages/interfaces\n'}
+[19.542622] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_generator_cExport.cmake\n'}
+[19.543406] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_generator_cExport-noconfig.cmake\n'}
+[19.544330] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_typesupport_introspection_cExport.cmake\n'}
+[19.545218] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_typesupport_introspection_cExport-noconfig.cmake\n'}
+[19.546168] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_typesupport_cExport.cmake\n'}
+[19.547170] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_typesupport_cExport-noconfig.cmake\n'}
+[19.548028] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_generator_cppExport.cmake\n'}
+[19.548972] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_typesupport_introspection_cppExport.cmake\n'}
+[19.549794] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_typesupport_introspection_cppExport-noconfig.cmake\n'}
+[19.550644] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_typesupport_cppExport.cmake\n'}
+[19.551418] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfaces__rosidl_typesupport_cppExport-noconfig.cmake\n'}
+[19.552164] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/rosidl_cmake-extras.cmake\n'}
+[19.553066] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[19.553781] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[19.554601] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/ament_cmake_export_targets-extras.cmake\n'}
+[19.555263] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[19.556008] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake\n'}
+[19.556777] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake\n'}
+[19.557545] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfacesConfig.cmake\n'}
+[19.558100] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/cmake/interfacesConfig-version.cmake\n'}
+[19.558882] (interfaces) StdoutLine: {'line': b'-- Installing: /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/share/interfaces/package.xml\n'}
+[19.559195] (-) TimerEvent: {}
+[19.570093] (interfaces) CommandEnded: {'returncode': 0}
+[19.659614] (-) TimerEvent: {}
+[19.761465] (-) TimerEvent: {}
+[19.863173] (-) TimerEvent: {}
+[19.967168] (-) TimerEvent: {}
+[20.008536] (interfaces) JobEnded: {'identifier': 'interfaces', 'rc': 0}
+[20.022654] (vision) JobStarted: {'identifier': 'vision'}
+[20.068330] (-) TimerEvent: {}
+[20.170659] (-) TimerEvent: {}
+[20.272837] (-) TimerEvent: {}
+[20.373930] (-) TimerEvent: {}
+[20.474837] (-) TimerEvent: {}
+[20.575727] (-) TimerEvent: {}
+[20.677259] (-) TimerEvent: {}
+[20.778141] (-) TimerEvent: {}
+[20.879382] (-) TimerEvent: {}
+[20.980275] (-) TimerEvent: {}
+[21.086380] (-) TimerEvent: {}
+[21.189625] (-) TimerEvent: {}
+[21.292379] (-) TimerEvent: {}
+[21.393253] (-) TimerEvent: {}
+[21.494075] (-) TimerEvent: {}
+[21.594910] (-) TimerEvent: {}
+[21.695734] (-) TimerEvent: {}
+[21.797197] (-) TimerEvent: {}
+[21.898789] (-) TimerEvent: {}
+[21.999682] (-) TimerEvent: {}
+[22.100639] (-) TimerEvent: {}
+[22.201473] (-) TimerEvent: {}
+[22.302433] (-) TimerEvent: {}
+[22.403318] (-) TimerEvent: {}
+[22.504682] (-) TimerEvent: {}
+[22.606000] (-) TimerEvent: {}
+[22.707208] (-) TimerEvent: {}
+[22.807987] (-) TimerEvent: {}
+[22.911170] (-) TimerEvent: {}
+[23.012037] (-) TimerEvent: {}
+[23.112977] (-) TimerEvent: {}
+[23.213860] (-) TimerEvent: {}
+[23.292909] (vision) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', '../../build/vision', 'build', '--build-base', '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build', 'install', '--record', '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/install.log', '--single-version-externally-managed'], 'cwd': '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/src/vision', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'xplore', 'SSH_AGENT_PID': '2866', 'XDG_SESSION_TYPE': 'x11', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64', 'HOME': '/home/xplore', 'OLDPWD': '/home/xplore/Desktop/main_HD_workspace/2023', 'DESKTOP_SESSION': 'ubuntu', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/terminator.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'MANAGERPID': '2692', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'TERMINATOR_DBUS_NAME': 'net.tenshu.Terminator23558193cd9818af7fe4d2c2f5bd9d00f', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '3433', 'IM_CONFIG_PHASE': '1', 'ROS_DISTRO': 'foxy', 'LOGNAME': 'xplore', 'JOURNAL_STREAM': '7:67854', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'xplore', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'WINDOWPATH': '2', 'PATH': '/opt/ros/foxy/bin:/usr/local/cuda-11.4/bin:/home/xplore/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/xplore/.local/bin', 'SESSION_MANAGER': 'local/ubuntu:@/tmp/.ICE-unix/2902,unix/ubuntu:/tmp/.ICE-unix/2902', 'INVOCATION_ID': '2f68c5dd8a474313bd6e053834c7dc9b', 'XDG_MENU_PREFIX': 'gnome-', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':1', 'TERMINATOR_DBUS_PATH': '/net/tenshu/Terminator2', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'RMW_IMPLEMENTATION': 'rmw_cyclonedds_cpp', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/gdm/Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces:/opt/ros/foxy', 'SHELL': '/bin/bash', 'TERMINATOR_UUID': 'urn:uuid:ace02359-1c78-42cb-94dd-8c807ec5a488', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GPG_AGENT_INFO': '/run/user/1000/gnupg/S.gpg-agent:0:1', 'GJS_DEBUG_OUTPUT': 'stderr', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/prefix_override:/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages:/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages:/usr/local/lib:/usr/local/lib/python3.8/pyrealsense2:/usr/lib/python2.7/dist-packages/pyrealsense2', 'COLCON': '1', 'VTE_VERSION': '6003', 'CMAKE_PREFIX_PATH': '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces'}, 'shell': False}
+[23.314908] (-) TimerEvent: {}
+[23.416748] (-) TimerEvent: {}
+[23.518067] (-) TimerEvent: {}
+[23.619010] (-) TimerEvent: {}
+[23.719929] (-) TimerEvent: {}
+[23.821228] (-) TimerEvent: {}
+[23.925375] (-) TimerEvent: {}
+[24.026695] (-) TimerEvent: {}
+[24.127508] (-) TimerEvent: {}
+[24.228279] (-) TimerEvent: {}
+[24.329239] (-) TimerEvent: {}
+[24.430288] (-) TimerEvent: {}
+[24.476688] (vision) StdoutLine: {'line': b'running egg_info\n'}
+[24.478582] (vision) StdoutLine: {'line': b'creating ../../build/vision/vision.egg-info\n'}
+[24.479254] (vision) StdoutLine: {'line': b'writing ../../build/vision/vision.egg-info/PKG-INFO\n'}
+[24.480530] (vision) StdoutLine: {'line': b'writing dependency_links to ../../build/vision/vision.egg-info/dependency_links.txt\n'}
+[24.481193] (vision) StdoutLine: {'line': b'writing entry points to ../../build/vision/vision.egg-info/entry_points.txt\n'}
+[24.481689] (vision) StdoutLine: {'line': b'writing requirements to ../../build/vision/vision.egg-info/requires.txt\n'}
+[24.482111] (vision) StdoutLine: {'line': b'writing top-level names to ../../build/vision/vision.egg-info/top_level.txt\n'}
+[24.490107] (vision) StdoutLine: {'line': b"writing manifest file '../../build/vision/vision.egg-info/SOURCES.txt'\n"}
+[24.530648] (-) TimerEvent: {}
+[24.631516] (-) TimerEvent: {}
+[24.632631] (vision) StdoutLine: {'line': b"reading manifest file '../../build/vision/vision.egg-info/SOURCES.txt'\n"}
+[24.635543] (vision) StdoutLine: {'line': b"writing manifest file '../../build/vision/vision.egg-info/SOURCES.txt'\n"}
+[24.636264] (vision) StdoutLine: {'line': b'running build\n'}
+[24.636644] (vision) StdoutLine: {'line': b'running build_py\n'}
+[24.637169] (vision) StdoutLine: {'line': b'creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build\n'}
+[24.637467] (vision) StdoutLine: {'line': b'creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib\n'}
+[24.637946] (vision) StdoutLine: {'line': b'creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision\n'}
+[24.638262] (vision) StdoutLine: {'line': b'copying vision/vision_publisher.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision\n'}
+[24.638719] (vision) StdoutLine: {'line': b'copying vision/__init__.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision\n'}
+[24.639150] (vision) StdoutLine: {'line': b'copying vision/test_ros.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision\n'}
+[24.639598] (vision) StdoutLine: {'line': b'copying vision/fake_matthias.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision\n'}
+[24.640037] (vision) StdoutLine: {'line': b'copying vision/camera_projection.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision\n'}
+[24.647530] (vision) StdoutLine: {'line': b'running install\n'}
+[24.652174] (vision) StdoutLine: {'line': b'running install_lib\n'}
+[24.656283] (vision) StdoutLine: {'line': b'creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision\n'}
+[24.657162] (vision) StdoutLine: {'line': b'copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/vision_publisher.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision\n'}
+[24.657604] (vision) StdoutLine: {'line': b'copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/__init__.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision\n'}
+[24.661032] (vision) StdoutLine: {'line': b'copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/test_ros.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision\n'}
+[24.661580] (vision) StdoutLine: {'line': b'copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/fake_matthias.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision\n'}
+[24.661907] (vision) StdoutLine: {'line': b'copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/camera_projection.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision\n'}
+[24.663197] (vision) StdoutLine: {'line': b'byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/vision_publisher.py to vision_publisher.cpython-38.pyc\n'}
+[24.670142] (vision) StdoutLine: {'line': b'byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/__init__.py to __init__.cpython-38.pyc\n'}
+[24.673137] (vision) StdoutLine: {'line': b'byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/test_ros.py to test_ros.cpython-38.pyc\n'}
+[24.678260] (vision) StdoutLine: {'line': b'byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/fake_matthias.py to fake_matthias.cpython-38.pyc\n'}
+[24.680883] (vision) StdoutLine: {'line': b'byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/camera_projection.py to camera_projection.cpython-38.pyc\n'}
+[24.683077] (vision) StdoutLine: {'line': b'running install_data\n'}
+[24.685831] (vision) StdoutLine: {'line': b'creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/ament_index\n'}
+[24.686741] (vision) StdoutLine: {'line': b'creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/ament_index/resource_index\n'}
+[24.687514] (vision) StdoutLine: {'line': b'creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/ament_index/resource_index/packages\n'}
+[24.688755] (vision) StdoutLine: {'line': b'copying resource/vision -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/ament_index/resource_index/packages\n'}
+[24.690036] (vision) StdoutLine: {'line': b'copying package.xml -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/vision\n'}
+[24.691095] (vision) StdoutLine: {'line': b'running install_egg_info\n'}
+[24.698764] (vision) StdoutLine: {'line': b'Copying ../../build/vision/vision.egg-info to /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision-0.0.0-py3.8.egg-info\n'}
+[24.704367] (vision) StdoutLine: {'line': b'running install_scripts\n'}
+[24.731766] (-) TimerEvent: {}
+[24.789090] (vision) StdoutLine: {'line': b'Installing listener script to /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/vision\n'}
+[24.791183] (vision) StdoutLine: {'line': b'Installing talker script to /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/vision\n'}
+[24.793826] (vision) StdoutLine: {'line': b"writing list of installed files to '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/install.log'\n"}
+[24.832128] (-) TimerEvent: {}
+[24.929955] (vision) CommandEnded: {'returncode': 0}
+[24.937814] (-) TimerEvent: {}
+[24.992828] (vision) JobEnded: {'identifier': 'vision', 'rc': 0}
+[24.998519] (-) EventReactorShutdown: {}

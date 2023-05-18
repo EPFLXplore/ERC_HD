@@ -1,0 +1,47 @@
+[3.281s] Invoking command in '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/src/vision': AMENT_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/prefix_override:/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages:/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/vision build --build-base /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build install --record /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/install.log --single-version-externally-managed
+[4.455s] running egg_info
+[4.456s] creating ../../build/vision/vision.egg-info
+[4.457s] writing ../../build/vision/vision.egg-info/PKG-INFO
+[4.458s] writing dependency_links to ../../build/vision/vision.egg-info/dependency_links.txt
+[4.459s] writing entry points to ../../build/vision/vision.egg-info/entry_points.txt
+[4.459s] writing requirements to ../../build/vision/vision.egg-info/requires.txt
+[4.460s] writing top-level names to ../../build/vision/vision.egg-info/top_level.txt
+[4.468s] writing manifest file '../../build/vision/vision.egg-info/SOURCES.txt'
+[4.610s] reading manifest file '../../build/vision/vision.egg-info/SOURCES.txt'
+[4.613s] writing manifest file '../../build/vision/vision.egg-info/SOURCES.txt'
+[4.614s] running build
+[4.614s] running build_py
+[4.615s] creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build
+[4.615s] creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib
+[4.615s] creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision
+[4.616s] copying vision/vision_publisher.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision
+[4.616s] copying vision/__init__.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision
+[4.617s] copying vision/test_ros.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision
+[4.617s] copying vision/fake_matthias.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision
+[4.617s] copying vision/camera_projection.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision
+[4.625s] running install
+[4.630s] running install_lib
+[4.634s] creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision
+[4.635s] copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/vision_publisher.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision
+[4.635s] copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/__init__.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision
+[4.639s] copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/test_ros.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision
+[4.639s] copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/fake_matthias.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision
+[4.639s] copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/camera_projection.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision
+[4.641s] byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/vision_publisher.py to vision_publisher.cpython-38.pyc
+[4.648s] byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/__init__.py to __init__.cpython-38.pyc
+[4.651s] byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/test_ros.py to test_ros.cpython-38.pyc
+[4.656s] byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/fake_matthias.py to fake_matthias.cpython-38.pyc
+[4.658s] byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/camera_projection.py to camera_projection.cpython-38.pyc
+[4.661s] running install_data
+[4.663s] creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/ament_index
+[4.664s] creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/ament_index/resource_index
+[4.665s] creating /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/ament_index/resource_index/packages
+[4.666s] copying resource/vision -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/ament_index/resource_index/packages
+[4.668s] copying package.xml -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/share/vision
+[4.669s] running install_egg_info
+[4.677s] Copying ../../build/vision/vision.egg-info to /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision-0.0.0-py3.8.egg-info
+[4.682s] running install_scripts
+[4.767s] Installing listener script to /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/vision
+[4.769s] Installing talker script to /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/vision
+[4.771s] writing list of installed files to '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/install.log'
+[4.908s] Invoked command in '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/src/vision' returned '0': AMENT_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces LD_LIBRARY_PATH=/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib:/usr/lib/aarch64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/aarch64-linux-gnu:/opt/ros/foxy/lib:/usr/local/cuda-11.4/lib64 PYTHONPATH=/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/prefix_override:/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages:/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/vision build --build-base /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build install --record /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/install.log --single-version-externally-managed

@@ -1,0 +1,4 @@
+[console_scripts]
+listener = vision.fake_matthias:main
+talker = vision.test_ros:main
+

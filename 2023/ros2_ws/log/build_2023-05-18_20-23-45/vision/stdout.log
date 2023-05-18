@@ -1,0 +1,23 @@
+running egg_info
+writing ../../build/vision/vision.egg-info/PKG-INFO
+writing dependency_links to ../../build/vision/vision.egg-info/dependency_links.txt
+writing entry points to ../../build/vision/vision.egg-info/entry_points.txt
+writing requirements to ../../build/vision/vision.egg-info/requires.txt
+writing top-level names to ../../build/vision/vision.egg-info/top_level.txt
+reading manifest file '../../build/vision/vision.egg-info/SOURCES.txt'
+writing manifest file '../../build/vision/vision.egg-info/SOURCES.txt'
+running build
+running build_py
+copying vision/test_ros.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision
+running install
+running install_lib
+copying /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/build/lib/vision/test_ros.py -> /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision
+byte-compiling /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision/test_ros.py to test_ros.cpython-38.pyc
+running install_data
+running install_egg_info
+removing '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision-0.0.0-py3.8.egg-info' (and everything under it)
+Copying ../../build/vision/vision.egg-info to /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/python3.8/site-packages/vision-0.0.0-py3.8.egg-info
+running install_scripts
+Installing listener script to /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/vision
+Installing talker script to /home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/install/vision/lib/vision
+writing list of installed files to '/home/xplore/Desktop/main_HD_workspace/2023/ros2_ws/build/vision/install.log'

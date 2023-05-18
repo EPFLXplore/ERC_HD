@@ -1,0 +1,10 @@
+Metadata-Version: 1.2
+Name: vision
+Version: 0.0.0
+Summary: Examples of minimal publisher/subscriber using rclpy
+Home-page: UNKNOWN
+Maintainer: eylul
+Maintainer-email: eylulipci00@gmail.com
+License: Apache License 2.0
+Description: UNKNOWN
+Platform: UNKNOWN
