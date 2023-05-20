@@ -4,6 +4,7 @@ from controlpanel.panel_b2 import PanelB2
 
 import cv2 as cv
 
+
 class ControlPanel:
     possible_panels = set(['A', 'B1', 'B2'])
     selected_panel = 'A'
@@ -66,3 +67,7 @@ class ControlPanel:
     
     def project(self):
         return self.get_selected_panel().project()
+    
+    def get_target(self):
+        print(self.get_selected_panel().get_target())
+        return self.get_selected_panel().get_target()

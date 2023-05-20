@@ -63,3 +63,6 @@ class PanelA( Panel):
         for button in self.buttons:
             button.draw(frame)
             
+
+    def get_target(self):
+         return [self.buttons[self.target].get_target()] + self.ar_tag.get_vecs()

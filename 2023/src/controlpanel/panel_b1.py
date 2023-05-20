@@ -13,9 +13,9 @@ class PanelB1(Panel):
         super().__init__()
         self.ar_tag_top = ARTag(aruco.DICT_4X4_50, self.AR_SIZE, 1 , camera_matrix, dist_coeffs)
         self.ar_tag_bottom = ARTag(aruco.DICT_4X4_50, self.AR_SIZE, 0 , camera_matrix, dist_coeffs) 
-        self.button = Button([ -62 - self.BUTTON_SIZE //2 , -self.BUTTON_SIZE //2] ,
+        self.button = Button([ -62 - self.BUTTON_SIZE //2 , self.BUTTON_SIZE //2] ,
                                  self.BUTTON_SIZE, self.BUTTON_SIZE)
-        self.plug = Plug([ -62 - self.BUTTON_SIZE //2 , -self.BUTTON_SIZE //2],
+        self.plug = Plug([ -62 - self.BUTTON_SIZE //2 , self.BUTTON_SIZE //2],
                          self.BUTTON_SIZE, self.BUTTON_SIZE)
 
 
@@ -61,3 +61,9 @@ class PanelB1(Panel):
         else:
             self.ar_tag_bottom.draw(frame)
             self.plug.draw(frame)
+
+    def get_target(self):
+        if self.button.isTarget():
+            return [self.button.get_target()] + self.ar_tag_top.get_vecs()
+        else:
+            return [self.plug.get_target()] +  self.ar_tag_bottom.get_vecs()

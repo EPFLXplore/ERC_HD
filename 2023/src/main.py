@@ -2,7 +2,7 @@ from stereo_camera import StereoCamera
 import cv2 as cv
 import numpy as np
 from controlpanel.control_panel import ControlPanel
-from utils import show
+from utils import show, translation_rotation
 
 
 
@@ -27,15 +27,12 @@ while True:
         control_panel.project()
         control_panel.draw(frame)
 
+        point2project, rvec, tvec = control_panel.get_target()
+        translation, quaternion = translation_rotation(point2project, rvec, tvec)
+        print(translation, quaternion)
 
-    # control_panel.draw(frame)
     show(frame, depth)
 
-    # select panel                                 OK
-    # select target                                OK
-    # compute necessary rotation and translation
-    # draw target on image
-    # control_panel.update(frame)
 
     key = cv.waitKey(1)
     if key == 27:

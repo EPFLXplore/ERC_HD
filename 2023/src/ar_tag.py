@@ -43,3 +43,6 @@ class ARTag:
              
         def self_project(self):
             self._projected = self.project(self.corners)
+
+        def get_vecs(self):
+             return [self.rvec, self.tvec]            

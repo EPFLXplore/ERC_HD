@@ -16,3 +16,7 @@ class Plug(CPO):
 
         
 
+    def get_target(self):
+        res = np.zeros(3)
+        res[:2] = self._position.sum() // 4
+        return res.astype(int)

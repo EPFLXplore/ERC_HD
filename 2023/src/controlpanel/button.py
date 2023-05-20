@@ -16,13 +16,11 @@ class Button(CPO):
         self._id = id
         self._value = value
         self.is_target= False
-        
+        self.turn_on_position = (position[0] + position[1]) // 2 - self._height //4
+        self.turn_off_position = (position[0] + position[1]) // 2 - 3 * self._height //4
 
 
-        print(f'button coords shape {position.shape}')
-        self.turn_on_target = np.concatenate( ((position[0] + position[1]) // 2 - (0, self._height//4), [0.]))
-        self.turn_off_target = np.concatenate( ((position[2] + position[3]) // 2 + (0, self._height//4), [0.]))
-
+  
     def get_id(self):
         return self._id
     
@@ -85,4 +83,10 @@ class Button(CPO):
             self.projected_target =  (points[2] + points[3])//2 - np.array([ 0, (points[3] -points[1])[1]//4]).astype(int)
         
 
-   
+    def get_target(self):
+        res = np.zeros(3)
+        if self._isOn:
+            res[:2] = self.turn_off_position
+        else:
+            res[:2] = self.turn_on_position
+        return res.astype(int)
