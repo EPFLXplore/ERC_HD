@@ -96,10 +96,12 @@ def main(args=None):
         gray_img = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         marker_corners, marker_IDs, rej = aruco.detectMarkers(gray_img, marker_dict_4, parameters=param_markers)
 
+        # this function converts the detected AR Tag info to expected message format by CS and publishes
+        # it in the corresponding topic 
         tag_publisher.publish_detected_tags(marker_IDs)
-        #print("Camera")
+
         if marker_corners:
-            #print("tags")
+            
             # get rotation and translation vectors
             rVec, tVec, _ = aruco.estimatePoseSingleMarkers(marker_corners, MARKER_REAL_SIZE, cam_matrix, coeffs)
 
@@ -116,6 +118,10 @@ def main(args=None):
 
                 # draw the pose of the marker
                 point = cv.drawFrameAxes(frame, cam_matrix, coeffs, rVec[i], tVec[i], 4, 4)
+
+                ## some function that converts element_id_subscriber.element_id 
+                ## to corresponding point coordinates in AR Tag frame
+                ## and puts it in TARGET_AR
 
 
                 [image_points, jacobian] = cv.projectPoints(TARGET_AR, rVec[i], tVec[i], cam_matrix, coeffs)
