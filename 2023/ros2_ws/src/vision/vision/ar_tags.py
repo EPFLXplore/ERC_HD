@@ -11,12 +11,11 @@ class ARTagsPublisher:
     def get_logger(self):
         return self.parent_node.get_logger()
     
-    def publish_detected_tags(self, tags):
+    def publish_detected_tags(self, tag_ids):
         msg = Int8MultiArray()
         msg.data = [0, 0, 0, 0]
 
-        ## TODO ##
-        # Convert tag info to an array
-
+        for id in tag_ids:
+            msg.data[id] = 1
 
         self.publisher_.publish(msg)
