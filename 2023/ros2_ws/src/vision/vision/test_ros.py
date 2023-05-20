@@ -71,9 +71,6 @@ def main(args=None):
     toggle_cameras_subscriber = HDToggleCamerasSubscriber(vision_node, camera_publisher)
     element_id_subscriber = ElementIdSubscriber(vision_node)
 
-
-
-
     threading.Thread(target=rclpy.spin, args=(vision_node,), daemon=True).start()
 
     # Skip first 5 frames
@@ -98,7 +95,7 @@ def main(args=None):
 
         gray_img = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         marker_corners, marker_IDs, rej = aruco.detectMarkers(gray_img, marker_dict_4, parameters=param_markers)
-        
+
         tag_publisher.publish_detected_tags(marker_IDs)
         #print("Camera")
         if marker_corners:
