@@ -5,6 +5,11 @@ import pyrealsense2 as rs
 from vision.camera_projection import camera_projection
 from scipy.spatial.transform import Rotation as R
 from vision.vision_publisher import VisionPublisher
+from vision.camera_flux import CameraFluxPublisher
+from vision.ar_tags import ARTagsPublisher
+from vision.toggle_cameras import HDToggleCamerasSubscriber
+from vision.element_id import ElementIdSubscriber
+
 
 import rclpy
 from rclpy.node import Node
@@ -51,19 +56,31 @@ def main(args=None):
     TARGET_AR = np.array([0., 0., 0.])
     EXPECTED_CAM= [1., 0., 0. ]
 
+    vision_node = Node("HD_vision_node")
 
     ############
-    # PUBLISHER
+    # PUBLISHERS
     ############
-    publisher = VisionPublisher()
+    publisher = VisionPublisher(vision_node)
+    camera_publisher = CameraFluxPublisher(vision_node)
+    tag_publisher = ARTagsPublisher(vision_node)
 
-    threading.Thread(target=rclpy.spin, args=(publisher,), daemon=True).start()
+    ############
+    # SUBSCRIBERS
+    ############
+    toggle_cameras_subscriber = HDToggleCamerasSubscriber(vision_node, camera_publisher)
+    element_id_subscriber = ElementIdSubscriber(vision_node)
+
+
+
+
+    threading.Thread(target=rclpy.spin, args=(vision_node,), daemon=True).start()
 
     # Skip first 5 frames
     for _ in range(5):
         pipe.wait_for_frames()
 
-    rate = publisher.create_rate(10)  # 10hz
+    rate = vision_node.create_rate(10)  # 10hz
     
     while True:
         # msg = publisher.create_panelobject_message(0, 1., 2., 3., 0., 0., 0., 0.)
@@ -81,6 +98,8 @@ def main(args=None):
 
         gray_img = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         marker_corners, marker_IDs, rej = aruco.detectMarkers(gray_img, marker_dict_4, parameters=param_markers)
+        
+        tag_publisher.publish_detected_tags(marker_IDs)
         #print("Camera")
         if marker_corners:
             #print("tags")

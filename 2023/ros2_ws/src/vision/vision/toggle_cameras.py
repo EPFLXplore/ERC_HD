@@ -3,11 +3,11 @@ from rclpy.node import Node
 from std_msgs.msg import Int8
 
 
-class HDToggleCamerasSubscriber(Node):
-    def __init__(self, publisher):
-        super().__init__('HD_toggle_cameras_subscriber')
+class HDToggleCamerasSubscriber:
+    def __init__(self, node, publisher):
+        self.parent_node = node
         self.publisher_ = publisher
-        self.subscription_ = self.create_subscription(
+        self.subscription_ = node.create_subscription(
             Int8,
             'ROVER/HD_toggle_cameras',
             self.callback,

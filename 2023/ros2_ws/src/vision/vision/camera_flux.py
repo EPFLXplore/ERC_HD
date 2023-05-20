@@ -7,10 +7,10 @@ import numpy as np
 from cv_bridge import CvBridge
 
 
-class CameraFluxPublisher(Node):
-    def __init__(self):
-        super().__init__('HD_camera_flux_publisher')
-        self.publisher_ = self.create_publisher(Image, 'HD/camera_flux', 10)
+class CameraFluxPublisher:
+    def __init__(self, node):
+        self.parent_node = node
+        self.publisher_ = node.create_publisher(Image, 'HD/camera_flux', 10)
         self.bridge_ = CvBridge()
         self.enabled_ = False  # Flag to indicate if the publisher is enabled
 
@@ -23,6 +23,9 @@ class CameraFluxPublisher(Node):
 
         self.pipeline_.start(self.config_)
 
+    def get_logger(self):
+        return self.parent_node.get_logger()
+    
     def publish_frame(self):
 
         if not self.enabled_:

@@ -7,11 +7,11 @@ from std_msgs.msg import String
 import geometry_msgs
 from geometry_msgs.msg import Pose
 
-class VisionPublisher(Node):
+class VisionPublisher:
 
-    def __init__(self):
-        super().__init__('vision_distance_publisher')
-        self.publisher_=self.create_publisher(PanelObject, 'distance_topic', 10)
+    def __init__(self, node):
+        self.parent_node = node
+        self.publisher_ = node.create_publisher(PanelObject, 'distance_topic', 10)
         # timer_period = 1
         # self.timer = self.create_timer(timer_period, self.timer_callback)
         # # self.projector = projector
@@ -41,6 +41,8 @@ class VisionPublisher(Node):
 
     #     self.i += 1
 
+    def get_logger(self):
+        return self.parent_node.get_logger()
     
     def create_panelobject_message(self, id, pos_x, pos_y, pos_z, or_x, or_y, or_z, or_w):
         msg = PanelObject()
