@@ -1,6 +1,7 @@
 import numpy as np
 import cv2 as cv
 from scipy.spatial.transform import Rotation as R
+from numpy import linalg
 
 
 def show(frame, depth, max_dist = 25500): # everything past 2.55 meters is set to 2.55 meters 
@@ -14,6 +15,57 @@ def show(frame, depth, max_dist = 25500): # everything past 2.55 meters is set t
 
     cv.imshow('RealSense', numpy_horizontal) 
 
+
+def rvec2quat(rVec):
+    # conversion to rotation matrix
+    r = R.from_rotvec(rVec)
+    rot_mat = r.as_dcm()#as_matrix()
+
+    # reshape to 3*3
+    rot_mat = rot_mat.T.reshape((3,3))
+
+    # change of reference
+    rot_mat = linalg.inv(rot_mat)
+
+    # convert to quat
+    r2 = R.from_dcm(rot_mat)#from_matrix(rot_mat)
+    quat = r2.as_quat()
+    
+    return quat
+
+
+"""
+    https://www.cse.psu.edu/~rtc12/CSE486/lecture12.pdf slide 19 
+"""
+def camera_projection_orig(point, rVec, tVec):
+    """""
+    point: [x, y, z] point to be projected to the camera frame, (x,y,z) are relative to the AR tag's coordinate frame
+    rVec: 3x1
+    tVec: 3x1
+    """""
+
+    # append 1 for homogenous coordinates
+    point = np.append(point, [1])
+
+    # compute the rotation matrix
+    R, _jacobian = cv.Rodrigues(rVec)
+    
+    # change of perspective
+    tVec = -linalg.inv(R) @ tVec.T
+    tVec = tVec.reshape(-1)
+    
+    # append extra row and column
+    R = np.vstack((R, [0, 0, 0]))
+    R = np.hstack((R, [[0], [0], [0], [1]]))
+
+    # identity 4x4
+    M = np.eye(4)
+    M[0:3, 3] = -tVec
+
+    x, y, z, n = R @ M @ point
+    
+
+    return np.array([x, y, z]) / n
 
 """
     https://www.cse.psu.edu/~rtc12/CSE486/lecture12.pdf slide 19 
@@ -29,42 +81,22 @@ def camera_projection(point, rVec, tVec):
     point = np.append(point, [1])
 
     # compute the rotation matrix
-    R, jacobian = cv.Rodrigues(rVec)
+    R, _jacobian = cv.Rodrigues(rVec)
+    
+    # change of perspective
+    tVec = -linalg.inv(R) @ tVec.T
 
     # append extra row and column
     R = np.vstack((R, [0, 0, 0]))
     R = np.hstack((R, [[0], [0], [0], [1]]))
 
+    print(tVec.shape)
     # identity 4x4
     id_3 = np.eye(3)
 
-    id3 = np.vstack((id_3, [0,0,0]))
+    id3 = np.vstack((id_3, [0, 0, 0]))
 
-    # -tVec appended to identity
-    M = np.hstack((id3, [[-tVec[0, 0]], [-tVec[0, 1]], [-tVec[0, 2]], [1]]))
+    M = np.hstack((id3, [[-tVec[0, 0]], [-tVec[1, 0]], [-tVec[2, 0]], [1]]))
 
     x, y, z, n = R @ M @ point.T
-
-    return np.array([-x, -y, z]) / n
-
-
-def next_movement(target, rvec, tvec):
-    point_cam = camera_projection(target, rvec, tvec)
-
-    r = R.from_rotvec(rvec)
-    rot_mat = r.as_matrix()
-    print(rot_mat.shape)
-    rot_mat = rot_mat.T.reshape((3,3))
-    print(rot_mat.shape)
-    r2 = R.from_matrix(rot_mat)
-    angles = r2.as_euler('xyz', degrees=True).flatten()
-
-    print("Point in AR tag coordinates: ", target)
-    print("Point in camera coordinates: ", point_cam)
-    print("Rotation matrix rVec:        ", rvec)
-
-    print("Rotation around x axis: ", (180 - angles[0]))
-    print("Rotation around y axis: ", -angles[1])
-    print("Rotation around z axis: ", -angles[2])
-
-    return tvec, angles
+    return np.array([x, y, z]) / n

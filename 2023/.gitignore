@@ -1,0 +1,7 @@
+ros2_ws/build
+ros2_ws/install 
+ros2_ws/log
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
