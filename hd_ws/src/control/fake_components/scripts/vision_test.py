@@ -19,6 +19,9 @@ end_effector_pose = Pose()
 artag_pose = Pose()
 artag_pose2 = Pose()
 
+vision_transform = Pose()
+vision_transform.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
+
 
 def artag_callback(msg):
     pose = Pose()
@@ -27,11 +30,7 @@ def artag_callback(msg):
     pose.position.z = msg.pose.position.z/100
     pose.orientation = msg.pose.orientation
 
-    transform_pose = Pose()
-    transform_pose.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
-    #qa.turn_around(transform_pose.orientation, [0.0, 0.0, 1.0], pi/2)
-
-    temp = qa.compose_poses(transform_pose, pose)
+    temp = qa.compose_poses(vision_transform, pose)
     artag_pose.position = temp.position
     artag_pose.orientation = temp.orientation
 
@@ -67,6 +66,8 @@ def get_btn_pose():
     obj3.name = "axis"
     axis = qa.point_image([0.0, 0.0, 1.0], obj.pose.orientation)
     obj3.pose.position = qa.make_point(qa.add(obj3.pose.position, qa.mul(0.05, axis)))
+    
+    return qa.compose_poses(obj, qa.reverse_pose(vision_transform)), qa.compose_poses(obj3, qa.reverse_pose(vision_transform))
     return obj, obj3
 
 

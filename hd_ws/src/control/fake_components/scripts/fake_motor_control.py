@@ -22,8 +22,8 @@ class Timer:
 
 
 class FakeMotorControl(Node):
-    MOTOR_COUNT = 6     # number of motors
-    MAX_VEL = [3.0, 1.5, 2.0, 4.0, 2.0, 3.0]    # max velocity of each motor in rad/s
+    MOTOR_COUNT = 7     # number of motors
+    MAX_VEL = [3.0, 1.5, 2.0, 4.0, 2.0, 3.0, 0.15]    # max velocity of each motor in rad/s
     VELOCITY = 0
     POSITION = 1
 

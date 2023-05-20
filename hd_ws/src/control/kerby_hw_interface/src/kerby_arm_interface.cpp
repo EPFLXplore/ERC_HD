@@ -162,6 +162,8 @@ void KerbyArmInterface::init_communication() {
     hd_cmd_pub_ = communication_node_->create_publisher<sensor_msgs::msg::JointState>("/HD/kinematics/joint_cmd", 10);
     hd_state_sub_ = communication_node_->create_subscription<sensor_msgs::msg::JointState>("/HD/arm_control/joint_telemetry", 10,
         std::bind(&KerbyArmInterface::arm_state_callback, this, std::placeholders::_1));
+    mode_change_sub_ = communication_node_->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10,
+        std::bind(&KerbyArmInterface::mode_change_callback, this, std::placeholders::_1));
 
     std::thread first(&KerbyArmInterface::communication_spin, this);
     first.detach();
@@ -171,11 +173,16 @@ void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::S
     for (uint i = 0; i < hw_position_states_.size(); i++) {
         hw_position_states_[i] = msg->position[i];
         hw_velocity_states_[i] = msg->velocity[i];
-        if (scanning_) {
+        if (scanning_ || !sending_commands_) {
             hw_position_commands_[i] = msg->position[i];
         }
     }
+
     scanning_ = false;
+}
+
+void KerbyArmInterface::mode_change_callback(const std_msgs::msg::Int8:SharedPtr msg) {
+    if (msg.data == 0);
 }
 
 

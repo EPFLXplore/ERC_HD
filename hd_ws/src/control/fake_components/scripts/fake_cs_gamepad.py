@@ -34,7 +34,7 @@ class GamePad(Node):
     def __init__(self):
         super().__init__("fake_cs_gamepad")
 
-        self.vel_cmd = [0, 0, 0, 0, 0, 0, 0]
+        self.vel_cmd = [0.0]*7
 
         # direction of joint 3, 4
         self.joint3_dir = 1
@@ -81,13 +81,13 @@ class GamePad(Node):
                         if event.value == 1:
                             #-----------gripper------------
                             if event.code == 305:
-                                self.vel_cmd[6] = 100.00
+                                self.vel_cmd[6] = 1.0
                             elif event.code == 308:
-                                self.vel_cmd[6] = 10
+                                self.vel_cmd[6] = 0.1
                             elif event.code == 307:
-                                self.vel_cmd[6] = -100.00
+                                self.vel_cmd[6] = -1.0
                             elif event.code == 304:
-                                self.vel_cmd[6] = -10
+                                self.vel_cmd[6] = -0.1
                             #----------joint 3, 4 retreat-----------
                             elif event.code == 311:       # joint 3 retreat 
                                 self.joint3_dir = -1

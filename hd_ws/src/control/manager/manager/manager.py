@@ -33,14 +33,12 @@ class Manager(Node):
     
     def create_ros_interfaces(self):
         self.manual_direct_cmd_pub = self.create_publisher(Float32MultiArray, '/arm_control/manual_direct_cmd', 10)
-        self.pos_manual_inverse_cmd_pub = self.create_publisher(Float32MultiArray, '/arm_control/pos_manual_inverse_cmd', 10)
-        self.orient_manual_inverse_cmd_pub = self.create_publisher(Float32MultiArray, '/arm_control/orient_manual_inverse_cmd', 10)
         self.task_pub = self.create_publisher(Task, '/arm_control/task_assignment', 10)
         self.create_subscription(Int8MultiArray, "HD_Angles", self.manual_cmd_callback, 10)
         self.create_subscription(Int8, "CS_HD_mode", self.mode_callback, 10)
         self.create_subscription(Int16, "fsm_state", self.semi_autonomous_callback, 10)
 
-    def mode_callback(self, msg):# Int8):
+    def mode_callback(self, msg: Int8):
         """listens to HD_mode topic published by CS"""
         self.target_mode = msg.data
         self.mode_transitioning = True
@@ -48,7 +46,7 @@ class Manager(Node):
     def taskCmdCallback(self, msg):# Task):
         """listens to task assignement topic published by detection"""
 
-    def manual_cmd_callback(self, msg):# Int8MultiArray):
+    def manual_cmd_callback(self, msg: Int8MultiArray):
         """listens to HD_joints topic"""
         if self.mode == self.MANUAL_DIRECT:
             max_speed = 100
@@ -74,26 +72,6 @@ class Manager(Node):
         if VERBOSE:
             self.get_logger().info("manager direct cmd :   " + str(msg.data))
         self.manual_direct_cmd_pub.publish(msg)
-
-    def send_manual_inverse_cmd(self):
-        """sends the last manual command to the manual control and locks any other command until completion"""
-        if self.manual_inverse_command_old():
-            return
-        cmd = self.manual_inverse_command
-        if cmd[0] != 0 or cmd[1] != 0 or cmd[2] != 0:
-            msg = Float32MultiArray()
-            msg.data = cmd[:3]
-            msg.data.append(max(cmd[:3]))
-            if VERBOSE:
-                self.get_logger().info("manager pos man inv cmd :   " + str(msg.data))
-            self.pos_manual_inverse_cmd_pub.publish(msg)
-        elif cmd[3] != 0 or cmd[4] != 0 or cmd[5] != 0:
-            msg = Float32MultiArray()
-            msg.data = cmd[3:6]
-            msg.data.append(max(cmd[3:6]))
-            if VERBOSE:
-                self.get_logger().info("manager orient man inv cmd :   " + str(msg.data))
-            self.orient_manual_inverse_cmd_pub.publish(msg)
 
     def send_semi_autonomous_cmd(self):
         if self.semi_autonomous_command is not None:
@@ -121,7 +99,7 @@ class Manager(Node):
         elif self.mode == self.SEMI_AUTONOMOUS:
             self.send_semi_autonomous_cmd()
         elif self.mode == self.MANUAL_INVERSE:
-            self.send_manual_inverse_cmd()
+            pass
         elif self.mode == self.MANUAL_DIRECT:
             self.send_manual_direct_cmd()
 
