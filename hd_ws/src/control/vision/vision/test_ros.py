@@ -83,7 +83,7 @@ def main(args=None):
     for _ in range(5):
         pipe.wait_for_frames()
 
-    rate = publisher.create_rate(10)  # 10hz
+    rate = publisher.create_rate(30)  # 25hz
     
     while True:
         # msg = publisher.create_panelobject_message(0, 1., 2., 3., 0., 0., 0., 0.)

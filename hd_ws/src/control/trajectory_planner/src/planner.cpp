@@ -112,7 +112,7 @@ void Planner::spin() {
 }
 
 void Planner::loop() {
-    rclcpp::Rate rate(25);
+    rclcpp::Rate rate(30);
     while (rclcpp::ok()) {
         publishEEFPose();
         rate.sleep();

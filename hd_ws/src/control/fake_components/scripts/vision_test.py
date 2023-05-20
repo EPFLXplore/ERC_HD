@@ -85,7 +85,7 @@ def main():
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
     thread.start()
 
-    rate = node.create_rate(5)
+    rate = node.create_rate(30)
     btn_refresh_time = 0.1
     t = time.time()
     try:
