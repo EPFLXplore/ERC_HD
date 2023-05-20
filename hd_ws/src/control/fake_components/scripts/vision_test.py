@@ -78,7 +78,7 @@ def main():
     node = rclpy.create_node("kinematics_vision_test")
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", end_effector_callback, 10)
-    node.create_subscription(PanelObject, "/HD/distance_topic", artag_callback, 10)
+    node.create_subscription(PanelObject, "/HD/vision/distance_topic", artag_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)
     # Spin in a separate thread

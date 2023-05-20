@@ -66,11 +66,11 @@ private:
     // communication with the control software of the motors (ugly, maybe change that)
     void init_communication();
     void arm_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
-    void mode_change_callback(const std_msgs::msg::Int8:SharedPtr msg);
+    void mode_change_callback(const std_msgs::msg::Int8::SharedPtr msg);
     void communication_spin();
 
     bool scanning_ = true;
-    bool sending_commands_ = true;
+    bool sending_commands_ = false;
     rclcpp::Node::SharedPtr communication_node_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr hd_cmd_pub_;
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr hd_state_sub_;

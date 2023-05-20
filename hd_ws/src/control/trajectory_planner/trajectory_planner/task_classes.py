@@ -45,14 +45,15 @@ class PoseCommand(Command):
         self.finished = False
 
     def setPose(self, position=None, orientation=None, revert=True):
-        if self.pose is None: 
+        if self.pose is None:
             self.pose = Pose()
         if position is not None: 
             self.pose.position = position
         if orientation is not None: 
             self.pose.orientation = orientation
         if revert:
-            self.pose = epc.revert(self.pose)
+            self.pose = epc.revert_from_vision(self.pose)
+            self.pose = epc.revert_to_eef(self.pose)
 
     def execute(self):
         """publishes on /arm_control/pose_goal topic for the trajectory planner"""
@@ -245,7 +246,7 @@ class Task(object):
         # TODO
 
 
-class PressButton2(Task):
+class PressButton(Task):
     def __init__(self, executor, btn_id, pose=None, scan_pose=True):
         super().__init__(executor)
         self.btn_id = btn_id

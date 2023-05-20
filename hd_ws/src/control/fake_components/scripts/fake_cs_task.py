@@ -2,17 +2,17 @@
 
 import rclpy
 from kerby_interfaces.msg import Task
+from std_msgs.msg import Int8
 
 
 def main():
     rclpy.init()
     node = rclpy.create_node("fake_cs_task")
 
-    task_pub = node.create_publisher(Task, "/HD/task_assignment", 10)
+    task_pub = node.create_publisher(Int8, "/ROVER/element_id", 10)
 
-    msg = Task()
-    msg.id = 0
-    msg.description = "btn"
+    msg = Int8()
+    msg.data = 0
     task_pub.publish(msg)
 
     rclpy.shutdown()

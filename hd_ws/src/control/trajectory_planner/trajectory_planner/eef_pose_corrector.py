@@ -1,6 +1,7 @@
 import trajectory_planner.quaternion_arithmetic as qa
 from geometry_msgs.msg import Pose
 import trajectory_planner.pose_tracker as pt
+from math import pi
 
 
 def link6_transform():
@@ -28,6 +29,9 @@ def init_correction(eef):
 
 EEFCORRECTION = init_correction("finger1")
 
+VISION_TRANSFORM_CORRECTION = Pose()
+VISION_TRANSFORM_CORRECTION.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
+
 
 def correct_eef_pose(pose=None):
     if pose is None:
@@ -35,5 +39,18 @@ def correct_eef_pose(pose=None):
     return qa.compose_poses(pose, EEFCORRECTION)
 
 
-def revert(pose):
+def revert_to_eef(pose):
     return qa.compose_poses(pose, qa.reverse_pose(EEFCORRECTION))
+
+
+def correct_vision_pose(pose):
+    return qa.compose_poses(VISION_TRANSFORM_CORRECTION, pose)
+
+
+def revert_from_vision(pose):
+    return qa.compose_poses(pose, qa.reverse_pose(VISION_TRANSFORM_CORRECTION))
+
+
+def revert_to_vision(pose):     # TODO: think about these functions (pre or post composing with the tranform) + give better names
+    # only for simulating vision and its reference
+    return qa.compose_poses(qa.reverse_pose(VISION_TRANSFORM_CORRECTION), pose)

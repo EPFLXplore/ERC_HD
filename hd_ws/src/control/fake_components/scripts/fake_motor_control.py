@@ -2,7 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray, Float32MultiArray
 from sensor_msgs.msg import JointState
 import threading
 import copy
@@ -33,9 +33,9 @@ class FakeMotorControl(Node):
         self.init_state()
         self.state_pub = self.create_publisher(JointState, "/HD/arm_control/joint_telemetry", 10)
         self.create_subscription(JointState, "/HD/kinematics/joint_cmd", self.moveit_cmd_callback, 10)
-        self.create_subscription(Float64MultiArray, "/CS/vel_joint_cmd", self.vel_cmd_callback, 10)
+        self.create_subscription(Float32MultiArray, "/HD/fsm/joint_vel_cmd", self.vel_cmd_callback, 10)
 
-        self.control_mode = self.POSITION
+        self.control_mode = self.VELOCITY
         self.last_vel_cmd = time.time()
 
         self.cmd_velocities = [0.0]*self.MOTOR_COUNT
@@ -53,7 +53,7 @@ class FakeMotorControl(Node):
         self.state.velocity[:len(msg.velocity)] = msg.velocity
         self.state.effort[:len(msg.effort)] = msg.effort
 
-    def vel_cmd_callback(self, msg: Float64MultiArray):
+    def vel_cmd_callback(self, msg: Float32MultiArray):
         self.last_vel_cmd = time.time()
         self.control_mode = self.VELOCITY
         self.timer.tick()

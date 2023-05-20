@@ -117,7 +117,7 @@ def generate_launch_description():
             }
         ],
     )
-    
+
     # Controller manager for realtime interactions
     ros2_control_node = Node(
         package="controller_manager",
@@ -140,10 +140,16 @@ def generate_launch_description():
         for controller in controller_names
     ]
 
+    fake_motor_control_node = Node(
+        package="fake_components",
+        executable="fake_motor_control.py"
+    )
+
     return LaunchDescription([
         move_group_node,
         robot_state_publisher,
         ros2_control_node,
         rviz,
+        fake_motor_control_node,
         ] + spawn_controllers
     )

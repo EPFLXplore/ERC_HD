@@ -123,7 +123,15 @@ hardware_interface::return_type KerbyArmInterface::read() {
 hardware_interface::return_type KerbyArmInterface::write() {
     // command the hardware based onthe values stored in internal varialbes defined in export_command_interfaces
     
-    if (scanning_) return hardware_interface::return_type::OK;
+    // RCLCPP_INFO(communication_node_->get_logger(), "WWWWWWWW    %f %f %f %f %f %f %f",  hw_position_commands_[0],
+    //                                                                         hw_position_commands_[1],
+    //                                                                         hw_position_commands_[2],
+    //                                                                         hw_position_commands_[3],
+    //                                                                         hw_position_commands_[4],
+    //                                                                         hw_position_commands_[5],
+    //                                                                         hw_position_commands_[6]);
+
+    if (scanning_ || !sending_commands_) return hardware_interface::return_type::OK;
 
     sensor_msgs::msg::JointState msg;
     for (uint i = 0; i < hw_position_states_.size(); i++) {
@@ -177,12 +185,23 @@ void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::S
             hw_position_commands_[i] = msg->position[i];
         }
     }
-
+    // RCLCPP_INFO(communication_node_->get_logger(), "CCCCCCCC    %f %f %f %f %f %f %f",  hw_position_commands_[0],
+    //                                                                         hw_position_commands_[1],
+    //                                                                         hw_position_commands_[2],
+    //                                                                         hw_position_commands_[3],
+    //                                                                         hw_position_commands_[4],
+    //                                                                         hw_position_commands_[5],
+    //                                                                         hw_position_commands_[6]);
     scanning_ = false;
 }
 
-void KerbyArmInterface::mode_change_callback(const std_msgs::msg::Int8:SharedPtr msg) {
-    if (msg.data == 0);
+void KerbyArmInterface::mode_change_callback(const std_msgs::msg::Int8::SharedPtr msg) {
+    static int MANUAL_INVERSE = 0;
+    static int MANUAL_DIRECT = 1;
+    static int SEMI_AUTONOMOUS = 2;
+    static int AUTONOMOUS = 3;
+    int mode = msg->data;
+    sending_commands_ = (mode != MANUAL_DIRECT);
 }
 
 

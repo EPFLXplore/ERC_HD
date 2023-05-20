@@ -6,7 +6,7 @@ from geometry_msgs.msg import Twist
 import evdev
 import threading
 from time import sleep
-from std_msgs.msg import Float64MultiArray, Int8, Bool
+from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
 
 max_vel = 1
 dt    = 1/50
@@ -40,8 +40,8 @@ class GamePad(Node):
         self.joint3_dir = 1
         self.joint4_dir = 1
 
-        self.HD_Angles_pub = self.create_publisher(Float64MultiArray, "/CS/vel_joint_cmd", 10)
-        self.timer = Inft_Timer(dt, self.publish_twist)
+        self.HD_Angles_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_gamepad", 10)
+        self.timer = Inft_Timer(dt, self.publish_cmd)
         self.connect()
 
     def connect(self):
@@ -55,9 +55,9 @@ class GamePad(Node):
                 return device
             sleep(1)
 
-    def publish_twist(self) :
+    def publish_cmd(self) :
         print(self.vel_cmd)
-        self.HD_Angles_pub.publish(Float64MultiArray(data = list(map(float, self.vel_cmd))))
+        self.HD_Angles_pub.publish(Float32MultiArray(data = list(map(float, self.vel_cmd))))
 
     def read_gamepad(self) :
         while rclpy.ok():

@@ -86,8 +86,14 @@ def generate_launch_description():
         ]
     )
 
+    kerby_task_executor_node = Node(
+        package="trajectory_planner",
+        executable="task_executor.py"
+    )
+
     return LaunchDescription(
         [
             kerby_trajectory_planner_node,
+            kerby_task_executor_node
         ]
     )

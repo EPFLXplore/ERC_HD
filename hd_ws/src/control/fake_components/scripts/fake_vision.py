@@ -5,13 +5,15 @@ from rclpy.node import Node
 import threading
 from geometry_msgs.msg import Pose, Quaternion
 import trajectory_planner.quaternion_arithmetic as qa
+from interfaces.msg import PanelObject
+import trajectory_planner.eef_pose_corrector as epc
 
 
 def main():
     rclpy.init()
     node = rclpy.create_node("fake_vision")
 
-    detected_element_pub = node.create_publisher(Pose, "/HD/detected_element", 10)
+    detected_element_pub = node.create_publisher(PanelObject, "/HD/vision/distance_topic", 10)
 
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
@@ -21,14 +23,19 @@ def main():
 
     try:
         while rclpy.ok():
+            msg = PanelObject()
             pose = Pose()
             pose.orientation = qa.quat((1.0, 0.0, 0.0), 4.2)#math.pi)
             #pose.orientation = Quaternion()
-            pose.position.x = 0.1
-            pose.position.y = -0.5
-            pose.position.z = -0.1
+            scale = 100
+            pose.position.x = 0.1 * scale
+            pose.position.y = -0.5 * scale
+            pose.position.z = -0.1 * scale
             #pose.position.x = pose.position.y = 0.0; pose.position.z = 0.00
-            detected_element_pub.publish(pose)
+
+            pose = epc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
+            msg.pose = pose
+            detected_element_pub.publish(msg)
 
             rate.sleep()
 

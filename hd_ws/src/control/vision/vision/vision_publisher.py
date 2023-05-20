@@ -11,7 +11,7 @@ class VisionPublisher(Node):
 
     def __init__(self):
         super().__init__('vision_distance_publisher')
-        self.publisher_=self.create_publisher(PanelObject, '/HD/distance_topic', 10)
+        self.publisher_=self.create_publisher(PanelObject, '/HD/vision/distance_topic', 10)
         # timer_period = 1
         # self.timer = self.create_timer(timer_period, self.timer_callback)
         # # self.projector = projector

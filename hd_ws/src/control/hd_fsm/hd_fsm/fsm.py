@@ -4,19 +4,20 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray, Int8MultiArray, Float32, Int8, Bool, Int16
 from kerby_interfaces.msg import Task
+from interfaces.msg import PanelObject
 
 
 VERBOSE = True
 
 
-class Manager(Node):
-    AUTONOMOUS = 0
-    SEMI_AUTONOMOUS = 1
-    MANUAL_INVERSE = 2
-    MANUAL_DIRECT = 3
+class FSM(Node):
+    MANUAL_INVERSE = 0
+    MANUAL_DIRECT = 1
+    SEMI_AUTONOMOUS = 2
+    AUTONOMOUS = 3
 
     def __init__(self):
-        super().__init__("HD_control_manager")
+        super().__init__("HD_fsm")
         self.create_ros_interfaces()
         self.velocity = 0
         self.command_expiration = .5   # seconds
@@ -25,40 +26,39 @@ class Manager(Node):
         motor_count = 8
         self.manual_direct_command = [0.0]*motor_count
         self.manual_inverse_command = [0.0]*motor_count
-        self.semi_autonomous_command = None
+        self.semi_autonomous_command_id = None
         self.mode = self.MANUAL_DIRECT
         self.target_mode = self.MANUAL_DIRECT
         self.mode_transitioning = False
         self.reset_arm_pos = False
     
     def create_ros_interfaces(self):
-        self.manual_direct_cmd_pub = self.create_publisher(Float32MultiArray, '/arm_control/manual_direct_cmd', 10)
-        self.task_pub = self.create_publisher(Task, '/arm_control/task_assignment', 10)
-        self.create_subscription(Int8MultiArray, "HD_Angles", self.manual_cmd_callback, 10)
-        self.create_subscription(Int8, "CS_HD_mode", self.mode_callback, 10)
-        self.create_subscription(Int16, "fsm_state", self.semi_autonomous_callback, 10)
+        self.manual_direct_cmd_pub = self.create_publisher(Float32MultiArray, '/HD/fsm/joint_vel_cmd', 10)
+        self.task_pub = self.create_publisher(Task, '/HD/fsm/task_assignment', 10)
+        self.mode_change_pub = self.create_publisher(Int8, '/HD/fsm/mode_change', 10)
+        self.create_subscription(Float32MultiArray, "/ROVER/HD_gamepad", self.manual_cmd_callback, 10)
+        self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
+        self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
 
     def mode_callback(self, msg: Int8):
         """listens to HD_mode topic published by CS"""
         self.target_mode = msg.data
         self.mode_transitioning = True
 
-    def taskCmdCallback(self, msg):# Task):
-        """listens to task assignement topic published by detection"""
-
-    def manual_cmd_callback(self, msg: Int8MultiArray):
+    def manual_cmd_callback(self, msg: Float32MultiArray):
         """listens to HD_joints topic"""
         if self.mode == self.MANUAL_DIRECT:
-            max_speed = 100
-            self.manual_direct_command = [float(x)/max_speed for x in msg.data]
+            self.manual_direct_command = msg.data
             self.received_manual_direct_cmd_at = time.time()
+            pass
         elif self.mode == self.MANUAL_INVERSE:
-            max_speed = 100
-            self.manual_inverse_command = [float(x)/max_speed for x in msg.data]
+            self.manual_inverse_command = msg.data
             self.received_manual_inverse_cmd_at = time.time()
 
-    def semi_autonomous_callback(self, msg):
-        self.semi_autonomous_command = msg.data
+    def task_cmd_callback(self, msg: Int8):
+        if self.mode != self.SEMI_AUTONOMOUS: return
+        
+        self.semi_autonomous_command_id = msg.data
 
     def send_task_cmd(self):
         """sends the last task command to the task executor and locks any other command until completion"""
@@ -70,17 +70,18 @@ class Manager(Node):
         msg = Float32MultiArray()
         msg.data = self.manual_direct_command
         if VERBOSE:
-            self.get_logger().info("manager direct cmd :   " + str(msg.data))
+            self.get_logger().info("FSM direct cmd :   " + str(list(msg.data)))
         self.manual_direct_cmd_pub.publish(msg)
 
     def send_semi_autonomous_cmd(self):
-        if self.semi_autonomous_command is not None:
+        if self.semi_autonomous_command_id is not None:
             self.get_logger().info("SENDING SEMI AUTO CMD")
-            task = Task()
-            task.description = "btn"
-            task.id = self.semi_autonomous_command
-            self.semi_autonomous_command = None
-            self.task_pub.publish(task)
+            msg = Task()
+            msg.description = "btn"
+            msg.id = self.semi_autonomous_command_id
+            #msg.pose = self.semi_autonomous_command_id.pose
+            self.semi_autonomous_command_id = None
+            self.task_pub.publish(msg)
 
     def updateWorld(self):
         """sends a world update to the trajectory planner"""
@@ -117,36 +118,36 @@ class Manager(Node):
         if transition_condition:
             self.mode_transitioning = False
             self.mode = self.target_mode
+            msg = Int8()
+            msg.data = self.mode
+            self.mode_change_pub.publish(msg)
 
-    def run(self):
-        """main"""
-        spin = threading.Thread(target=rclpy.spin, args=(self,), daemon=True)
-        spin.start()
-        rate = self.create_rate(2)   # 25hz
-        print("ZEBI")
-
-        """if VERBOSE:
-            rospy.logwarn("manager started")"""
-        try:
-            while rclpy.ok():
-                if self.mode_transitioning:
-                    self.transition_loop_action()
-                else:
-                    self.normal_loop_action()
-                rate.sleep()
-        except KeyboardInterrupt:
-            pass
-        
-        self.destroy_node()
-        rclpy.shutdown()
-        spin.join()
+    def loop(self):
+        rate = self.create_rate(25)   # 25hz
+        while rclpy.ok():
+            if self.mode_transitioning:
+                self.transition_loop_action()
+            else:
+                self.normal_loop_action()
+            rate.sleep()
 
 
 def main(args=None):
     rclpy.init(args=args)
-    Manager().run()
+    node = FSM()
+
+    # Spin in a separate thread
+    thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
+    thread.start()
+
+    try:
+        node.loop()
+    except KeyboardInterrupt:
+        pass
+
+    rclpy.shutdown()
+    thread.join()
 
 
 if __name__ == '__main__':
     main()
-
