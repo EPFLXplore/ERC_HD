@@ -1,5 +1,6 @@
 import numpy as np
 import cv2 as cv
+import numpy.linalg as linalg
 
 
 """
@@ -17,6 +18,11 @@ def camera_projection(point, rVec, tVec):
 
     # compute the rotation matrix
     R, jacobian = cv.Rodrigues(rVec)
+    R = np.array(R)
+
+    # change of perspective
+    tVec_np = np.array(tVec)
+    tVec_np = -linalg.inv(R) @ tVec_np.T
 
     # append extra row and column
     R = np.vstack((R, [0, 0, 0]))
@@ -25,13 +31,12 @@ def camera_projection(point, rVec, tVec):
     # identity 4x4
     id_3 = np.eye(3)
 
-    id3 = np.vstack((id_3, [0,0,0]))
+    id3 = np.vstack((id_3, [0, 0, 0]))
 
-    # -tVec appended to identity
-    M = np.hstack((id3, [[-tVec[0, 0]], [-tVec[0, 1]], [-tVec[0, 2]], [1]]))
+    M = np.hstack((id3, [[-tVec_np[0, 0]], [-tVec_np[1, 0]], [-tVec_np[2, 0]], [1]]))
 
     x, y, z, n = R @ M @ point.T
 
-    return np.array([-x, -y, z]) / n
+    return np.array([x, y, z]) / n
 
 

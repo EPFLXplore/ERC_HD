@@ -62,8 +62,8 @@ class VisionPublisher(Node):
     
     def publish_inform(self, msg):
         self.publisher_.publish(msg)
-        self.get_logger().info('Publishing msg with id: "%d"' % msg.id)
-        self.get_logger().info('Publishing msg with orientation x : "%f"' % msg.pose.orientation.x)
+        # self.get_logger().info('Publishing msg with id: "%d"' % msg.id)
+        # self.get_logger().info('Publishing msg with orientation x : "%f"' % msg.pose.orientation.x)
 
 
 def main(args=None):

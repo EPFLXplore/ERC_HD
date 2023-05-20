@@ -16,6 +16,26 @@ import geometry_msgs
 from geometry_msgs.msg import Pose
 
 import threading
+import numpy.linalg as linalg
+
+
+def rvec2quat(rVec):
+    # conversion to rotation matrix
+    r = R.from_rotvec(rVec)
+    rot_mat = r.as_dcm()#as_matrix()
+
+    # reshape to 3*3
+    rot_mat = rot_mat.T.reshape((3,3))
+
+    # change of reference
+    rot_mat = linalg.inv(rot_mat)
+
+    # convert to quat
+    r2 = R.from_dcm(rot_mat)#from_matrix(rot_mat)
+    quat = r2.as_quat()
+    
+    return quat
+
 
 def main(args=None):
     rclpy.init(args=args)
@@ -109,20 +129,11 @@ def main(args=None):
 
                 point_cam = camera_projection(TARGET_AR, rVec[i], tVec[i])
 
-                r = R.from_rotvec(rVec[i])
-                rot_mat = r.as_dcm()#as_matrix()
-                # print(rot_mat.shape)
-                rot_mat = rot_mat.T.reshape((3,3))
-                # print(rot_mat.shape)
-                r2 = R.from_dcm(rot_mat)#from_matrix(rot_mat)
-                angles = r2.as_euler('xyz', degrees=True).flatten()
-                quat = r2.as_quat()
-
-                print('quat: ', quat)
+                quat = rvec2quat(rVec[i])
 
                 msg = publisher.create_panelobject_message(0, 
-                                                     point_cam[0], point_cam[1], point_cam[2],
-                                                     quat[0], quat[1], quat[2], quat[3])
+                                                     *point_cam,
+                                                     *quat)
                 
                 publisher.publish_inform(msg)
 
