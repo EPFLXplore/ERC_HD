@@ -3,9 +3,9 @@
 import rclpy
 from rclpy.node import Node
 import threading
-from trajectory_planner.task_classes import *
-import trajectory_planner.quaternion_arithmetic as qa
-import trajectory_planner.eef_pose_corrector as epc
+from task_execution.all_tasks import *
+import kinematics_utils.quaternion_arithmetic as qa
+import kinematics_utils.pose_corrector as pc
 from kerby_interfaces.msg import Task, Object
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Bool, Float64MultiArray
@@ -46,7 +46,7 @@ def artag_callback(msg):
 
 
 def end_effector_callback(msg):
-    combined = epc.correct_eef_pose(msg)
+    combined = pc.correct_eef_pose(msg)
     end_effector_pose.position = combined.position
     end_effector_pose.orientation = combined.orientation
 
@@ -81,6 +81,7 @@ def main():
     node.create_subscription(PanelObject, "/HD/vision/distance_topic", artag_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)
+    
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
     thread.start()

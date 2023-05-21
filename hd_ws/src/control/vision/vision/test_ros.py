@@ -1,7 +1,10 @@
 import numpy as np
 import cv2 as cv
 from cv2 import aruco
-import pyrealsense2.pyrealsense2 as rs
+try:
+    import pyrealsense2.pyrealsense2 as rs
+except:
+    import pyrealsense2 as rs
 from vision.camera_projection import camera_projection
 from scipy.spatial.transform import Rotation as R
 from vision.vision_publisher import VisionPublisher

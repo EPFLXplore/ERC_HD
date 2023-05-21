@@ -1,4 +1,5 @@
 #include "trajectory_planner/planner.h"
+#include <chrono>
 
 
 using namespace std::chrono_literals;
@@ -10,9 +11,11 @@ Planner::Planner(rclcpp::NodeOptions node_options) :
     m_pose_target_sub = this->create_subscription<kerby_interfaces::msg::PoseGoal>("/HD/kinematics/pose_goal", 10, std::bind(&Planner::poseTargetCallback, this, _1));
     m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
     m_add_object_sub = this->create_subscription<kerby_interfaces::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
+    m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&Planner::modeChangeCallback, this, _1));
 
     m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/HD/kinematics/eef_pose", 10);
     m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/traj_feedback", 10);
+    m_done_planning_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/done_planning", 10);
 }
 
 void Planner::config() {
@@ -57,8 +60,9 @@ Planner::TrajectoryStatus Planner::computeCartesianPath(const geometry_msgs::msg
     const double eef_step = 0.01;
     double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
     if (fraction != 1.0) status = Planner::TrajectoryStatus::PLANNING_ERROR;
-    else if (m_move_group->execute(trajectory) != moveit::planning_interface::MoveItErrorCode::SUCCESS) 
-        status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+    else if (!execute(trajectory)) status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+    // else if (m_move_group->execute(trajectory) != moveit::planning_interface::MoveItErrorCode::SUCCESS) 
+    //     status = Planner::TrajectoryStatus::EXECUTION_ERROR;
     status = Planner::TrajectoryStatus::SUCCESS;
 
     std_msgs::msg::Bool msg;
@@ -72,7 +76,13 @@ bool Planner::plan() {
 }
 
 bool Planner::execute() {
+    publishDonePlanning();
     return (m_move_group->execute(m_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+}
+
+bool Planner::execute(moveit_msgs::msg::RobotTrajectory &trajectory) {
+    publishDonePlanning();
+    return (m_move_group->execute(trajectory) != moveit::planning_interface::MoveItErrorCode::SUCCESS);
 }
 
 void Planner::setScalingFactors(double vel, double accel) {
@@ -115,6 +125,7 @@ void Planner::loop() {
     rclcpp::Rate rate(30);
     while (rclcpp::ok()) {
         publishEEFPose();
+        if (m_in_direct_mode) m_move_group->setStartStateToCurrentState();
         rate.sleep();
     }
 }
@@ -144,7 +155,23 @@ void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr m
     if (msg->type == "box") addBoxToWorld(msg->shape.data, msg->pose, msg->name);
 }
 
+void Planner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg) {
+    static int MANUAL_INVERSE = 0;
+    static int MANUAL_DIRECT = 1;
+    static int SEMI_AUTONOMOUS = 2;
+    static int AUTONOMOUS = 3;
+    int mode = msg->data;
+    m_in_direct_mode = (mode == MANUAL_DIRECT);
+}
+
 void Planner::publishEEFPose() {
     geometry_msgs::msg::Pose msg = m_move_group->getCurrentPose().pose;
     m_eef_pose_pub->publish(msg);
+}
+
+void Planner::publishDonePlanning() {
+    std_msgs::msg::Bool msg;
+    msg.data = true;
+    m_done_planning_pub->publish(msg);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }

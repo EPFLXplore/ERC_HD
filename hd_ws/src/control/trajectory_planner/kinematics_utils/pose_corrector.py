@@ -1,0 +1,75 @@
+import kinematics_utils.quaternion_arithmetic as qa
+from geometry_msgs.msg import Pose
+import kinematics_utils.pose_tracker as pt
+from math import pi
+
+
+# TRANSFORM CONSTRUCTORS
+
+def link6_transform():
+    transform = Pose()
+    transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=2.975)
+    d = 0.1598
+    transform.position = qa.point_image([0.0, 0.0, d], transform.orientation)
+    return transform
+
+
+def finger1_transform():    # actually joint name is finger1 but the link is hd_finger2_1, will be corrected
+    transform = Pose()
+    transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=2.975)
+    vect = [-0.8, 0.1005, -0.0785]
+    transform.position = qa.point_image(vect, transform.orientation)
+    return transform
+
+
+def construct_eef_transform(eef):
+    transforms = {"link6": link6_transform, "finger1": finger1_transform}
+    if eef not in transforms:
+        raise ValueError(f"No end effector transform for {eef}")
+    return transforms[eef]()
+
+
+def construct_vision_tranform():
+    transform = Pose()
+    transform.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
+    return transform
+
+
+# STATIC TRANSFORMS
+
+EEF_TRANSFORM_CORRECTION = construct_eef_transform("finger1")
+
+VISION_TRANSFORM_CORRECTION = Pose()
+VISION_TRANSFORM_CORRECTION.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
+
+
+# CORRECTORS
+
+def correct_eef_pose(pose=None):
+    if pose is None:
+        pose = pt.END_EFFECTOR_POSE
+    return qa.compose_poses(pose, EEF_TRANSFORM_CORRECTION)
+
+
+def revert_to_eef(pose):
+    return qa.compose_poses(pose, qa.reverse_pose(EEF_TRANSFORM_CORRECTION))
+
+
+def correct_vision_pose(pose):
+    return qa.compose_poses(VISION_TRANSFORM_CORRECTION, pose)
+
+
+def revert_from_vision(pose):
+    return qa.compose_poses(pose, qa.reverse_pose(VISION_TRANSFORM_CORRECTION))
+
+
+def revert_to_vision(pose):     # TODO: think about these functions (pre or post composing with the tranform) + give better names
+    # only for simulating vision and its reference
+    pose = qa.compose_poses(qa.reverse_pose(VISION_TRANSFORM_CORRECTION), pose)
+    return qa.compose_poses(pose, qa.reverse_pose(VISION_TRANSFORM_CORRECTION))
+
+
+def global_revert(pose):
+    pose = revert_from_vision(pose)
+    pose = revert_to_eef(pose)
+    return pose

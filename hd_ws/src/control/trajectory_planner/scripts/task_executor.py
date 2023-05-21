@@ -2,15 +2,15 @@
 
 import rclpy
 from rclpy.node import Node
-from trajectory_planner.task_classes import PressButton
-import trajectory_planner.pose_tracker as pt
+from task_execution.all_tasks import PressButton
 from kerby_interfaces.msg import Task, Object, PoseGoal
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8
 import threading
 from interfaces.msg import PanelObject
-import trajectory_planner.eef_pose_corrector as epc
-import trajectory_planner.quaternion_arithmetic as qa
+import kinematics_utils.pose_tracker as pt
+import kinematics_utils.pose_corrector as pc
+import kinematics_utils.quaternion_arithmetic as qa
 
 
 class Executor(Node):
@@ -76,7 +76,7 @@ class Executor(Node):
         msg = Object()
         msg.type = type
         msg.name = name
-        msg.pose = epc.revert_from_vision(pose)
+        msg.pose = pc.revert_from_vision(pose)
         shape_ = Float64MultiArray()
         shape_.data = shape
         msg.shape = shape_
@@ -112,7 +112,8 @@ class Executor(Node):
 
         shape = [0.2, 0.1, 0.0001]
         relative_pose = pt.DETECTED_OBJECTS_POSE[0].object_pose
-        pose = qa.compose_poses(epc.correct_eef_pose(), relative_pose)
+        #pose = qa.compose_poses(pc.correct_eef_pose(), relative_pose)
+        pose = relative_pose
         name = "test_btn"
         self.addObjectToWorld(shape, pose, name)
 

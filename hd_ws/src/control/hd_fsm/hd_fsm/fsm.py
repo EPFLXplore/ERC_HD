@@ -2,9 +2,10 @@ import time
 import threading
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float32MultiArray, Int8MultiArray, Float32, Int8, Bool, Int16
+from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8MultiArray, Float32, Int8, Bool, Int16
 from kerby_interfaces.msg import Task
 from interfaces.msg import PanelObject
+import array
 
 
 VERBOSE = True
@@ -24,8 +25,7 @@ class FSM(Node):
         self.received_manual_direct_cmd_at = time.time() - self.command_expiration
         self.received_manual_inverse_cmd_at = time.time() - self.command_expiration
         motor_count = 8
-        self.manual_direct_command = [0.0]*motor_count
-        self.manual_inverse_command = [0.0]*motor_count
+        self.manual_direct_command = array.array('d', [0.0]*motor_count)
         self.semi_autonomous_command_id = None
         self.mode = self.MANUAL_DIRECT
         self.target_mode = self.MANUAL_DIRECT
@@ -33,7 +33,7 @@ class FSM(Node):
         self.reset_arm_pos = False
     
     def create_ros_interfaces(self):
-        self.manual_direct_cmd_pub = self.create_publisher(Float32MultiArray, '/HD/fsm/joint_vel_cmd', 10)
+        self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, '/HD/fsm/joint_vel_cmd', 10)
         self.task_pub = self.create_publisher(Task, '/HD/fsm/task_assignment', 10)
         self.mode_change_pub = self.create_publisher(Int8, '/HD/fsm/mode_change', 10)
         self.create_subscription(Float32MultiArray, "/ROVER/HD_gamepad", self.manual_cmd_callback, 10)
@@ -50,10 +50,8 @@ class FSM(Node):
         if self.mode == self.MANUAL_DIRECT:
             self.manual_direct_command = msg.data
             self.received_manual_direct_cmd_at = time.time()
-            pass
         elif self.mode == self.MANUAL_INVERSE:
-            self.manual_inverse_command = msg.data
-            self.received_manual_inverse_cmd_at = time.time()
+            pass
 
     def task_cmd_callback(self, msg: Int8):
         if self.mode != self.SEMI_AUTONOMOUS: return
@@ -67,8 +65,8 @@ class FSM(Node):
         """sends the last direct command to the motor control and locks any other command until completion"""
         if self.manual_direct_command_old(): 
             return
-        msg = Float32MultiArray()
-        msg.data = self.manual_direct_command
+        msg = Float64MultiArray()
+        msg.data = array.array('d', self.manual_direct_command)
         if VERBOSE:
             self.get_logger().info("FSM direct cmd :   " + str(list(msg.data)))
         self.manual_direct_cmd_pub.publish(msg)

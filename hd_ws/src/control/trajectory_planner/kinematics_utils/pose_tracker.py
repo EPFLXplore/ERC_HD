@@ -1,9 +1,9 @@
 from geometry_msgs.msg import Pose
-import trajectory_planner.quaternion_arithmetic as qa
+import kinematics_utils.quaternion_arithmetic as qa
 import math
 import copy
 from interfaces.msg import PanelObject
-import trajectory_planner.eef_pose_corrector as epc
+import kinematics_utils.pose_corrector as pc
 
 
 END_EFFECTOR_POSE = Pose()
@@ -40,8 +40,6 @@ def detected_object_pose_callback(msg: PanelObject):
     for _ in range(len(DETECTED_OBJECTS_POSE)):
         DETECTED_OBJECTS_POSE.pop()
 
-    #mm_to_m = 1/1000.0  # mm to m conversion
-
     cm_to_m = 1/100
 
     corrected_pose = Pose()
@@ -50,11 +48,14 @@ def detected_object_pose_callback(msg: PanelObject):
     corrected_pose.position.z = msg.pose.position.z * cm_to_m
     corrected_pose.orientation = msg.pose.orientation
 
-    corected_pose = epc.correct_vision_pose(corrected_pose)
+    corrected_pose = pc.correct_vision_pose(corrected_pose)
 
+    corrected_pose = qa.compose_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), corrected_pose)
+    
     detected_object = DetectedObject()
-    detected_object.artag_pose = corected_pose
-    detected_object.object_pose = corected_pose
+    detected_object.artag_pose = corrected_pose
+    detected_object.object_pose = corrected_pose
+    
     DETECTED_OBJECTS_POSE.append(detected_object)
 
     DETECTED_OBJECTS_LOCKED = False

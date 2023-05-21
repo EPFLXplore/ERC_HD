@@ -4,9 +4,9 @@ import rclpy
 from rclpy.node import Node
 import threading
 from geometry_msgs.msg import Pose, Quaternion
-import trajectory_planner.quaternion_arithmetic as qa
+import kinematics_utils.quaternion_arithmetic as qa
 from interfaces.msg import PanelObject
-import trajectory_planner.eef_pose_corrector as epc
+import kinematics_utils.pose_corrector as pc
 
 
 def main():
@@ -33,7 +33,7 @@ def main():
             pose.position.z = -0.1 * scale
             #pose.position.x = pose.position.y = 0.0; pose.position.z = 0.00
 
-            pose = epc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
+            pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
             msg.pose = pose
             detected_element_pub.publish(msg)
 

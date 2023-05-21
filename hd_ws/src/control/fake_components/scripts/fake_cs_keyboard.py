@@ -2,7 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Float64MultiArray, Float32MultiArray
 import keyboard
 import threading
 
@@ -20,7 +20,7 @@ class FakeCSKeyboard(Node):
         self.vel = 0.0
     
     def publish_cmd(self):
-        msg = Float64MultiArray()
+        msg = Float32MultiArray()
         msg.data = [float(self.vel*c) for c in self.cmd]
         self.cmd_pub.publish(msg)
     

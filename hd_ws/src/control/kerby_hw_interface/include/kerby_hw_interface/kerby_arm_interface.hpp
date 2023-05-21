@@ -17,6 +17,8 @@
 #include "visibility_control.h"
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "std_msgs/msg/int8.hpp"
+#include "std_msgs/msg/bool.hpp"
+#include "std_msgs/msg/float64_multi_array.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 
@@ -67,14 +69,16 @@ private:
     void init_communication();
     void arm_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
     void mode_change_callback(const std_msgs::msg::Int8::SharedPtr msg);
+    void done_planning_callback(const std_msgs::msg::Bool::SharedPtr msg);
     void communication_spin();
 
     bool scanning_ = true;
     bool sending_commands_ = false;
     rclcpp::Node::SharedPtr communication_node_;
-    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr hd_cmd_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr hd_cmd_pub_;
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr hd_state_sub_;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr mode_change_sub_;
+    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr done_planning_sub_;
     
 };
 

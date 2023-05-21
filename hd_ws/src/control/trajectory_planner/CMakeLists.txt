@@ -56,7 +56,13 @@ install(TARGETS planner
 
 
 # Install Python modules
-ament_python_install_package(${PROJECT_NAME})
+#ament_python_install_package(${PROJECT_NAME})
+ament_python_install_package(kinematics_utils)
+ament_python_install_package(task_execution)
+
+
+
+
 # Install Python executables
 
 install(PROGRAMS

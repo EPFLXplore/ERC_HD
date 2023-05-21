@@ -133,9 +133,9 @@ hardware_interface::return_type KerbyArmInterface::write() {
 
     if (scanning_ || !sending_commands_) return hardware_interface::return_type::OK;
 
-    sensor_msgs::msg::JointState msg;
+    std_msgs::msg::Float64MultiArray msg;
     for (uint i = 0; i < hw_position_states_.size(); i++) {
-        msg.position.push_back(hw_position_commands_[i]);
+        msg.data.push_back(hw_position_commands_[i]);
     }
     hd_cmd_pub_->publish(msg);
 
@@ -167,11 +167,13 @@ void KerbyArmInterface::communication_spin() {
 void KerbyArmInterface::init_communication() {
     communication_node_ = std::make_shared<rclcpp::Node>("hardware_arm_interface_communication_node");
 
-    hd_cmd_pub_ = communication_node_->create_publisher<sensor_msgs::msg::JointState>("/HD/kinematics/joint_cmd", 10);
-    hd_state_sub_ = communication_node_->create_subscription<sensor_msgs::msg::JointState>("/HD/arm_control/joint_telemetry", 10,
+    hd_cmd_pub_ = communication_node_->create_publisher<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_pos_cmd", 10);
+    hd_state_sub_ = communication_node_->create_subscription<sensor_msgs::msg::JointState>("/HD/motor_control/joint_telemetry", 10,
         std::bind(&KerbyArmInterface::arm_state_callback, this, std::placeholders::_1));
     mode_change_sub_ = communication_node_->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10,
         std::bind(&KerbyArmInterface::mode_change_callback, this, std::placeholders::_1));
+    done_planning_sub_ = communication_node_->create_subscription<std_msgs::msg::Bool>("/HD/kinematics/done_planning", 10,
+        std::bind(&KerbyArmInterface::done_planning_callback, this, std::placeholders::_1));
 
     std::thread first(&KerbyArmInterface::communication_spin, this);
     first.detach();
@@ -201,7 +203,12 @@ void KerbyArmInterface::mode_change_callback(const std_msgs::msg::Int8::SharedPt
     static int SEMI_AUTONOMOUS = 2;
     static int AUTONOMOUS = 3;
     int mode = msg->data;
+    //if (mode == MANUAL_DIRECT) sending_commands_ = false;
     sending_commands_ = (mode != MANUAL_DIRECT);
+}
+
+void KerbyArmInterface::done_planning_callback(const std_msgs::msg::Bool::SharedPtr msg) {
+    sending_commands_ = true;
 }
 
 
