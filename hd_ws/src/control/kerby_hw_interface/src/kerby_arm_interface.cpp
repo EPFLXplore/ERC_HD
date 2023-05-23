@@ -69,7 +69,6 @@ hardware_interface::return_type KerbyArmInterface::configure(const hardware_inte
     return hardware_interface::return_type::OK;
 }
 
-
 hardware_interface::return_type KerbyArmInterface::start() {
     // setup communication to the hardware and set everything up so that the hardware can be activated
 
@@ -172,8 +171,10 @@ void KerbyArmInterface::init_communication() {
         std::bind(&KerbyArmInterface::arm_state_callback, this, std::placeholders::_1));
     mode_change_sub_ = communication_node_->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10,
         std::bind(&KerbyArmInterface::mode_change_callback, this, std::placeholders::_1));
-    done_planning_sub_ = communication_node_->create_subscription<std_msgs::msg::Bool>("/HD/kinematics/done_planning", 10,
-        std::bind(&KerbyArmInterface::done_planning_callback, this, std::placeholders::_1));
+    // done_planning_sub_ = communication_node_->create_subscription<std_msgs::msg::Bool>("/HD/kinematics/done_planning", 10,
+    //     std::bind(&KerbyArmInterface::done_planning_callback, this, std::placeholders::_1));
+    position_mode_switch_ = communication_node_->create_subscription<std_msgs::msg::Int8>("/HD/kinematics/position_mode_switch", 10,
+        std::bind(&KerbyArmInterface::position_mode_switch_callback, this, std::placeholders::_1));
 
     std::thread first(&KerbyArmInterface::communication_spin, this);
     first.detach();
@@ -203,12 +204,13 @@ void KerbyArmInterface::mode_change_callback(const std_msgs::msg::Int8::SharedPt
     static int SEMI_AUTONOMOUS = 2;
     static int AUTONOMOUS = 3;
     int mode = msg->data;
-    //if (mode == MANUAL_DIRECT) sending_commands_ = false;
-    sending_commands_ = (mode != MANUAL_DIRECT);
+    if (mode == MANUAL_DIRECT) sending_commands_ = false;
+    //sending_commands_ = (mode != MANUAL_DIRECT);
 }
 
-void KerbyArmInterface::done_planning_callback(const std_msgs::msg::Bool::SharedPtr msg) {
-    sending_commands_ = true;
+void KerbyArmInterface::position_mode_switch_callback(const std_msgs::msg::Int8::SharedPtr msg) {
+    if (msg->data == 1)
+        sending_commands_ = true;
 }
 
 

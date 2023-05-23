@@ -18,13 +18,13 @@ class GamePad(Node):
         print("connecting")
         self.device = None
         while not self.device : 
-            for device in [evdev.InputDevice(path) for path in evdev.list_devices()] : 
+            for device in [evdev.InputDevice(path) for path in evdev.list_devices()]: 
                 print(device)
                 self.device = device
                 return device
             sleep(1)
 
-    def read_gamepad(self) :
+    def read_gamepad(self):
         while rclpy.ok():
             try : 
                 for event in self.device.read_loop():

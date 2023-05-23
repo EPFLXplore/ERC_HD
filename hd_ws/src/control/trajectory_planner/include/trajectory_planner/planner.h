@@ -50,7 +50,11 @@ public:
 
     bool execute();
 
+    bool executeSilent();
+
     bool execute(moveit_msgs::msg::RobotTrajectory &trajectory);
+
+    void enforceCurrentState();
 
     void setScalingFactors(double vel, double accel);
 
@@ -59,6 +63,8 @@ public:
     void spin();
 
     void loop();
+
+    void updateCurrentPosition();
 
 private:
     void poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg);
@@ -70,14 +76,6 @@ private:
     void modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg);
 
     void publishEEFPose();
-
-    void publishDonePlanning();
-
-    // void poseTargetSrv(const std::shared_ptr<kerby_interfaces::srv::PoseGoal::Request>          request, 
-    //                          std::shared_ptr<kerby_interfaces::srv::PoseGoal::Response>         response);
-
-    // void jointTargetSrv(const std::shared_ptr<kerby_interfaces::srv::JointGoal::Request>        request, 
-    //                           std::shared_ptr<kerby_interfaces::srv::JointGoal::Response>       response);
 
 
     const std::string                                                   m_planning_group = "kerby_arm_group";
@@ -91,6 +89,6 @@ private:
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_mode_change_sub;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr              m_eef_pose_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   m_traj_feedback_pub;
-    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   m_done_planning_pub;
+    rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr                   m_position_mode_switch_pub;
     bool                                                                m_in_direct_mode = true;
 };

@@ -55,7 +55,7 @@ class GamePad(Node):
                 return device
             sleep(1)
 
-    def publish_cmd(self) :
+    def publish_cmd(self):
         print(self.vel_cmd)
         self.HD_Angles_pub.publish(Float32MultiArray(data = list(map(float, self.vel_cmd))))
 
