@@ -78,7 +78,6 @@ private:
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr hd_cmd_pub_;
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr hd_state_sub_;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr mode_change_sub_;
-    //rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr done_planning_sub_;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr position_mode_switch_;
     
 };

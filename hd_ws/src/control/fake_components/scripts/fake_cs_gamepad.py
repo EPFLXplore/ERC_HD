@@ -11,6 +11,12 @@ from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
 max_vel = 1
 dt    = 1/50
 
+max_velocities = [0.4, 0.0002, 0.00005, 0.4, 0.2, 0.2, 1, 1]
+
+
+def clean(x):
+    return 0 if abs(x) < 0.05 else x
+
 
 class Inft_Timer():
     def __init__(self, t, target):
@@ -34,7 +40,7 @@ class GamePad(Node):
     def __init__(self):
         super().__init__("fake_cs_gamepad")
 
-        self.vel_cmd = [0.0]*7
+        self.vel_cmd = [0.0]*8
 
         # direction of joint 3, 4
         self.joint3_dir = 1
@@ -56,8 +62,9 @@ class GamePad(Node):
             sleep(1)
 
     def publish_cmd(self):
-        print(self.vel_cmd)
-        self.HD_Angles_pub.publish(Float32MultiArray(data = list(map(float, self.vel_cmd))))
+        l = [v*x for v,x  in zip(max_velocities, list(map(clean, map(float, self.vel_cmd))))]
+        print(l)
+        self.HD_Angles_pub.publish(Float32MultiArray(data = l))
 
     def read_gamepad(self) :
         while rclpy.ok():
