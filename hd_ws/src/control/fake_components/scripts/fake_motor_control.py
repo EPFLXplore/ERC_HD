@@ -47,11 +47,9 @@ class FakeMotorControl(Node):
         self.state.effort = [0.0]*self.MOTOR_COUNT
 
     def moveit_cmd_callback(self, msg: Float64MultiArray):
-        print("hmmm")
         if self.control_mode != self.POSITION:
             return
         self.state.position[:len(msg.data)] = msg.data
-        print(self.state.position)
 
     def vel_cmd_callback(self, msg: Float64MultiArray):
         self.last_vel_cmd = time.time()
