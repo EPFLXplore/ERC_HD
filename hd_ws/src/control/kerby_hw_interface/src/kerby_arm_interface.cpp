@@ -133,11 +133,11 @@ hardware_interface::return_type KerbyArmInterface::read(const rclcpp::Time & tim
 hardware_interface::return_type KerbyArmInterface::write(const rclcpp::Time & time, const rclcpp::Duration & period) {
     // command the hardware based onthe values stored in internal varialbes defined in export_command_interfaces
 
-    if (scanning_) return hardware_interface::return_type::OK;
+    if (scanning_ || !sending_commands_) return hardware_interface::return_type::OK;
 
-    sensor_msgs::msg::JointState msg;
+    std_msgs::msg::Float64MultiArray msg;
     for (uint i = 0; i < hw_position_states_.size(); i++) {
-        msg.position.push_back(hw_position_commands_[i]);
+        msg.data.push_back(hw_position_commands_[i]);
     }
     hd_cmd_pub_->publish(msg);
 
@@ -167,30 +167,55 @@ void KerbyArmInterface::communication_spin() {
 }
 
 void KerbyArmInterface::init_communication() {
-    communication_node_ = std::make_shared<rclcpp::Node>("hardware_interface_communication_node");
+    communication_node_ = std::make_shared<rclcpp::Node>("hardware_arm_interface_communication_node");
 
-    hd_cmd_pub_ = communication_node_->create_publisher<sensor_msgs::msg::JointState>("/HD/kinematics/joint_cmd", 10);
-    hd_state_sub_ = communication_node_->create_subscription<sensor_msgs::msg::JointState>("/HD/arm_control/joint_telemetry", 10,
-        //[this](const sensor_msgs::msg::JointState::SharedPtr msg){ arm_state_callback(msg); });
+    hd_cmd_pub_ = communication_node_->create_publisher<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_pos_cmd", 10);
+    hd_state_sub_ = communication_node_->create_subscription<sensor_msgs::msg::JointState>("/HD/motor_control/joint_telemetry", 10,
         std::bind(&KerbyArmInterface::arm_state_callback, this, std::placeholders::_1));
-
+    mode_change_sub_ = communication_node_->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10,
+        std::bind(&KerbyArmInterface::mode_change_callback, this, std::placeholders::_1));
+    position_mode_switch_ = communication_node_->create_subscription<std_msgs::msg::Int8>("/HD/kinematics/position_mode_switch", 10,
+        std::bind(&KerbyArmInterface::position_mode_switch_callback, this, std::placeholders::_1));
+    
     std::thread first(&KerbyArmInterface::communication_spin, this);
     first.detach();
 
-    // rclcpp::executors::SingleThreadedExecutor executor;
-    // executor.add_node(communication_node_aaa);
-    // std::thread([&executor]() { executor.spin(); }).detach();
 }
 
 void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
-    for (uint i = 0; i < hw_position_states_.size(); i++) {
+    uint size = (hw_position_states_.size() < msg->position.size()) ? hw_position_states_.size() : msg->position.size();
+    for (uint i = 0; i < size; i++) {
         hw_position_states_[i] = msg->position[i];
         hw_velocity_states_[i] = msg->velocity[i];
-        if (scanning_) {
+        if (scanning_ || !sending_commands_) {
             hw_position_commands_[i] = msg->position[i];
         }
     }
+    if (size < hw_position_states_.size()) {
+        for (uint i = size; i < hw_position_states_.size(); i++) {
+            hw_position_states_[i] = msg->position[i];
+            hw_velocity_states_[i] = msg->velocity[i];
+            if (scanning_ || !sending_commands_) {
+                hw_position_commands_[i] = msg->position[i];
+            }
+        }
+    }
+
     scanning_ = false;
+}
+
+void KerbyArmInterface::mode_change_callback(const std_msgs::msg::Int8::SharedPtr msg) {
+    static int MANUAL_INVERSE = 0;
+    static int MANUAL_DIRECT = 1;
+    static int SEMI_AUTONOMOUS = 2;
+    static int AUTONOMOUS = 3;
+    int mode = msg->data;
+    if (mode == MANUAL_DIRECT) sending_commands_ = false;
+}
+
+void KerbyArmInterface::position_mode_switch_callback(const std_msgs::msg::Int8::SharedPtr msg) {
+    if (msg->data == 1)
+        sending_commands_ = true;
 }
 
 

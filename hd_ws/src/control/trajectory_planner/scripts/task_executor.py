@@ -2,22 +2,23 @@
 
 import rclpy
 from rclpy.node import Node
-from trajectory_planner.task_classes import PressButton2
-import trajectory_planner.pose_tracker as pt
+from task_execution.all_tasks import PressButton
 from kerby_interfaces.msg import Task, Object, PoseGoal
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8
 import threading
-    
+from interfaces.msg import PanelObject
+import kinematics_utils.pose_tracker as pt
+import kinematics_utils.pose_corrector as pc
+import kinematics_utils.quaternion_arithmetic as qa
+
 
 class Executor(Node):
     def __init__(self):
         super().__init__("kinematics_task_executor")
-        #self.add_obj_pub = rospy.Publisher("arm_control/add_object", Object, queue_size=5)
-        self.create_subscription(Task, "/HD/task_assignment", self.taskAssignementCallback, 10)
-        self.create_subscription(Int8, "/ROVER/element_id", self.taskAssignementCallback2, 10)
+        self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignementCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-        self.create_subscription(Pose, "/HD/detected_element", pt.detected_object_pose_callback, 10)  # TODO: coordinate this with vision (change topic and msg type)
+        self.create_subscription(PanelObject, "/HD/vision/distance_topic", pt.detected_object_pose_callback, 10)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
@@ -75,7 +76,7 @@ class Executor(Node):
         msg = Object()
         msg.type = type
         msg.name = name
-        msg.pose = pose
+        msg.pose = pc.revert_from_vision(pose)
         shape_ = Float64MultiArray()
         shape_.data = shape
         msg.shape = shape_
@@ -92,22 +93,8 @@ class Executor(Node):
             return
         if msg.description == "btn":
             self.loginfo("Button task")
-            self.task = PressButton2(self, msg.id, msg.pose, True)
+            self.task = PressButton(self, msg.id, msg.pose, True)
             self.new_task = True
-    
-    def taskAssignementCallback2(self, msg: Int8):
-        """listens to /arm_control/task_assignment topic"""
-        self.loginfo("Task executor received cmd")
-        if self.hasTask():
-            return
-        
-        self.loginfo("Button task")
-        self.task = PressButton2(self, 0, None, True)
-        self.new_task = True
-    
-    def assignTask(self, task):
-        """assigns the task"""
-        # TODO: implement or delete
 
     def initiateTask(self):
         """starts assigned task"""
@@ -120,6 +107,16 @@ class Executor(Node):
         """stops the assigned task"""
         # TODO
     
+    def testVision(self):
+        if len(pt.DETECTED_OBJECTS_POSE) == 0: return
+
+        shape = [0.2, 0.1, 0.0001]
+        relative_pose = pt.DETECTED_OBJECTS_POSE[0].object_pose
+        #pose = qa.compose_poses(pc.correct_eef_pose(), relative_pose)
+        pose = relative_pose
+        name = "test_btn"
+        self.addObjectToWorld(shape, pose, name)
+
     def run(self):
         rate = self.create_rate(25)   # 25hz
         while rclpy.ok():
@@ -127,7 +124,7 @@ class Executor(Node):
                 self.new_task = False
                 thread = threading.Thread(target=self.initiateTask)
                 thread.start()
-                #self.initiateTask()
+            #self.testVision()
             rate.sleep()
 
 

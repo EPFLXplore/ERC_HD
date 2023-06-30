@@ -3,34 +3,50 @@
 import rclpy
 from rclpy.node import Node
 import threading
-from trajectory_planner.task_classes import *
-import trajectory_planner.quaternion_arithmetic as qa
-import trajectory_planner.eef_pose_corrector as epc
+from task_execution.all_tasks import *
+import kinematics_utils.quaternion_arithmetic as qa
+import kinematics_utils.pose_corrector as pc
 from kerby_interfaces.msg import Task, Object
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Bool, Float64MultiArray
 import time
 from math import pi
 import copy
+from interfaces.msg import PanelObject
 
 
 end_effector_pose = Pose()
 artag_pose = Pose()
 artag_pose2 = Pose()
 
+vision_transform = Pose()
+vision_transform.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
+
 
 def artag_callback(msg):
-    artag_pose.position = msg.position
-    artag_pose.orientation = msg.orientation
+    pose = Pose()
+    #pose = qa.reverse_pose(pose)
+    pose.position.x = msg.pose.position.x/100
+    pose.position.y = msg.pose.position.y/100
+    pose.position.z = msg.pose.position.z/100
+    pose.orientation = msg.pose.orientation
+
+    temp = qa.compose_poses(vision_transform, pose)
+    artag_pose.position = temp.position
+    artag_pose.orientation = temp.orientation
+
+    # artag_pose.position.x = pose.position.y
+    # artag_pose.position.y = pose.position.x
+    # artag_pose.position.z = pose.position.z
+
+    # artag_pose.orientation.x = pose.orientation.x
+    # artag_pose.orientation.y = pose.orientation.y
+    # artag_pose.orientation.z = pose.orientation.z
+    # artag_pose.orientation.w = pose.orientation.w
 
 
 def end_effector_callback(msg):
-    # pose = Pose()
-    # pose.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=2.975)
-    # d = 0.1598
-    # pose.position = qa.point_image([0.0, 0.0, d], pose.orientation)
-    # combined = qa.compose_poses(msg, pose)
-    combined = epc.correct_eef_pose(msg)
+    combined = pc.correct_eef_pose(msg)
     end_effector_pose.position = combined.position
     end_effector_pose.orientation = combined.orientation
 
@@ -51,6 +67,9 @@ def get_btn_pose():
     obj3.name = "axis"
     axis = qa.point_image([0.0, 0.0, 1.0], obj.pose.orientation)
     obj3.pose.position = qa.make_point(qa.add(obj3.pose.position, qa.mul(0.05, axis)))
+    
+    obj.pose = qa.compose_poses(obj.pose, qa.reverse_pose(vision_transform))
+    obj3.pose = qa.compose_poses(obj3.pose, qa.reverse_pose(vision_transform))
     return obj, obj3
 
 
@@ -59,14 +78,15 @@ def main():
     node = rclpy.create_node("kinematics_vision_test")
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", end_effector_callback, 10)
-    node.create_subscription(Pose, "/HD/detected_element", artag_callback, 10)
+    node.create_subscription(PanelObject, "/HD/vision/distance_topic", artag_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)
+    
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
     thread.start()
 
-    rate = node.create_rate(5)
+    rate = node.create_rate(30)
     btn_refresh_time = 0.1
     t = time.time()
     try:

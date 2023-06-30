@@ -14,6 +14,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(trajectory_planner)
+find_package(interfaces)
 
 
 # install launch directory
@@ -31,31 +32,13 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   scripts/fake_cs_gamepad.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
   scripts/fake_cs_keyboard.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
   scripts/fake_motor_control.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
   scripts/fake_cs_task.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
   scripts/fake_vision.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-install(PROGRAMS
   scripts/vision_test.py
+  scripts/test_gamepad.py
+  scripts/fake_rover_control.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

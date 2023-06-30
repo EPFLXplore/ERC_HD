@@ -57,10 +57,6 @@ def generate_launch_description():
     moveit_simple_controllers_yaml = load_yaml(
         "kerby_moveit_config", "config/moveit_controllers.yaml"
     )
-    moveit_controllers = {
-        "moveit_simple_controller_manager": moveit_simple_controllers_yaml,
-        "moveit_controller_manager": "moveit_simple_controller_manager/MoveItSimpleControllerManager",
-    }
 
     trajectory_execution = {
         "moveit_manage_controllers": True,
@@ -84,15 +80,10 @@ def generate_launch_description():
             robot_description,
             robot_description_semantic,
             kinematics_yaml,
-            #ompl_planning_pipeline_config,
             trajectory_execution,
-            #moveit_controllers,
             planning_scene_monitor_parameters,
             robot_description_kinematics
         ],
-        # remappings=[
-        #     ("/robot/joint_states", "/joint_states")
-        # ]
     )
 
     return LaunchDescription(

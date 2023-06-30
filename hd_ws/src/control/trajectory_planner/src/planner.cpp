@@ -1,21 +1,22 @@
 #include "trajectory_planner/planner.h"
-
+#include <chrono>
 
 using namespace std::chrono_literals;
 
-
-Planner::Planner(rclcpp::NodeOptions node_options) : 
-    Node("kinematics_trajectory_planner", node_options)
+Planner::Planner(rclcpp::NodeOptions node_options) : Node("kinematics_trajectory_planner", node_options)
 {
     m_pose_target_sub = this->create_subscription<kerby_interfaces::msg::PoseGoal>("/HD/kinematics/pose_goal", 10, std::bind(&Planner::poseTargetCallback, this, _1));
     m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
     m_add_object_sub = this->create_subscription<kerby_interfaces::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
+    m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&Planner::modeChangeCallback, this, _1));
 
     m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/HD/kinematics/eef_pose", 10);
     m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/traj_feedback", 10);
+    m_position_mode_switch_pub = this->create_publisher<std_msgs::msg::Int8>("/HD/kinematics/position_mode_switch", 10);
 }
 
-void Planner::config() {
+void Planner::config()
+{
     m_move_group = new moveit::planning_interface::MoveGroupInterface(shared_from_this(), m_planning_group);
     m_planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
     m_joint_model_group = m_move_group->getCurrentState()->getJointModelGroup(m_planning_group);
@@ -23,42 +24,52 @@ void Planner::config() {
     setScalingFactors(1, 1);
 }
 
-Planner::TrajectoryStatus Planner::reachTargetPose(const geometry_msgs::msg::Pose &target) {
+Planner::TrajectoryStatus Planner::reachTargetPose(const geometry_msgs::msg::Pose &target)
+{
+    updateCurrentPosition();
     m_move_group->setPoseTarget(target);
-    Planner::TrajectoryStatus status;
-    if (!plan()) status = Planner::TrajectoryStatus::PLANNING_ERROR;
-    else if (!execute()) status = Planner::TrajectoryStatus::EXECUTION_ERROR;
-    status = Planner::TrajectoryStatus::SUCCESS;
+    Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
+    if (!plan())
+        status = Planner::TrajectoryStatus::PLANNING_ERROR;
+    else if (!execute())
+        status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+
     std_msgs::msg::Bool msg;
     msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
     m_traj_feedback_pub->publish(msg);
     return status;
 }
 
-Planner::TrajectoryStatus Planner::reachTargetJointValues(const std::vector<double> &target) {
+Planner::TrajectoryStatus Planner::reachTargetJointValues(const std::vector<double> &target)
+{
+    updateCurrentPosition();
     m_move_group->setJointValueTarget(target);
-    Planner::TrajectoryStatus status;
-    if (!plan()) status = Planner::TrajectoryStatus::PLANNING_ERROR;
-    else if (!execute()) status = Planner::TrajectoryStatus::EXECUTION_ERROR;
-    status = Planner::TrajectoryStatus::SUCCESS;
+    Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
+    if (!plan())
+        status = Planner::TrajectoryStatus::PLANNING_ERROR;
+    else if (!execute())
+        status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+
     std_msgs::msg::Bool msg;
     msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
     m_traj_feedback_pub->publish(msg);
     return status;
 }
 
-Planner::TrajectoryStatus Planner::computeCartesianPath(const geometry_msgs::msg::Pose &target) {   // TODO: make this function cleaner
-    Planner::TrajectoryStatus status;
+Planner::TrajectoryStatus Planner::computeCartesianPath(const geometry_msgs::msg::Pose &target) { 
+    // TODO: make this function cleaner
+    updateCurrentPosition();
+    Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
     std::vector<geometry_msgs::msg::Pose> waypoints;
     waypoints.push_back(target);
     moveit_msgs::msg::RobotTrajectory trajectory;
-    const double jump_threshold = 0.0;  // TODO: check how to put a real value here
+    const double jump_threshold = 0.0; // TODO: check how to put a real value here
     const double eef_step = 0.01;
     double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
-    if (fraction != 1.0) status = Planner::TrajectoryStatus::PLANNING_ERROR;
-    else if (m_move_group->execute(trajectory) != moveit::core::MoveItErrorCode::SUCCESS) 
+    if (fraction != 1.0)
+        status = Planner::TrajectoryStatus::PLANNING_ERROR;
+    else if (!execute(trajectory))
         status = Planner::TrajectoryStatus::EXECUTION_ERROR;
-    status = Planner::TrajectoryStatus::SUCCESS;
 
     std_msgs::msg::Bool msg;
     msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
@@ -66,20 +77,69 @@ Planner::TrajectoryStatus Planner::computeCartesianPath(const geometry_msgs::msg
     return status;
 }
 
-bool Planner::plan() {
-    return (m_move_group->plan(m_plan) == moveit::core::MoveItErrorCode::SUCCESS);
+bool Planner::plan()
+{
+    return (m_move_group->plan(m_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 }
 
-bool Planner::execute() {
-    return (m_move_group->execute(m_plan) == moveit::core::MoveItErrorCode::SUCCESS);
+bool Planner::execute()
+{
+    return (m_move_group->execute(m_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 }
 
-void Planner::setScalingFactors(double vel, double accel) {
+bool Planner::executeSilent()
+{
+    return (m_move_group->execute(m_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+}
+
+bool Planner::execute(moveit_msgs::msg::RobotTrajectory &trajectory)
+{
+    return (m_move_group->execute(trajectory) != moveit::planning_interface::MoveItErrorCode::SUCCESS);
+}
+
+void Planner::enforceCurrentState() 
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    updateCurrentPosition();
+    moveit::core::RobotState current_state(*m_move_group->getCurrentState());
+    const double *positions = current_state.getVariablePositions();
+    std::vector<double> target;
+    static size_t MOTOR_COUNT = 7;
+    for (size_t i = 0; i < MOTOR_COUNT; i++)
+    {
+        target.push_back(positions[i]);
+    }
+
+    m_move_group->setJointValueTarget(target);
+
+    Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
+
+    if (!plan())
+        status = Planner::TrajectoryStatus::PLANNING_ERROR;
+    else if (!executeSilent())
+        status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+
+    std_msgs::msg::Int8 msg;
+    if (status == Planner::TrajectoryStatus::SUCCESS) {
+        msg.data = 1;
+        RCLCPP_INFO(this->get_logger(), "Successful switch to position mode with MoveIt.");
+    }
+    else {
+        msg.data = 0;
+        RCLCPP_INFO(this->get_logger(), "Failed to switch to position mode with MoveIt, no commands will be executed.");
+    }
+    msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
+    m_position_mode_switch_pub->publish(msg);
+}
+
+void Planner::setScalingFactors(double vel, double accel)
+{
     m_move_group->setMaxVelocityScalingFactor(vel);
     m_move_group->setMaxAccelerationScalingFactor(accel);
 }
 
-void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msgs::msg::Pose &pose, std::string &name) {
+void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msgs::msg::Pose &pose, std::string &name)
+{
     // TODO: make this function better
 
     moveit_msgs::msg::CollisionObject collision_object;
@@ -106,21 +166,34 @@ void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msg
     m_planning_scene_interface->addCollisionObjects(collision_objects);
 }
 
-void Planner::spin() {
+void Planner::spin()
+{
     rclcpp::spin(shared_from_this());
 }
 
-void Planner::loop() {
-    rclcpp::Rate rate(25);
-    while (rclcpp::ok()) {
+void Planner::loop()
+{
+    rclcpp::Rate rate(30);
+    while (rclcpp::ok())
+    {
         publishEEFPose();
+        if (m_in_direct_mode)
+            updateCurrentPosition();
         rate.sleep();
     }
 }
 
-void Planner::poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg) {
+void Planner::updateCurrentPosition()
+{
+    moveit::core::RobotState current_state(*m_move_group->getCurrentState());
+    const double *positions = current_state.getVariablePositions();
+    m_move_group->setStartState(current_state);
+    current_state.update(true);
+}
+
+void Planner::poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg)
+{
     RCLCPP_INFO(this->get_logger(), "Received pose goal");
-    //m_pose_target = *msg;
     if (msg->cartesian) {
         std::thread executor(&Planner::computeCartesianPath, this, msg->goal);
         executor.detach();
@@ -131,19 +204,36 @@ void Planner::poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPt
     }
 }
 
-void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
+void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
+{
     RCLCPP_INFO(this->get_logger(), "Received joint goal");
-    //m_joints_target = msg->data;
     std::thread executor(&Planner::reachTargetJointValues, this, msg->data);
     executor.detach();
 }
 
-void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg) {
+void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg)
+{
     RCLCPP_INFO(this->get_logger(), "Received new object");
-    if (msg->type == "box") addBoxToWorld(msg->shape.data, msg->pose, msg->name);
+    if (msg->type == "box")
+        addBoxToWorld(msg->shape.data, msg->pose, msg->name);
 }
 
-void Planner::publishEEFPose() {
+void Planner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
+{
+    static int MANUAL_INVERSE = 0;
+    static int MANUAL_DIRECT = 1;
+    static int SEMI_AUTONOMOUS = 2;
+    static int AUTONOMOUS = 3;
+    int mode = msg->data;
+    m_in_direct_mode = (mode == MANUAL_DIRECT);
+    if (mode != MANUAL_DIRECT) {
+        std::thread executor(&Planner::enforceCurrentState, this);
+        executor.detach();
+    }
+}
+
+void Planner::publishEEFPose()
+{
     geometry_msgs::msg::Pose msg = m_move_group->getCurrentPose().pose;
     m_eef_pose_pub->publish(msg);
 }

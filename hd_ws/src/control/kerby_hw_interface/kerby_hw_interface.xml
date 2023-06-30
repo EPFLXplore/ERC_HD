@@ -6,4 +6,11 @@
             Hardware interface for the arm of the Kerby rover.
         </description>
     </class>
+    <class name="kerby_hw_interface/KerbyBaseInterface"
+            type="kerby_hw_interface::KerbyBaseInterface"
+            base_class_type="hardware_interface::SystemInterface">
+        <description>
+            Hardware interface for the arm of the Kerby rover.
+        </description>
+    </class>
 </library>

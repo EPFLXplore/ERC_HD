@@ -2,7 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray, Float32MultiArray
 import keyboard
 import threading
 
@@ -14,13 +14,13 @@ CONTROL_KEYS = ["a", "z", "e", "r", "t", "y", "u", "i"]
 class FakeCSKeyboard(Node):
     def __init__(self):
         super().__init__("fake_cs_keyboard")
-        self.cmd_pub = self.create_publisher(Float64MultiArray, "/CS/vel_joint_cmd", 10)
+        self.cmd_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_gamepad", 10)
 
         self.cmd = [0.0]*MOTOR_COUNT
         self.vel = 0.0
     
     def publish_cmd(self):
-        msg = Float64MultiArray()
+        msg = Float32MultiArray()
         msg.data = [float(self.vel*c) for c in self.cmd]
         self.cmd_pub.publish(msg)
     

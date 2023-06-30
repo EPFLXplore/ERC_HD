@@ -3,14 +3,17 @@ controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
 
-    kerby_arm_group_controller:
+    kerby_arm_moveit_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
+    kerby_base_moveit_controller:
+      type: position_controllers/JointGroupPositionController
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-kerby_arm_group_controller:
+
+kerby_arm_moveit_controller:
   ros__parameters:
     joints:
       - joint1
@@ -19,8 +22,27 @@ kerby_arm_group_controller:
       - joint4
       - joint5
       - joint6
+      - finger1
     command_interfaces:
       - position
     state_interfaces:
       - position
       - velocity
+
+kerby_base_moveit_controller:
+  ros__parameters:
+    joints:
+      - pivot_gauche
+      - steering1
+      - driving1
+      - steering4
+      - driving4
+      - pivot_droit
+      - steering2
+      - driving2
+      - steering3
+      - driving3
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position

@@ -2,7 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray, Float32MultiArray
 from sensor_msgs.msg import JointState
 import threading
 import copy
@@ -22,8 +22,8 @@ class Timer:
 
 
 class FakeMotorControl(Node):
-    MOTOR_COUNT = 6     # number of motors
-    MAX_VEL = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]    # max velocity of each motor in rad/s
+    MOTOR_COUNT = 7     # number of motors
+    MAX_VEL = [3.0, 1.5, 2.0, 4.0, 2.0, 3.0, 0.15]    # max velocity of each motor in rad/s
     VELOCITY = 0
     POSITION = 1
 
@@ -31,11 +31,11 @@ class FakeMotorControl(Node):
         super().__init__("fake_motor_control")
         self.state = JointState()
         self.init_state()
-        self.state_pub = self.create_publisher(JointState, "/HD/arm_control/joint_telemetry", 10)
-        self.create_subscription(JointState, "/HD/kinematics/joint_cmd", self.moveit_cmd_callback, 10)
-        self.create_subscription(Float64MultiArray, "/CS/vel_joint_cmd", self.vel_cmd_callback, 10)
+        self.state_pub = self.create_publisher(JointState, "/HD/motor_control/joint_telemetry", 10)
+        self.create_subscription(Float64MultiArray, "/HD/kinematics/joint_pos_cmd", self.moveit_cmd_callback, 10)
+        self.create_subscription(Float64MultiArray, "/HD/fsm/joint_vel_cmd", self.vel_cmd_callback, 10)
 
-        self.control_mode = self.POSITION
+        self.control_mode = self.VELOCITY
         self.last_vel_cmd = time.time()
 
         self.cmd_velocities = [0.0]*self.MOTOR_COUNT
@@ -46,12 +46,12 @@ class FakeMotorControl(Node):
         self.state.velocity = [0.0]*self.MOTOR_COUNT
         self.state.effort = [0.0]*self.MOTOR_COUNT
 
-    def moveit_cmd_callback(self, msg: JointState):
+    def moveit_cmd_callback(self, msg: Float64MultiArray):
+        print("hmmm")
         if self.control_mode != self.POSITION:
             return
-        self.state.position[:len(msg.position)] = msg.position
-        self.state.velocity[:len(msg.velocity)] = msg.velocity
-        self.state.effort[:len(msg.effort)] = msg.effort
+        self.state.position[:len(msg.data)] = msg.data
+        print(self.state.position)
 
     def vel_cmd_callback(self, msg: Float64MultiArray):
         self.last_vel_cmd = time.time()

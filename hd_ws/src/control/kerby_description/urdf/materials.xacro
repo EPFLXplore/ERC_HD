@@ -14,11 +14,12 @@
 </material>
 
 <material name="pink">
-  <color rgba="1 0.4117 0.70588 1.000"/>
+  <!-- <color rgba="1 0.4117 0.70588 1.000"/> -->
+  <color rgba="1 1 1 1.000"/>
 </material>
 
 <material name="blue">
-  <color rgba="0 0 0.7 1.000"/>
+  <color rgba="0 0 0.5 1.000"/>
 </material>
 
 

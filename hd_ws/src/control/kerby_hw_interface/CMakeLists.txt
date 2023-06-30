@@ -12,6 +12,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   pluginlib
   rclcpp
   rclcpp_lifecycle
+  std_msgs
   sensor_msgs
 )
 
@@ -25,6 +26,7 @@ endforeach()
 ## COMPILE LIBRARY
 add_library(kerby_hw_interface SHARED
     src/kerby_arm_interface.cpp
+    src/kerby_base_interface.cpp
 )
 target_compile_features(kerby_hw_interface PUBLIC cxx_std_17)
 # target_include_directories(kerby_hw_interface PUBLIC
@@ -41,7 +43,7 @@ ament_target_dependencies(
 
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
-target_compile_definitions(${PROJECT_NAME} PRIVATE "KERBY_HW_INTERFACE_BUILDING_DLL")
+target_compile_definitions(${PROJECT_NAME} PRIVATE "ASTRA_HW_INTERFACE_BUILDING_DLL")
 
 # Export hardware plugins
 pluginlib_export_plugin_description_file(hardware_interface kerby_hw_interface.xml)

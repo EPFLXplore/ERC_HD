@@ -40,8 +40,9 @@ include_directories(include)
 # executables
 
 add_executable(planner src/planner_main.cpp src/planner.cpp)
-# target_include_directories(planner 
-#   include)
+# target_include_directories(planner PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(planner
   moveit_ros_planning_interface
   rclcpp
@@ -55,7 +56,12 @@ install(TARGETS planner
 
 
 # Install Python modules
-ament_python_install_package(${PROJECT_NAME})
+#ament_python_install_package(${PROJECT_NAME})
+ament_python_install_package(kinematics_utils)
+ament_python_install_package(task_execution)
+
+
+
 
 # Install Python executables
 
@@ -63,7 +69,6 @@ install(PROGRAMS
   scripts/task_executor.py
   DESTINATION lib/${PROJECT_NAME}
 )
-
 
 
 
