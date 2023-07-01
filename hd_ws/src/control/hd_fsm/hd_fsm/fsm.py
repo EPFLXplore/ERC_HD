@@ -6,6 +6,7 @@ from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8MultiArray, F
 from kerby_interfaces.msg import Task
 from interfaces.msg import PanelObject
 import array
+import sys
 
 
 VERBOSE = True
@@ -20,6 +21,7 @@ class FSM(Node):
     def __init__(self):
         super().__init__("HD_fsm")
         self.create_ros_interfaces()
+        self.spinning_thread = None     # ros will spin in a separate thread which will be passed to the loop function
         self.velocity = 0
         self.command_expiration = .5   # seconds
         self.received_manual_direct_cmd_at = time.time() - self.command_expiration
@@ -31,6 +33,7 @@ class FSM(Node):
         self.target_mode = self.MANUAL_DIRECT
         self.mode_transitioning = False
         self.reset_arm_pos = False
+        self.abort = False
     
     def create_ros_interfaces(self):
         self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, '/HD/fsm/joint_vel_cmd', 10)
@@ -39,6 +42,7 @@ class FSM(Node):
         self.create_subscription(Float32MultiArray, "/ROVER/HD_gamepad", self.manual_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
         self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
+        self.create_subscription(Int8, "/ROVER/shutdown", self.kill, 10)
 
     def mode_callback(self, msg: Int8):
         """listens to HD_mode topic published by CS"""
@@ -57,6 +61,10 @@ class FSM(Node):
         if self.mode != self.SEMI_AUTONOMOUS: return
         
         self.semi_autonomous_command_id = msg.data
+
+    def kill(self, msg):
+        self.get_logger().info("Shutdown of HD FSM")
+        self.abort = True
 
     def send_task_cmd(self):
         """sends the last task command to the task executor and locks any other command until completion"""
@@ -120,9 +128,10 @@ class FSM(Node):
             msg.data = self.mode
             self.mode_change_pub.publish(msg)
 
-    def loop(self):
+    def loop(self, spinning_thread):
+        self.spinning_thread = spinning_thread
         rate = self.create_rate(25)   # 25hz
-        while rclpy.ok():
+        while rclpy.ok() and not self.abort:
             if self.mode_transitioning:
                 self.transition_loop_action()
             else:
@@ -139,7 +148,7 @@ def main(args=None):
     thread.start()
 
     try:
-        node.loop()
+        node.loop(thread)
     except KeyboardInterrupt:
         pass
 
