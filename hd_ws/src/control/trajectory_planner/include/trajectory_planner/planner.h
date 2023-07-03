@@ -31,6 +31,13 @@ public:
         EXECUTION_ERROR
     };
 
+    enum CommandMode {
+        MANUAL_INVERSE = 0,
+        MANUAL_DIRECT = 1,
+        SEMI_AUTONOMOUS = 2,
+        AUTONOMOUS = 3
+    };
+
     Planner(rclcpp::NodeOptions node_options);
 
     void config();
@@ -41,10 +48,14 @@ public:
         }
 
     TrajectoryStatus reachTargetPose(const geometry_msgs::msg::Pose &target);
-
+    
     TrajectoryStatus reachTargetJointValues(const std::vector<double> &target);
 
-    TrajectoryStatus computeCartesianPath(const geometry_msgs::msg::Pose &target);
+    TrajectoryStatus computeCartesianPath(std::vector<geometry_msgs::msg::Pose> waypoints);
+
+    TrajectoryStatus reachTargetPoseCartesian(const geometry_msgs::msg::Pose &target);
+
+    TrajectoryStatus advanceAlongAxis();
 
     bool plan();
 
@@ -66,10 +77,16 @@ public:
 
     void updateCurrentPosition();
 
+    bool manualInverseCommandOld();
+
+    void stop();
+
 private:
     void poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg);
 
     void jointTargetCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
+
+    void manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
 
     void addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg);
 
@@ -87,8 +104,12 @@ private:
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_joint_target_sub;
     rclcpp::Subscription<kerby_interfaces::msg::Object>::SharedPtr      m_add_object_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_mode_change_sub;
+    rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_man_inv_axis_sub;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr              m_eef_pose_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   m_traj_feedback_pub;
     rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr                   m_position_mode_switch_pub;
-    bool                                                                m_in_direct_mode = true;
+    CommandMode                                                         m_mode = CommandMode::MANUAL_DIRECT;
+    std::chrono::time_point<std::chrono::steady_clock>                  m_last_man_inv_cmd_time = std::chrono::steady_clock::now();
+    bool                                                                m_executing_man_inv_cmd = false;
+    std::vector<double>                                                 m_man_inv_axis;
 };

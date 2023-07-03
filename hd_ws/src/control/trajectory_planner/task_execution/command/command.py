@@ -33,3 +33,7 @@ class Command:
 
     def abort(self):
         """stops all movement"""
+    
+    def done(self):
+        """indicate if command has executed correctly (by default returns true as soon as the commands has been executed once)"""
+        return self.execute_count > 0

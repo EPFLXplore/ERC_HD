@@ -85,7 +85,11 @@ class Executor(Node):
     def trajFeedbackUpdate(self, msg: Bool):
         self.traj_feedback_update = True
         self.traj_feedback = msg.data
-        
+    
+    def manualInverseCallback(self, msg):
+        if not self.hasTask():
+            pass
+
     def taskAssignementCallback(self, msg: Task):
         """listens to /arm_control/task_assignment topic"""
         self.loginfo("Task executor received cmd")
@@ -109,11 +113,8 @@ class Executor(Node):
     
     def testVision(self):
         if len(pt.DETECTED_OBJECTS_POSE) == 0: return
-
         shape = [0.2, 0.1, 0.0001]
-        relative_pose = pt.DETECTED_OBJECTS_POSE[0].object_pose
-        #pose = qa.compose_poses(pc.correct_eef_pose(), relative_pose)
-        pose = relative_pose
+        pose = pt.DETECTED_OBJECTS_POSE[0].object_pose
         name = "test_btn"
         self.addObjectToWorld(shape, pose, name)
 

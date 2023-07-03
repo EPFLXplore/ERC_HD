@@ -11,6 +11,18 @@ import array
 VERBOSE = True
 
 
+def str_pad(x, length=10):
+    s = str(x)
+    if len(s) >= length:
+        return s[:length]
+    return s + " " * (length-len(s))
+
+
+def str_pad_list(l, length=10):
+    pad_fct = lambda x: str_pad(x, length)
+    return "[ " + ", ".join(map(pad_fct, l)) + " ]"
+
+
 class FSM(Node):
     MANUAL_INVERSE = 0
     MANUAL_DIRECT = 1
@@ -30,12 +42,13 @@ class FSM(Node):
         self.mode = self.MANUAL_DIRECT
         self.target_mode = self.MANUAL_DIRECT
         self.mode_transitioning = False
-        self.reset_arm_pos = False
+        self.manual_inverse_axis = [0.0, 0.0, 0.0]
     
     def create_ros_interfaces(self):
-        self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, '/HD/fsm/joint_vel_cmd', 10)
-        self.task_pub = self.create_publisher(Task, '/HD/fsm/task_assignment', 10)
-        self.mode_change_pub = self.create_publisher(Int8, '/HD/fsm/mode_change', 10)
+        self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/joint_vel_cmd", 10)
+        self.manual_inverse_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/man_inv_axis_cmd", 10)
+        self.task_pub = self.create_publisher(Task, "/HD/fsm/task_assignment", 10)
+        self.mode_change_pub = self.create_publisher(Int8, "/HD/fsm/mode_change", 10)
         self.create_subscription(Float32MultiArray, "/ROVER/HD_gamepad", self.manual_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
         self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
@@ -51,8 +64,21 @@ class FSM(Node):
             self.manual_direct_command = msg.data
             self.received_manual_direct_cmd_at = time.time()
         elif self.mode == self.MANUAL_INVERSE:
-            pass
+            self.manual_inverse_axis = self.get_axis(msg.data[6])
+            self.received_manual_inverse_cmd_at = time.time()
 
+    @staticmethod
+    def get_axis(x):
+        close = lambda x, y: abs(x-y) < 0.001
+        if close(x, 0.1):
+            return [0, -1, 0]
+        if close(x, 1):
+            return [0, 1, 0]
+        if close(x, -1):
+            return [-1, 0, 0]
+        if close(x, -0.1):
+            return [1, 0, 0]
+        return [0, 0, 0]
     def task_cmd_callback(self, msg: Int8):
         if self.mode != self.SEMI_AUTONOMOUS: return
         
@@ -68,19 +94,29 @@ class FSM(Node):
         msg = Float64MultiArray()
         msg.data = array.array('d', self.manual_direct_command)
         if VERBOSE:
-            self.get_logger().info("FSM direct cmd :   " + str(list(msg.data)))
+            self.get_logger().info("FSM direct cmd :   " + str_pad_list(list(msg.data)))
         self.manual_direct_cmd_pub.publish(msg)
+
+    def send_manual_inverse_cmd(self):
+        if self.manual_inverse_command_old():
+            return
+        msg = Float64MultiArray()
+        msg.data = array.array('d', self.manual_inverse_axis)
+        if VERBOSE:
+            self.get_logger().info("FSM manual inverse cmd :   " + str_pad_list(list(msg.data)))
+        self.manual_inverse_cmd_pub.publish(msg)
 
     def send_semi_autonomous_cmd(self):
         if self.semi_autonomous_command_id is not None:
-            self.get_logger().info("SENDING SEMI AUTO CMD")
+            if VERBOSE:
+                self.get_logger().info("SENDING SEMI AUTO CMD")
             msg = Task()
             msg.description = "btn"
             msg.id = self.semi_autonomous_command_id
             #msg.pose = self.semi_autonomous_command_id.pose
             self.semi_autonomous_command_id = None
             self.task_pub.publish(msg)
-
+        
     def updateWorld(self):
         """sends a world update to the trajectory planner"""
         # TODO
@@ -92,13 +128,15 @@ class FSM(Node):
         return time.time()-self.received_manual_inverse_cmd_at > self.command_expiration
 
     def normal_loop_action(self):
-        self.get_logger().info("MODE : " + str(self.mode))
+        if VERBOSE:
+            self.get_logger().info("MODE : " + str(self.mode))
+            
         if self.mode == self.AUTONOMOUS:
             pass
         elif self.mode == self.SEMI_AUTONOMOUS:
             self.send_semi_autonomous_cmd()
         elif self.mode == self.MANUAL_INVERSE:
-            pass
+            self.send_manual_inverse_cmd()
         elif self.mode == self.MANUAL_DIRECT:
             self.send_manual_direct_cmd()
 
