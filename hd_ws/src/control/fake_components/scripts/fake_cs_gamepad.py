@@ -7,6 +7,7 @@ import evdev
 import threading
 from time import sleep
 from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
+import math
 
 
 def clean(x):
@@ -18,6 +19,17 @@ def str_pad(x, length=10):
     if len(s) >= length:
         return s[:length]
     return s + " " * (length-len(s))
+
+
+def add(l1: list, l2: list):
+    return [x+y for x, y in zip(l1, l2)]
+
+
+def normalized(l):
+    n = math.sqrt(sum(x**2 for x in l))
+    if n == 0:
+        return l
+    return [x/n for x in l]
 
 
 class Inft_Timer():
@@ -46,7 +58,7 @@ class GamePad(Node):
     AUTONOMOUS = 3
     HD_MODES = [MANUAL_INVERSE, MANUAL_DIRECT, SEMI_AUTONOMOUS, AUTONOMOUS]
 
-    MAX_VELOCITIES = [1, 1, 1, 1, 1, 1, 1, 1]
+    MAX_VELOCITIES = [2, 2, 2, 2, 2, 2, 1, 0]
 
     # default config
     JOINT_EVENT_CODES = [3, 4, 5, 2, 1, 0]
@@ -54,8 +66,6 @@ class GamePad(Node):
     JOINT4_RETREAT_CODE = 310
     JOINT_EVENT_OFFSETS = [0, 0, 0, 0, 0, 0]
     JOINT_EVENT_AMPLITUDES = [2**15, 2**15, 2**8, 2**8, 2**15, 2**15]    # amplitude in one direction (so half the total amplitude)
-    JOINT_EVENT_OFFSETS = [2**7, 2**7, 0, 0, 2**7, 2**7]
-    JOINT_EVENT_AMPLITUDES = [2**7, 2**7, 2**8, 2**8, 2**7, 2**7]
     GRIPPER_EVENT_CODES = [305, 308, 307, 304]      # giving respectively 1, 0.1, -1, -0.1
     MODE_SWITCH_CODE = 316
 
@@ -66,7 +76,16 @@ class GamePad(Node):
         "joint3_retreat_code": 311,
         "joint4_retreat_code": 310,
         "joint_event_offsets": [2**7, 2**7, 0, 0, 2**7, 2**7],
-        "joint_event_amplitutes": [2**7, 2**7, 2**8, 2**8, 2**7, 2**7],
+        "joint_event_amplitudes": [-2**7, 2**7, 2**8, 2**8, 2**7, 2**7],
+        "gripper_event_codes": [305, 308, 307, 304],
+        "mode_switch_code": 316
+    }
+    KNOWN_CONFIGS["Generic X-Box pad"] = {
+        "joint_event_codes": [3, 4, 5, 2, 1, 0],
+        "joint3_retreat_code": 311,
+        "joint4_retreat_code": 310,
+        "joint_event_offsets": [0, 0, 0, 0, 0, 0],
+        "joint_event_amplitudes": [-2**15, 2**15, 2**8, 2**8, 2**15, 2**15],
         "gripper_event_codes": [305, 308, 307, 304],
         "mode_switch_code": 316
     }
@@ -75,6 +94,16 @@ class GamePad(Node):
         super().__init__("fake_cs_gamepad")
 
         self.vel_cmd = [0.0]*8
+        self.axis_cmd = [0.0]*3
+        self.man_inv_data = [0]*6
+        self.man_inv_vectors = [    # possible vectors for manual inverse translation (actually the resulting vector could be an integral linear combination of those)
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [-1.0, 0.0, 0.0],
+            [0.0, -1.0, 0.0],
+            [0.0, 0.0, 1.0],
+            [0.0, 0.0, -1.0]
+        ]
 
         # direction of joint 3, 4
         self.joint3_dir = 1
@@ -83,6 +112,7 @@ class GamePad(Node):
         self.hd_mode = self.MANUAL_DIRECT
 
         self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_gamepad", 10)
+        self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
         self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
         dt = 1/50
         self.timer = Inft_Timer(dt, self.publish_cmd)
@@ -109,62 +139,86 @@ class GamePad(Node):
         self.JOINT3_RETREAT_CODE = config["joint3_retreat_code"]
         self.JOINT4_RETREAT_CODE = config["joint4_retreat_code"]
         self.JOINT_EVENT_OFFSETS = config["joint_event_offsets"]
-        self.JOINT_EVENT_AMPLITUDES = config["joint_event_amplitutes"]
+        self.JOINT_EVENT_AMPLITUDES = config["joint_event_amplitudes"]
         self.GRIPPER_EVENT_CODES = config["gripper_event_codes"]
         self.MODE_SWITCH_CODE = config["mode_switch_code"]
 
     def publish_cmd(self):
-        l = [v*x for v,x  in zip(self.MAX_VELOCITIES, list(map(clean, map(float, self.vel_cmd))))]
-        print("[", ", ".join(map(str_pad, l)), "]")
-        self.joint_vel_cmd_pub.publish(Float32MultiArray(data = l))
+        if self.hd_mode == self.MANUAL_DIRECT:
+            self.vel_cmd[2] *= self.joint3_dir
+            self.vel_cmd[3] *= self.joint4_dir
+            l = [v*x for v,x  in zip(self.MAX_VELOCITIES, list(map(clean, map(float, self.vel_cmd))))]
+            print("[", ", ".join(map(str_pad, l)), "]")
+            self.joint_vel_cmd_pub.publish(Float32MultiArray(data = l))
+        elif self.hd_mode == self.MANUAL_INVERSE:
+            axis = [0.0, 0.0, 0.0]
+            for vec, d in zip(self.man_inv_vectors, self.man_inv_data):
+                if d:
+                    axis = add(axis, vec)
+            axis = normalized(axis)
+            print("[", ", ".join(map(str_pad, axis)), "]")
+            self.man_inv_axis_pub.publish(Float32MultiArray(data = axis))
+    
+    def switch_mode(self):
+        self.hd_mode = (self.hd_mode + 1) % len(self.HD_MODES)
+        msg = Int8()
+        msg.data = self.hd_mode
+        self.mode_change_pub.publish(msg)
 
-    def read_gamepad(self) :
+    def handle_continuous_event(self, event):
+        if self.hd_mode == self.MANUAL_DIRECT:
+            for i, (code, offset, amplitude) in enumerate(zip(self.JOINT_EVENT_CODES, self.JOINT_EVENT_OFFSETS, self.JOINT_EVENT_AMPLITUDES)):
+                if event.code == code:
+                    self.vel_cmd[i] = (event.value - offset) / amplitude
+                    return
+        
+        elif self.hd_mode == self.MANUAL_INVERSE:
+            if event.code == self.JOINT_EVENT_CODES[2]:
+                self.man_inv_data[4] = 1 if (event.value - self.JOINT_EVENT_OFFSETS[2]) / self.JOINT_EVENT_AMPLITUDES[2] > 0.5 else 0
+            if event.code == self.JOINT_EVENT_CODES[3]:
+                self.man_inv_data[5] = 1 if (event.value - self.JOINT_EVENT_OFFSETS[3]) / self.JOINT_EVENT_AMPLITUDES[3] > 0.5 else 0
+    
+    def handle_binary_event_direct_mode(self, event):
+        if event.value != 0 and event.value != 1: return
+
+        if event.value == 1:
+            for code, val in zip(self.GRIPPER_EVENT_CODES, [1.0, 0.1, -1.0, -0.1]):
+                if event.code == code:
+                    self.vel_cmd[6] = val
+                    return
+        elif event.value == 0:
+            self.vel_cmd[6] = 0.0
+
+        if event.code == self.JOINT3_RETREAT_CODE:
+            self.joint3_dir = -1 if event.value == 1 else 1
+        if event.code == self.JOINT4_RETREAT_CODE:
+            self.joint4_dir = -1 if event.value == 1 else 1
+    
+    def handle_binary_event_inverse_mode(self, event):
+        for i, code in enumerate(self.GRIPPER_EVENT_CODES):
+            if event.code == code:
+                self.man_inv_data[i] = event.value
+
+    def handle_binary_event(self, event):
+        if event.code == self.MODE_SWITCH_CODE:
+            if event.value == 1:
+                self.switch_mode()
+            return
+        
+        if self.hd_mode == self.MANUAL_DIRECT:
+            self.handle_binary_event_direct_mode(event)
+        elif self.hd_mode == self.MANUAL_INVERSE:
+            self.handle_binary_event_inverse_mode(event)
+
+    def read_gamepad(self):
         while rclpy.ok():
-            try : 
+            try: 
                 for event in self.device.read_loop():
                     if event.type == 3:
-                        if event.code == self.JOINT_EVENT_CODES[0]:   # J1
-                            self.vel_cmd[0] = -(event.value - self.JOINT_EVENT_OFFSETS[0]) / self.JOINT_EVENT_AMPLITUDES[0]
-                        if event.code == self.JOINT_EVENT_CODES[1]:   # J2
-                            self.vel_cmd[1] = (event.value - self.JOINT_EVENT_OFFSETS[1]) / self.JOINT_EVENT_AMPLITUDES[1]
-                        if event.code == self.JOINT_EVENT_CODES[2]:   # J3
-                            self.vel_cmd[2] = self.joint3_dir * (event.value - self.JOINT_EVENT_OFFSETS[2]) / self.JOINT_EVENT_AMPLITUDES[2]
-                        if event.code == self.JOINT_EVENT_CODES[3]:   # J4
-                            self.vel_cmd[3] = self.joint4_dir * (event.value - self.JOINT_EVENT_OFFSETS[3]) / self.JOINT_EVENT_AMPLITUDES[3]
-                        if event.code == self.JOINT_EVENT_CODES[4]:   # J5
-                            self.vel_cmd[4] = (event.value - self.JOINT_EVENT_OFFSETS[4]) / self.JOINT_EVENT_AMPLITUDES[4]
-                        if event.code == self.JOINT_EVENT_CODES[5]:   # J6
-                            self.vel_cmd[5] = (event.value - self.JOINT_EVENT_OFFSETS[5]) / self.JOINT_EVENT_AMPLITUDES[5]
+                        self.handle_continuous_event(event)
 
                     if event.type == 1:
-                        if event.value == 1:
-                            #-----------gripper------------
-                            if event.code == self.GRIPPER_EVENT_CODES[0]:
-                                self.vel_cmd[6] = 1.0
-                            elif event.code == self.GRIPPER_EVENT_CODES[1]:
-                                self.vel_cmd[6] = 0.1
-                            elif event.code == self.GRIPPER_EVENT_CODES[2]:
-                                self.vel_cmd[6] = -1.0
-                            elif event.code == self.GRIPPER_EVENT_CODES[3]:
-                                self.vel_cmd[6] = -0.1
-                            #----------joint 3, 4 retreat-----------
-                            elif event.code == 311:       # joint 3 retreat 
-                                self.joint3_dir = -1
-                            elif event.code == 310:       # joint 4 retreat
-                                self.joint4_dir = -1
-                            #----------mode change----------
-                            elif event.code == self.MODE_SWITCH_CODE:
-                                self.hd_mode = (self.hd_mode + 1) % len(self.HD_MODES)
-                                msg = Int8()
-                                msg.data = self.hd_mode
-                                self.mode_change_pub.publish(msg)
-
-                        elif event.value == 0:
-                            self.vel_cmd[6] = 0
-                            if event.code == self.JOINT3_RETREAT_CODE:         # joint 3 stop retreat
-                                self.joint3_dir = 1
-                            elif event.code == self.JOINT4_RETREAT_CODE:       # joint 4 stop retreat
-                                self.joint4_dir = 1
+                        self.handle_binary_event(event)
 
             except (TypeError, IOError):
                 self.timer.cancel()

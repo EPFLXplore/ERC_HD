@@ -25,7 +25,6 @@ vision_transform.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
 
 def artag_callback(msg):
     pose = Pose()
-    #pose = qa.reverse_pose(pose)
     pose.position.x = msg.pose.position.x/100
     pose.position.y = msg.pose.position.y/100
     pose.position.z = msg.pose.position.z/100
@@ -35,17 +34,15 @@ def artag_callback(msg):
     artag_pose.position = temp.position
     artag_pose.orientation = temp.orientation
 
-    # artag_pose.position.x = pose.position.y
-    # artag_pose.position.y = pose.position.x
-    # artag_pose.position.z = pose.position.z
-
-    # artag_pose.orientation.x = pose.orientation.x
-    # artag_pose.orientation.y = pose.orientation.y
-    # artag_pose.orientation.z = pose.orientation.z
-    # artag_pose.orientation.w = pose.orientation.w
-
 
 def end_effector_callback(msg):
+    # transform = Pose()
+    # transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
+    # rot = qa.quat(axis=(0.0, 0.0, 1.0), angle=-pi/2)
+    # transform.orientation = qa.mul(transform.orientation, rot)
+    # vect = [0.7545, -0.097, -0.3079]
+    # transform.position = qa.point_image(vect, transform.orientation)
+    # combined = qa.compose_poses(msg, transform)
     combined = pc.correct_eef_pose(msg)
     end_effector_pose.position = combined.position
     end_effector_pose.orientation = combined.orientation

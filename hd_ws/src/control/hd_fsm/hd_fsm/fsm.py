@@ -11,14 +11,14 @@ import array
 VERBOSE = True
 
 
-def str_pad(x, length=10):
+def str_pad(x, length=5):
     s = str(x)
     if len(s) >= length:
         return s[:length]
     return s + " " * (length-len(s))
 
 
-def str_pad_list(l, length=10):
+def str_pad_list(l, length=5):
     pad_fct = lambda x: str_pad(x, length)
     return "[ " + ", ".join(map(pad_fct, l)) + " ]"
 
@@ -50,6 +50,7 @@ class FSM(Node):
         self.task_pub = self.create_publisher(Task, "/HD/fsm/task_assignment", 10)
         self.mode_change_pub = self.create_publisher(Int8, "/HD/fsm/mode_change", 10)
         self.create_subscription(Float32MultiArray, "/ROVER/HD_gamepad", self.manual_cmd_callback, 10)
+        self.create_subscription(Float32MultiArray, "/ROVER/HD_man_inv_axis", self.manual_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
         self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
 
@@ -64,21 +65,9 @@ class FSM(Node):
             self.manual_direct_command = msg.data
             self.received_manual_direct_cmd_at = time.time()
         elif self.mode == self.MANUAL_INVERSE:
-            self.manual_inverse_axis = self.get_axis(msg.data[6])
+            self.manual_inverse_axis = msg.data
             self.received_manual_inverse_cmd_at = time.time()
 
-    @staticmethod
-    def get_axis(x):
-        close = lambda x, y: abs(x-y) < 0.001
-        if close(x, 0.1):
-            return [0, -1, 0]
-        if close(x, 1):
-            return [0, 1, 0]
-        if close(x, -1):
-            return [-1, 0, 0]
-        if close(x, -0.1):
-            return [1, 0, 0]
-        return [0, 0, 0]
     def task_cmd_callback(self, msg: Int8):
         if self.mode != self.SEMI_AUTONOMOUS: return
         

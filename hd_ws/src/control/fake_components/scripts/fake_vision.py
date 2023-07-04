@@ -26,12 +26,12 @@ def main():
             msg = PanelObject()
             pose = Pose()
             pose.orientation = qa.quat((1.0, 0.0, 0.0), 4.2)#math.pi)
-            #pose.orientation = Quaternion()
+            pose.orientation = Quaternion()
             scale = 100
             pose.position.x = 0.1 * scale
             pose.position.y = -0.5 * scale
             pose.position.z = -0.1 * scale
-            #pose.position.x = pose.position.y = 0.0; pose.position.z = 0.00
+            pose.position.x = pose.position.y = pose.position.z = 0.0
 
             pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
             msg.pose = pose

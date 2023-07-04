@@ -1,5 +1,6 @@
 #include "trajectory_planner/planner.h"
-#include <chrono>
+#include "trajectory_planner/quaternion_arithmetic.h"
+
 
 using namespace std::chrono_literals;
 
@@ -87,12 +88,19 @@ Planner::TrajectoryStatus Planner::advanceAlongAxis() {
     double step_size = 0.1;     // [m]
     double limit = 2.0;         // [m]
     int step_count = std::ceil(limit/step_size);
-    double step[3] = {m_man_inv_axis[0]*step_size, m_man_inv_axis[1]*step_size, m_man_inv_axis[2]*step_size};
+    geometry_msgs::msg::Point step;
+    step.x = m_man_inv_axis[0]*step_size;
+    step.y = m_man_inv_axis[1]*step_size;
+    step.z = m_man_inv_axis[2]*step_size;
     geometry_msgs::msg::Pose pose = m_move_group->getCurrentPose().pose;
+    RCLCPP_INFO(this->get_logger(), "Step before : %g, %g, %g", step.x, step.y, step.z);
+    //RCLCPP_INFO(this->get_logger(), "Quat : w: %g, x: %g, y: %g, z: %g", pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z);
+    step = pointImage(step, pose.orientation);
+    RCLCPP_INFO(this->get_logger(), "Step after : %g, %g, %g", step.x, step.y, step.z);
     for (int i = 1; i <= step_count; i++) {
-        pose.position.x += step[0];
-        pose.position.y += step[1];
-        pose.position.z += step[2];
+        pose.position.x += step.x;
+        pose.position.y += step.y;
+        pose.position.z += step.z;
         geometry_msgs::msg::Pose waypoint = pose;
         waypoints.push_back(waypoint);
     }

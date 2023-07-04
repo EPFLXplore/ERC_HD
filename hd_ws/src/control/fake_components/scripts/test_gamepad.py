@@ -28,8 +28,7 @@ class GamePad(Node):
         while rclpy.ok():
             try : 
                 for event in self.device.read_loop():
-                    if event.type == 1:
-                        print(event)
+                    print(event)
 
             except (TypeError, IOError):
                 self.connect()
