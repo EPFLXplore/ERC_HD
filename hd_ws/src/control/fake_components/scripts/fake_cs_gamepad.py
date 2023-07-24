@@ -11,7 +11,8 @@ import math
 
 
 def clean(x):
-    return 0 if abs(x) < 0.05 else x
+    epsilon = 0.09
+    return 0 if abs(x) < epsilon else x
 
 
 def str_pad(x, length=10):
@@ -58,7 +59,7 @@ class GamePad(Node):
     AUTONOMOUS = 3
     HD_MODES = [MANUAL_INVERSE, MANUAL_DIRECT, SEMI_AUTONOMOUS, AUTONOMOUS]
 
-    MAX_VELOCITIES = [2, 2, 2, 2, 2, 2, 1, 0]
+    MAX_VELOCITIES = [1, 1, 1, 1, 1, 1, 1, 0]
 
     # default config
     JOINT_EVENT_CODES = [3, 4, 5, 2, 1, 0]
@@ -77,7 +78,7 @@ class GamePad(Node):
         "joint4_retreat_code": 310,
         "joint_event_offsets": [2**7, 2**7, 0, 0, 2**7, 2**7],
         "joint_event_amplitudes": [-2**7, 2**7, 2**8, 2**8, 2**7, 2**7],
-        "gripper_event_codes": [305, 308, 307, 304],
+        "gripper_event_codes": [305, 307, 308, 304],
         "mode_switch_code": 316
     }
     KNOWN_CONFIGS["Generic X-Box pad"] = {
@@ -97,13 +98,14 @@ class GamePad(Node):
         self.axis_cmd = [0.0]*3
         self.man_inv_data = [0]*6
         self.man_inv_vectors = [    # possible vectors for manual inverse translation (actually the resulting vector could be an integral linear combination of those)
-            [1.0, 0.0, 0.0],
             [0.0, 1.0, 0.0],
-            [-1.0, 0.0, 0.0],
-            [0.0, -1.0, 0.0],
             [0.0, 0.0, 1.0],
-            [0.0, 0.0, -1.0]
+            [0.0, -1.0, 0.0],
+            [0.0, 0.0, -1.0],
+            [-1.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0]
         ]
+        self.semi_auto_cmd_id = -1      # -1 for no command
 
         # direction of joint 3, 4
         self.joint3_dir = 1
@@ -113,6 +115,7 @@ class GamePad(Node):
 
         self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_gamepad", 10)
         self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
+        self.task_id_pub = self.create_publisher(Int8, "/ROVER/element_id", 10)
         self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
         dt = 1/50
         self.timer = Inft_Timer(dt, self.publish_cmd)
@@ -145,9 +148,9 @@ class GamePad(Node):
 
     def publish_cmd(self):
         if self.hd_mode == self.MANUAL_DIRECT:
-            self.vel_cmd[2] *= self.joint3_dir
-            self.vel_cmd[3] *= self.joint4_dir
             l = [v*x for v,x  in zip(self.MAX_VELOCITIES, list(map(clean, map(float, self.vel_cmd))))]
+            l[2] *= self.joint3_dir
+            l[3] *= self.joint4_dir
             print("[", ", ".join(map(str_pad, l)), "]")
             self.joint_vel_cmd_pub.publish(Float32MultiArray(data = l))
         elif self.hd_mode == self.MANUAL_INVERSE:
@@ -158,6 +161,12 @@ class GamePad(Node):
             axis = normalized(axis)
             print("[", ", ".join(map(str_pad, axis)), "]")
             self.man_inv_axis_pub.publish(Float32MultiArray(data = axis))
+        elif self.hd_mode == self.SEMI_AUTONOMOUS:
+            if self.semi_auto_cmd_id == -1: 
+                return
+            msg = Int8(data = self.semi_auto_cmd_id)
+            self.task_id_pub.publish(msg)
+            self.semi_auto_cmd_id = -1
     
     def switch_mode(self):
         self.hd_mode = (self.hd_mode + 1) % len(self.HD_MODES)
@@ -188,16 +197,24 @@ class GamePad(Node):
                     return
         elif event.value == 0:
             self.vel_cmd[6] = 0.0
+            self.man_inv_data[5] = 1 if (event.value - self.JOINT_EVENT_OFFSETS[3]) / self.JOINT_EVENT_AMPLITUDES[3] > 0.5 else 0
 
         if event.code == self.JOINT3_RETREAT_CODE:
             self.joint3_dir = -1 if event.value == 1 else 1
         if event.code == self.JOINT4_RETREAT_CODE:
             self.joint4_dir = -1 if event.value == 1 else 1
     
-    def handle_binary_event_inverse_mode(self, event):
+    def handle_binary_event_manual_inverse_mode(self, event):
         for i, code in enumerate(self.GRIPPER_EVENT_CODES):
             if event.code == code:
                 self.man_inv_data[i] = event.value
+    
+    def handle_binary_event_semi_auto_mode(self, event):
+        if event.value != 1:
+            return
+        for i, code in enumerate(self.GRIPPER_EVENT_CODES):
+            if event.code == code:
+                self.semi_auto_cmd_id = i
 
     def handle_binary_event(self, event):
         if event.code == self.MODE_SWITCH_CODE:
@@ -208,7 +225,9 @@ class GamePad(Node):
         if self.hd_mode == self.MANUAL_DIRECT:
             self.handle_binary_event_direct_mode(event)
         elif self.hd_mode == self.MANUAL_INVERSE:
-            self.handle_binary_event_inverse_mode(event)
+            self.handle_binary_event_manual_inverse_mode(event)
+        elif self.hd_mode == self.SEMI_AUTONOMOUS:
+            self.handle_binary_event_semi_auto_mode(event)
 
     def read_gamepad(self):
         while rclpy.ok():

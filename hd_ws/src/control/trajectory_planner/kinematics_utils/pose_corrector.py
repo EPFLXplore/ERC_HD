@@ -25,9 +25,7 @@ def finger1_transform_old():    # actually joint name is finger1 but the link is
 def finger1_transform():
     transform = Pose()
     transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
-    rot = qa.quat(axis=(0.0, 0.0, 1.0), angle=-pi/2)
-    transform.orientation = qa.mul(transform.orientation, rot)
-    vect = [0.7545, -0.097, -0.3079]
+    vect = [-0.097, -0.7545, -0.3081]
     transform.position = qa.point_image(vect, transform.orientation)
     return transform
 

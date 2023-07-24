@@ -6,6 +6,7 @@ import threading
 from task_execution.all_tasks import *
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_corrector as pc
+import kinematics_utils.pose_tracker as pt
 from kerby_interfaces.msg import Task, Object
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Bool, Float64MultiArray
@@ -30,20 +31,18 @@ def artag_callback(msg):
     pose.position.z = msg.pose.position.z/100
     pose.orientation = msg.pose.orientation
 
-    temp = qa.compose_poses(vision_transform, pose)
+    temp = pc.correct_vision_pose(pose)
     artag_pose.position = temp.position
     artag_pose.orientation = temp.orientation
 
 
 def end_effector_callback(msg):
-    # transform = Pose()
-    # transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
-    # rot = qa.quat(axis=(0.0, 0.0, 1.0), angle=-pi/2)
-    # transform.orientation = qa.mul(transform.orientation, rot)
-    # vect = [0.7545, -0.097, -0.3079]
-    # transform.position = qa.point_image(vect, transform.orientation)
-    # combined = qa.compose_poses(msg, transform)
-    combined = pc.correct_eef_pose(msg)
+    transform = Pose()
+    transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
+    vect = [-0.097, -0.7545, -0.3081]
+    transform.position = qa.point_image(vect, transform.orientation)
+    combined = qa.compose_poses(msg, transform)
+    #combined = pc.correct_eef_pose(msg)
     end_effector_pose.position = combined.position
     end_effector_pose.orientation = combined.orientation
 
@@ -65,8 +64,10 @@ def get_btn_pose():
     axis = qa.point_image([0.0, 0.0, 1.0], obj.pose.orientation)
     obj3.pose.position = qa.make_point(qa.add(obj3.pose.position, qa.mul(0.05, axis)))
     
-    obj.pose = qa.compose_poses(obj.pose, qa.reverse_pose(vision_transform))
-    obj3.pose = qa.compose_poses(obj3.pose, qa.reverse_pose(vision_transform))
+    obj.pose = pc.revert_from_vision(obj.pose)
+    obj3.pose = pc.revert_from_vision(obj3.pose)
+    # obj.pose = qa.compose_poses(obj.pose, qa.reverse_pose(vision_transform))
+    # obj3.pose = qa.compose_poses(obj3.pose, qa.reverse_pose(vision_transform))
     return obj, obj3
 
 
@@ -76,6 +77,7 @@ def main():
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", end_effector_callback, 10)
     node.create_subscription(PanelObject, "/HD/vision/distance_topic", artag_callback, 10)
+    #node.create_subscription(PanelObject, "/HD/vision/distance_topic", pt.detected_object_pose_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)
     

@@ -115,6 +115,7 @@ class Executor(Node):
         if len(pt.DETECTED_OBJECTS_POSE) == 0: return
         shape = [0.2, 0.1, 0.0001]
         pose = pt.DETECTED_OBJECTS_POSE[0].object_pose
+        pose = pc.revert_from_vision(pose)
         name = "test_btn"
         self.addObjectToWorld(shape, pose, name)
 
