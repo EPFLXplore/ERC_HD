@@ -6,18 +6,15 @@ from controlpanel.cpo import CPO
 
 class ARTag:
     def __init__(self, marker_dict, marker_size, marker_id, camera_matrix, dist_coeffs):
-        marker_dict = aruco.getPredefinedDictionary(marker_dict)
+        self.marker_dict = aruco.Dictionary_get(marker_dict)
         self.marker_size = marker_size
         self.camera_matrix = camera_matrix
         self.dist_coeffs = dist_coeffs
         self.marker_id = marker_id
 
-        parameters = aruco.DetectorParameters()
-        self.detector = aruco.ArucoDetector(marker_dict, parameters)
-
     def detect(self, frame):
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-        corners, ids, _rejectedImgPoints = self.detector.detectMarkers(gray)
+        corners, ids, _rejectedImgPoints = aruco.detectMarkers(gray, self.marker_dict)
         if ids is not None and self.marker_id in ids:
             tag_idx = np.where(ids == self.marker_id)[0][0]
             rvecs, tvecs, _objPoints = aruco.estimatePoseSingleMarkers(
