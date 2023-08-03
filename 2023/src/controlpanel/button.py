@@ -52,15 +52,19 @@ class Button(CPO):
         return self._bottom_center
     
     def draw(self, frame):
-        if self._isOn:
-            cv.polylines(frame, self._projected_coords, 10, (0, 255, 0), 4)
-        if not self._isOn:
-            cv.polylines(frame, self._projected_coords, 10, (0, 0, 255), 4)
+        print(f'type: {self._projected_coords.astype(int).dtype}')
+        print(f'coordinates: {self._projected_coords}')
+        # cv.circle(frame, tuple(self.projected_target.astype(int)) , 2, (0, 255, 0), 10)
+        
         if self.is_target:
-            cv.polylines(frame, self._projected_coords, 10, (255, 0, 0), 4)
-
-        if self.is_target:
-            cv.circle(frame, self.projected_target.astype(int) , 2, (0, 255, 0), 10)
+            
+            cv.polylines(frame, self._projected_coords.astype(int), True, (255, 0, 0), 4)
+            cv.circle(frame, tuple(self.projected_target.astype(int)) , 2, (0, 255, 0), 10)
+        else: 
+            if self._isOn:
+                cv.polylines(frame, self._projected_coords.astype(int), True, (0, 255, 0), 4)
+            if not self._isOn:
+                cv.polylines(frame, self._projected_coords.astype(int), True, (0, 0, 255), 4)
 
 
     def isTarget(self):

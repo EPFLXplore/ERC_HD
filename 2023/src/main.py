@@ -21,7 +21,7 @@ out = cv.VideoWriter("demo.avi",cv.VideoWriter_fourcc(*"MJPG"), 30,(848, 480))
 while True:
     depth = camera.get_depth()
     frame = camera.get_image()
-    print(frame.shape)
+    # print(frame.shape)
 
     # TODO send to cs
 
@@ -34,7 +34,7 @@ while True:
 
         point2project, rvec, tvec = control_panel.get_target()
         translation, quaternion = translation_rotation(point2project, rvec, tvec)
-        print(translation, quaternion)
+        # print(translation, quaternion)
 
     out.write(frame.astype('uint8'))
     show(frame, depth)

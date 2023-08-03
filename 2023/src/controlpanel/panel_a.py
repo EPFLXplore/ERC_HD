@@ -59,7 +59,7 @@ class PanelA( Panel):
 
     # must be called after detect_ar_tag to be sure that the positions are not outdated or None
     def draw(self, frame):
-        self.ar_tag.draw(frame)
+        # self.ar_tag.draw(frame)
         for button in self.buttons:
             button.draw(frame)
             

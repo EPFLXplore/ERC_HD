@@ -37,9 +37,9 @@ class CPO:
     # This method should be overridden in a subclass that implements the drawing functionality.
     def draw(self, frame):
         if self._is_target:
-            cv.polylines(frame, [np.array(self._projected_coords)], True, (255, 0, 0), 4)
+            cv.polylines(frame, [np.array(self._projected_coords).astype(np.int32)], True, (255, 0, 0), 4)
         else:
-            cv.polylines(frame, [np.array(self._projected_coords)], True, (0, 0, 255), 4)
+            cv.polylines(frame, [np.array(self._projected_coords).astype(np.int32)], True, (0, 0, 255), 4)
         
 
     # A special method that returns a string representation of the object.
@@ -54,7 +54,7 @@ class CPO:
         self.is_target = False
 
     def set_projected_coord(self, projected):
-        self._projected_coords = projected.astype(int)
+        self._projected_coords = projected.astype(np.int32)
 
     def get_projected(self):
         return self._projected_coords
