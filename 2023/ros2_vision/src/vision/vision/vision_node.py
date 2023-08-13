@@ -1,3 +1,12 @@
+import os
+
+print(f"cwd: {os.getcwd()}")
+import sys
+
+sys.path.append("./src/vision/vision")
+# sys.path.append("./src/vision/vision")
+# sys.path.append("./src/vision/vision/publishers")
+
 # Import the necessary libraries
 import rclpy  # Python Client Library for ROS 2
 from rclpy.node import Node  # Handles the creation of nodes
@@ -7,10 +16,7 @@ import numpy as np
 from vision.stereo_camera import StereoCamera
 from vision.controlpanel.control_panel import ControlPanel
 from vision.utils import show, translation_rotation
-import sys
 
-# sys.path.append("./src/vision/vision")
-# sys.path.append("./src/vision/vision/publishers")
 # import os
 
 # from image_publisher import ImagePublisher
@@ -63,25 +69,13 @@ class VisionNode(Node):
         depth = self.camera.get_depth()
         frame = self.camera.get_image()
 
-        # TODO send to cs
-
-        cv.putText(
-            frame,
-            self.control_panel.selected_panel,
-            (10, 30),
-            cv.FONT_HERSHEY_SIMPLEX,
-            1,
-            (0, 0, 255),
-            2,
-            cv.LINE_AA,
-        )
-
         if self.control_panel.detect_ar_tag(frame):
             self.control_panel.project()
             self.control_panel.draw(frame)
 
             point2project, rvec, tvec = self.control_panel.get_target()
             translation, quaternion = translation_rotation(point2project, rvec, tvec)
+            self.target_pose_publisher.publish(translation, quaternion)
             # print(translation, quaternion)
 
         # show(frame, depth)

@@ -20,8 +20,9 @@ setup(
     entry_points={
         "console_scripts": [
             "img_publisher = vision.image_publisher:main",
-            "img_subscriber = vision.image_subscriber:main",
+            "img_subscriber = vision.subscribers.image_subscriber:main",
             "vision_node = vision.vision_node:main",
+            "fake_task_selector = vision.publishers.fake_cs_task_selector:main",
         ],
     },
 )
