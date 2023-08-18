@@ -14,3 +14,4 @@ class AddObjectCommand(Command):
         super().execute()
         self.executor.addObjectToWorld(self.shape, self.pose, self.name, self.type)
         time.sleep(.5)
+

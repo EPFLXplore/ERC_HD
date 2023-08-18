@@ -91,8 +91,7 @@ def main(args=None):
     while True:
         # msg = publisher.create_panelobject_message(0, 1., 2., 3., 0., 0., 0., 0.)
         # publisher.publish_inform(msg)
-
-
+ 
         frameset = pipe.wait_for_frames()
         color_frame = frameset.get_color_frame()
         depth_frame = frameset.get_depth_frame()
@@ -104,6 +103,7 @@ def main(args=None):
 
         gray_img = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         marker_corners, marker_IDs, rej = aruco.detectMarkers(gray_img, marker_dict_4, parameters=param_markers)
+
         #print("Camera")
         if marker_corners:
             #print("tags")

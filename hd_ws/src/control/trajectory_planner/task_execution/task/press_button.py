@@ -19,9 +19,6 @@ class PressButton(Task):
                 self.btn_pose = obj.object_pose
                 self.artag_pose = self.btn_pose
 
-    def currentCommand(self):
-        return self.command_chain[self.cmd_counter]
-
     def getPressPosition(self, position=None):
         if position is None:
             position = self.btn_pose.position

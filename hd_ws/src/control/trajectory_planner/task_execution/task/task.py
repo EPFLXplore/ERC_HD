@@ -11,6 +11,7 @@ from task_execution.command.all_commands import *
 
 class Task:
     """abstract class representing a task"""
+    NONE_OPERATION = lambda cmd: None
 
     def __init__(self, executor):
         self.executor = executor
@@ -29,9 +30,9 @@ class Task:
     def addCommand(self, command: Command, pre_operation: Callable = None, post_operation: Callable = None, description: str = ""):
         """add a new command to the command list"""
         if pre_operation is None:
-            pre_operation = lambda cmd: None
+            pre_operation = Task.NONE_OPERATION
         if post_operation is None:
-            post_operation = lambda cmd: None
+            post_operation = Task.NONE_OPERATION
 
         command.executor = self.executor
         self.command_chain.append(command)
@@ -39,15 +40,15 @@ class Task:
         self.post_command_operation.append(post_operation)
         self.command_description.append(description)
 
+    def currentCommand(self):
+        return self.command_chain[self.cmd_counter]
+    
     def finished(self):
         """indicates if task has finished"""
+        return self.cmd_counter == len(self.command_chain)
     
     def update_world(self):
         """update the objects in the world"""
-
-    def setupNextCommand(self):
-        """gives the required information to the next command"""
-        # deprecated
     
     def nextPreOperation(self):
         """execute the pre operation of the current command"""
@@ -61,14 +62,14 @@ class Task:
 
     def currentCommandValidated(self):
         """indicates after the request of execution of the command if the outcome is satisfactory and the next command can begin"""
-        return True
+        return self.currentCommand().done()
 
     def stopCondition(self):
         """indicates if task should be stopped because a command can't be executed"""
         return False
 
     def oneCommandLoop(self):
-        self.command_chain[self.cmd_counter].execute()
+        self.currentCommand().execute()
         if self.stopCondition():
             return False
         return True
@@ -76,10 +77,7 @@ class Task:
     def executeNextCommand(self):
         """attempts to execute next command on the command chain
         returns a bool indicating if it succeeded"""
-        self.setupNextCommand()     # deprecated
         self.nextPreOperation()
-        if not self.oneCommandLoop():
-            return False
         while not self.currentCommandValidated():
             if not self.oneCommandLoop():
                 return False

@@ -1,5 +1,6 @@
 #include "trajectory_planner/planner.h"
-#include <chrono>
+#include "trajectory_planner/quaternion_arithmetic.h"
+
 
 using namespace std::chrono_literals;
 
@@ -9,6 +10,7 @@ Planner::Planner(rclcpp::NodeOptions node_options) : Node("kinematics_trajectory
     m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
     m_add_object_sub = this->create_subscription<kerby_interfaces::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&Planner::modeChangeCallback, this, _1));
+    m_man_inv_axis_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/fsm/man_inv_axis_cmd", 10, std::bind(&Planner::manualInverseAxisCallback, this, _1));
 
     m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/HD/kinematics/eef_pose", 10);
     m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/traj_feedback", 10);
@@ -56,17 +58,15 @@ Planner::TrajectoryStatus Planner::reachTargetJointValues(const std::vector<doub
     return status;
 }
 
-Planner::TrajectoryStatus Planner::computeCartesianPath(const geometry_msgs::msg::Pose &target) { 
+Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msgs::msg::Pose> waypoints) { 
     // TODO: make this function cleaner
     updateCurrentPosition();
     Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
-    std::vector<geometry_msgs::msg::Pose> waypoints;
-    waypoints.push_back(target);
     moveit_msgs::msg::RobotTrajectory trajectory;
     const double jump_threshold = 0.0; // TODO: check how to put a real value here
     const double eef_step = 0.01;
     double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
-    if (fraction != 1.0)
+    if (0 && fraction != 1.0)
         status = Planner::TrajectoryStatus::PLANNING_ERROR;
     else if (!execute(trajectory))
         status = Planner::TrajectoryStatus::EXECUTION_ERROR;
@@ -74,6 +74,38 @@ Planner::TrajectoryStatus Planner::computeCartesianPath(const geometry_msgs::msg
     std_msgs::msg::Bool msg;
     msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
     m_traj_feedback_pub->publish(msg);
+    return status;
+}
+
+Planner::TrajectoryStatus Planner::reachTargetPoseCartesian(const geometry_msgs::msg::Pose &target) {
+    std::vector<geometry_msgs::msg::Pose> waypoints;
+    waypoints.push_back(target);
+    return computeCartesianPath(waypoints);
+}
+
+Planner::TrajectoryStatus Planner::advanceAlongAxis() {
+    std::vector<geometry_msgs::msg::Pose> waypoints;
+    double step_size = 0.1;     // [m]
+    double limit = 2.0;         // [m]
+    int step_count = std::ceil(limit/step_size);
+    geometry_msgs::msg::Point step;
+    step.x = m_man_inv_axis[0]*step_size;
+    step.y = m_man_inv_axis[1]*step_size;
+    step.z = m_man_inv_axis[2]*step_size;
+    geometry_msgs::msg::Pose pose = m_move_group->getCurrentPose().pose;
+    RCLCPP_INFO(this->get_logger(), "Step before : %g, %g, %g", step.x, step.y, step.z);
+    //RCLCPP_INFO(this->get_logger(), "Quat : w: %g, x: %g, y: %g, z: %g", pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z);
+    step = pointImage(step, pose.orientation);
+    RCLCPP_INFO(this->get_logger(), "Step after : %g, %g, %g", step.x, step.y, step.z);
+    for (int i = 1; i <= step_count; i++) {
+        pose.position.x += step.x;
+        pose.position.y += step.y;
+        pose.position.z += step.z;
+        geometry_msgs::msg::Pose waypoint = pose;
+        waypoints.push_back(waypoint);
+    }
+    Planner::TrajectoryStatus status = computeCartesianPath(waypoints);
+    m_executing_man_inv_cmd = false;
     return status;
 }
 
@@ -177,8 +209,16 @@ void Planner::loop()
     while (rclcpp::ok())
     {
         publishEEFPose();
-        if (m_in_direct_mode)
-            updateCurrentPosition();
+        switch(m_mode) {
+            case Planner::CommandMode::MANUAL_DIRECT:
+                updateCurrentPosition();
+                break;
+            case Planner::CommandMode::MANUAL_INVERSE:
+                if (manualInverseCommandOld() && m_executing_man_inv_cmd) {
+                    stop();
+                }
+                break;
+        }
         rate.sleep();
     }
 }
@@ -191,11 +231,23 @@ void Planner::updateCurrentPosition()
     current_state.update(true);
 }
 
+bool Planner::manualInverseCommandOld() {
+    static const double command_expiration = 200;
+    auto now = std::chrono::steady_clock::now();
+    return (std::chrono::duration_cast<std::chrono::milliseconds>(now-m_last_man_inv_cmd_time).count() > command_expiration);
+}
+
+void Planner::stop() {
+    m_move_group->stop();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    m_executing_man_inv_cmd = false;
+}
+
 void Planner::poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg)
 {
     RCLCPP_INFO(this->get_logger(), "Received pose goal");
     if (msg->cartesian) {
-        std::thread executor(&Planner::computeCartesianPath, this, msg->goal);
+        std::thread executor(&Planner::reachTargetPoseCartesian, this, msg->goal);
         executor.detach();
     }
     else {
@@ -211,6 +263,31 @@ void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::Shared
     executor.detach();
 }
 
+bool equal(const std::vector<double> &v1, const std::vector<double> &v2) {
+    return v1[0] == v2[0] && v1[1]  == v2[1] && v1[2] == v2[2];
+}
+
+bool isZero(const std::vector<double> &v) {
+    return v[0] == 0 && v[1] == 0 && v[2] == 0;
+}
+
+void Planner::manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
+    if (isZero(msg->data)) {
+        stop();
+        return;
+    }
+
+    if (!m_executing_man_inv_cmd || !equal(m_man_inv_axis, msg->data)) {
+        if (m_executing_man_inv_cmd) stop();
+        m_man_inv_axis = msg->data;
+        std::thread executor(&Planner::advanceAlongAxis, this);
+        executor.detach();
+        m_executing_man_inv_cmd = true;
+    }
+    
+    m_last_man_inv_cmd_time = std::chrono::steady_clock::now();
+}
+
 void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg)
 {
     RCLCPP_INFO(this->get_logger(), "Received new object");
@@ -220,16 +297,12 @@ void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr m
 
 void Planner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
 {
-    static int MANUAL_INVERSE = 0;
-    static int MANUAL_DIRECT = 1;
-    static int SEMI_AUTONOMOUS = 2;
-    static int AUTONOMOUS = 3;
-    int mode = msg->data;
-    m_in_direct_mode = (mode == MANUAL_DIRECT);
-    if (mode != MANUAL_DIRECT) {
+    Planner::CommandMode new_mode = static_cast<Planner::CommandMode>(msg->data);
+    if (new_mode != Planner::CommandMode::MANUAL_DIRECT) {
         std::thread executor(&Planner::enforceCurrentState, this);
         executor.detach();
     }
+    m_mode = new_mode;
 }
 
 void Planner::publishEEFPose()

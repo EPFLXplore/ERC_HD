@@ -11,7 +11,7 @@ class VisionSubscriber(Node):
         super().__init__('vision_distance_subscriber')
         self.subscription = self.create_subscription(
             PanelObject,
-            '/HD/distance_topic',
+            '/HD/vision/distance_topic',
             self.listener_callback,
             10)
         self.subscription  # prevent unused variable warning

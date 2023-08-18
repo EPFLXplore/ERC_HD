@@ -124,7 +124,7 @@ hardware_interface::return_type KerbyArmInterface::write() {
 
     if (scanning_ || !sending_commands_) return hardware_interface::return_type::OK;
 
-    return hardware_interface::return_type::OK;     // disabled
+    //return hardware_interface::return_type::OK;     // disabled
 
 
     std_msgs::msg::Float64MultiArray msg;
@@ -169,8 +169,8 @@ void KerbyArmInterface::init_communication() {
     position_mode_switch_ = communication_node_->create_subscription<std_msgs::msg::Int8>("/HD/kinematics/position_mode_switch", 10,
         std::bind(&KerbyArmInterface::position_mode_switch_callback, this, std::placeholders::_1));
 
-    std::thread first(&KerbyArmInterface::communication_spin, this);
-    first.detach();
+    std::thread communication_thread(&KerbyArmInterface::communication_spin, this);
+    communication_thread.detach();
 }
 
 void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
@@ -184,7 +184,7 @@ void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::S
     }
     if (size < hw_position_states_.size()) {
         for (uint i = size; i < hw_position_states_.size(); i++) {
-            hw_position_states_[i] = msg->position[i];
+            hw_position_states_[i] = msg->position[i];      // don't remember why I am doing this here, should maybe set it to 0 rather thatn msg->position[i]
             hw_velocity_states_[i] = msg->velocity[i];
             if (scanning_ || !sending_commands_) {
                 hw_position_commands_[i] = msg->position[i];
