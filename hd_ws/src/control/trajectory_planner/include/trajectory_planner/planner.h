@@ -42,6 +42,8 @@ public:
 
     void config();
 
+    void initCommunication();
+
     ~Planner() {    // TODO: make the pointer shared so no need for destructor
         delete m_move_group;
         delete m_planning_scene_interface;
@@ -111,5 +113,6 @@ private:
     CommandMode                                                         m_mode = CommandMode::MANUAL_DIRECT;
     std::chrono::time_point<std::chrono::steady_clock>                  m_last_man_inv_cmd_time = std::chrono::steady_clock::now();
     bool                                                                m_executing_man_inv_cmd = false;
-    std::vector<double>                                                 m_man_inv_axis;
+    std::vector<double>                                                 m_man_inv_axis = {0.0, 0.0, 0.0};
+    bool                                                                m_mode_transition_ready = true;
 };

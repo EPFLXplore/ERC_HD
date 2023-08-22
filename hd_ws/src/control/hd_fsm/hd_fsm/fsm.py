@@ -2,14 +2,25 @@ import time
 import threading
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8MultiArray, Float32, Int8, Bool, Int16
+from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8
 from kerby_interfaces.msg import Task
 from interfaces.msg import PanelObject
 import array
-import sys
 
 
 VERBOSE = True
+
+
+def str_pad(x, length=5):
+    s = str(x)
+    if len(s) >= length:
+        return s[:length]
+    return s + " " * (length-len(s))
+
+
+def str_pad_list(l, length=5):
+    pad_fct = lambda x: str_pad(x, length)
+    return "[ " + ", ".join(map(pad_fct, l)) + " ]"
 
 
 class FSM(Node):
@@ -21,7 +32,6 @@ class FSM(Node):
     def __init__(self):
         super().__init__("HD_fsm")
         self.create_ros_interfaces()
-        self.spinning_thread = None     # ros will spin in a separate thread which will be passed to the loop function
         self.velocity = 0
         self.command_expiration = .5   # seconds
         self.received_manual_direct_cmd_at = time.time() - self.command_expiration
@@ -32,17 +42,17 @@ class FSM(Node):
         self.mode = self.MANUAL_DIRECT
         self.target_mode = self.MANUAL_DIRECT
         self.mode_transitioning = False
-        self.reset_arm_pos = False
-        self.abort = False
+        self.manual_inverse_axis = [0.0, 0.0, 0.0]
     
     def create_ros_interfaces(self):
-        self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, '/HD/fsm/joint_vel_cmd', 10)
-        self.task_pub = self.create_publisher(Task, '/HD/fsm/task_assignment', 10)
-        self.mode_change_pub = self.create_publisher(Int8, '/HD/fsm/mode_change', 10)
+        self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/joint_vel_cmd", 10)
+        self.manual_inverse_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/man_inv_axis_cmd", 10)
+        self.task_pub = self.create_publisher(Task, "/HD/fsm/task_assignment", 10)
+        self.mode_change_pub = self.create_publisher(Int8, "/HD/fsm/mode_change", 10)
         self.create_subscription(Float32MultiArray, "/ROVER/HD_gamepad", self.manual_cmd_callback, 10)
+        self.create_subscription(Float32MultiArray, "/ROVER/HD_man_inv_axis", self.manual_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
         self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
-        self.create_subscription(Int8, "/ROVER/shutdown", self.kill, 10)
 
     def mode_callback(self, msg: Int8):
         """listens to HD_mode topic published by CS"""
@@ -55,16 +65,13 @@ class FSM(Node):
             self.manual_direct_command = msg.data
             self.received_manual_direct_cmd_at = time.time()
         elif self.mode == self.MANUAL_INVERSE:
-            pass
+            self.manual_inverse_axis = msg.data
+            self.received_manual_inverse_cmd_at = time.time()
 
     def task_cmd_callback(self, msg: Int8):
         if self.mode != self.SEMI_AUTONOMOUS: return
         
         self.semi_autonomous_command_id = msg.data
-
-    def kill(self, msg):
-        self.get_logger().info("Shutdown of HD FSM")
-        self.abort = True
 
     def send_task_cmd(self):
         """sends the last task command to the task executor and locks any other command until completion"""
@@ -76,19 +83,29 @@ class FSM(Node):
         msg = Float64MultiArray()
         msg.data = array.array('d', self.manual_direct_command)
         if VERBOSE:
-            self.get_logger().info("FSM direct cmd :   " + str(list(msg.data)))
+            self.get_logger().info("FSM direct cmd :   " + str_pad_list(list(msg.data)))
         self.manual_direct_cmd_pub.publish(msg)
+
+    def send_manual_inverse_cmd(self):
+        if self.manual_inverse_command_old():
+            return
+        msg = Float64MultiArray()
+        msg.data = array.array('d', self.manual_inverse_axis)
+        if VERBOSE:
+            self.get_logger().info("FSM manual inverse cmd :   " + str_pad_list(list(msg.data)))
+        self.manual_inverse_cmd_pub.publish(msg)
 
     def send_semi_autonomous_cmd(self):
         if self.semi_autonomous_command_id is not None:
-            self.get_logger().info("SENDING SEMI AUTO CMD")
+            if VERBOSE:
+                self.get_logger().info("SENDING SEMI AUTO CMD")
             msg = Task()
             msg.description = "btn"
             msg.id = self.semi_autonomous_command_id
             #msg.pose = self.semi_autonomous_command_id.pose
             self.semi_autonomous_command_id = None
             self.task_pub.publish(msg)
-
+        
     def updateWorld(self):
         """sends a world update to the trajectory planner"""
         # TODO
@@ -100,13 +117,15 @@ class FSM(Node):
         return time.time()-self.received_manual_inverse_cmd_at > self.command_expiration
 
     def normal_loop_action(self):
-        self.get_logger().info("MODE : " + str(self.mode))
+        if VERBOSE:
+            self.get_logger().info("MODE : " + str(self.mode))
+            
         if self.mode == self.AUTONOMOUS:
             pass
         elif self.mode == self.SEMI_AUTONOMOUS:
             self.send_semi_autonomous_cmd()
         elif self.mode == self.MANUAL_INVERSE:
-            pass
+            self.send_manual_inverse_cmd()
         elif self.mode == self.MANUAL_DIRECT:
             self.send_manual_direct_cmd()
 
@@ -128,10 +147,9 @@ class FSM(Node):
             msg.data = self.mode
             self.mode_change_pub.publish(msg)
 
-    def loop(self, spinning_thread):
-        self.spinning_thread = spinning_thread
+    def loop(self):
         rate = self.create_rate(25)   # 25hz
-        while rclpy.ok() and not self.abort:
+        while rclpy.ok():
             if self.mode_transitioning:
                 self.transition_loop_action()
             else:
@@ -148,7 +166,7 @@ def main(args=None):
     thread.start()
 
     try:
-        node.loop(thread)
+        node.loop()
     except KeyboardInterrupt:
         pass
 
