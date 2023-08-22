@@ -6,6 +6,7 @@ from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8
 from kerby_interfaces.msg import Task
 from interfaces.msg import PanelObject
 import array
+import math
 
 
 VERBOSE = True
@@ -22,6 +23,12 @@ def str_pad_list(l, length=5):
     pad_fct = lambda x: str_pad(x, length)
     return "[ " + ", ".join(map(pad_fct, l)) + " ]"
 
+
+def normalize(l):
+    n = math.sqrt(sum(x**2 for x in l))
+    if n == 0:
+        return l
+    return [x/n for x in l]
 
 class FSM(Node):
     MANUAL_INVERSE = 0
@@ -49,7 +56,7 @@ class FSM(Node):
         self.manual_inverse_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/man_inv_axis_cmd", 10)
         self.task_pub = self.create_publisher(Task, "/HD/fsm/task_assignment", 10)
         self.mode_change_pub = self.create_publisher(Int8, "/HD/fsm/mode_change", 10)
-        self.create_subscription(Float32MultiArray, "/ROVER/HD_gamepad", self.manual_cmd_callback, 10)
+        self.create_subscription(Float32MultiArray, "/CS/HD_gamepad", self.manual_cmd_callback, 10)
         self.create_subscription(Float32MultiArray, "/ROVER/HD_man_inv_axis", self.manual_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
         self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
@@ -65,7 +72,7 @@ class FSM(Node):
             self.manual_direct_command = msg.data
             self.received_manual_direct_cmd_at = time.time()
         elif self.mode == self.MANUAL_INVERSE:
-            self.manual_inverse_axis = msg.data
+            self.manual_inverse_axis = normalize(msg.data[:3])
             self.received_manual_inverse_cmd_at = time.time()
 
     def task_cmd_callback(self, msg: Int8):
