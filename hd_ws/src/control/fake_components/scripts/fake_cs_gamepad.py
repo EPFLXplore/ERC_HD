@@ -113,7 +113,7 @@ class GamePad(Node):
 
         self.hd_mode = self.MANUAL_DIRECT
 
-        self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_gamepad", 10)
+        self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, "/CS/HD_gamepad", 10)
         self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
         self.task_id_pub = self.create_publisher(Int8, "/ROVER/element_id", 10)
         self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
@@ -133,7 +133,7 @@ class GamePad(Node):
                 return device
             sleep(1)
     
-    def identify_device(self):        
+    def identify_device(self):
         name = self.device.name
         if name not in self.KNOWN_CONFIGS:
             return

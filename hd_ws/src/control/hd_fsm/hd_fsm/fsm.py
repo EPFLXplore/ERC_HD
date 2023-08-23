@@ -71,7 +71,7 @@ class FSM(Node):
         if self.mode == self.MANUAL_DIRECT:
             self.manual_direct_command = msg.data
             self.received_manual_direct_cmd_at = time.time()
-        elif self.mode == self.MANUAL_INVERSE:
+        elif self.mode == self.MANUAL_INVERSE:  # TODO: standardize this
             self.manual_inverse_axis = normalize(msg.data[:3])
             self.received_manual_inverse_cmd_at = time.time()
 
