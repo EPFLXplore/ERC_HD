@@ -7,7 +7,6 @@ from kerby_interfaces.msg import Task, Object, PoseGoal
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8
 import threading
-from interfaces.msg import PanelObject
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 import kinematics_utils.quaternion_arithmetic as qa
@@ -18,7 +17,7 @@ class Executor(Node):
         super().__init__("kinematics_task_executor")
         self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignementCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-        self.create_subscription(PanelObject, "/HD/vision/distance_topic", pt.detected_object_pose_callback, 10)
+        self.create_subscription(Pose, "target_pose", pt.detected_object_pose_callback, 10)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)

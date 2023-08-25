@@ -13,7 +13,6 @@ from std_msgs.msg import Bool, Float64MultiArray
 import time
 from math import pi
 import copy
-from interfaces.msg import PanelObject
 
 
 end_effector_pose = Pose()
@@ -26,10 +25,10 @@ vision_transform.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
 
 def artag_callback(msg):
     pose = Pose()
-    pose.position.x = msg.pose.position.x/100
-    pose.position.y = msg.pose.position.y/100
-    pose.position.z = msg.pose.position.z/100
-    pose.orientation = msg.pose.orientation
+    pose.position.x = msg.position.x/1000
+    pose.position.y = msg.position.y/1000
+    pose.position.z = msg.position.z/1000
+    pose.orientation = msg.orientation
 
     temp = pc.correct_vision_pose(pose)
     artag_pose.position = temp.position
@@ -76,7 +75,7 @@ def main():
     node = rclpy.create_node("kinematics_vision_test")
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", end_effector_callback, 10)
-    node.create_subscription(PanelObject, "/HD/vision/distance_topic", artag_callback, 10)
+    node.create_subscription(Pose, "target_pose", artag_callback, 10)
     #node.create_subscription(PanelObject, "/HD/vision/distance_topic", pt.detected_object_pose_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)

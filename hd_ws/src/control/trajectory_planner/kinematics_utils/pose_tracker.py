@@ -2,7 +2,6 @@ from geometry_msgs.msg import Pose
 import kinematics_utils.quaternion_arithmetic as qa
 import math
 import copy
-from interfaces.msg import PanelObject
 import kinematics_utils.pose_corrector as pc
 
 
@@ -29,7 +28,7 @@ def eef_pose_callback(msg):
     END_EFFECTOR_POSE = msg
 
 
-def detected_object_pose_callback(msg: PanelObject):
+def detected_object_pose_callback(msg: Pose):
     """listens to detected_elements topic and updates the pose of the detected elements (with respect to the end effector pose)"""
     global DETECTED_OBJECTS_LOCKED
     global DETECTION_UPDATED
@@ -40,13 +39,13 @@ def detected_object_pose_callback(msg: PanelObject):
     for _ in range(len(DETECTED_OBJECTS_POSE)):
         DETECTED_OBJECTS_POSE.pop()
 
-    cm_to_m = 1/100
+    mm_to_m = 1/1000
 
     corrected_pose = Pose()
-    corrected_pose.position.x = msg.pose.position.x * cm_to_m
-    corrected_pose.position.y = msg.pose.position.y * cm_to_m
-    corrected_pose.position.z = msg.pose.position.z * cm_to_m
-    corrected_pose.orientation = msg.pose.orientation
+    corrected_pose.position.x = msg.position.x * mm_to_m
+    corrected_pose.position.y = msg.position.y * mm_to_m
+    corrected_pose.position.z = msg.position.z * mm_to_m
+    corrected_pose.orientation = msg.orientation
 
     corrected_pose = pc.correct_vision_pose(corrected_pose)
 

@@ -28,7 +28,8 @@ public:
     enum TrajectoryStatus {
         SUCCESS,
         PLANNING_ERROR,
-        EXECUTION_ERROR
+        EXECUTION_ERROR,
+        CANNOT_ATTEMPT
     };
 
     enum CommandMode {
@@ -96,6 +97,10 @@ private:
 
     void publishEEFPose();
 
+    void sendTrajFeedback(Planner::TrajectoryStatus status);
+
+    bool canMove();
+
 
     const std::string                                                   m_planning_group = "kerby_arm_group";
     moveit::planning_interface::MoveGroupInterface*                     m_move_group;
@@ -115,4 +120,5 @@ private:
     bool                                                                m_executing_man_inv_cmd = false;
     std::vector<double>                                                 m_man_inv_axis = {0.0, 0.0, 0.0};
     bool                                                                m_mode_transition_ready = true;
+    bool                                                                m_is_executing_path = false;
 };

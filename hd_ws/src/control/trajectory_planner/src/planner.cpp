@@ -32,6 +32,7 @@ void Planner::initCommunication() {
 
 Planner::TrajectoryStatus Planner::reachTargetPose(const geometry_msgs::msg::Pose &target)
 {
+
     updateCurrentPosition();
     m_move_group->setPoseTarget(target);
     Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
@@ -40,9 +41,7 @@ Planner::TrajectoryStatus Planner::reachTargetPose(const geometry_msgs::msg::Pos
     else if (!execute())
         status = Planner::TrajectoryStatus::EXECUTION_ERROR;
 
-    std_msgs::msg::Bool msg;
-    msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
-    m_traj_feedback_pub->publish(msg);
+    sendTrajFeedback(status);
     return status;
 }
 
@@ -56,9 +55,7 @@ Planner::TrajectoryStatus Planner::reachTargetJointValues(const std::vector<doub
     else if (!execute())
         status = Planner::TrajectoryStatus::EXECUTION_ERROR;
 
-    std_msgs::msg::Bool msg;
-    msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
-    m_traj_feedback_pub->publish(msg);
+    sendTrajFeedback(status);
     return status;
 }
 
@@ -75,9 +72,7 @@ Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msg
     else if (!execute(trajectory))
         status = Planner::TrajectoryStatus::EXECUTION_ERROR;
 
-    std_msgs::msg::Bool msg;
-    msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
-    m_traj_feedback_pub->publish(msg);
+    sendTrajFeedback(status);
     return status;
 }
 
@@ -97,10 +92,7 @@ Planner::TrajectoryStatus Planner::advanceAlongAxis() {
     step.y = m_man_inv_axis[1]*step_size;
     step.z = m_man_inv_axis[2]*step_size;
     geometry_msgs::msg::Pose pose = m_move_group->getCurrentPose().pose;
-    //RCLCPP_INFO(this->get_logger(), "Step before : %g, %g, %g", step.x, step.y, step.z);
-    //RCLCPP_INFO(this->get_logger(), "Quat : w: %g, x: %g, y: %g, z: %g", pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z);
     step = pointImage(step, pose.orientation);
-    //RCLCPP_INFO(this->get_logger(), "Step after : %g, %g, %g", step.x, step.y, step.z);
     for (int i = 1; i <= step_count; i++) {
         pose.position.x += step.x;
         pose.position.y += step.y;
@@ -133,7 +125,7 @@ bool Planner::execute(moveit_msgs::msg::RobotTrajectory &trajectory)
     return (m_move_group->execute(trajectory) != moveit::planning_interface::MoveItErrorCode::SUCCESS);
 }
 
-void Planner::enforceCurrentState()
+void Planner::enforceCurrentState()     // TODO: maybe add in this method the canMove and sendTrajFeedback (or something similar without sending a message)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     updateCurrentPosition();
@@ -294,7 +286,10 @@ void Planner::manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::
             stop();
             static const double security_sleep = 1000;      // In order to make sure not to send commands to MoveIt while old ones are still executing, won't move in new direction for 1 second after last command
             auto now = std::chrono::steady_clock::now();
-            if (std::chrono::duration_cast<std::chrono::milliseconds>(now-m_last_man_inv_cmd_time).count() < security_sleep) return;
+            if (std::chrono::duration_cast<std::chrono::milliseconds>(now-m_last_man_inv_cmd_time).count() < security_sleep) {
+                exec_locked = false;
+                return;
+            }
         }
         m_executing_man_inv_cmd = true;
         m_man_inv_axis = msg->data;
@@ -328,4 +323,18 @@ void Planner::publishEEFPose()
 {
     geometry_msgs::msg::Pose msg = m_move_group->getCurrentPose().pose;
     m_eef_pose_pub->publish(msg);
+}
+
+void Planner::sendTrajFeedback(Planner::TrajectoryStatus status) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std_msgs::msg::Bool msg;
+    msg.data = (status == Planner::TrajectoryStatus::SUCCESS);
+    m_traj_feedback_pub->publish(msg);
+    m_is_executing_path = false;
+}
+
+bool Planner::canMove() {
+    bool res = m_is_executing_path;
+    m_is_executing_path = true;
+    return res;
 }
