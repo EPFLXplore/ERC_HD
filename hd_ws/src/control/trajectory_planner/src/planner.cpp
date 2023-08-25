@@ -24,7 +24,7 @@ void Planner::initCommunication() {
     m_add_object_sub = this->create_subscription<kerby_interfaces::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&Planner::modeChangeCallback, this, _1));
     m_man_inv_axis_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/fsm/man_inv_axis_cmd", 10, std::bind(&Planner::manualInverseAxisCallback, this, _1));
-
+    m_named_target_sub = this->create_subscription<std_msgs::msg::String>("/HD/kinematics/named_joint_target", 10, std::bind(&Planner::namedTargetCallback, this, _1));
     m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/HD/kinematics/eef_pose", 10);
     m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/traj_feedback", 10);
     m_position_mode_switch_pub = this->create_publisher<std_msgs::msg::Int8>("/HD/kinematics/position_mode_switch", 10);
@@ -32,35 +32,35 @@ void Planner::initCommunication() {
 
 Planner::TrajectoryStatus Planner::reachTargetPose(const geometry_msgs::msg::Pose &target)
 {
+    if (!canMove()) return Planner::TrajectoryStatus::CANNOT_ATTEMPT;
 
     updateCurrentPosition();
     m_move_group->setPoseTarget(target);
-    Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
-    if (!plan())
-        status = Planner::TrajectoryStatus::PLANNING_ERROR;
-    else if (!execute())
-        status = Planner::TrajectoryStatus::EXECUTION_ERROR;
-
-    sendTrajFeedback(status);
-    return status;
+    return planAndExecute();
 }
 
 Planner::TrajectoryStatus Planner::reachTargetJointValues(const std::vector<double> &target)
 {
+    if (!canMove()) return Planner::TrajectoryStatus::CANNOT_ATTEMPT;
+
     updateCurrentPosition();
     m_move_group->setJointValueTarget(target);
-    Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
-    if (!plan())
-        status = Planner::TrajectoryStatus::PLANNING_ERROR;
-    else if (!execute())
-        status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+    return planAndExecute();
+}
 
-    sendTrajFeedback(status);
-    return status;
+Planner::TrajectoryStatus Planner::reachNamedTarget(const std::string &target)
+{
+    if (!canMove()) return Planner::TrajectoryStatus::CANNOT_ATTEMPT;
+
+    updateCurrentPosition();
+    m_move_group->setNamedTarget(target);
+    return planAndExecute();
 }
 
 Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msgs::msg::Pose> waypoints) { 
     // TODO: make this function cleaner
+    if (!canMove()) return Planner::TrajectoryStatus::CANNOT_ATTEMPT;
+
     updateCurrentPosition();
     Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
     moveit_msgs::msg::RobotTrajectory trajectory;
@@ -123,6 +123,17 @@ bool Planner::executeSilent()
 bool Planner::execute(moveit_msgs::msg::RobotTrajectory &trajectory)
 {
     return (m_move_group->execute(trajectory) != moveit::planning_interface::MoveItErrorCode::SUCCESS);
+}
+
+Planner::TrajectoryStatus Planner::planAndExecute() {
+    Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
+    if (!plan())
+        status = Planner::TrajectoryStatus::PLANNING_ERROR;
+    else if (!execute())
+        status = Planner::TrajectoryStatus::EXECUTION_ERROR;
+
+    sendTrajFeedback(status);
+    return status;
 }
 
 void Planner::enforceCurrentState()     // TODO: maybe add in this method the canMove and sendTrajFeedback (or something similar without sending a message)
@@ -319,6 +330,12 @@ void Planner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
     m_mode = new_mode;
 }
 
+void Planner::namedTargetCallback(const std_msgs::msg::String::SharedPtr msg) {
+    RCLCPP_INFO(this->get_logger(), "Received named target goal : " + msg->data);
+    std::thread executor(&Planner::reachNamedTarget, this, msg->data);
+    executor.detach();
+}
+
 void Planner::publishEEFPose()
 {
     geometry_msgs::msg::Pose msg = m_move_group->getCurrentPose().pose;
@@ -334,7 +351,7 @@ void Planner::sendTrajFeedback(Planner::TrajectoryStatus status) {
 }
 
 bool Planner::canMove() {
-    bool res = m_is_executing_path;
+    bool res = !m_is_executing_path;
     m_is_executing_path = true;
     return res;
 }

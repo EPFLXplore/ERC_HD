@@ -4,7 +4,6 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8
 from kerby_interfaces.msg import Task
-from interfaces.msg import PanelObject
 import array
 import math
 
@@ -45,7 +44,8 @@ class FSM(Node):
         self.received_manual_inverse_cmd_at = time.time() - self.command_expiration
         motor_count = 8
         self.manual_direct_command = array.array('d', [0.0]*motor_count)
-        self.semi_autonomous_command_id = None
+        #self.semi_autonomous_command_id = None
+        self.semi_autonomous_command = None
         self.mode = self.MANUAL_DIRECT
         self.target_mode = self.MANUAL_DIRECT
         self.mode_transitioning = False
@@ -59,7 +59,8 @@ class FSM(Node):
         self.create_subscription(Float32MultiArray, "/CS/HD_gamepad", self.manual_cmd_callback, 10)
         self.create_subscription(Float32MultiArray, "/ROVER/HD_man_inv_axis", self.manual_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
-        self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
+        #self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
+        self.create_subscription(Task, "/ROVER/semi_auto_task", self.task_cmd_callback, 10)
 
     def mode_callback(self, msg: Int8):
         """listens to HD_mode topic published by CS"""
@@ -75,10 +76,12 @@ class FSM(Node):
             self.manual_inverse_axis = normalize(msg.data[:3])
             self.received_manual_inverse_cmd_at = time.time()
 
-    def task_cmd_callback(self, msg: Int8):
-        if self.mode != self.SEMI_AUTONOMOUS: return
-        
-        self.semi_autonomous_command_id = msg.data
+    # def task_cmd_callback(self, msg: Int8):
+    #     if self.mode != self.SEMI_AUTONOMOUS: return
+    #     self.semi_autonomous_command_id = msg.data
+
+    def task_cmd_callback(self, msg: Task):
+        self.semi_autonomous_command = msg
 
     def send_task_cmd(self):
         """sends the last task command to the task executor and locks any other command until completion"""
@@ -103,15 +106,16 @@ class FSM(Node):
         self.manual_inverse_cmd_pub.publish(msg)
 
     def send_semi_autonomous_cmd(self):
-        if self.semi_autonomous_command_id is not None:
+        if self.semi_autonomous_command is not None:
             if VERBOSE:
                 self.get_logger().info("SENDING SEMI AUTO CMD")
-            msg = Task()
-            msg.description = "btn"
-            msg.id = self.semi_autonomous_command_id
-            #msg.pose = self.semi_autonomous_command_id.pose
-            self.semi_autonomous_command_id = None
-            self.task_pub.publish(msg)
+            # msg = Task()
+            # msg.description = "btn"
+            # msg.id = self.semi_autonomous_command_id
+            # self.semi_autonomous_command_id = None
+            # self.task_pub.publish(msg)
+            self.task_pub.publish(self.semi_autonomous_command)
+            self.semi_autonomous_command = None
         
     def updateWorld(self):
         """sends a world update to the trajectory planner"""

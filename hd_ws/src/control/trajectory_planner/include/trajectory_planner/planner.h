@@ -18,6 +18,7 @@
 #include "kerby_interfaces/msg/pose_goal.hpp"
 #include "kerby_interfaces/msg/object.hpp"
 #include "std_msgs/msg/int8.hpp"
+#include "std_msgs/msg/string.hpp"
 
 
 using std::placeholders::_1;
@@ -41,42 +42,37 @@ public:
 
     Planner(rclcpp::NodeOptions node_options);
 
-    void config();
-
-    void initCommunication();
-
     ~Planner() {    // TODO: make the pointer shared so no need for destructor
         delete m_move_group;
         delete m_planning_scene_interface;
-        }
+    }
 
+    // configuration and workflow
+    void config();
+    void initCommunication();
+    void spin();
+    void loop();
+
+    // movement
     TrajectoryStatus reachTargetPose(const geometry_msgs::msg::Pose &target);
-    
     TrajectoryStatus reachTargetJointValues(const std::vector<double> &target);
-
+    TrajectoryStatus reachNamedTarget(const std::string &target);
     TrajectoryStatus computeCartesianPath(std::vector<geometry_msgs::msg::Pose> waypoints);
-
     TrajectoryStatus reachTargetPoseCartesian(const geometry_msgs::msg::Pose &target);
-
     TrajectoryStatus advanceAlongAxis();
 
+    // planning and execution
     bool plan();
-
     bool execute();
-
     bool executeSilent();
-
     bool execute(moveit_msgs::msg::RobotTrajectory &trajectory);
+    TrajectoryStatus planAndExecute();
 
     void enforceCurrentState();
 
     void setScalingFactors(double vel, double accel);
 
     void addBoxToWorld(const std::vector<double> &dim, const geometry_msgs::msg::Pose &pose, std::string &name);
-
-    void spin();
-
-    void loop();
 
     void updateCurrentPosition();
 
@@ -95,6 +91,8 @@ private:
 
     void modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg);
 
+    void namedTargetCallback(const std_msgs::msg::String::SharedPtr msg);
+
     void publishEEFPose();
 
     void sendTrajFeedback(Planner::TrajectoryStatus status);
@@ -112,6 +110,7 @@ private:
     rclcpp::Subscription<kerby_interfaces::msg::Object>::SharedPtr      m_add_object_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_mode_change_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_man_inv_axis_sub;
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr              m_named_target_sub;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr              m_eef_pose_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   m_traj_feedback_pub;
     rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr                   m_position_mode_switch_pub;

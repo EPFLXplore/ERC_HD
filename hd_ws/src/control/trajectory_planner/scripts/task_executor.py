@@ -3,9 +3,10 @@
 import rclpy
 from rclpy.node import Node
 from task_execution.all_tasks import PressButton
+from task_execution.all_tasks import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal
 from geometry_msgs.msg import Pose
-from std_msgs.msg import Bool, Float64MultiArray, Int8
+from std_msgs.msg import Bool, Float64MultiArray, Int8, String
 import threading
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
@@ -22,6 +23,7 @@ class Executor(Node):
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
         self.add_object_pub = self.create_publisher(Object, "/HD/kinematics/add_object", 10)
+        self.named_joint_target_pub = self.create_publisher(String, "/HD/kinematics/named_joint_target", 10)
 
         self.task = None
         self.new_task = False
@@ -81,6 +83,10 @@ class Executor(Node):
         msg.shape = shape_
         self.add_object_pub.publish(msg)
 
+    def sendNamedJointTarget(self, target: str):
+        msg = String(data=target)
+        self.named_joint_target_pub.publish(msg)
+
     def trajFeedbackUpdate(self, msg: Bool):
         self.traj_feedback_update = True
         self.traj_feedback = msg.data
@@ -97,10 +103,15 @@ class Executor(Node):
         if msg.description == "btn":
             self.loginfo("Button task")
             self.task = PressButton(self, msg.id, msg.pose, True)
-            self.new_task = True
+        elif msg.description == "named_target":
+            self.loginfo("Named target task")
+            self.task = NamedJointTargetCommand(self, msg.str_slot)
+        
+        self.new_task = True
 
     def initiateTask(self):
         """starts assigned task"""
+        self.new_task = False
         self.loginfo("Starting task")
         self.task.execute()
         self.loginfo("Executed task")
@@ -122,7 +133,6 @@ class Executor(Node):
         rate = self.create_rate(25)   # 25hz
         while rclpy.ok():
             if self.new_task:
-                self.new_task = False
                 thread = threading.Thread(target=self.initiateTask)
                 thread.start()
             #self.testVision()

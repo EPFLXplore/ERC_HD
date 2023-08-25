@@ -31,8 +31,9 @@
         <joint name="steering3"/>
         <joint name="driving3"/>
     </group>
+
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
-    <group_state name="home" group="kerby_arm_group">
+    <group_state name="zero" group="kerby_arm_group">
         <joint name="joint1" value="0"/>
         <joint name="joint2" value="0"/>
         <joint name="joint3" value="0"/>
@@ -41,8 +42,28 @@
         <joint name="joint6" value="0"/>
         <joint name="finger1" value="0"/>
     </group_state>
+    <group_state name="optimal_view" group="kerby_arm_group">
+        <joint name="joint1" value="0"/>
+        <joint name="joint2" value="0.87266"/>
+        <joint name="joint3" value="-0.87266"/>
+        <joint name="joint4" value="0"/>
+        <joint name="joint5" value="0"/>
+        <joint name="joint6" value="0"/>
+        <joint name="finger1" value="0"/>
+    </group_state>
+    <group_state name="home" group="kerby_arm_group">
+        <joint name="joint1" value="0"/>
+        <joint name="joint2" value="0.87266"/>
+        <joint name="joint3" value="-0.87266"/>
+        <joint name="joint4" value="0"/>
+        <joint name="joint5" value="3.14159"/>
+        <joint name="joint6" value="0"/>
+        <joint name="finger1" value="0"/>
+    </group_state>
+
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="kerby_virtual_joint" type="fixed" parent_frame="world" child_link="base_link"/>
+
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <passive_joint name="pivot_droit"/>
     <passive_joint name="steering2"/>
@@ -54,6 +75,7 @@
     <passive_joint name="driving1"/>
     <passive_joint name="steering4"/>
     <passive_joint name="driving4"/>
+
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="hd_link1_1" reason="Adjacent"/>
     <disable_collisions link1="base_link" link2="pivot_droit_1" reason="Adjacent"/>
