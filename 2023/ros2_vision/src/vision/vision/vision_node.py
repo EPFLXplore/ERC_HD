@@ -27,6 +27,9 @@ from vision.publishers.image_publisher import ImagePublisher
 from vision.publishers.target_pose_publisher import TargetPosePublisher
 from vision.publishers.target_publisher import TargetPublisher
 
+from vision.subscribers.fake_cs_subscriber import MinimalSubscriber
+import threading
+
 
 class VisionNode(Node):
     """
@@ -44,6 +47,13 @@ class VisionNode(Node):
         self.image_publisher = ImagePublisher()
         self.target_pose_publisher = TargetPosePublisher()
         self.target_publisher = TargetPublisher()
+
+        # Initialize subscribers
+        self.subscriber = MinimalSubscriber()
+        executor = rclpy.executors.MultiThreadedExecutor()
+        executor.add_node(self.subscriber)
+        executor_thread = threading.Thread(target=executor.spin, daemon=True)
+        executor_thread.start()
 
         # We will publish a message every 0.1 seconds
         timer_period = 0.04  # seconds
@@ -71,7 +81,7 @@ class VisionNode(Node):
 
         if self.control_panel.detect_ar_tag(frame):
             self.control_panel.project()
-            self.control_panel.draw(frame)
+            # self.control_panel.draw(frame)
 
             point2project, rvec, tvec = self.control_panel.get_target()
             translation, quaternion = translation_rotation(point2project, rvec, tvec)
@@ -87,8 +97,9 @@ class VisionNode(Node):
         # elif key in self.POSSIBLE_PANELS:
         #     self.control_panel.select_panel(key)
         #     self.control_panel.set_target()
-
+        self.task = self.subscriber.get_data()
         self.image_publisher.publish(frame)
+        self.image_publisher._logger.info(f"current task: {self.task}")
 
 
 def main(args=None):

@@ -71,4 +71,4 @@ class ImagePublisher(Node):
         self.publisher_.publish(self.br.cv2_to_imgmsg(frame))
 
         # Display the message on the console
-        self.get_logger().info("Publishing video frame")
+        # self.get_logger().info("Publishing video frame")

@@ -22,16 +22,26 @@ class FakeCSTaskSelector(Node):
         self.get_logger().info("Fake CS Task Selector Created")
 
         self.cs_task = 0
-        timer_period = 0.5
-
-        self.timer = self.create_timer(timer_period, self.timer_callback)
 
     def select_task(self):
         task = -1
         while task not in self.accepted_tasks:
             task = input("Enter task number: ")
+            try:
+                task = int(task)
+            except ValueError:
+                print(
+                    f"The task must be a number from the following list: {self.accepted_tasks}"
+                )
+                continue
+
+        print(f"Selected task {task}")
 
         self.cs_task = task
+        self.publish()
+
+    def publish(self):
+        self.publisher_.publish(Int32(data=self.cs_task))
 
 
 def main(args=None):
@@ -41,7 +51,6 @@ def main(args=None):
 
     while rclpy.ok():
         fake_cs_task_selector.select_task()
-        fake_cs_task_selector.publisher_.publish(Int32(data=10))
 
     fake_cs_task_selector.destroy_node()
     rclpy.shutdown()
