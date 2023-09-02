@@ -4,6 +4,41 @@
 <xacro:include filename="$(find kerby_description)/urdf/materials.xacro" />
 <xacro:include filename="$(find kerby_description)/urdf/kerby.trans" />
 <xacro:include filename="$(find kerby_description)/urdf/kerby.gazebo" />
+
+
+<xacro:property name="rpm_to_Radps" value="${2*pi/60.0}" />     <!-- rotations per minute to Rad per second conversion -->
+
+<xacro:macro name="aaa_joint_limits" params="lower:=0.0 upper:=0.0 velocity:=${rpm_to_Radps} effort:=100.0">
+  <limit lower="${lower}" upper="${upper}" velocity="${velocity}" effort="${effort}"/>
+</xacro:macro>
+
+<xacro:property name="joint1_limits">
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${0.5*rpm_to_Radps}" />
+</xacro:property>
+
+<xacro:property name="joint2_limits">
+  <xacro:aaa_joint_limits lower="${-pi/30}" upper="${pi/30}" velocity="${0.5*rpm_to_Radps}" />
+</xacro:property>
+
+<xacro:property name="joint3_limits">
+  <xacro:aaa_joint_limits lower="${-pi/4}" upper="${pi/4}" velocity="${1*rpm_to_Radps}" />
+</xacro:property>
+
+<xacro:property name="joint4_limits">
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${2*rpm_to_Radps}" />
+</xacro:property>
+
+<xacro:property name="joint5_limits">
+  <xacro:aaa_joint_limits lower="${-pi/4}" upper="${pi/4}" velocity="${1.5*rpm_to_Radps}" />
+</xacro:property>
+
+<xacro:property name="joint6_limits">
+  <xacro:aaa_joint_limits lower="${-pi/2}" upper="${pi/2}" velocity="${2*rpm_to_Radps}" />
+</xacro:property>
+
+
+
+
 <link name="base_link">
   <inertial>
     <origin xyz="0.029969421077976347 0.10500332317031078 -0.11062962842827342" rpy="0 0 0"/>
@@ -485,6 +520,7 @@
   <parent link="hd_link1_1"/>
   <child link="hd_link2_1"/>
   <axis xyz="0.0 1.0 0.0"/>
+  <xacro:insert_block name="joint2_limits" />
 </joint>
 
 <joint name="joint3" type="continuous">
@@ -492,6 +528,7 @@
   <parent link="hd_link2_1"/>
   <child link="hd_link3_1"/>
   <axis xyz="-0.0 1.0 0.0"/>
+  <xacro:insert_block name="joint3_limits" />
 </joint>
 
 <joint name="joint4" type="continuous">
@@ -499,6 +536,7 @@
   <parent link="hd_link3_1"/>
   <child link="hd_link4_1"/>
   <axis xyz="0.999999 0.0 -0.001732"/>
+  <xacro:insert_block name="joint4_limits" />
 </joint>
 
 <joint name="joint5" type="continuous">
@@ -506,6 +544,7 @@
   <parent link="hd_link4_1"/>
   <child link="hd_link5_1"/>
   <axis xyz="0.0 -1.0 0.0"/>
+  <xacro:insert_block name="joint5_limits" />
 </joint>
 
 <joint name="joint6" type="continuous">
@@ -513,6 +552,7 @@
   <parent link="hd_link5_1"/>
   <child link="hd_link6_1"/>
   <axis xyz="-0.999981 -0.0 -0.006092"/>
+  <xacro:insert_block name="joint6_limits" />
 </joint>
 
 <joint name="finger1" type="prismatic">
@@ -550,6 +590,8 @@
   <parent link="base_link"/>
   <child link="hd_link1_1"/>
   <axis xyz="0.0 -0.0 1.0"/>
+  <xacro:insert_block name="joint1_limits" />
+  <!-- <limit lower="${-pi}" upper="${pi}" velocity="${2*rpm_to_Radps}" effort="100" /> -->
 </joint>
 
 <joint name="pivot_droit" type="continuous">
