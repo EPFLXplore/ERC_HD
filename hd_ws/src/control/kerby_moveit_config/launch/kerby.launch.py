@@ -44,11 +44,14 @@ def generate_launch_description():
     ompl_config_file = get_package_file('kerby_moveit_config', 'config/ompl_planning.yaml')
     moveit_controllers_file = get_package_file('kerby_moveit_config', 'config/moveit_controllers.yaml')
     ros_controllers_file = get_package_file('kerby_moveit_config', 'config/ros2_controllers.yaml')
+    joint_limits_file = get_package_file('kerby_moveit_config', 'config/joint_limits.yaml')
 
     robot_description = load_file(urdf_file)
     robot_description_semantic = load_file(srdf_file)
     kinematics_config = load_yaml(kinematics_file)
     ompl_config = load_yaml(ompl_config_file)
+
+    joint_limits = {"robot_description_planning": load_yaml(joint_limits_file)}
 
     moveit_controllers = {
         'moveit_simple_controller_manager' : load_yaml(moveit_controllers_file),
@@ -86,6 +89,7 @@ def generate_launch_description():
             moveit_controllers,
             trajectory_execution,
             planning_scene_monitor_config,
+            joint_limits,
         ],
     )
 
@@ -114,7 +118,8 @@ def generate_launch_description():
                 'robot_description': robot_description,
                 'robot_description_semantic': robot_description_semantic,
                 'robot_description_kinematics': kinematics_config,
-            }
+            },
+            joint_limits,
         ],
     )
     

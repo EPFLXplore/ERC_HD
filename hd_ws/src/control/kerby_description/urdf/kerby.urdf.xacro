@@ -13,27 +13,27 @@
 </xacro:macro>
 
 <xacro:property name="joint1_limits">
-  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${0.5*rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-100*pi}" upper="${100*pi}" velocity="${2 * rpm_to_Radps}" />
 </xacro:property>
 
 <xacro:property name="joint2_limits">
-  <xacro:aaa_joint_limits lower="${-pi/30}" upper="${pi/30}" velocity="${0.5*rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-100*pi/30}" upper="${100*pi/30}" velocity="${1.5 * rpm_to_Radps}" />
 </xacro:property>
 
 <xacro:property name="joint3_limits">
-  <xacro:aaa_joint_limits lower="${-pi/4}" upper="${pi/4}" velocity="${1*rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-100*pi/4}" upper="${100*pi/4}" velocity="${1.5 * rpm_to_Radps}" />
 </xacro:property>
 
 <xacro:property name="joint4_limits">
-  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${2*rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-100*pi}" upper="${100*pi}" velocity="${6 * rpm_to_Radps}" />
 </xacro:property>
 
 <xacro:property name="joint5_limits">
-  <xacro:aaa_joint_limits lower="${-pi/4}" upper="${pi/4}" velocity="${1.5*rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-100*pi/4}" upper="${100*pi/4}" velocity="${2 * rpm_to_Radps}" />
 </xacro:property>
 
 <xacro:property name="joint6_limits">
-  <xacro:aaa_joint_limits lower="${-pi/2}" upper="${pi/2}" velocity="${2*rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-100*pi/2}" upper="${100*pi/2}" velocity="${6 * rpm_to_Radps}" />
 </xacro:property>
 
 
