@@ -6,6 +6,7 @@ import threading
 from geometry_msgs.msg import Pose, Quaternion
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_corrector as pc
+import math
 
 
 def main():
@@ -23,12 +24,11 @@ def main():
     try:
         while rclpy.ok():
             pose = Pose()
-            pose.orientation = qa.quat((1.0, 0.0, 0.0), 4.2)#math.pi)
-            #pose.orientation = Quaternion()
-            scale = 100
+            pose.orientation = qa.quat((1.0, 0.0, 0.0), math.pi)
+            scale = 1000
             pose.position.x = 0.1 * scale
-            pose.position.y = -0.5 * scale
-            pose.position.z = -0.1 * scale
+            pose.position.y = -0.2 * scale
+            pose.position.z = 0.2 * scale
             #pose.position.x = pose.position.y = 0.0; pose.position.z = 0.00
 
             pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference

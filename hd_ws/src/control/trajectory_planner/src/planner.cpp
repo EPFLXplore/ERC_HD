@@ -64,9 +64,9 @@ Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msg
     updateCurrentPosition();
     Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
     moveit_msgs::msg::RobotTrajectory trajectory;
-    const double jump_threshold = 0.0; // TODO: check how to put a real value here
+    const double jump_threshold = 10.0; // TODO: check how to put a real value here
     const double eef_step = 0.01;
-    double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+    double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory, false);
     if (0 && fraction != 1.0)   // TODO
         status = Planner::TrajectoryStatus::PLANNING_ERROR;
     else if (!execute(trajectory))
