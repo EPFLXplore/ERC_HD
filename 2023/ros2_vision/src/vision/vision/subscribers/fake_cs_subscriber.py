@@ -11,7 +11,7 @@ class MinimalSubscriber(Node):
             Int8, "ROVER/HD_element_id", self.listener_callback, 10
         )
         self.subscription  # prevent unused variable warning
-        self.data = 0
+        self.data = 20
 
     def listener_callback(self, msg):
         self.get_logger().info(f"I heard: {msg.data}")

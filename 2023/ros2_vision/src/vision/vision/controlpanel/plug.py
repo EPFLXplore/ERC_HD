@@ -1,5 +1,5 @@
-from controlpanel.cpo import CPO
-from controlpanel.utils import *
+from vision.controlpanel.cpo import CPO
+from vision.controlpanel.utils import *
 
 
 class Plug(CPO):
@@ -10,11 +10,9 @@ class Plug(CPO):
 
     def get_is_plugged_in(self):
         return self._is_plugged_in
-        
+
     def change_state(self):
         self._is_plugged_in = not self._is_plugged_in
-
-        
 
     def get_target(self):
         res = np.zeros(3)

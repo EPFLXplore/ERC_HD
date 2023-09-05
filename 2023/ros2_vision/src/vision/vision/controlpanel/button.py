@@ -1,6 +1,6 @@
-from controlpanel.cpo import CPO
+from vision.controlpanel.cpo import CPO
 import cv2 as cv
-from controlpanel.utils import *
+from vision.controlpanel.utils import *
 
 """
 position 0 --- 1

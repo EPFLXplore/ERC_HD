@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import Int32
+from std_msgs.msg import Int8
 
 
 class FakeCSTaskSelector(Node):
@@ -18,7 +18,7 @@ class FakeCSTaskSelector(Node):
             + self.panel_b2_task_numbers
         )
 
-        self.publisher_ = self.create_publisher(Int32, "cs_task", 10)
+        self.publisher_ = self.create_publisher(Int8, "ROVER/HD_element_id", 10)
         self.get_logger().info("Fake CS Task Selector Created")
 
         self.cs_task = 0
@@ -41,7 +41,7 @@ class FakeCSTaskSelector(Node):
         self.publish()
 
     def publish(self):
-        self.publisher_.publish(Int32(data=self.cs_task))
+        self.publisher_.publish(Int8(data=self.cs_task))
 
 
 def main(args=None):

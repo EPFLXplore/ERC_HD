@@ -13,9 +13,11 @@ from rclpy.node import Node  # Handles the creation of nodes
 import cv2 as cv
 import numpy as np
 
+from vision.controlpanel.control_panel import ControlPanel
 from vision.stereo_camera import StereoCamera
 from vision.controlpanel.control_panel import ControlPanel
 from vision.utils import show, translation_rotation
+
 
 # import os
 
@@ -70,6 +72,7 @@ class VisionNode(Node):
 
         self.MAX_DIST = 25500  # everything past 2.55 meters is set to 2.55 meters
         self.POSSIBLE_PANELS = set([ord("1"), ord("2"), ord("a")])
+        self.task = 20
 
     def timer_callback(self):
         """
@@ -81,11 +84,14 @@ class VisionNode(Node):
 
         if self.control_panel.detect_ar_tag(frame):
             self.control_panel.project()
-            # self.control_panel.draw(frame)
+            self.control_panel.draw(frame)
 
             point2project, rvec, tvec = self.control_panel.get_target()
+            ar_translation, ar_quaternion = translation_rotation([0, 0, 0], rvec, tvec)
             translation, quaternion = translation_rotation(point2project, rvec, tvec)
-            self.target_pose_publisher.publish(translation, quaternion)
+            self.target_pose_publisher.publish(
+                translation, quaternion, ar_translation, ar_quaternion, self.task
+            )
             # print(translation, quaternion)
 
         # show(frame, depth)
@@ -96,10 +102,12 @@ class VisionNode(Node):
         #     return
         # elif key in self.POSSIBLE_PANELS:
         #     self.control_panel.select_panel(key)
-        #     self.control_panel.set_target()
         self.task = self.subscriber.get_data()
+        self.control_panel.set_target(self.task)
         self.image_publisher.publish(frame)
-        self.image_publisher._logger.info(f"current task: {self.task}")
+        self.image_publisher._logger.info(
+            f"current task: {self.task:2d}, target panel {self.control_panel.get_selected_panel().name}"
+        )
 
 
 def main(args=None):
