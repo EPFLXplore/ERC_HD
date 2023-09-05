@@ -1,5 +1,5 @@
 import kinematics_utils.quaternion_arithmetic as qa
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Point
 import kinematics_utils.pose_tracker as pt
 from math import pi
 
@@ -47,8 +47,12 @@ def construct_vision_tranform():
 
 EEF_TRANSFORM_CORRECTION = construct_eef_transform("finger1")
 
+CAMERA_TRANSFORM = Pose(                    # transform between end effector and camera
+    position = Point(x=0.0, y=0.0, z=0.5)
+)
+
 VISION_TRANSFORM_CORRECTION = Pose()
-VISION_TRANSFORM_CORRECTION.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
+VISION_TRANSFORM_CORRECTION.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)    # vision has different frame than MoveIt
 
 
 # CORRECTORS

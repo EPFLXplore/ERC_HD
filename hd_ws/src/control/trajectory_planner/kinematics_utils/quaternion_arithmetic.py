@@ -248,6 +248,13 @@ def compose_poses(pose1, pose2):
     return res
 
 
+def compose_multiple_poses(*poses):
+    res = Pose()
+    for pose in poses:
+        res = compose_poses(res, pose)
+    return res
+
+
 def colinear(v1, v2):
     for j in range(len(v1)):
         if v1[j] != 0:

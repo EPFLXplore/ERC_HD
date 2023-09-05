@@ -135,7 +135,7 @@ class Executor(Node):
             if self.new_task:
                 thread = threading.Thread(target=self.initiateTask)
                 thread.start()
-            #self.testVision()
+            self.testVision()
             rate.sleep()
 
 

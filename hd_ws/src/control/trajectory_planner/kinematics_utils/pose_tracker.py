@@ -49,7 +49,8 @@ def detected_object_pose_callback(msg: Pose):
 
     corrected_pose = pc.correct_vision_pose(corrected_pose)
 
-    corrected_pose = qa.compose_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), corrected_pose)
+    #corrected_pose = qa.compose_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), corrected_pose)
+    corrected_pose = qa.compose_multiple_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), pc.CAMERA_TRANSFORM, corrected_pose)
     
     detected_object = DetectedObject()
     detected_object.artag_pose = corrected_pose
