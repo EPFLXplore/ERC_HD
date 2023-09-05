@@ -11,11 +11,11 @@ class TargetPublisher(Node):
 
         self.target = 0
 
-    def timer_callback(self):
-        msg = Int32()
-        msg.data = self.target
-        self.publisher_.publish(msg)
-        self.target += 1
+    # def timer_callback(self):
+    #     msg = Int32()
+    #     msg.data = self.target
+    #     self.publisher_.publish(msg)
+    #     self.target += 1
 
     def publish(self, target):
         msg = Int32()

@@ -66,9 +66,9 @@ class ControlPanel:
 
     def set_target(self):
         if self.selected_panel != "B2":
-            print(str(self.get_selected_panel().get_possible_inputs()))
+            # print(str(self.get_selected_panel().get_possible_inputs()))
             input = int(cv.waitKey()) - 48  # because ord('0') = 48
-            print(f"selected target: {input}")
+            # print(f"selected target: {input}")
             self.get_selected_panel().set_target(input)
 
     def detect_ar_tag(self, frame):
@@ -78,5 +78,5 @@ class ControlPanel:
         return self.get_selected_panel().project()
 
     def get_target(self):
-        print(self.get_selected_panel().get_target())
+        # print(self.get_selected_panel().get_target())
         return self.get_selected_panel().get_target()
