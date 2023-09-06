@@ -17,7 +17,7 @@ class PressButton(Task):
         for obj in pt.DETECTED_OBJECTS_POSE:
             if 1 or obj.id == self.btn_id:
                 self.btn_pose = obj.object_pose
-                self.artag_pose = self.btn_pose
+                self.artag_pose = obj.artag_pose
 
     def getPressPosition(self, position=None):
         if position is None:

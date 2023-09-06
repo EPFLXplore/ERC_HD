@@ -1,4 +1,5 @@
 from geometry_msgs.msg import Pose
+from hd_interfaces.msg import TargetInstruction
 import kinematics_utils.quaternion_arithmetic as qa
 import math
 import copy
@@ -28,7 +29,7 @@ def eef_pose_callback(msg):
     END_EFFECTOR_POSE = msg
 
 
-def detected_object_pose_callback(msg: Pose):
+def detected_object_pose_callback(msg: TargetInstruction):
     """listens to detected_elements topic and updates the pose of the detected elements (with respect to the end effector pose)"""
     global DETECTED_OBJECTS_LOCKED
     global DETECTION_UPDATED
@@ -41,20 +42,31 @@ def detected_object_pose_callback(msg: Pose):
 
     mm_to_m = 1/1000
 
-    corrected_pose = Pose()
-    corrected_pose.position.x = msg.position.x * mm_to_m
-    corrected_pose.position.y = msg.position.y * mm_to_m
-    corrected_pose.position.z = msg.position.z * mm_to_m
-    corrected_pose.orientation = msg.orientation
+    corrected_artag_pose = Pose()
+    corrected_artag_pose.position.x = msg.ar_tag_pose.position.x * mm_to_m
+    corrected_artag_pose.position.y = msg.ar_tag_pose.position.y * mm_to_m
+    corrected_artag_pose.position.z = msg.ar_tag_pose.position.z * mm_to_m
+    corrected_artag_pose.orientation = msg.ar_tag_pose.orientation
 
-    corrected_pose = pc.correct_vision_pose(corrected_pose)
+    corrected_artag_pose = pc.correct_vision_pose(corrected_artag_pose)
 
-    #corrected_pose = qa.compose_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), corrected_pose)
-    corrected_pose = qa.compose_multiple_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), pc.CAMERA_TRANSFORM, corrected_pose)
+    #corrected_artag_pose = qa.compose_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), corrected_artag_pose)
+    corrected_artag_pose = qa.compose_multiple_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), pc.CAMERA_TRANSFORM, corrected_artag_pose)
+
+    corrected_object_pose = Pose()
+    corrected_object_pose.position.x = msg.object_pose.position.x * mm_to_m
+    corrected_object_pose.position.y = msg.object_pose.position.y * mm_to_m
+    corrected_object_pose.position.z = msg.object_pose.position.z * mm_to_m
+    corrected_object_pose.orientation = msg.object_pose.orientation
+
+    corrected_object_pose = pc.correct_vision_pose(corrected_object_pose)
+
+    #corrected_object_pose = qa.compose_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), corrected_object_pose)
+    corrected_object_pose = qa.compose_multiple_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), pc.CAMERA_TRANSFORM, corrected_object_pose)
     
     detected_object = DetectedObject()
-    detected_object.artag_pose = corrected_pose
-    detected_object.object_pose = corrected_pose
+    detected_object.artag_pose = corrected_artag_pose
+    detected_object.object_pose = corrected_object_pose
     
     DETECTED_OBJECTS_POSE.append(detected_object)
 

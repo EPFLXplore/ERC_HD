@@ -1,12 +1,12 @@
 from rclpy.node import Node
-from std_msgs.msg import Int32
+from std_msgs.msg import Int8
 
 
 class TargetPublisher(Node):
     def __init__(self):
         super().__init__("target_publisher")
 
-        self.publisher_ = self.create_publisher(Int32, "target", 10)
+        self.publisher_ = self.create_publisher(Int8, "target", 10)
         self.get_logger().info("Target Publisher Created")
 
         self.target = 0
@@ -18,6 +18,6 @@ class TargetPublisher(Node):
     #     self.target += 1
 
     def publish(self, target):
-        msg = Int32()
+        msg = Int8()
         msg.data = target
         self.publisher_.publish(msg)

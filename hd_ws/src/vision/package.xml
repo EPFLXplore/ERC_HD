@@ -13,6 +13,7 @@
   <depend>python3-opencv</depend>
   <depend>python3-numpy</depend>
   <depend>python-pyrealsense2-pip</depend>
+  <depend>hd_interfaces</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

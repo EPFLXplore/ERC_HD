@@ -1,4 +1,5 @@
-import controlpanel.plug as plug
+import vision.controlpanel.plug as plug
+
 
 class Electric_plug(plug):
     def __init__(self, position) -> None:

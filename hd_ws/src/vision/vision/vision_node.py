@@ -13,9 +13,11 @@ from rclpy.node import Node  # Handles the creation of nodes
 import cv2 as cv
 import numpy as np
 
+from vision.controlpanel.control_panel import ControlPanel
 from vision.stereo_camera import StereoCamera
 from vision.controlpanel.control_panel import ControlPanel
 from vision.utils import show, translation_rotation
+
 
 # import os
 
@@ -26,6 +28,9 @@ from vision.utils import show, translation_rotation
 from vision.publishers.image_publisher import ImagePublisher
 from vision.publishers.target_pose_publisher import TargetPosePublisher
 from vision.publishers.target_publisher import TargetPublisher
+
+from vision.subscribers.fake_cs_subscriber import MinimalSubscriber
+import threading
 
 
 class VisionNode(Node):
@@ -45,6 +50,13 @@ class VisionNode(Node):
         self.target_pose_publisher = TargetPosePublisher()
         self.target_publisher = TargetPublisher()
 
+        # Initialize subscribers
+        self.subscriber = MinimalSubscriber()
+        executor = rclpy.executors.MultiThreadedExecutor()
+        executor.add_node(self.subscriber)
+        executor_thread = threading.Thread(target=executor.spin, daemon=True)
+        executor_thread.start()
+
         # We will publish a message every 0.1 seconds
         timer_period = 0.04  # seconds
 
@@ -60,6 +72,7 @@ class VisionNode(Node):
 
         self.MAX_DIST = 25500  # everything past 2.55 meters is set to 2.55 meters
         self.POSSIBLE_PANELS = set([ord("1"), ord("2"), ord("a")])
+        self.task = 20
 
     def timer_callback(self):
         """
@@ -74,8 +87,11 @@ class VisionNode(Node):
             self.control_panel.draw(frame)
 
             point2project, rvec, tvec = self.control_panel.get_target()
+            ar_translation, ar_quaternion = translation_rotation([0, 0, 0], rvec, tvec)
             translation, quaternion = translation_rotation(point2project, rvec, tvec)
-            self.target_pose_publisher.publish(translation, quaternion)
+            self.target_pose_publisher.publish(
+                translation, quaternion, ar_translation, ar_quaternion, self.task
+            )
             # print(translation, quaternion)
 
         # show(frame, depth)
@@ -86,9 +102,12 @@ class VisionNode(Node):
         #     return
         # elif key in self.POSSIBLE_PANELS:
         #     self.control_panel.select_panel(key)
-        #     self.control_panel.set_target()
-
+        self.task = self.subscriber.get_data()
+        self.control_panel.set_target(self.task)
         self.image_publisher.publish(frame)
+        self.image_publisher._logger.info(
+            f"current task: {self.task:2d}, target panel {self.control_panel.get_selected_panel().name}"
+        )
 
 
 def main(args=None):

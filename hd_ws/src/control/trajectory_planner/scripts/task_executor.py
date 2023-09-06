@@ -5,6 +5,7 @@ from rclpy.node import Node
 from task_execution.all_tasks import PressButton
 from task_execution.all_tasks import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal
+from hd_interfaces.msg import TargetInstruction
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String
 import threading
@@ -18,7 +19,7 @@ class Executor(Node):
         super().__init__("kinematics_task_executor")
         self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignementCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-        self.create_subscription(Pose, "target_pose", pt.detected_object_pose_callback, 10)
+        self.create_subscription(TargetInstruction, "target_pose", pt.detected_object_pose_callback, 10)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
@@ -96,7 +97,7 @@ class Executor(Node):
             pass
 
     def taskAssignementCallback(self, msg: Task):
-        """listens to /arm_control/task_assignment topic"""
+        """listens to /HD/fsm/task_assignment topic"""
         self.loginfo("Task executor received cmd")
         if self.hasTask():
             return
@@ -124,8 +125,7 @@ class Executor(Node):
     def testVision(self):
         if len(pt.DETECTED_OBJECTS_POSE) == 0: return
         shape = [0.2, 0.1, 0.0001]
-        pose = pt.DETECTED_OBJECTS_POSE[0].object_pose
-        pose = pc.revert_from_vision(pose)
+        pose = pt.DETECTED_OBJECTS_POSE[0].artag_pose
         name = "test_btn"
         self.addObjectToWorld(shape, pose, name)
 
@@ -135,7 +135,7 @@ class Executor(Node):
             if self.new_task:
                 thread = threading.Thread(target=self.initiateTask)
                 thread.start()
-            self.testVision()
+            #self.testVision()
             rate.sleep()
 
 

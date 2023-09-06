@@ -61,6 +61,7 @@ class FSM(Node):
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
         #self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
         self.create_subscription(Task, "/ROVER/semi_auto_task", self.task_cmd_callback, 10)
+        self.create_subscription(Int8, "/ROVER/HD_element_id", self.task_cmd_callback2, 10)
 
     def mode_callback(self, msg: Int8):
         """listens to HD_mode topic published by CS"""
@@ -82,6 +83,12 @@ class FSM(Node):
 
     def task_cmd_callback(self, msg: Task):
         self.semi_autonomous_command = msg
+    
+    def task_cmd_callback2(self, msg: Int8):        # TODO
+        self.semi_autonomous_command = Task(
+            description = "btn",
+            id = 0
+        )
 
     def send_task_cmd(self):
         """sends the last task command to the task executor and locks any other command until completion"""

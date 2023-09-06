@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from controlpanel.panel_a import PanelA
-from controlpanel.panel_b1 import PanelB1
-from controlpanel.panel_b2 import PanelB2
+from vision.controlpanel.panel_a import PanelA
+from vision.controlpanel.panel_b1 import PanelB1
+from vision.controlpanel.panel_b2 import PanelB2
 
 import cv2 as cv
 
@@ -21,7 +21,6 @@ class ControlPanel:
 
     # select the panel to be displayed
     def select_panel(self, panel):
-        panel = self.KEY2PANEL[panel]
         if panel in self.possible_panels:
             self.selected_panel = panel
         else:
@@ -64,12 +63,20 @@ class ControlPanel:
     def get_possible_inputs(self):
         return self.get_selected_panel().get_possible_inputs()
 
-    def set_target(self):
-        if self.selected_panel != "B2":
-            # print(str(self.get_selected_panel().get_possible_inputs()))
-            input = int(cv.waitKey()) - 48  # because ord('0') = 48
-            # print(f"selected target: {input}")
-            self.get_selected_panel().set_target(input)
+    def set_target(self, target):
+        if target == 0 or target == 10:
+            self.select_panel("B1")
+            if target == 0:
+                self.get_selected_panel().set_target(0)
+            else:
+                self.get_selected_panel().set_target(1)
+
+        if target == 30:
+            self.select_panel("B2")
+
+        if target >= 20 and target <= 29:
+            self.select_panel("A")
+            self.get_selected_panel().set_target(target - 20)
 
     def detect_ar_tag(self, frame):
         return self.get_selected_panel().detect_ar_tag(frame)

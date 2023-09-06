@@ -1,7 +1,7 @@
 from cv2 import aruco
 import cv2 as cv
 import numpy as np
-from controlpanel.cpo import CPO
+from vision.controlpanel.cpo import CPO
 
 
 class ARTag:

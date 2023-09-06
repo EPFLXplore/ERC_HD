@@ -1,4 +1,5 @@
-import controlpanel.cpo as cpo
+import vision.controlpanel.cpo as cpo
+
 
 # class representing electromagnetic lock on the control panel
 class Lock(cpo):
