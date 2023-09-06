@@ -114,8 +114,11 @@ class Executor(Node):
         """starts assigned task"""
         self.new_task = False
         self.loginfo("Starting task")
-        self.task.execute()
-        self.loginfo("Executed task")
+        success = self.task.execute()
+        if success:
+            self.loginfo("Executed task successfully")
+        else:
+            self.loginfo("Task failed")
         self.task = None
 
     def abortTask(self):

@@ -13,6 +13,7 @@ class Command:
     def __init__(self, executor=None):
         self.executor = executor
         self.execute_count = 0
+        self.has_failed = False
 
     def createSetter(self, attribute: str):
         """create a setter for the given attribute"""
@@ -37,3 +38,7 @@ class Command:
     def done(self):
         """indicate if command has executed correctly (by default returns true as soon as the commands has been executed once)"""
         return self.execute_count > 0
+
+    def hasFailed(self):
+        return self.has_failed
+    

@@ -224,6 +224,12 @@ def point_image(point, q):
     return quat_to_point(p)
 
 
+def point_object_image(point, pose):
+    """calculate the image of the point under the transformation described by the pose"""
+    p = point_image(point, pose.orientation)
+    return point_add(pose.position, p)
+
+
 def reverse_pose(pose):
     """return rev_pose such that compose_poses(pose, rev_pose) is the trivial pose"""
     res = Pose()

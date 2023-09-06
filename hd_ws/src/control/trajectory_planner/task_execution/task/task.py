@@ -66,7 +66,7 @@ class Task:
 
     def stopCondition(self):
         """indicates if task should be stopped because a command can't be executed"""
-        return False
+        return self.currentCommand().hasFailed()
 
     def oneCommandLoop(self):
         self.currentCommand().execute()
@@ -80,17 +80,19 @@ class Task:
         self.nextPreOperation()
         while not self.currentCommandValidated():
             if not self.oneCommandLoop():
-                return False
+                return False        # command failed
         
         self.nextPostOperation()
         self.cmd_counter += 1
-        return True
+        return True                 # command succeeded
         
     def execute(self):
         """executes all commands"""
         for _ in range(len(self.command_chain)):
-            self.executeNextCommand()
+            if not self.executeNextCommand():
+                return False    # task failed
             time.sleep(self.pause_time)
+        return True             # task succeeded
     
     def abort(self):
         """stops all movement"""
