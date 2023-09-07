@@ -11,6 +11,7 @@ from kerby_interfaces.msg import Task, Object, PoseGoal
 from hd_interfaces.msg import TargetInstruction
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String
+from motor_control_interfaces.msg import MotorCommand
 import threading
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
@@ -78,6 +79,14 @@ class Executor(Node):
         msg = Float64MultiArray(data=goal)
         self.joint_target_pub.publish(msg)
     
+    def sendGripperTorque(self, torque_scaling_factor):
+        msg = MotorCommand(
+            name = "Gripper",
+            mode = MotorCommand.TORQUE,
+            command = torque_scaling_factor
+        )
+        # send
+
     def addObjectToWorld(self, shape: list, pose: Pose, name: str, type="box"):
         msg = Object()
         msg.type = type
@@ -95,10 +104,6 @@ class Executor(Node):
     def trajFeedbackUpdate(self, msg: Bool):
         self.traj_feedback_update = True
         self.traj_feedback = msg.data
-    
-    def manualInverseCallback(self, msg):
-        if not self.hasTask():
-            pass
 
     def taskAssignementCallback(self, msg: Task):
         """listens to /HD/fsm/task_assignment topic"""
@@ -107,7 +112,7 @@ class Executor(Node):
             return
         if msg.description == "btn":
             self.loginfo("Button task")
-            self.task = PressButton(self, msg.id, msg.pose, True)
+            self.task = PressButton(self, msg.id, msg.pose)
         elif msg.description == "named_target":
             self.loginfo("Named target task")
             self.task = task_execution.task.Task(self)

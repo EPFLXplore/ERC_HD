@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>maxon_epos_ethercat_sdk</name>
+  <version>1.0.1</version>
+  <description>Maxon Ethercat implementation.</description>
+  
+  <author email="jungerj@student.ethz.ch">Jonas Junger</author>
+  <author email="lingzhang@ethz.ch">Linghao Zhang</author>
+  <author email="nachtigall@mavt.ethz.ch">Lennart Nachtigall</author>
+  
+  <maintainer email="jungerj@student.ethz.ch">Jonas Junger</maintainer>
+  <maintainer email="lingzhang@ethz.ch">Linghao Zhang</maintainer>
+  <maintainer email="r.danylovych@gmail.com">rocknd79</maintainer>
+  
+  <url type="website">https://github.com/leggedrobotics/maxon_epos_ethercat_sdk</url>
+  
+  <license>BSD-3-Clause</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <depend>message_logger</depend>
+  <depend>soem_interface</depend>
+  <depend>yaml-cpp</depend>
+  <depend>ethercat_sdk_master</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

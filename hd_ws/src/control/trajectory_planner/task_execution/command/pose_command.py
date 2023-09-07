@@ -9,10 +9,10 @@ class PoseCommand(Command):
         self.pose = pose    # Pose
         self.cartesian = cartesian
         self.velocity_scaling_factor = velocity_scaling_factor
-        self.createSetters("pose", "cartesian")
+        #self.createSetters("pose", "cartesian")
         self.finished = False
 
-    def setPose(self, position=None, orientation=None):#, revert=True):
+    def setPose(self, position=None, orientation=None):
         if self.pose is None:
             self.pose = Pose()
         if position is not None: 
