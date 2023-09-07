@@ -6,7 +6,7 @@ import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 from collections.abc import Callable
-from task_execution.command.all_commands import *
+from task_execution.command import *
 
 
 class Task:
@@ -49,6 +49,10 @@ class Task:
     
     def update_world(self):
         """update the objects in the world"""
+        # TODO: probably remove this function, don't remember what I intended it for
+    
+    def printUpdate(self):
+        self.executor.loginfo("Next task command : " + self.command_description[self.cmd_counter])
     
     def nextPreOperation(self):
         """execute the pre operation of the current command"""
@@ -77,6 +81,7 @@ class Task:
     def executeNextCommand(self):
         """attempts to execute next command on the command chain
         returns a bool indicating if it succeeded"""
+        self.printUpdate()
         self.nextPreOperation()
         while not self.currentCommandValidated():
             if not self.oneCommandLoop():

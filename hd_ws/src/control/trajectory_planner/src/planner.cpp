@@ -1,5 +1,8 @@
 #include "trajectory_planner/planner.h"
 #include "trajectory_planner/quaternion_arithmetic.h"
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <moveit/trajectory_processing/iterative_time_parameterization.h>
+#include <moveit/robot_trajectory/robot_trajectory.h>
 
 
 using namespace std::chrono_literals;
@@ -63,13 +66,28 @@ Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msg
 
     updateCurrentPosition();
     Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
-    moveit_msgs::msg::RobotTrajectory trajectory;
+
+    // create cartesian path as in the tutorial
+    //moveit_msgs::msg::RobotTrajectory trajectory;
+    moveit_msgs::msg::RobotTrajectory trajectory_slow;
+
+    //moveit_msgs::msg::RobotTrajectory trajectory;
     const double jump_threshold = 10.0; // TODO: check how to put a real value here
     const double eef_step = 0.01;
-    double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+    double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory_slow);
+
+    // // add timing Note: you have to convert it to a RobotTrajectory Object (not message) and back
+    // trajectory_processing::IterativeParabolicTimeParameterization iptp(100, 0.05);
+    // robot_trajectory::RobotTrajectory r_trajec(m_move_group->getRobotModel(), m_planning_group);
+    // r_trajec.setRobotTrajectoryMsg(*m_move_group->getCurrentState(), trajectory);
+    // iptp.computeTimeStamps(r_trajec, 1, 1);
+    // r_trajec.getRobotTrajectoryMsg(trajectory);
+    // iptp.computeTimeStamps(r_trajec, 0.1, 0.1);
+    // r_trajec.getRobotTrajectoryMsg(trajectory_slow);
+
     if (0 && fraction != 1.0)   // TODO
         status = Planner::TrajectoryStatus::PLANNING_ERROR;
-    else if (!execute(trajectory))
+    else if (!execute(trajectory_slow))
         status = Planner::TrajectoryStatus::EXECUTION_ERROR;
 
     sendTrajFeedback(status);
@@ -257,6 +275,8 @@ void Planner::stop() {
 void Planner::poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg)
 {
     RCLCPP_INFO(this->get_logger(), "Received pose goal");
+    //setScalingFactors(msg->velocity_scaling_factor, msg->velocity_scaling_factor);
+
     if (msg->cartesian) {
         std::thread executor(&Planner::reachTargetPoseCartesian, this, msg->goal);
         executor.detach();

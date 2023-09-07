@@ -4,6 +4,9 @@ import rclpy
 from rclpy.node import Node
 from task_execution.all_tasks import PressButton
 from task_execution.all_tasks import NamedJointTargetCommand
+from task_execution.task import PressButton
+import task_execution.task
+from task_execution.command import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal
 from hd_interfaces.msg import TargetInstruction
 from geometry_msgs.msg import Pose
@@ -26,7 +29,7 @@ class Executor(Node):
         self.add_object_pub = self.create_publisher(Object, "/HD/kinematics/add_object", 10)
         self.named_joint_target_pub = self.create_publisher(String, "/HD/kinematics/named_joint_target", 10)
 
-        self.task = None
+        self.task = None    # usually a Task from task_execution.task but could also be just a Command
         self.new_task = False
 
         self.traj_feedback_update = False
@@ -63,15 +66,16 @@ class Executor(Node):
         msg.dims = dims
         self.add_obj_pub.publish(msg)"""
 
-    def sendPoseGoal(self, goal: Pose, cartesian=False):
-        msg = PoseGoal()
-        msg.goal = goal
-        msg.cartesian = cartesian
+    def sendPoseGoal(self, goal: Pose, cartesian=False, velocity_scaling_factor=1.0):
+        msg = PoseGoal(
+            goal = goal,
+            cartesian = cartesian,
+            velocity_scaling_factor = velocity_scaling_factor
+        )
         self.pose_target_pub.publish(msg)
     
     def sendJointGoal(self, goal: list):
-        msg = Float64MultiArray()
-        msg.data = goal
+        msg = Float64MultiArray(data=goal)
         self.joint_target_pub.publish(msg)
     
     def addObjectToWorld(self, shape: list, pose: Pose, name: str, type="box"):
@@ -106,7 +110,8 @@ class Executor(Node):
             self.task = PressButton(self, msg.id, msg.pose, True)
         elif msg.description == "named_target":
             self.loginfo("Named target task")
-            self.task = NamedJointTargetCommand(self, msg.str_slot)
+            self.task = task_execution.task.Task(self)
+            self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))
         
         self.new_task = True
 

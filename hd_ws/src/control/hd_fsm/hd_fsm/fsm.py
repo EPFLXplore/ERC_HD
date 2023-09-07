@@ -61,7 +61,7 @@ class FSM(Node):
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
         #self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
         self.create_subscription(Task, "/ROVER/semi_auto_task", self.task_cmd_callback, 10)
-        self.create_subscription(Int8, "/ROVER/HD_element_id", self.task_cmd_callback2, 10)
+        #self.create_subscription(Int8, "/ROVER/HD_element_id", self.task_cmd_callback2, 10)
 
     def mode_callback(self, msg: Int8):
         """listens to HD_mode topic published by CS"""

@@ -14,7 +14,7 @@ class RequestDetectionCommand(Command):
         start = time.time()
         rate = self.executor.create_rate(25)    # 25 hz rate in order to leave release ressources
         while not pt.DETECTION_UPDATED:
-            if time.time()-start > self.max_wait_time:
+            if time.time()-start > self.max_wait_duration:
                 self.has_failed = True
                 return  # TODO: indicate that no detection was recorded (command failed)
             rate.sleep()

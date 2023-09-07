@@ -1,10 +1,6 @@
 from task_execution.task.task import *
 
 
-BTN = 0
-ARTAG = 1
-
-
 class PressButton(Task):
     def __init__(self, executor, btn_id, pose=None, scan_pose=True):
         super().__init__(executor)
@@ -13,7 +9,7 @@ class PressButton(Task):
         self.artag_pose = None
         self.scan_pose = scan_pose
         self.press_distance = 0.2
-        self.scan_distance = 0.2        # from end effector in the z (forward) coordinate
+        self.scan_distance = 0.13        # from end effector in the z (forward if gripper is standardly oriented) coordinate
         self.pause_time = 2
 
     def scan_for_btn_pose(self):
@@ -35,9 +31,10 @@ class PressButton(Task):
         return qa.turn_around(self.btn_pose.orientation)
     
     def getScanPosition(self):
+        # give a position where the camera would be aligned with the ARtag
         # for now supposing camera has the same orientation as the end effector
-        p = qa.scalar_mul(-1, pc.CAMERA_TRANSFORM.position)
-        p = qa.point_add(p, [0.0, 0.0, self.scan_distance])
+        camera_pos = pc.CAMERA_TRANSFORM.position
+        p = [camera_pos.y, -camera_pos.x, self.scan_distance]   # not sure why I need to exchange x and y here (x needs to be negated but I thing y doesn't although this hasn't been tested due to our y being 0)
         return qa.point_object_image(p, self.artag_pose)
     
     def getScanOrientation(self):
@@ -49,24 +46,24 @@ class PressButton(Task):
             post_operation = lambda cmd: self.scan_for_btn_pose(),
             description = "request detection"
         )
-        self.addCommand(        # TODO: maybe disable collisions for this object
-            AddObjectCommand(),
-            pre_operation = lambda cmd: (cmd.setPose(self.artag_pose),
-                                         cmd.setShape([0.2, 0.1, 0.0001]),
-                                         cmd.setName("artag")),
-            description="add ARtag to world"
-        )
-        self.addCommand(
-            PoseCommand(self.executor),
-            pre_operation = lambda cmd: cmd.setPose(position=self.getScanPosition(),
-                                                    orientation=self.getScanOrientation()),
-            description = "go in front of ARtag"
-        )
-        self.addCommand(
-            RequestDetectionCommand(),
-            post_operation = lambda cmd: self.scan_for_btn_pose(),
-            description = "request detection"
-        )
+        # self.addCommand(        # TODO: maybe disable collisions for this object
+        #     AddObjectCommand(),
+        #     pre_operation = lambda cmd: (cmd.setPose(self.artag_pose),
+        #                                  cmd.setShape([0.2, 0.1, 0.0001]),
+        #                                  cmd.setName("artag")),
+        #     description="add ARtag to world"
+        # )
+        # self.addCommand(
+        #     PoseCommand(self.executor),
+        #     pre_operation = lambda cmd: cmd.setPose(position=self.getScanPosition(),
+        #                                             orientation=self.getScanOrientation()),
+        #     description = "go in front of ARtag"
+        # )
+        # self.addCommand(
+        #     RequestDetectionCommand(),
+        #     post_operation = lambda cmd: self.scan_for_btn_pose(),
+        #     description = "request new detection"
+        # )
         self.addCommand(        # TODO: maybe disable collisions for this object
             AddObjectCommand(),
             pre_operation = lambda cmd: (cmd.setPose(self.btn_pose),
@@ -81,14 +78,16 @@ class PressButton(Task):
             description = "go in front of button"
         )
         self.addCommand(
-            StraightMoveCommand(),
+            StraightMoveCommand(velocity_scaling_factor=0.1),
             pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
-                                         cmd.setAxisFromOrientation(self.btn_pose.orientation, reverse=True))
+                                         cmd.setAxisFromOrientation(self.btn_pose.orientation, reverse=True)),
+            description = "click on button"
         )
         self.addCommand(
-            StraightMoveCommand(),
+            StraightMoveCommand(velocity_scaling_factor=0.1),
             pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
-                                         cmd.setAxisFromOrientation(self.btn_pose.orientation))
+                                         cmd.setAxisFromOrientation(self.btn_pose.orientation)),
+            description = "move back from button"
         )
         
         # TODO: maybe remove the objects added to the world

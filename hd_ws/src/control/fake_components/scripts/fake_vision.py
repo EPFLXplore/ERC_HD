@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 import threading
 from geometry_msgs.msg import Pose, Quaternion
+from hd_interfaces import TaskInstruction
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_corrector as pc
 import math
@@ -13,7 +14,7 @@ def main():
     rclpy.init()
     node = rclpy.create_node("fake_vision")
 
-    detected_element_pub = node.create_publisher(Pose, "target_pose", 10)
+    detected_element_pub = node.create_publisher(TaskInstruction, "target_pose", 10)
 
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
@@ -32,7 +33,8 @@ def main():
             #pose.position.x = pose.position.y = 0.0; pose.position.z = 0.00
 
             pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
-            detected_element_pub.publish(pose)
+            msg = TaskInstruction(ar_tag_pose=pose, object_pose=pose)
+            detected_element_pub.publish(msg)
 
             rate.sleep()
 
