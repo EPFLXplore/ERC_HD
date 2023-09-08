@@ -24,7 +24,7 @@ class PanelB2(Panel):
 
     # must be called after detect_ar_tag to be sure that the positions are not outdated or None
     def project(self):
-        prjected_plug = self.ar_tag.project(self.ether_plug.get_3d_coords())
+        prjected_plug = self.ar_tag.project(self.ether_plug.get_corners_coords_3d())
         self.ether_plug.set_projected_coord(prjected_plug)
 
     # must be called after detect_ar_tag to be sure that the positions are not outdated or None

@@ -86,8 +86,12 @@ class VisionNode(Node):
             self.control_panel.project()
             self.control_panel.draw(frame)
 
+            # projected_center = self.control_panel.panels["A"].project([0, 0, 0])
+            # print(projected_center)
+
             point2project, rvec, tvec = self.control_panel.get_target()
             ar_translation, ar_quaternion = translation_rotation([0, 0, 0], rvec, tvec)
+
             translation, quaternion = translation_rotation(point2project, rvec, tvec)
             self.target_pose_publisher.publish(
                 translation, quaternion, ar_translation, ar_quaternion, self.task
@@ -105,9 +109,9 @@ class VisionNode(Node):
         self.task = self.subscriber.get_data()
         self.control_panel.set_target(self.task)
         self.image_publisher.publish(frame)
-        self.image_publisher._logger.info(
-            f"current task: {self.task:2d}, target panel {self.control_panel.get_selected_panel().name}"
-        )
+        # self.image_publisher._logger.info(
+        #     f"current task: {self.task:2d}, target panel {self.control_panel.get_selected_panel().name}"
+        # )
 
 
 def main(args=None):

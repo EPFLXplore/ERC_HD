@@ -52,10 +52,14 @@ class PanelB1(Panel):
     # must be called after detect_ar_tag to be sure that the positions are not outdated or None
     def project(self):
         if self.button.isTarget():
-            projected_button = self.ar_tag_top.project(self.button.get_3d_coords())
+            projected_button = self.ar_tag_top.project(
+                self.button.get_corners_coords_3d()
+            )
             self.button.set_projected_coord(projected_button)
         else:
-            projected_plug = self.ar_tag_bottom.project(self.plug.get_3d_coords())
+            projected_plug = self.ar_tag_bottom.project(
+                self.plug.get_corners_coords_3d()
+            )
             self.plug.set_projected_coord(projected_plug)
 
     def draw(self, frame):

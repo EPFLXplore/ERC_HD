@@ -25,6 +25,10 @@ class TargetPosePublisher(Node):
         ar_tag_pose = self.toPose(ar_translation, ar_quaternion)
         task = Int8(data=task)
 
+        print(
+            f"difference: x:{pose.position.x - ar_tag_pose.position.x}, y: {pose.position.y - ar_tag_pose.position.y}, z: {pose.position.z - ar_tag_pose.position.z}"
+        )
+
         instruction = TargetInstruction()
         instruction.object_pose = pose
         instruction.ar_tag_pose = ar_tag_pose
