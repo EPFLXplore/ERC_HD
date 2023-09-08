@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+from vision.controlpanel.utils import top_left_hw_to_corners
 
 # super class representing a control panel object
 
@@ -12,23 +13,39 @@ class CPO:
     """
 
     # Constructor method that initializes a new instance of the class with a given position.
-    def __init__(self, position):
-        self._position = (
-            position  # sets the position attribute to the provided position.
-        )
-        self._width = abs(position[1][0] - position[0][0])
-        self._height = abs(position[2][1] - position[0][1])
-        self._position_3D = np.array(
-            [[coord[0]] + [coord[1]] + [0.0] for coord in position]
+    def __init__(
+        self,
+        corners_coords_2d: np.ndarray = None,
+        top_left_corner: np.ndarray = None,
+        height: int = None,
+        width: int = None,
+    ) -> None:
+        if corners_coords_2d is None:
+            self.corners_coords_2d = top_left_hw_to_corners(
+                top_left_corner, height, width
+            )
+            self._width = width
+            self._height = height
+        else:
+            # sets the position attribute to the provided position.
+            self.corners_coords_2d = corners_coords_2d
+            self._width = abs(corners_coords_2d[1][0] - corners_coords_2d[0][0])
+            self._height = abs(corners_coords_2d[2][1] - corners_coords_2d[0][1])
+
+        self.corners_coords_3d = np.array(
+            [[coord[0], coord[1], 0.0] for coord in self.corners_coords_2d]
         )
         self._is_target = False
 
     # Getter method for the position attribute.
-    def get_position(self):
-        return self._position  # returns the position attribute.
+    def get_corners_coords_2d(self):
+        return self.corners_coords_2d  # returns the position attribute.
 
-    def get_3d_coords(self):
-        return self._position_3D
+    def get_corners_coords_3d(self):
+        return self.corners_coords_3d
+
+    def get_center_coords_3d(self):
+        return self.corners_coords_3d.mean(axis=0)
 
     def get_width(self):
         return self._width
@@ -60,7 +77,7 @@ class CPO:
     # A special method that returns a string representation of the object.
     # This method is automatically called when the object is converted to a string using the str() function.
     def __str__(self):
-        return f"Position: {self._position}"  # returns a string representation of the object.
+        return f"Position: {self.corners_coords_2d}"  # returns a string representation of the object.
 
     def target(self):
         self.is_target = True

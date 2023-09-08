@@ -127,11 +127,12 @@ HD_MODES = Enum(
 
 
 SEMI_AUTO_TASKS = Enum(
-    NO_TASK = -1,
-    BTN_TASK = 0,
-    NAMED_TARGET_TASK = 1
+    NO_TASK = Task.NO_TASK,
+    BTN_TASK = Task.BUTTON,
+    PLUG_VOLTMETER = Task.PLUG_VOLTMETER,
+    NAMED_TARGET_TASK = Task.NAMED_TARGET
 )
-    
+
 
 class GamePad(Node):
     MAX_VELOCITIES = [1, 1, 1, 1, 1, 1, 1, 0]
@@ -151,7 +152,7 @@ class GamePad(Node):
             [1.0, 0.0, 0.0]
         ]
         self.semi_auto_cmd_id = -1      # -1 for no command
-        self.semi_auto_cmd = SEMI_AUTO_TASKS.NO_TASK
+        self.semi_auto_cmd = Task.NO_TASK
 
         # direction of joint 3, 4
         self.joint3_dir = 1
@@ -205,15 +206,18 @@ class GamePad(Node):
             print("[", ", ".join(map(str_pad, axis)), "]")
             self.man_inv_axis_pub.publish(Float32MultiArray(data = axis))
         elif self.hd_mode == HD_MODES.SEMI_AUTONOMOUS:
-            if self.semi_auto_cmd == SEMI_AUTO_TASKS.NO_TASK:
+            if self.semi_auto_cmd == Task.NO_TASK:
                 return
-            elif self.semi_auto_cmd == SEMI_AUTO_TASKS.BTN_TASK:
-                msg = Task(description="btn", id=self.semi_auto_cmd_id)
+            elif self.semi_auto_cmd == Task.BUTTON:
+                msg = Task(type=Task.BUTTON, id=self.semi_auto_cmd_id)
                 self.task_pub.publish(msg)
-            elif self.semi_auto_cmd == SEMI_AUTO_TASKS.NAMED_TARGET_TASK:
-                msg = Task(description="named_target", str_slot="optimal_view")
+            elif self.semi_auto_cmd == Task.PLUG_VOLTMETER:
+                msg = Task(type=Task.PLUG_VOLTMETER)
                 self.task_pub.publish(msg)
-            self.semi_auto_cmd = SEMI_AUTO_TASKS.NO_TASK
+            elif self.semi_auto_cmd == Task.NAMED_TARGET:
+                msg = Task(type=Task.NAMED_TARGET, str_slot="optimal_view")
+                self.task_pub.publish(msg)
+            self.semi_auto_cmd = Task.NO_TASK
     
     def switch_mode(self):
         self.hd_mode = (self.hd_mode + 1) % len(HD_MODES)

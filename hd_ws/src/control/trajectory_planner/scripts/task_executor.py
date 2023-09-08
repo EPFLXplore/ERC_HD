@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 from task_execution.all_tasks import PressButton
 from task_execution.all_tasks import NamedJointTargetCommand
-from task_execution.task import PressButton
+from task_execution.task import PressButton, PlugVoltmeter
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal
@@ -29,6 +29,7 @@ class Executor(Node):
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
         self.add_object_pub = self.create_publisher(Object, "/HD/kinematics/add_object", 10)
         self.named_joint_target_pub = self.create_publisher(String, "/HD/kinematics/named_joint_target", 10)
+        self.motor_command_pub = self.create_publisher(MotorCommand, "HD/kinematics/single_joint_cmd", 10)
 
         self.task = None    # usually a Task from task_execution.task but could also be just a Command
         self.new_task = False
@@ -85,7 +86,7 @@ class Executor(Node):
             mode = MotorCommand.TORQUE,
             command = torque_scaling_factor
         )
-        # send
+        self.motor_command_pub.publish(msg)
 
     def addObjectToWorld(self, shape: list, pose: Pose, name: str, type="box"):
         msg = Object()
@@ -110,10 +111,13 @@ class Executor(Node):
         self.loginfo("Task executor received cmd")
         if self.hasTask():
             return
-        if msg.description == "btn":
+        if msg.type == Task.BUTTON:
             self.loginfo("Button task")
             self.task = PressButton(self, msg.id, msg.pose)
-        elif msg.description == "named_target":
+        elif msg.type == Task.PLUG_VOLTMETER:
+            self.loginfo("Plug voltmeter task")
+            self.task = PlugVoltmeter(self)
+        elif msg.type == Task.NAMED_TARGET:
             self.loginfo("Named target task")
             self.task = task_execution.task.Task(self)
             self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))

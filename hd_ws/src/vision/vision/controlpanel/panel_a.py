@@ -9,13 +9,20 @@ import numpy as np
 class PanelA(Panel):
     name = "A"
     AR_SIZE = 50
-    BUTTON_HEIGHT = 50
-    BUTTON_WIDTH = 25
+    BUTTON_HEIGHT = 42  # 50    # official measure
+    BUTTON_WIDTH = 21   # 25    # official measure
 
-    # origin is in the middle of ar tag
-    rows = {0: 25, 1: 25 - 71, 2: 25 - 2 * 71}
-    cols = {0: -25, 1: 0, 2: 84 - 25, 3: 84}
-    buttons_top_left = [
+    # origin is in the middle of ar tag, with x going to the right and y going up
+    HORIZONTAL_DIST_BETWEEN_BUTTONS = 84 # mm
+    VERTICAL_DIST_BETWEEN_BUTTONS = 71 # mm
+    rows = {0: BUTTON_WIDTH,
+            1: BUTTON_WIDTH - VERTICAL_DIST_BETWEEN_BUTTONS,
+            2: BUTTON_WIDTH - 2 * VERTICAL_DIST_BETWEEN_BUTTONS,}
+    cols = {0: -BUTTON_WIDTH,
+            1: 0,
+            2: HORIZONTAL_DIST_BETWEEN_BUTTONS - BUTTON_WIDTH,
+            3: HORIZONTAL_DIST_BETWEEN_BUTTONS,}
+    buttons_top_left_corner = [
         [cols[2], rows[0]],
         [cols[3], rows[0]],
         [cols[0], rows[1]],
@@ -27,16 +34,28 @@ class PanelA(Panel):
         [cols[2], rows[2]],
         [cols[3], rows[2]],
     ]
+    FRACTION = 0.5
+    HORIZONTAL_CENTER_OFFSET = int(BUTTON_WIDTH / 2 * FRACTION)  # mm
+    
 
     def __init__(self, camera_matrix, dist_coeffs, values):
         super().__init__()
+        print(f'Button horizontal offset: {self.HORIZONTAL_CENTER_OFFSET}')
         self.ar_tag = ARTag(
             aruco.DICT_4X4_50, self.AR_SIZE, 2, camera_matrix, dist_coeffs
         )
         self.buttons = [
             Button(corner, self.BUTTON_HEIGHT, self.BUTTON_WIDTH, id, values)
-            for id, corner in enumerate(self.buttons_top_left)
+            for id, corner in enumerate(self.buttons_top_left_corner)
         ]
+        left = np.array([-self.HORIZONTAL_CENTER_OFFSET, 0])
+        for button in self.buttons:
+            button.coordinates_2d_target = button.coords_2d_to_turn_on + left
+            left *= -1
+        print("New offsets")
+        for button in self.buttons:
+            print(button.get_target())
+
         self.target = 0
 
     def get_possible_inputs(self):
@@ -55,12 +74,12 @@ class PanelA(Panel):
     # must be called after detect_ar_tag to be sure that the positions are not outdated or None
     def project(self):
         for button in self.buttons:
-            projected_button = self.ar_tag.project(button.get_3d_coords())
+            projected_button = self.ar_tag.project(button.get_corners_coords_3d())
             button.set_projected_coord(projected_button)
 
     # must be called after detect_ar_tag to be sure that the positions are not outdated or None
     def draw(self, frame):
-        # self.ar_tag.draw(frame)
+        self.ar_tag.draw(frame)
         for button in self.buttons:
             button.draw(frame)
 

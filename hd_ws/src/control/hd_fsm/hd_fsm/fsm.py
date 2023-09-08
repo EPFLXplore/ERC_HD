@@ -86,7 +86,7 @@ class FSM(Node):
     
     def task_cmd_callback2(self, msg: Int8):        # TODO
         self.semi_autonomous_command = Task(
-            description = "btn",
+            type = Task.BUTTON,
             id = 0
         )
 

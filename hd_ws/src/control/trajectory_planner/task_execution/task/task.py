@@ -23,6 +23,8 @@ class Task:
         self.constructCommandChain()
         self.aborted = False
         self.pause_time = 0
+        self.artag_pose = None
+        self.object_pose = None
 
     def constructCommandChain(self):
         """constructs the chain of the commands that constitute the task"""
@@ -102,3 +104,46 @@ class Task:
     def abort(self):
         """stops all movement"""
         # TODO
+
+    def scanForObjects(self):
+        """try to get the pose of the ARtag and object for the task"""
+        while pt.DETECTED_OBJECTS_LOCKED:
+            pass
+        for obj in pt.DETECTED_OBJECTS_POSE:
+            if 1:   # TODO: check if obj.id corresponds to task id here
+                self.object_pose = obj.object_pose
+                self.artag_pose = obj.artag_pose
+
+    def constructStandardDetectionCommands(self, object_name="object", object_box=(0.2, 0.1, 0.0001), extended=True):
+        """an example of a series of commands for accurate detection of ARtag and associated object"""
+        if extended:
+            self.addCommand(
+                RequestDetectionCommand(),
+                post_operation = lambda cmd: self.scanForObjects(),
+                description = "request detection"
+            )
+            self.addCommand(        # TODO: maybe disable collisions for this object
+                AddObjectCommand(),
+                pre_operation = lambda cmd: (cmd.setPose(self.artag_pose),
+                                            cmd.setShape([0.2, 0.1, 0.0001]),
+                                            cmd.setName("artag")),
+                description="add ARtag to world"
+            )
+            self.addCommand(
+                PoseCommand(self.executor),
+                pre_operation = lambda cmd: cmd.setPose(position=self.getScanPosition(),
+                                                        orientation=self.getScanOrientation()),
+                description = "go in front of ARtag"
+            )
+        self.addCommand(
+            RequestDetectionCommand(),
+            post_operation = lambda cmd: self.scanForObjects(),
+            description = "request new detection"
+        )
+        self.addCommand(        # TODO: maybe disable collisions for this object
+            AddObjectCommand(),
+            pre_operation = lambda cmd: (cmd.setPose(self.object_pose),
+                                         cmd.setShape(list(object_box)),
+                                         cmd.setName(object_name)),
+            description=f"add {object_name} to world"
+        )

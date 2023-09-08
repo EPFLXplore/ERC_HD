@@ -11,8 +11,9 @@ default_acceleration_scaling_factor: 0.1
 
 # joint_limits:
 #   joint1:
-#     min_position: -0.2
-#     max_position: 0.2
+#     has_position_limits: true
+#     min_position: -0.1
+#     max_position: 0.1
 #     has_velocity_limits: true
 #     max_velocity: 0.1
 #     has_acceleration_limits: true
@@ -42,3 +43,10 @@ default_acceleration_scaling_factor: 0.1
 #     max_velocity: 0.1
 #     has_acceleration_limits: false
 #     max_acceleration: 0
+
+
+cartesian_limits:
+  max_trans_vel: 0.01
+  max_trans_acc: 0.02
+  max_trans_dec: -0.02
+  max_rot_vel: 0.01

@@ -7,33 +7,34 @@
 
 
 <xacro:property name="rpm_to_Radps" value="${2*pi/60.0}" />     <!-- rotations per minute to Rad per second conversion -->
+<xacro:property name="velocity_scaling" value="1.0" />     <!-- allows to scale all max velocities down at once -->
 
 <xacro:macro name="aaa_joint_limits" params="lower:=0.0 upper:=0.0 velocity:=${rpm_to_Radps} effort:=100.0">
   <limit lower="${lower}" upper="${upper}" velocity="${velocity}" effort="${effort}"/>
 </xacro:macro>
 
 <xacro:property name="joint1_limits">
-  <xacro:aaa_joint_limits lower="${-100*pi}" upper="${100*pi}" velocity="${2 * rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${2 * rpm_to_Radps * velocity_scaling}" />
 </xacro:property>
 
 <xacro:property name="joint2_limits">
-  <xacro:aaa_joint_limits lower="${-100*pi/30}" upper="${100*pi/30}" velocity="${1.5 * rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-pi/2}" upper="${pi/2}" velocity="${1.5 * rpm_to_Radps * velocity_scaling}" />
 </xacro:property>
 
 <xacro:property name="joint3_limits">
-  <xacro:aaa_joint_limits lower="${-100*pi/4}" upper="${100*pi/4}" velocity="${1.5 * rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-pi/4}" upper="${pi/4}" velocity="${1.5 * rpm_to_Radps * velocity_scaling}" />
 </xacro:property>
 
 <xacro:property name="joint4_limits">
-  <xacro:aaa_joint_limits lower="${-100*pi}" upper="${100*pi}" velocity="${6 * rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-1.5*pi}" upper="${1.5*pi}" velocity="${6 * rpm_to_Radps * velocity_scaling}" />
 </xacro:property>
 
 <xacro:property name="joint5_limits">
-  <xacro:aaa_joint_limits lower="${-100*pi/4}" upper="${100*pi/4}" velocity="${2 * rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-pi/2}" upper="${pi/2}" velocity="${2 * rpm_to_Radps * velocity_scaling}" />
 </xacro:property>
 
 <xacro:property name="joint6_limits">
-  <xacro:aaa_joint_limits lower="${-100*pi/2}" upper="${100*pi/2}" velocity="${6 * rpm_to_Radps}" />
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${6 * rpm_to_Radps * velocity_scaling}" />
 </xacro:property>
 
 
@@ -515,7 +516,7 @@
   <axis xyz="0.033329 -0.999444 -0.000279"/>
 </joint>
 
-<joint name="joint2" type="continuous">
+<joint name="joint2" type="revolute">
   <origin xyz="0.0 -0.0577 0.102" rpy="0 0 0"/>
   <parent link="hd_link1_1"/>
   <child link="hd_link2_1"/>
@@ -523,7 +524,7 @@
   <xacro:insert_block name="joint2_limits" />
 </joint>
 
-<joint name="joint3" type="continuous">
+<joint name="joint3" type="revolute">
   <origin xyz="0.000693 0.088 0.400095" rpy="0 0 0"/>
   <parent link="hd_link2_1"/>
   <child link="hd_link3_1"/>
@@ -531,7 +532,7 @@
   <xacro:insert_block name="joint3_limits" />
 </joint>
 
-<joint name="joint4" type="continuous">
+<joint name="joint4" type="revolute">
   <origin xyz="-0.31539 -0.029644 0.034839" rpy="0 0 0"/>
   <parent link="hd_link3_1"/>
   <child link="hd_link4_1"/>
@@ -539,7 +540,7 @@
   <xacro:insert_block name="joint4_limits" />
 </joint>
 
-<joint name="joint5" type="continuous">
+<joint name="joint5" type="revolute">
   <origin xyz="-0.0937 -0.042 0.000163" rpy="0 0 0"/>
   <parent link="hd_link4_1"/>
   <child link="hd_link5_1"/>
@@ -547,7 +548,7 @@
   <xacro:insert_block name="joint5_limits" />
 </joint>
 
-<joint name="joint6" type="continuous">
+<joint name="joint6" type="revolute">
   <origin xyz="-0.027 0.04196 -0.000165" rpy="0 0 0"/>
   <parent link="hd_link5_1"/>
   <child link="hd_link6_1"/>
@@ -585,7 +586,7 @@
   <axis xyz="0.0 -1.0 -0.0"/>
 </joint>
 
-<joint name="joint1" type="continuous">
+<joint name="joint1" type="revolute">
   <origin xyz="-0.228643 0.101917 -0.055782" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="hd_link1_1"/>

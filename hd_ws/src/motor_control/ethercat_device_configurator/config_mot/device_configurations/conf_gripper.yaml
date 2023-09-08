@@ -15,7 +15,7 @@ Reading:
 Hardware:
   mode_of_operation:
   - CyclicSynchronousTorqueMode
-  position_encoder_resolution: 1056
+  position_encoder_resolution: 1024
   gear_ratio: [1, 1]
   motor_constant: 1.0
   working_voltage: 48

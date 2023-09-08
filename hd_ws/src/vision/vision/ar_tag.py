@@ -45,6 +45,9 @@ class ARTag:
         )
         cv.polylines(frame, [self.corners.astype(np.int32)], True, (0, 255, 255), 10)
 
+        center = self.corners.mean(axis=1).astype(np.int32)
+        cv.circle(frame, tuple(center[0]), 10, (0, 255, 255), -1)
+
     def project(self, points):
         [projected, jacobian] = cv.projectPoints(
             points, self.rvec, self.tvec, self.camera_matrix, self.dist_coeffs

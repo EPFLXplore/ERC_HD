@@ -10,17 +10,17 @@ position 0 --- 1
 
 
 class Button(CPO):
-    def __init__(self, top_left_corner, height, width, id=0, value=0) -> None:
-        position = get_coords(top_left_corner, height, width)
-        super().__init__(position)
+    def __init__(self, top_left_corner, height, width, id=0, value=0, offset=0) -> None:
+        corners = top_left_hw_to_corners(top_left_corner, height, width)
+        super().__init__(corners)
         self._isOn = False  # the on position means we can see the small rectangle looking from the top
         self._id = id
         self._value = value
         self.is_target = False
-        self.turn_on_position = (position[0] + position[1]) // 2 - self._height // 4
-        self.turn_off_position = (
-            position[0] + position[1]
-        ) // 2 - 3 * self._height // 4
+        self.coords_2d_to_turn_off = (corners[0] + corners[1]) // 2
+        self.coords_2d_to_turn_on = (corners[2] + corners[3]) // 2
+        self.coordinates_2d_target = self.coords_2d_to_turn_on
+        print(self.coordinates_2d_target)
 
     def get_id(self):
         return self._id
@@ -33,6 +33,9 @@ class Button(CPO):
 
     def change_state(self):
         self._isOn = not self._isOn
+        self.coordinates_2d_target = (
+            self.coords_2d_to_turn_off if self._isOn else self.coords_2d_to_turn_on
+        )
 
     def __str__(self):
         return (
@@ -91,18 +94,11 @@ class Button(CPO):
 
         points = projected[0]
         if self._isOn:
-            self.projected_target = (points[0] + points[1]) // 2 + np.array(
-                [0, (points[3] - points[1])[1] // 4]
-            ).astype(int)
+            self.projected_target = (points[0] + points[1]) // 2
         else:
-            self.projected_target = (points[2] + points[3]) // 2 - np.array(
-                [0, (points[3] - points[1])[1] // 4]
-            ).astype(int)
+            self.projected_target = (points[2] + points[3]) // 2
 
     def get_target(self):
         res = np.zeros(3)
-        if self._isOn:
-            res[:2] = self.turn_off_position
-        else:
-            res[:2] = self.turn_on_position
+        res[:2] = self.coordinates_2d_target
         return res.astype(int)
