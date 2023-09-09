@@ -54,11 +54,12 @@ public:
     void loop();
 
     // movement
-    TrajectoryStatus reachTargetPose(const geometry_msgs::msg::Pose &target);
+    TrajectoryStatus reachTargetPose(const geometry_msgs::msg::Pose &target, double velocity_scaling_factor);
     TrajectoryStatus reachTargetJointValues(const std::vector<double> &target);
     TrajectoryStatus reachNamedTarget(const std::string &target);
-    TrajectoryStatus computeCartesianPath(std::vector<geometry_msgs::msg::Pose> waypoints, double velocity_scaling_factor=0.2);
-    TrajectoryStatus reachTargetPoseCartesian(const geometry_msgs::msg::Pose &target);
+    TrajectoryStatus computeCartesianPath(std::vector<geometry_msgs::msg::Pose> &waypoints);
+    TrajectoryStatus computeCartesianPath(std::vector<geometry_msgs::msg::Pose> &waypoints, double velocity_scaling_factor);
+    TrajectoryStatus reachTargetPoseCartesian(const geometry_msgs::msg::Pose &target, double velocity_scaling_factor);
     TrajectoryStatus advanceAlongAxis();
 
     // planning and execution

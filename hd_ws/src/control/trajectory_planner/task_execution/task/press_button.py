@@ -36,7 +36,7 @@ class PressButton(Task):
     def constructCommandChain(self):
         super().constructCommandChain()
 
-        self.constructStandardDetectionCommands("button", extended=True)
+        self.constructStandardDetectionCommands("button", extended=False)
 
         self.addCommand(
             PoseCommand(self.executor),
@@ -51,7 +51,7 @@ class PressButton(Task):
             description = "click on button"
         )
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.1),
+            StraightMoveCommand(velocity_scaling_factor=0.5),
             pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
                                          cmd.setAxisFromOrientation(self.btn_pose.orientation)),
             description = "move back from button"
