@@ -36,7 +36,7 @@ class PressButton(Task):
     def constructCommandChain(self):
         super().constructCommandChain()
 
-        self.constructStandardDetectionCommands("button", extended=False)
+        self.constructStandardDetectionCommands("button", extended=True)
 
         self.addCommand(
             PoseCommand(self.executor),

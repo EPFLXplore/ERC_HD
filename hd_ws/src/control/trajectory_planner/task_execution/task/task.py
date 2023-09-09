@@ -9,6 +9,13 @@ from collections.abc import Callable
 from task_execution.command import *
 
 
+class CommandWrapper:
+    def __init__(self):
+        pass
+        
+
+
+
 class Task:
     """abstract class representing a task"""
     NONE_OPERATION = lambda cmd: None
@@ -100,7 +107,7 @@ class Task:
                 return False    # task failed
             time.sleep(self.pause_time)
         return True             # task succeeded
-    
+
     def abort(self):
         """stops all movement"""
         # TODO

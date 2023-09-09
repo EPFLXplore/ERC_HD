@@ -115,7 +115,7 @@ private:
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     void manual_direct_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
         for (uint i=0; i < motor_command_list.size(); i++) {
-            if (i < 6) {
+            if (i == 30000) {
                 position_direct_command(i, msg->data[i]);
             }
             else {

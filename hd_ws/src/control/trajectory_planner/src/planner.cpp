@@ -67,7 +67,7 @@ Planner::TrajectoryStatus Planner::reachNamedTarget(const std::string &target)
 }
 
 Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msgs::msg::Pose> &waypoints) {
-    computeCartesianPath(waypoints, 0.2);
+    computeCartesianPath(waypoints, 0.7);
 }
 
 Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msgs::msg::Pose> &waypoints, double velocity_scaling_factor) { 
