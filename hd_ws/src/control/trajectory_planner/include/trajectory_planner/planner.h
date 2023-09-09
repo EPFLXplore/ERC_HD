@@ -96,6 +96,8 @@ private:
 
     void publishEEFPose();
 
+    void publishSanityFeedback();
+
     void sendTrajFeedback(Planner::TrajectoryStatus status);
 
     bool canMove();
@@ -115,6 +117,7 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr              m_eef_pose_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   m_traj_feedback_pub;
     rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr                   m_position_mode_switch_pub;
+    rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr                   m_sanity_feedback_pub;
     CommandMode                                                         m_mode = CommandMode::MANUAL_DIRECT;
     std::chrono::time_point<std::chrono::steady_clock>                  m_last_man_inv_cmd_time = std::chrono::steady_clock::now();
     bool                                                                m_executing_man_inv_cmd = false;

@@ -125,21 +125,27 @@ private:
     }
 
     static void position_direct_command(size_t motor_index, double velocity_scaling_factor) {
+        auto now = std::chrono::steady_clock::now();
+        static std::vector<std::chrono::steady_clock::time_point> last_cmd_times = {now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN};
+        static std::vector<double> position_commands = {0, 0, 0, 0, 0, 0, 0, 0};
         // velocity_scaling_factor in [-1, 1]
         auto &command = motor_command_list[motor_index];
         double velocity = velocity_scaling_factor * command.max_velocity * DIRECTIONS[motor_index];
         // little flaw : time since last command does not differentiate between a position command or other, but it should be fine since TIME_COUNTDOWN is small
-        auto now = std::chrono::steady_clock::now();
         auto time_since_last_cmd = now-command.command_time;
         if (time_since_last_cmd < TIME_COUNTDOWN) {
             // if previous command is not too old
             command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
             double current_pos = get_position(motor_index);
             double dt = std::chrono::duration_cast<std::chrono::seconds>(time_since_last_cmd).count();
-            double new_pos = current_pos + dt * velocity;
-            command.command.setTargetPosition(new_pos);
+            position_commands[motor_index] += dt * velocity;
+            command.command.setTargetPosition(position_commands[motor_index]);
+        }
+        else {  // scanning
+            position_commands[motor_index] = get_position(motor_index);
         }
         command.command_time = now;
+        last_cmd_times[motor_index] = now;
         enforce_limits(motor_index);
     }
 

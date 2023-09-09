@@ -91,9 +91,23 @@ def generate_launch_description():
         executable="task_executor.py"
     )
 
+    kerby_trajectory_planner_supervisor_node = Node(
+        package="trajectory_planner",
+        executable="planner_supervisor",
+        parameters=[
+            robot_description,
+            robot_description_semantic,
+            kinematics_yaml,
+            trajectory_execution,
+            planning_scene_monitor_parameters,
+            robot_description_kinematics
+        ]
+    )
+
     return LaunchDescription(
         [
             kerby_trajectory_planner_node,
-            kerby_task_executor_node
+            kerby_task_executor_node,
+            kerby_trajectory_planner_supervisor_node,
         ]
     )

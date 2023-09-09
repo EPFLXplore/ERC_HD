@@ -34,6 +34,7 @@ void Planner::initCommunication() {
     m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/HD/kinematics/eef_pose", 10);
     m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/traj_feedback", 10);
     m_position_mode_switch_pub = this->create_publisher<std_msgs::msg::Int8>("/HD/kinematics/position_mode_switch", 10);
+    m_sanity_feedback_pub = this->create_publisher<std_msgs::msg::Int8>("/HD/kinematics/planner_sanity_feedback", 10);
 }
 
 Planner::TrajectoryStatus Planner::reachTargetPose(const geometry_msgs::msg::Pose &target, double velocity_scaling_factor)
@@ -258,6 +259,7 @@ void Planner::loop()
     while (rclcpp::ok())
     {
         publishEEFPose();
+        publishSanityFeedback();
         switch(m_mode) {
             case Planner::CommandMode::MANUAL_DIRECT:
                 updateCurrentPosition();
@@ -353,6 +355,17 @@ void Planner::manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::
     }
     
     m_last_man_inv_cmd_time = std::chrono::steady_clock::now();
+
+
+    // if (!m_executing_man_inv_cmd) {
+    //     if (!equal(m_man_inv_axis, msg->data)) {
+    //         stop();
+    //     }
+    //     m_executing_man_inv_cmd = true;
+    //     m_man_inv_axis = msg->data;
+    //     std::thread executor(&Planner::advanceAlongAxis, this);
+    //     executor.detach();
+    // }
 }
 
 void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg)
@@ -383,6 +396,11 @@ void Planner::publishEEFPose()
 {
     geometry_msgs::msg::Pose msg = m_move_group->getCurrentPose().pose;
     m_eef_pose_pub->publish(msg);
+}
+
+void Planner::publishSanityFeedback() {
+    std_msgs::msg::Int8 msg;
+    m_sanity_feedback_pub->publish(msg);
 }
 
 void Planner::sendTrajFeedback(Planner::TrajectoryStatus status) {

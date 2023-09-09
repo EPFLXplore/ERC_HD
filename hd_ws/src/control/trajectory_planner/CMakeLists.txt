@@ -48,7 +48,6 @@ ament_target_dependencies(planner
   std_msgs
   kerby_interfaces
 )
-
 install(TARGETS planner
   DESTINATION lib/${PROJECT_NAME})
 
@@ -63,8 +62,21 @@ ament_target_dependencies(
   "rclcpp"
   "moveit_msgs"
 )
-
 install(TARGETS test_demo
+  DESTINATION lib/${PROJECT_NAME})
+
+
+add_executable(planner_supervisor src/planner_supervisor.cpp)
+target_include_directories(planner_supervisor PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(
+  planner_supervisor
+  "moveit_ros_planning_interface"
+  "rclcpp"
+  "moveit_msgs"
+)
+install(TARGETS planner_supervisor
   DESTINATION lib/${PROJECT_NAME})
 
 
