@@ -1,32 +1,32 @@
 #include "EthercatDeviceConfigurator.hpp"
 #include <maxon_epos_ethercat_sdk/Maxon.hpp>
- 
+
 #include "rclcpp/rclcpp.hpp"
 #include "motor_control_interfaces/msg/motor_command.hpp"
 #include "motor_control_interfaces/msg/motor_data.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
 #include "std_msgs/msg/int8.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
- 
+
 #include <iostream>
 #include <thread>
 #include <csignal>
 #include <string>
 #include <vector>
- 
+
 #define TIME_COUNTDOWN 200ms
- 
+
 using namespace std::chrono_literals;
- 
+
 using std::placeholders::_1;
- 
+
 enum MotorMode
 {
     POSITION = 0,
     VELOCITY = 1,
     TORQUE = 2
 };
- 
+
 struct MotorCommand
 {
     std::string name;
@@ -36,32 +36,35 @@ struct MotorCommand
     double max_torque = 0;
     double pos_lower_limit = 0;
     double pos_upper_limit = 0;
+    maxon::ModeOfOperationEnum stationary_mode = maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode;
  
     MotorCommand(std::string name, maxon::Command command, std::chrono::steady_clock::time_point command_time) : name(name), command(command), command_time(command_time) {}
 };
- 
+
 static const double PI = 3.14159265359;
 static const double INF = 1e10;
 static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J5", "J6", "Gripper", "Rassor"};
-static const std::vector<double> MAX_VELOCITIES = {1, 1, 1, 1, 1, 1, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
+static const std::vector<double> MAX_VELOCITIES = {0.2, 0.07, 0.1, 0.6, 0.2, 0.5, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 1, 1};
 static const std::vector<double> POS_LOWER_LIMITS = {-PI, -PI/2, -PI/4, -PI, -PI/2, -PI, -INF};
 static const std::vector<double> POS_UPPER_LIMITS = {PI, PI/2, PI/4, PI, PI/2, PI, INF};
- 
+
 //static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
 static const std::vector<double> DIRECTIONS = {-1, 1, 1, -1, 1, 1, 1, 1};   // to match directions of MoveIt
- 
+
+static std::vector<bool> should_scan_stationary_states = {true, true, true, true, true, true, true, true};
+
 std::vector<MotorCommand> motor_command_list;
- 
+
 std::unique_ptr<std::thread> worker_thread;
 bool abrt = false;
- 
+
 EthercatDeviceConfigurator::SharedPtr configurator;
- 
+
 unsigned int counter = 0;
- 
+
 void signal_handler(int sig);
- 
+
 class MotorController : public rclcpp::Node
 {
 public:
@@ -92,16 +95,42 @@ public:
             motor_command_list[i].max_torque = MAX_TORQUES[i];
             motor_command_list[i].pos_lower_limit = POS_LOWER_LIMITS[i];
             motor_command_list[i].pos_upper_limit = POS_UPPER_LIMITS[i];
+            if (i < 6) motor_command_list[i].stationary_mode = maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode;
+            else motor_command_list[i].stationary_mode = maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode;
         }
     }
- 
+
+    static void set_stationary(size_t motor_index) {
+        static std::vector<double> stationary_positions = {0, 0, 0, 0, 0, 0, 0, 0};
+        auto &command = motor_command_list[motor_index];
+        switch (command.stationary_mode)
+        {
+        case maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode:
+            command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
+            if (should_scan_stationary_states[motor_index]) {
+                stationary_positions[motor_index] = get_position(motor_index);
+            }
+            command.command.setTargetPosition(stationary_positions[motor_index] * DIRECTIONS[motor_index]);
+            break;
+        case maxon::ModeOfOperationEnum::CyclicSynchronousVelocityMode:
+            command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousVelocityMode);
+            command.command.setTargetVelocity(0);
+            break;
+        case maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode:
+            command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode);
+            command.command.setTargetTorque(0);
+            break;
+        }
+        should_scan_stationary_states[motor_index] = false;
+    }
+
 private:
     /**                         variablres                             **/
     // commande au moteur
     // std::vector<MotorCommand> motor_command_list;
- 
+
     // Ros related
- 
+
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr subscription_velocity_command_;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr subscription_position_command_;
@@ -109,13 +138,13 @@ private:
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr subscription_shutdown_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr publisher_state_;
     // MATTHIAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 
+
     rclcpp::TimerBase::SharedPtr timer_motor_data_;
- 
+
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     void manual_direct_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
         for (uint i=0; i < motor_command_list.size(); i++) {
-            if (i == 30000) {
+            if (i < 6) {
                 position_direct_command(i, msg->data[i]);
             }
             else {
@@ -125,27 +154,28 @@ private:
     }
 
     static void position_direct_command(size_t motor_index, double velocity_scaling_factor) {
+        // velocity_scaling_factor in [-1, 1]
         auto now = std::chrono::steady_clock::now();
         static std::vector<std::chrono::steady_clock::time_point> last_cmd_times = {now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN, now-2*TIME_COUNTDOWN};
         static std::vector<double> position_commands = {0, 0, 0, 0, 0, 0, 0, 0};
-        // velocity_scaling_factor in [-1, 1]
+
         auto &command = motor_command_list[motor_index];
-        double velocity = velocity_scaling_factor * command.max_velocity * DIRECTIONS[motor_index];
-        // little flaw : time since last command does not differentiate between a position command or other, but it should be fine since TIME_COUNTDOWN is small
-        auto time_since_last_cmd = now-command.command_time;
+        command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
+        double velocity = velocity_scaling_factor * command.max_velocity;
+        auto time_since_last_cmd = now-last_cmd_times[motor_index];
         if (time_since_last_cmd < TIME_COUNTDOWN) {
             // if previous command is not too old
-            command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
-            double current_pos = get_position(motor_index);
-            double dt = std::chrono::duration_cast<std::chrono::seconds>(time_since_last_cmd).count();
+            const double ms_to_s = 0.001;
+            double dt = std::chrono::duration_cast<std::chrono::milliseconds>(time_since_last_cmd).count() * ms_to_s;
             position_commands[motor_index] += dt * velocity;
-            command.command.setTargetPosition(position_commands[motor_index]);
+            command.command.setTargetPosition(position_commands[motor_index] * DIRECTIONS[motor_index]);
         }
         else {  // scanning
             position_commands[motor_index] = get_position(motor_index);
         }
-        command.command_time = now;
         last_cmd_times[motor_index] = now;
+        command.command_time = now;
+        should_scan_stationary_states[motor_index] = true;
         enforce_limits(motor_index);
     }
 
@@ -156,6 +186,7 @@ private:
         command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode);
         command.command.setTargetTorque(torque);
         command.command_time = std::chrono::steady_clock::now();
+        should_scan_stationary_states[motor_index] = true;
         enforce_limits(motor_index);
     }
 
@@ -166,9 +197,10 @@ private:
         command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousVelocityMode);
         command.command.setTargetVelocity(velocity);
         command.command_time = std::chrono::steady_clock::now();
+        should_scan_stationary_states[motor_index] = true;
         enforce_limits(motor_index);
     }
- 
+
     void position_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
     {
         for (uint i = 0; i < 6; i++)     // only accepting position commands for j1-6
@@ -180,9 +212,11 @@ private:
             if (new_pos > POS_UPPER_LIMITS[i]) new_pos = POS_UPPER_LIMITS[i];
             motor_command_list[i].command.setTargetPosition(new_pos);
             motor_command_list[i].command_time = std::chrono::steady_clock::now();
+            should_scan_stationary_states[i] = true;
+            enforce_limits(i);
         }
     }
- 
+
     void publish_state()
     {
         sensor_msgs::msg::JointState msg;
@@ -190,9 +224,9 @@ private:
         {
             auto slave = configurator->getSlave(DEVICE_NAMES[i]);
             std::shared_ptr<maxon::Maxon> maxon_slave_ptr = std::dynamic_pointer_cast<maxon::Maxon>(slave);
- 
+
             msg.name.push_back(slave->getName());
- 
+
             auto getReading = maxon_slave_ptr->getReading();
             msg.position.push_back(getReading.getActualPosition() * DIRECTIONS[i]);
             msg.velocity.push_back(getReading.getActualVelocity() * DIRECTIONS[i]);
@@ -200,19 +234,19 @@ private:
         }
         publisher_state_->publish(msg);
     }
- 
+
     void kill(const std_msgs::msg::Int8::SharedPtr msg)
     {
         signal_handler(0);
         rclcpp::shutdown();
     }
     // MATTHIAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
- 
+
     void motor_command_callback(const motor_control_interfaces::msg::MotorCommand::SharedPtr msg)
     {
         // TODO: add the multiplication by the direction of the corresponding joint in this function
-        for (auto &motor_command : motor_command_list)
-        {
+        for (uint i=0; i < motor_command_list.size(); i++) {
+            auto &motor_command = motor_command_list[i];
  
             if (motor_command.name == msg->name)
             {
@@ -224,29 +258,35 @@ private:
                     break;
                 case MotorMode::VELOCITY:
                     motor_command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousVelocityMode);
-                    motor_command.command.setTargetVelocity(msg->command * motor_command.max_velocity);
+                    motor_command.command.setTargetVelocity(msg->command * motor_command.max_velocity * DIRECTIONS[i]);
                     break;
                 case MotorMode::TORQUE:
                     motor_command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode);
-                    motor_command.command.setTargetTorque(msg->command * motor_command.max_torque);
+                    motor_command.command.setTargetTorque(msg->command * motor_command.max_torque * DIRECTIONS[i]);
                     break;
                 default:
                     std::cerr << "Motor mode not recognized" << std::endl;
                     break;
                 }
                 motor_command.command_time = std::chrono::steady_clock::now();
+                should_scan_stationary_states[i] = true;
+                enforce_limits(i);
 
                 return;
             }
         }
     }
- 
+
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     static double get_position(size_t motor_index) {
         auto slave = configurator->getSlave(DEVICE_NAMES[motor_index]);
         std::shared_ptr<maxon::Maxon> maxon_slave_ptr = std::dynamic_pointer_cast<maxon::Maxon>(slave);
         auto getReading = maxon_slave_ptr->getReading();
         return getReading.getActualPosition() * DIRECTIONS[motor_index];
+    }
+
+    static double get_target_position(size_t motor_index) {
+        return motor_command_list[motor_index].command.getTargetPosition();
     }
     
     static void reorder_command_list()
@@ -277,7 +317,7 @@ private:
         switch (command.command.getModeOfOperation())
         {
         case maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode: {
-            double pos = get_position(i);
+            double pos = get_target_position(i);
             if (pos < POS_LOWER_LIMITS[i]) command.command.setTargetPosition(POS_LOWER_LIMITS[i] * DIRECTIONS[i]);
             if (pos > POS_UPPER_LIMITS[i]) command.command.setTargetPosition(POS_UPPER_LIMITS[i] * DIRECTIONS[i]);
             break;
@@ -294,7 +334,7 @@ private:
 
 };
 
- 
+
 void worker()
 {
     bool rtSuccess = true;
@@ -303,10 +343,10 @@ void worker()
         rtSuccess &= master->setRealtimePriority(99);
     }
     std::cout << "Setting RT Priority: " << (rtSuccess ? "successful." : "not successful. Check user privileges.") << std::endl;
- 
+
     // Flag to set the drive state for the elmos on first startup
     bool maxonEnabledAfterStartup = false;
- 
+
     /*
     ** The communication update loop.
     ** This loop is supposed to be executed at a constant rate.
@@ -325,36 +365,36 @@ void worker()
         {
             master->update(ecat_master::UpdateMode::StandaloneEnforceRate); // TODO fix the rate compensation (Elmo reliability problem)!!
         }
- 
+
         /*
         ** Do things with the attached devices.
         ** Your lowlevel control input / measurement logic goes here.
         ** Different logic can be implemented for each device.
         */
-        for (auto &motor_command : motor_command_list)
-        {
- 
+        for (int i=0; i < motor_command_list.size(); i++) {
+            auto &motor_command = motor_command_list[i];
+
             // Keep constant update rate
             // std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
- 
+
             auto slave = configurator->getSlave(motor_command.name);
- 
+
             std::shared_ptr<maxon::Maxon> maxon_slave_ptr = std::dynamic_pointer_cast<maxon::Maxon>(slave);
- 
+
             if (!maxonEnabledAfterStartup)
             {
                 // Set maxons to operation enabled state, do not block the call!
                 maxon_slave_ptr->setDriveStateViaPdo(maxon::DriveState::OperationEnabled, false);
             }
- 
+
             // set commands if we can
             if (maxon_slave_ptr->lastPdoStateChangeSuccessful() &&
                 maxon_slave_ptr->getReading().getDriveState() == maxon::DriveState::OperationEnabled)
             {
                 if (std::chrono::steady_clock::now() - motor_command.command_time >= TIME_COUNTDOWN)
                 {
-                    motor_command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode);
-                    motor_command.command.setTargetTorque(0.0);
+                    
+                    MotorController::set_stationary(i);
                 }
                 maxon_slave_ptr->stageCommand(motor_command.command);
             }
@@ -362,8 +402,10 @@ void worker()
             {
                 MELO_WARN_STREAM("Maxon '" << maxon_slave_ptr->getName()
                                            << "': " << maxon_slave_ptr->getReading().getDriveState());
+                // Set maxons to operation enabled state, do not block the call!
+                //maxon_slave_ptr->setDriveStateViaPdo(maxon::DriveState::OperationEnabled, false);
             }
- 
+
             // Constant update rate
             // std::this_thread::sleep_until(start_time + std::chrono::milliseconds(1));
         }
@@ -371,7 +413,7 @@ void worker()
         maxonEnabledAfterStartup = true;
     }
 }
- 
+
 /*
 ** Handle the interrupt signal.
 ** This is the shutdown routine.

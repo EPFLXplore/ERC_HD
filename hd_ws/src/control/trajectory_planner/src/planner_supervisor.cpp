@@ -38,7 +38,6 @@ private:
         double dt = std::chrono::duration_cast<std::chrono::milliseconds>(now-m_last_sanity_feedback_time).count();
         if (dt > command_expiration) {
             RCLCPP_ERROR(this->get_logger(), "Trajectory planner has died, time : %f", dt);
-            //std::chrono::duration_cast<std::chrono::milliseconds>(now-m_last_man_inv_cmd_time).count()
             return true;
         }
         return false;

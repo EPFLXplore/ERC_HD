@@ -8,7 +8,7 @@ import numpy as np
 # Class PanelA represents the central panel containing the buttons
 class PanelA(Panel):
     name = "A"
-    AR_SIZE = 50
+    AR_SIZE = 49 # 50 # official measure
     BUTTON_HEIGHT = 42  # 50    # official measure
     BUTTON_WIDTH = 21   # 25    # official measure
 
