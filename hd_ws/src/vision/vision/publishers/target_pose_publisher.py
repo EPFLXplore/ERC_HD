@@ -11,7 +11,7 @@ class TargetPosePublisher(Node):
     def __init__(self):
         super().__init__("target_pose_publisher")
 
-        self.publisher_ = self.create_publisher(TargetInstruction, "target_pose", 10)
+        self.publisher_ = self.create_publisher(TargetInstruction, "HD/vision/target_pose", 10)
         self.get_logger().info("Target Pose Publisher Created")
 
     def timer_callback(self):

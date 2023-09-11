@@ -14,7 +14,7 @@ def main():
     rclpy.init()
     node = rclpy.create_node("fake_vision")
 
-    detected_element_pub = node.create_publisher(TargetInstruction, "target_pose", 10)
+    detected_element_pub = node.create_publisher(TargetInstruction, "HD/vision/target_pose", 10)
 
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)

@@ -2,8 +2,6 @@
 
 import rclpy
 from rclpy.node import Node
-from task_execution.all_tasks import PressButton
-from task_execution.all_tasks import NamedJointTargetCommand
 from task_execution.task import PressButton, PlugVoltmeter
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
@@ -23,13 +21,15 @@ class Executor(Node):
         super().__init__("kinematics_task_executor")
         self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignementCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-        self.create_subscription(TargetInstruction, "target_pose", pt.detected_object_pose_callback, 10)
+        self.create_subscription(TargetInstruction, "HD/vision/target_pose", pt.detected_object_pose_callback, 10)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
+        self.create_subscription(Int8, "/ROVER/Maintenance", self.CSMaintenanceCallback, 10)
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
         self.add_object_pub = self.create_publisher(Object, "/HD/kinematics/add_object", 10)
         self.named_joint_target_pub = self.create_publisher(String, "/HD/kinematics/named_joint_target", 10)
         self.motor_command_pub = self.create_publisher(MotorCommand, "HD/kinematics/single_joint_cmd", 10)
+        self.task_outcome_pub = self.create_publisher(Int8, "HD/kinematics/task_outcome", 10)
 
         self.task = None    # usually a Task from task_execution.task but could also be just a Command
         self.new_task = False
@@ -123,21 +123,35 @@ class Executor(Node):
             self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))
         
         self.new_task = True
+    
+    def CSMaintenanceCallback(self, msg: Int8):
+        LAUNCH = 1
+        ABORT = 2
+        WAIT = 3
+        RESUME = 4
+        if msg.data == ABORT:
+            if self.hasTask():
+                self.abortTask()
 
     def initiateTask(self):
         """starts assigned task"""
         self.new_task = False
         self.loginfo("Starting task")
         success = self.task.execute()
+        msg = Int8()
         if success:
+            msg.data = 0
             self.loginfo("Executed task successfully")
         else:
+            msg.data = 1
             self.loginfo("Task failed")
+        self.task_outcome_pub.publish(msg)
         self.task = None
 
     def abortTask(self):
         """stops the assigned task"""
-        # TODO
+        self.task.abort()
+        self.task = None
     
     def testVision(self):
         if len(pt.DETECTED_OBJECTS_POSE) == 0: return

@@ -79,9 +79,11 @@ class Task:
 
     def stopCondition(self):
         """indicates if task should be stopped because a command can't be executed"""
-        return self.currentCommand().hasFailed()
+        return self.aborted or self.currentCommand().hasFailed()
 
     def oneCommandLoop(self):
+        if self.aborted:
+            return False
         self.currentCommand().execute()
         if self.stopCondition():
             return False
@@ -110,7 +112,7 @@ class Task:
 
     def abort(self):
         """stops all movement"""
-        # TODO
+        self.aborted = True
 
     def scanForObjects(self):
         """try to get the pose of the ARtag and object for the task"""

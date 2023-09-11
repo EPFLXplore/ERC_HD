@@ -6,7 +6,7 @@ class TargetPublisher(Node):
     def __init__(self):
         super().__init__("target_publisher")
 
-        self.publisher_ = self.create_publisher(Int8, "target", 10)
+        self.publisher_ = self.create_publisher(Int8, "HD/vision/target", 10)
         self.get_logger().info("Target Publisher Created")
 
         self.target = 0

@@ -94,6 +94,8 @@ private:
 
     void namedTargetCallback(const std_msgs::msg::String::SharedPtr msg);
 
+    void CSMaintenanceCallback(const std_msgs::msg::Int8::SharedPtr msg);
+
     void publishEEFPose();
 
     void publishSanityFeedback();
@@ -114,6 +116,7 @@ private:
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_mode_change_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_man_inv_axis_sub;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr              m_named_target_sub;
+    rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_cs_maintenance_sub;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr              m_eef_pose_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   m_traj_feedback_pub;
     rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr                   m_position_mode_switch_pub;
@@ -121,7 +124,8 @@ private:
     CommandMode                                                         m_mode = CommandMode::MANUAL_DIRECT;
     std::chrono::time_point<std::chrono::steady_clock>                  m_last_man_inv_cmd_time = std::chrono::steady_clock::now();
     bool                                                                m_executing_man_inv_cmd = false;
-    std::vector<double>                                                 m_man_inv_axis = {0.0, 0.0, 0.0};
+    std::vector<double>                                                 m_man_inv_axis = {0.0, 0.0, 0.0, 0.0};  // last value is the velocity scaling (redundant with m_man_inv_velocity_scaling)
+    double                                                              m_man_inv_velocity_scaling = 0.0;
     bool                                                                m_mode_transition_ready = true;
     bool                                                                m_is_executing_path = false;
 };

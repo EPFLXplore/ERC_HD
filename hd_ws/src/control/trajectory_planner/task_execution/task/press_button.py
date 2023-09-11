@@ -9,7 +9,7 @@ class PressButton(Task):
         self.artag_pose = None
         self.press_distance = 0.2
         self.scan_distance = 0.13        # from end effector in the z (forward if gripper is standardly oriented) coordinate
-        self.pause_time = 0.5
+        self.pause_time = 0.2
 
     @property
     def btn_pose(self):
@@ -36,7 +36,7 @@ class PressButton(Task):
     def constructCommandChain(self):
         super().constructCommandChain()
 
-        self.constructStandardDetectionCommands("button", extended=True)
+        self.constructStandardDetectionCommands("button", extended=False)
 
         self.addCommand(
             PoseCommand(self.executor),
@@ -45,13 +45,13 @@ class PressButton(Task):
             description = "go in front of button"
         )
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=1.0),
+            StraightMoveCommand(velocity_scaling_factor=0.7),
             pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
                                          cmd.setAxisFromOrientation(self.btn_pose.orientation, reverse=True)),
             description = "click on button"
         )
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=1.0),
+            StraightMoveCommand(velocity_scaling_factor=0.7),
             pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
                                          cmd.setAxisFromOrientation(self.btn_pose.orientation)),
             description = "move back from button"

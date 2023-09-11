@@ -151,6 +151,7 @@ class GamePad(Node):
             [-1.0, 0.0, 0.0],
             [1.0, 0.0, 0.0]
         ]
+        self.man_inv_velocity_scaling = 0.0
         self.semi_auto_cmd_id = -1      # -1 for no command
         self.semi_auto_cmd = Task.NO_TASK
 
@@ -196,6 +197,7 @@ class GamePad(Node):
             l[2] *= self.joint3_dir
             l[3] *= self.joint4_dir
             print("[", ", ".join(map(str_pad, l)), "]")
+            l = [1.0] + l   # add dummy velocity scaling factor
             self.joint_vel_cmd_pub.publish(Float32MultiArray(data = l))
         elif self.hd_mode == HD_MODES.MANUAL_INVERSE:
             axis = [0.0, 0.0, 0.0]
@@ -204,7 +206,8 @@ class GamePad(Node):
                     axis = add(axis, vec)
             axis = normalized(axis)
             print("[", ", ".join(map(str_pad, axis)), "]")
-            self.man_inv_axis_pub.publish(Float32MultiArray(data = axis))
+            data = [self.man_inv_velocity_scaling] + axis
+            self.man_inv_axis_pub.publish(Float32MultiArray(data = data))
         elif self.hd_mode == HD_MODES.SEMI_AUTONOMOUS:
             if self.semi_auto_cmd == Task.NO_TASK:
                 return
@@ -237,6 +240,9 @@ class GamePad(Node):
                 self.man_inv_data[4] = 1 if (event.value - self.config.joint_event_offsets[2]) / self.config.joint_event_amplitudes[2] > 0.5 else 0
             if event.code == self.config.joint_event_codes[3]:
                 self.man_inv_data[5] = 1 if (event.value - self.config.joint_event_offsets[3]) / self.config.joint_event_amplitudes[3] > 0.5 else 0
+            if event.code == self.config.joint_event_codes[4]:
+                x = (event.value - self.config.joint_event_offsets[4]) / self.config.joint_event_offsets[4]
+                self.man_inv_velocity_scaling = 1.0 - abs(x)
     
     def handle_binary_event_direct_mode(self, event):
         if event.value != 0 and event.value != 1: return

@@ -26,7 +26,7 @@ def str_pad_list(l, length=5):
 def normalize(l):
     n = math.sqrt(sum(x**2 for x in l))
     if n == 0:
-        return l
+        return [x for x in l]
     return [x/n for x in l]
 
 class FSM(Node):
@@ -50,6 +50,7 @@ class FSM(Node):
         self.target_mode = self.MANUAL_DIRECT
         self.mode_transitioning = False
         self.manual_inverse_axis = [0.0, 0.0, 0.0]
+        self.manual_inverse_velocity_scaling = 0.0
     
     def create_ros_interfaces(self):
         self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/joint_vel_cmd", 10)
@@ -71,10 +72,12 @@ class FSM(Node):
     def manual_cmd_callback(self, msg: Float32MultiArray):
         """listens to HD_joints topic"""
         if self.mode == self.MANUAL_DIRECT:
-            self.manual_direct_command = msg.data
+            self.manual_direct_command = msg.data[1:]
+            self.manual_direct_velocity_scaling = msg.data[0]
             self.received_manual_direct_cmd_at = time.time()
         elif self.mode == self.MANUAL_INVERSE:  # TODO: standardize this
-            self.manual_inverse_axis = normalize(msg.data[:3])
+            self.manual_inverse_axis = normalize(msg.data[1:4])
+            self.manual_inverse_velocity_scaling = msg.data[0]
             self.received_manual_inverse_cmd_at = time.time()
 
     # def task_cmd_callback(self, msg: Int8):
@@ -107,7 +110,7 @@ class FSM(Node):
         if self.manual_inverse_command_old():
             return
         msg = Float64MultiArray()
-        msg.data = array.array('d', self.manual_inverse_axis)
+        msg.data = array.array('d', self.manual_inverse_axis + [self.manual_inverse_velocity_scaling])
         if VERBOSE:
             self.get_logger().info("FSM manual inverse cmd :   " + str_pad_list(list(msg.data)))
         self.manual_inverse_cmd_pub.publish(msg)

@@ -16,12 +16,48 @@ using namespace std::chrono_literals;
 
 
 class PlannerSupervisor : public rclcpp::Node {
+public:
+
+    enum CommandMode {
+        MANUAL_INVERSE = 0,
+        MANUAL_DIRECT = 1,
+        SEMI_AUTONOMOUS = 2,
+        AUTONOMOUS = 3
+    };
+
+    PlannerSupervisor(rclcpp::NodeOptions node_options) : Node("kinematics_trajectory_planner_supervisor", node_options)
+    {}
+
+    void config()
+    {
+        m_move_group = new moveit::planning_interface::MoveGroupInterface(shared_from_this(), m_planning_group);
+        m_planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
+        m_joint_model_group = m_move_group->getCurrentState()->getJointModelGroup(m_planning_group);
+
+        initCommunication();
+    }
+
+    void loop() {
+        rclcpp::Rate rate(30);
+        while (rclcpp::ok())
+        {
+            if (m_mode == CommandMode::MANUAL_INVERSE && sanityFeedbackOld()) {
+                m_move_group->stop();
+                //RCLCPP_ERROR(this->get_logger(), "Trajectory planner has died");
+            }
+            rate.sleep();
+        }
+    }
+
+
 private:
     const std::string                                                   m_planning_group = "kerby_arm_group";
     moveit::planning_interface::MoveGroupInterface*                     m_move_group;
     moveit::planning_interface::PlanningSceneInterface*                 m_planning_scene_interface;
     const moveit::core::JointModelGroup*                                m_joint_model_group;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_sanity_feedback_sub;
+    rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_mode_change_sub;
+    CommandMode                                                         m_mode = CommandMode::MANUAL_DIRECT;
     std::chrono::time_point<std::chrono::steady_clock>                  m_last_sanity_feedback_time = std::chrono::steady_clock::now();
 
     void sanityFeedbackCallback(const std_msgs::msg::Int8::SharedPtr msg) {
@@ -43,31 +79,8 @@ private:
         return false;
     }
 
-
-public:
-
-    PlannerSupervisor(rclcpp::NodeOptions node_options) : Node("kinematics_trajectory_planner_supervisor", node_options)
-    {}
-
-    void config()
-    {
-        m_move_group = new moveit::planning_interface::MoveGroupInterface(shared_from_this(), m_planning_group);
-        m_planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
-        m_joint_model_group = m_move_group->getCurrentState()->getJointModelGroup(m_planning_group);
-
-        initCommunication();
-    }
-
-    void loop() {
-        rclcpp::Rate rate(30);
-        while (rclcpp::ok())
-        {
-            if (sanityFeedbackOld()) {
-                m_move_group->stop();
-                //RCLCPP_ERROR(this->get_logger(), "Trajectory planner has died");
-            }
-            rate.sleep();
-        }
+    void modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg) {
+        m_mode = static_cast<PlannerSupervisor::CommandMode>(msg->data);
     }
 
 };

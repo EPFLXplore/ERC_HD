@@ -31,6 +31,7 @@ void Planner::initCommunication() {
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&Planner::modeChangeCallback, this, _1));
     m_man_inv_axis_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/fsm/man_inv_axis_cmd", 10, std::bind(&Planner::manualInverseAxisCallback, this, _1));
     m_named_target_sub = this->create_subscription<std_msgs::msg::String>("/HD/kinematics/named_joint_target", 10, std::bind(&Planner::namedTargetCallback, this, _1));
+    m_cs_maintenance_sub = this->create_subscription<std_msgs::msg::Int8>("/ROVER/Maintenance", 10, std::bind(&Planner::CSMaintenanceCallback, this, _1));
     m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/HD/kinematics/eef_pose", 10);
     m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/traj_feedback", 10);
     m_position_mode_switch_pub = this->create_publisher<std_msgs::msg::Int8>("/HD/kinematics/position_mode_switch", 10);
@@ -68,7 +69,7 @@ Planner::TrajectoryStatus Planner::reachNamedTarget(const std::string &target)
 }
 
 Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msgs::msg::Pose> &waypoints) {
-    computeCartesianPath(waypoints, 0.7);
+    computeCartesianPath(waypoints, 1.0);
 }
 
 Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msgs::msg::Pose> &waypoints, double velocity_scaling_factor) { 
@@ -78,33 +79,19 @@ Planner::TrajectoryStatus Planner::computeCartesianPath(std::vector<geometry_msg
     updateCurrentPosition();
     Planner::TrajectoryStatus status = Planner::TrajectoryStatus::SUCCESS;
 
-    // create cartesian path as in the tutorial
-    //moveit_msgs::msg::RobotTrajectory trajectory;
+    // compute trajectory
     moveit_msgs::msg::RobotTrajectory trajectory_slow;
-
-    //moveit_msgs::msg::RobotTrajectory trajectory;
     const double jump_threshold = 10.0; // TODO: check how to put a real value here
     const double eef_step = 0.01;
     double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory_slow);
 
-    // // add timing Note: you have to convert it to a RobotTrajectory Object (not message) and back
-    // trajectory_processing::IterativeParabolicTimeParameterization iptp(100, 0.05);
-    // robot_trajectory::RobotTrajectory r_trajec(m_move_group->getRobotModel(), m_planning_group);
-    // r_trajec.setRobotTrajectoryMsg(*m_move_group->getCurrentState(), trajectory_slow);
-    // //iptp.computeTimeStamps(r_trajec, 1, 1);
-    // //r_trajec.getRobotTrajectoryMsg(trajectory);
-    // iptp.computeTimeStamps(r_trajec, 0.1, 0.1);
-    // r_trajec.getRobotTrajectoryMsg(trajectory_slow);
-
+    // retime it to potentially slow it down
     robot_trajectory::RobotTrajectory rt(m_move_group->getCurrentState()->getRobotModel(), m_planning_group);
     rt.setRobotTrajectoryMsg(*m_move_group->getCurrentState(), trajectory_slow);
     trajectory_processing::IterativeParabolicTimeParameterization iptp;
     bool ItSuccess = iptp.computeTimeStamps(rt, velocity_scaling_factor);
     RCLCPP_INFO(this->get_logger(), "Computed time stamp %s", ItSuccess ? "SUCCEDED" : "FAILED");
     rt.getRobotTrajectoryMsg(trajectory_slow);
-    //m_plan.trajectory_ = trajectory_slow;
-
-    //double fraction = m_move_group->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory_slow);
 
     if (0 && fraction != 1.0)   // TODO
         status = Planner::TrajectoryStatus::PLANNING_ERROR;
@@ -139,7 +126,7 @@ Planner::TrajectoryStatus Planner::advanceAlongAxis() {
         geometry_msgs::msg::Pose waypoint = pose;
         waypoints.push_back(waypoint);
     }
-    Planner::TrajectoryStatus status = computeCartesianPath(waypoints);
+    Planner::TrajectoryStatus status = computeCartesianPath(waypoints, m_man_inv_velocity_scaling);
     m_executing_man_inv_cmd = false;
     return status;
 }
@@ -320,14 +307,16 @@ void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::Shared
 }
 
 bool equal(const std::vector<double> &v1, const std::vector<double> &v2) {
+    // TODO: establish wether to also compare speeds or not
     return v1[0] == v2[0] && v1[1]  == v2[1] && v1[2] == v2[2];
 }
 
 bool isZero(const std::vector<double> &v) {
-    return v[0] == 0 && v[1] == 0 && v[2] == 0;
+    return (v[0] == 0 && v[1] == 0 && v[2] == 0) || v[3] == 0;      // v[3] is the speed scaling
 }
 
 void Planner::manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
+    // last element of the message is the velocity scaling, the first three represent the axis
     if (!m_mode_transition_ready) return;
 
     if (isZero(msg->data)) {
@@ -349,6 +338,7 @@ void Planner::manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::
         }
         m_executing_man_inv_cmd = true;
         m_man_inv_axis = msg->data;
+        m_man_inv_velocity_scaling = msg->data[3];
         std::thread executor(&Planner::advanceAlongAxis, this);
         executor.detach();
         exec_locked = false;
@@ -387,9 +377,22 @@ void Planner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
 }
 
 void Planner::namedTargetCallback(const std_msgs::msg::String::SharedPtr msg) {
-    RCLCPP_INFO(this->get_logger(), "Received named target goal : " + msg->data);
+    RCLCPP_INFO(this->get_logger(), "Received named target goal : %s", msg->data);
     std::thread executor(&Planner::reachNamedTarget, this, msg->data);
     executor.detach();
+}
+
+void Planner::CSMaintenanceCallback(const std_msgs::msg::Int8::SharedPtr msg) {
+    static const int LAUNCH = 1;
+    static const int ABORT = 2;
+    static const int WAIT = 3;
+    static const int RESUME = 4;
+    switch(msg->data) {
+    case ABORT:
+        stop();
+        if (m_is_executing_path) sendTrajFeedback(Planner::TrajectoryStatus::EXECUTION_ERROR);
+        break;
+    }
 }
 
 void Planner::publishEEFPose()
