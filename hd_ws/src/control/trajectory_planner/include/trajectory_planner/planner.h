@@ -91,6 +91,8 @@ private:
 
     void jointTarget2Callback(const kerby_interfaces::msg::JointSpaceCmd::SharedPtr msg);
 
+    void jointTargetIntermediary(const kerby_interfaces::msg::JointSpaceCmd::SharedPtr msg);
+
     void manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
 
     void addObjectToWorld(const moveit_msgs::msg::CollisionObject::SharedPtr object);

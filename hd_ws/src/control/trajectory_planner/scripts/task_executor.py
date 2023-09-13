@@ -101,7 +101,7 @@ class Executor(Node):
     def sendGripperTorque(self, torque_scaling_factor):
         msg = MotorCommand(
             name = "Gripper",
-            mode = MotorCommand.TORQUE,
+            mode = 2,   # MotorCommand.TORQUE,
             command = torque_scaling_factor
         )
         self.motor_command_pub.publish(msg)
@@ -109,7 +109,7 @@ class Executor(Node):
     def sendRassorTorque(self, torque_scaling_factor):
         msg = MotorCommand(
             name = "Rassor",
-            mode = MotorCommand.TORQUE,
+            mode = 2,   # MotorCommand.TORQUE,
             command = torque_scaling_factor
         )
         self.motor_command_pub.publish(msg)

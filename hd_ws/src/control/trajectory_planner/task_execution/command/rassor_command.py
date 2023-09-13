@@ -21,6 +21,6 @@ class RassorCommand(Command):
         super().execute()
         start = time.time()
         rate = self.executor.create_rate(25)    # 25 hz rate in order to release ressources
-        while not time.time()-start < self.duration:
+        while time.time()-start < self.duration:
             self.executor.sendRassorTorque(self.getTorqueSign() * self.torque_scaling_factor)
             rate.sleep()

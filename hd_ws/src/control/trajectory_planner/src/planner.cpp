@@ -291,10 +291,10 @@ void Planner::loop()
 
 void Planner::updateCurrentPosition()
 {
-    moveit::core::RobotState current_state(*m_move_group->getCurrentState());
-    //const double *positions = current_state.getVariablePositions();
-    m_move_group->setStartState(current_state);
-    current_state.update(true);
+    // moveit::core::RobotState current_state(*m_move_group->getCurrentState());
+    // //const double *positions = current_state.getVariablePositions();
+    // m_move_group->setStartState(current_state);
+    // current_state.update(true);
 }
 
 bool Planner::manualInverseCommandOld() {
@@ -336,18 +336,22 @@ void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::Shared
 
 void Planner::jointTarget2Callback(const kerby_interfaces::msg::JointSpaceCmd::SharedPtr msg)
 {
-    RCLCPP_INFO(this->get_logger(), "Received joint goal");
+    RCLCPP_INFO(this->get_logger(), "Received joint goal ***");
+    std::thread executor(&Planner::jointTargetIntermediary, this, msg);
+    executor.detach();
+}
+
+void Planner::jointTargetIntermediary(const kerby_interfaces::msg::JointSpaceCmd::SharedPtr msg) {
     moveit::core::RobotStatePtr current_state = m_move_group->getCurrentState();
     std::vector<double> joint_group_positions = {0, 0, 0, 0, 0, 0, 0};
     current_state->copyJointGroupPositions(m_joint_model_group, joint_group_positions);
-    for (size_t i=0; i < joint_group_positions.size(); i++) {
+    for (size_t i=0; i < 7; i++) {
         if (msg->states.data[i] != msg->CURRENT_STATE) {
             if (msg->mode == msg->ABSOLUTE) joint_group_positions[i] = msg->states.data[i];
             else if (msg->mode == msg->RELATIVE) joint_group_positions[i] += msg->states.data[i];
         }
     }
-    std::thread executor(&Planner::reachTargetJointValues, this, joint_group_positions);
-    executor.detach();
+    reachTargetJointValues(joint_group_positions);
 }
 
 bool equal(const std::vector<double> &v1, const std::vector<double> &v2) {
