@@ -33,6 +33,7 @@ void Planner::initCommunication() {
     m_man_inv_axis_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/fsm/man_inv_axis_cmd", 10, std::bind(&Planner::manualInverseAxisCallback, this, _1));
     m_named_target_sub = this->create_subscription<std_msgs::msg::String>("/HD/kinematics/named_joint_target", 10, std::bind(&Planner::namedTargetCallback, this, _1));
     m_cs_maintenance_sub = this->create_subscription<std_msgs::msg::Int8>("/ROVER/Maintenance", 10, std::bind(&Planner::CSMaintenanceCallback, this, _1));
+    m_man_inv_frame_sub = this->create_subscription<std_msgs::msg::String>("ROVER/HD_inverse_frame", 10, std::bind(&Planner::manualInverseFrameCallback, this, _1));
     m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/HD/kinematics/eef_pose", 10);
     m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/traj_feedback", 10);
     m_position_mode_switch_pub = this->create_publisher<std_msgs::msg::Int8>("/HD/kinematics/position_mode_switch", 10);
@@ -418,12 +419,17 @@ void Planner::CSMaintenanceCallback(const std_msgs::msg::Int8::SharedPtr msg) {
     static const int RESUME = 4;
     static const int CANCEL = 5;
     switch(msg->data) {
-    case ABORT:
-    case CANCEL:
-        stop();
-        if (m_is_executing_path) sendTrajFeedback(Planner::TrajectoryStatus::EXECUTION_ERROR);
-        break;
+        case ABORT:
+        case CANCEL:
+            stop();
+            if (m_is_executing_path) sendTrajFeedback(Planner::TrajectoryStatus::EXECUTION_ERROR);
+            break;
     }
+}
+
+void Planner::manualInverseFrameCallback(const std_msgs::msg::String::SharedPtr msg) {
+    if (msg->data == "gripper") m_man_inv_gripper_frame = true;
+    if (msg->data == "rover") m_man_inv_gripper_frame = false;
 }
 
 void Planner::publishEEFPose()

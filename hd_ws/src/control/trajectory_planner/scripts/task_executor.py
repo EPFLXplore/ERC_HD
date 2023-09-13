@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 import rclpy
+import time
 from rclpy.node import Node
 from task_execution.task import PressButton, PlugVoltmeter
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal
-from hd_interfaces.msg import TargetInstruction
+from hd_interfaces.msg import TargetInstruction, ServoRequest, ServoResponse
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
 from motor_control_interfaces.msg import MotorCommand
@@ -26,18 +27,22 @@ class Executor(Node):
         self.create_subscription(Int8, "/ROVER/Maintenance", self.CSMaintenanceCallback, 10)
         self.create_subscription(UInt32, "/HD/vision/depth", pt.depth_callback, 10)
         self.create_subscription(Float64MultiArray, "/HD/kinematics/set_camera_transform", pc.set_camera_transform_position, 10)
+        self.create_subscription(ServoResponse, "/EL/servo_response", self.voltmeterResponseCallback, 10)
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
         self.add_object_pub = self.create_publisher(Object, "/HD/kinematics/add_object", 10)
         self.named_joint_target_pub = self.create_publisher(String, "/HD/kinematics/named_joint_target", 10)
         self.motor_command_pub = self.create_publisher(MotorCommand, "HD/kinematics/single_joint_cmd", 10)
         self.task_outcome_pub = self.create_publisher(Int8, "HD/kinematics/task_outcome", 10)
+        self.voltmeter_pub = self.create_publisher(ServoRequest, "EL/servo_req", 10)
 
         self.task = None    # usually a Task from task_execution.task but could also be just a Command
         self.new_task = False
 
         self.traj_feedback_update = False
         self.traj_feedback = False
+
+        self.received_voltmeter_response = False
 
     def loginfo(self, text):
         self.get_logger().info(text)
@@ -57,6 +62,16 @@ class Executor(Node):
         while not self.traj_feedback_update:
             rate.sleep()
         return self.getTrajFeedback()
+    
+    def waitForVoltmeterResponse(self, timeout=1, hz=10):
+        self.received_voltmeter_response = False
+        rate = self.create_rate(hz)
+        start = time.time()
+        while not self.received_voltmeter_response:
+            if time.time()-start > timeout:
+                return False
+            rate.sleep()
+        return True
 
     def hasTask(self):
         return self.task is not None
@@ -98,6 +113,10 @@ class Executor(Node):
         )
         self.motor_command_pub.publish(msg)
 
+    def sendVoltmeterCommand(self, angle):
+        msg = ServoRequest(destination_id=0, channel=4, angle=angle)
+        self.voltmeter_pub.publish(msg)
+
     def addObjectToWorld(self, shape: list, pose: Pose, name: str, type=Object.BOX, operation=Object.ADD):
         msg = Object()
         msg.type = type
@@ -116,6 +135,10 @@ class Executor(Node):
     def trajFeedbackUpdate(self, msg: Bool):
         self.traj_feedback_update = True
         self.traj_feedback = msg.data
+    
+    def voltmeterResponseCallback(self, msg: ServoResponse):
+        if msg.success:
+            self.received_voltmeter_response = True
 
     def taskAssignementCallback(self, msg: Task):
         """listens to /HD/fsm/task_assignment topic"""

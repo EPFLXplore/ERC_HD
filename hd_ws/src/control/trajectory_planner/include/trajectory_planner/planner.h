@@ -102,6 +102,8 @@ private:
 
     void CSMaintenanceCallback(const std_msgs::msg::Int8::SharedPtr msg);
 
+    void manualInverseFrameCallback(const std_msgs::msg::String::SharedPtr msg);
+
     void publishEEFPose();
 
     void publishSanityFeedback();
@@ -124,6 +126,7 @@ private:
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_man_inv_axis_sub;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr              m_named_target_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_cs_maintenance_sub;
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr              m_man_inv_frame_sub;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr              m_eef_pose_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   m_traj_feedback_pub;
     rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr                   m_position_mode_switch_pub;

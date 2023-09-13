@@ -28,6 +28,7 @@ from vision.utils import show, translation_rotation
 from vision.publishers.image_publisher import ImagePublisher
 from vision.publishers.target_pose_publisher import TargetPosePublisher
 from vision.publishers.target_publisher import TargetPublisher
+from vision.publishers.depth_publisher import DepthPublisher
 
 from vision.subscribers.fake_cs_subscriber import MinimalSubscriber
 import threading
@@ -49,6 +50,7 @@ class VisionNode(Node):
         self.image_publisher = ImagePublisher()
         self.target_pose_publisher = TargetPosePublisher()
         self.target_publisher = TargetPublisher()
+        self.depth_publisher = DepthPublisher()
 
         # Initialize subscribers
         self.subscriber = MinimalSubscriber()
@@ -109,6 +111,7 @@ class VisionNode(Node):
         self.task = self.subscriber.get_data()
         self.control_panel.set_target(self.task)
         self.image_publisher.publish(frame)
+        self.depth_publisher.publish(depth)
         # self.image_publisher._logger.info(
         #     f"current task: {self.task:2d}, target panel {self.control_panel.get_selected_panel().name}"
         # )
