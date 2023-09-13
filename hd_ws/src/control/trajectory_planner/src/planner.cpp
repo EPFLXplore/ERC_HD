@@ -27,6 +27,7 @@ void Planner::config()
 void Planner::initCommunication() {
     m_pose_target_sub = this->create_subscription<kerby_interfaces::msg::PoseGoal>("/HD/kinematics/pose_goal", 10, std::bind(&Planner::poseTargetCallback, this, _1));
     m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
+    m_joint_target2_sub = this->create_subscription<kerby_interfaces::msg::JointSpaceCmd>("/HD/kinematics/joint_goal2", 10, std::bind(&Planner::jointTarget2Callback, this, _1));
     m_add_object_sub = this->create_subscription<kerby_interfaces::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
     m_add_object2_sub = this->create_subscription<moveit_msgs::msg::CollisionObject>("/HD/kinematics/add_object2", 10, std::bind(&Planner::addObjectToWorld, this, _1));
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&Planner::modeChangeCallback, this, _1));
@@ -330,6 +331,22 @@ void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::Shared
 {
     RCLCPP_INFO(this->get_logger(), "Received joint goal");
     std::thread executor(&Planner::reachTargetJointValues, this, msg->data);
+    executor.detach();
+}
+
+void Planner::jointTarget2Callback(const kerby_interfaces::msg::JointSpaceCmd::SharedPtr msg)
+{
+    RCLCPP_INFO(this->get_logger(), "Received joint goal");
+    moveit::core::RobotStatePtr current_state = m_move_group->getCurrentState();
+    std::vector<double> joint_group_positions = {0, 0, 0, 0, 0, 0, 0};
+    current_state->copyJointGroupPositions(m_joint_model_group, joint_group_positions);
+    for (size_t i=0; i < joint_group_positions.size(); i++) {
+        if (msg->states.data[i] != msg->CURRENT_STATE) {
+            if (msg->mode == msg->ABSOLUTE) joint_group_positions[i] = msg->states.data[i];
+            else if (msg->mode == msg->RELATIVE) joint_group_positions[i] += msg->states.data[i];
+        }
+    }
+    std::thread executor(&Planner::reachTargetJointValues, this, joint_group_positions);
     executor.detach();
 }
 

@@ -3,10 +3,10 @@
 import rclpy
 import time
 from rclpy.node import Node
-from task_execution.task import PressButton, PlugVoltmeter
+from task_execution.task import PressButton, PlugVoltmeter, RassorSampling, RockSampling, BarMagnet
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
-from kerby_interfaces.msg import Task, Object, PoseGoal
+from kerby_interfaces.msg import Task, Object, PoseGoal, JointSpaceCmd
 from hd_interfaces.msg import TargetInstruction, ServoRequest, ServoResponse
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
@@ -35,6 +35,7 @@ class Executor(Node):
         self.motor_command_pub = self.create_publisher(MotorCommand, "HD/kinematics/single_joint_cmd", 10)
         self.task_outcome_pub = self.create_publisher(Int8, "HD/kinematics/task_outcome", 10)
         self.voltmeter_pub = self.create_publisher(ServoRequest, "EL/servo_req", 10)
+        self.joint_space_cmd_pub = self.create_publisher(JointSpaceCmd, "HD/kinematics/joint_goal2", 10)
 
         self.task = None    # usually a Task from task_execution.task but could also be just a Command
         self.new_task = False
@@ -117,6 +118,13 @@ class Executor(Node):
         msg = ServoRequest(destination_id=0, channel=4, angle=angle)
         self.voltmeter_pub.publish(msg)
 
+    def sendJointSpaceCmd(self, mode, states: list):
+        msg = JointSpaceCmd(
+            mode=mode,
+            states=Float64MultiArray(data=states)
+        )
+        self.joint_space_cmd_pub.publish(msg)
+
     def addObjectToWorld(self, shape: list, pose: Pose, name: str, type=Object.BOX, operation=Object.ADD):
         msg = Object()
         msg.type = type
@@ -155,6 +163,15 @@ class Executor(Node):
             self.loginfo("Named target task")
             self.task = task_execution.task.Task(self)
             self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))
+        elif msg.type == Task.PICK_ROCK :
+            self.loginfo("Rock smpling task")
+            self.task = RockSampling(self)
+        elif msg.type == Task.RASSOR_SAMPLE:
+            self.loginfo("Rassor sample task")
+            self.task = RassorSampling(self)
+        elif msg.type == Task.ETHERNET_CABLE:
+            self.loginfo("Plug ethernet task")
+            # TODO
         
         self.new_task = True
     

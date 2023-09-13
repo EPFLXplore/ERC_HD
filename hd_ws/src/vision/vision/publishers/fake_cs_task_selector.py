@@ -29,6 +29,7 @@ class FakeCSTaskSelector(Node):
             task = input("Enter task number: ")
             try:
                 task = int(task)
+                break       # to remove this break
             except ValueError:
                 print(
                     f"The task must be a number from the following list: {self.accepted_tasks}"

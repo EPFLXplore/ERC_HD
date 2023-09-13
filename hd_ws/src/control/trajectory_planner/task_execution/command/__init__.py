@@ -5,3 +5,5 @@ from .straight_move_command import *
 from .named_joint_target_command import *
 from .gripper_command import *
 from .voltmeter_command import *
+from .joint_space_command import *
+from .rassor_command import *

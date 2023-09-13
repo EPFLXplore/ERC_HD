@@ -241,7 +241,7 @@ class GamePad(Node):
             if event.code == self.config.joint_event_codes[3]:
                 self.man_inv_data[5] = 1 if (event.value - self.config.joint_event_offsets[3]) / self.config.joint_event_amplitudes[3] > 0.5 else 0
             if event.code == self.config.joint_event_codes[4]:
-                x = (event.value - self.config.joint_event_offsets[4]) / self.config.joint_event_offsets[4]
+                x = (event.value - self.config.joint_event_offsets[4]) / self.config.joint_event_amplitudes[4]
                 self.man_inv_velocity_scaling = 1.0 - abs(x)
     
     def handle_binary_event_direct_mode(self, event):

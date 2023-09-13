@@ -60,9 +60,8 @@ class FSM(Node):
         self.create_subscription(Float32MultiArray, "/CS/HD_gamepad", self.manual_cmd_callback, 10)
         self.create_subscription(Float32MultiArray, "/ROVER/HD_man_inv_axis", self.manual_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
-        #self.create_subscription(Int8, "/ROVER/element_id", self.task_cmd_callback, 10)
         self.create_subscription(Task, "/ROVER/semi_auto_task", self.task_cmd_callback, 10)
-        #self.create_subscription(Int8, "/ROVER/HD_element_id", self.task_cmd_callback2, 10)
+        self.create_subscription(Int8, "/ROVER/HD_element_id", self.task_cmd_callback2, 10)
 
     def mode_callback(self, msg: Int8):
         """listens to HD_mode topic published by CS"""
@@ -80,17 +79,29 @@ class FSM(Node):
             self.manual_inverse_velocity_scaling = msg.data[0]
             self.received_manual_inverse_cmd_at = time.time()
 
-    # def task_cmd_callback(self, msg: Int8):
-    #     if self.mode != self.SEMI_AUTONOMOUS: return
-    #     self.semi_autonomous_command_id = msg.data
-
     def task_cmd_callback(self, msg: Task):
         self.semi_autonomous_command = msg
-    
+
     def task_cmd_callback2(self, msg: Int8):        # TODO
+        task_type = 0   # random default
+        task_str = ""
+        x = msg.data
+        if 100 <= x <= 119 or x == 10:
+            task_type = Task.BUTTON
+        elif x == 20:
+            task_type = Task.PLUG_VOLTMETER
+        elif x == 30:
+            task_type = Task.ETHERNET_CABLE
+        elif x == 40:
+            task_type = Task.PICK_ROCK
+        elif x == 41:
+            task_type = Task.RASSOR_SAMPLE
+        elif 50 <= x <= 55:
+            task_type = Task.NAMED_TARGET
+            task_str = ["home", "optimal_view", "zero", "face_ground", "science_drop", "optimal_view_high"][x-50]
         self.semi_autonomous_command = Task(
-            type = Task.BUTTON,
-            id = 0
+            type = task_type,
+            str_slot = task_str
         )
 
     def send_task_cmd(self):

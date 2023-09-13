@@ -57,7 +57,7 @@ private:
     const moveit::core::JointModelGroup*                                m_joint_model_group;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_sanity_feedback_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_mode_change_sub;
-    CommandMode                                                         m_mode = CommandMode::MANUAL_DIRECT;
+    CommandMode                                                         m_mode = CommandMode::MANUAL_INVERSE;
     std::chrono::time_point<std::chrono::steady_clock>                  m_last_sanity_feedback_time = std::chrono::steady_clock::now();
 
     void sanityFeedbackCallback(const std_msgs::msg::Int8::SharedPtr msg) {

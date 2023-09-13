@@ -19,6 +19,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Object.msg"
   "msg/Task.msg"
   "msg/PoseGoal.msg"
+  "msg/JointSpaceCmd.msg"
   "srv/JointGoal.srv"
   "srv/PoseGoal.srv"
   DEPENDENCIES geometry_msgs std_msgs
