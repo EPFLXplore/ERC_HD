@@ -7,6 +7,7 @@ import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 from collections.abc import Callable
 from task_execution.command import *
+from kerby_interfaces.msg import Object
 
 
 class CommandWrapper:
@@ -155,4 +156,13 @@ class Task:
                                          cmd.setShape(list(object_box)),
                                          cmd.setName(object_name)),
             description=f"add {object_name} to world"
+        )
+
+    def constructRemoveObjectsCommands(self, object_name="object", extended=True):
+        if extended:
+            self.addCommand(
+                AddObjectCommand(name="artag", operation=Object.REMOVE)
+            )
+        self.addCommand(
+            AddObjectCommand(name=object_name, operation=Object.REMOVE)
         )

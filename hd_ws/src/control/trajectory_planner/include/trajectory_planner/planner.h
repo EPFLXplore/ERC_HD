@@ -20,6 +20,8 @@
 #include "std_msgs/msg/int8.hpp"
 #include "std_msgs/msg/string.hpp"
 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
 
 using std::placeholders::_1;
 
@@ -88,6 +90,10 @@ private:
 
     void manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
 
+    void addObjectToWorld(const moveit_msgs::msg::CollisionObject::SharedPtr object);
+
+    void removeFromWorld(std::string &name);
+
     void addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg);
 
     void modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg);
@@ -113,6 +119,7 @@ private:
     rclcpp::Subscription<kerby_interfaces::msg::PoseGoal>::SharedPtr    m_pose_target_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_joint_target_sub;
     rclcpp::Subscription<kerby_interfaces::msg::Object>::SharedPtr      m_add_object_sub;
+    rclcpp::Subscription<moveit_msgs::msg::CollisionObject>::SharedPtr   m_add_object2_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                m_mode_change_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr   m_man_inv_axis_sub;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr              m_named_target_sub;
@@ -128,4 +135,5 @@ private:
     double                                                              m_man_inv_velocity_scaling = 0.0;
     bool                                                                m_mode_transition_ready = true;
     bool                                                                m_is_executing_path = false;
+    bool                                                                m_man_inv_gripper_frame = true;
 };

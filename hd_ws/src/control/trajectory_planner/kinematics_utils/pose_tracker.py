@@ -1,5 +1,6 @@
 from geometry_msgs.msg import Pose
 from hd_interfaces.msg import TargetInstruction
+from std_msgs.msg import UInt32
 import kinematics_utils.quaternion_arithmetic as qa
 import math
 import copy
@@ -10,6 +11,7 @@ END_EFFECTOR_POSE = Pose()
 DETECTED_OBJECTS_POSE = []
 DETECTED_OBJECTS_LOCKED = False
 DETECTION_UPDATED = False
+DEPTH = 0       # [m]
 
 
 class DetectedObject:
@@ -27,6 +29,12 @@ def eef_pose_callback(msg):
     """listens to /arm_control/end_effector_pose topic and updates the end effector pose"""
     global END_EFFECTOR_POSE
     END_EFFECTOR_POSE = msg
+
+
+def depth_callback(msg: UInt32):
+    global DEPTH
+    mm_to_m = 0.001
+    DEPTH = msg.data * mm_to_m
 
 
 def detected_object_pose_callback(msg: TargetInstruction):

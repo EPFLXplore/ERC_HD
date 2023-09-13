@@ -42,7 +42,16 @@
         <joint name="joint6" value="0"/>
         <joint name="finger1" value="0"/>
     </group_state>
-    <group_state name="optimal_view" group="kerby_arm_group">
+    <group_state name="home" group="kerby_arm_group">
+        <joint name="joint1" value="0"/>
+        <joint name="joint2" value="0.733038"/>
+        <joint name="joint3" value="-0.733038"/>
+        <joint name="joint4" value="0"/>
+        <joint name="joint5" value="1.5708"/>
+        <joint name="joint6" value="0"/>
+        <joint name="finger1" value="0"/>
+    </group_state>
+    <group_state name="optimal_view_high" group="kerby_arm_group">
         <joint name="joint1" value="0"/>
         <joint name="joint2" value="0.733038"/>
         <joint name="joint3" value="-0.733038"/>
@@ -51,12 +60,30 @@
         <joint name="joint6" value="0"/>
         <joint name="finger1" value="0"/>
     </group_state>
-    <group_state name="home" group="kerby_arm_group">
+    <group_state name="optimal_view" group="kerby_arm_group">
         <joint name="joint1" value="0"/>
-        <joint name="joint2" value="0.733038"/>
-        <joint name="joint3" value="-0.733038"/>
+        <joint name="joint2" value="0.2967"/>
+        <joint name="joint3" value="-0.785398"/>
         <joint name="joint4" value="0"/>
-        <joint name="joint5" value="3.14159"/>
+        <joint name="joint5" value="-0.48869"/>
+        <joint name="joint6" value="0"/>
+        <joint name="finger1" value="0"/>
+    </group_state>
+    <group_state name="science_drop" group="kerby_arm_group">
+        <joint name="joint1" value="3.14159265"/>
+        <joint name="joint2" value="0.2967"/>
+        <joint name="joint3" value="-0.785398"/>
+        <joint name="joint4" value="0"/>
+        <joint name="joint5" value="-0.48869"/>
+        <joint name="joint6" value="0"/>
+        <joint name="finger1" value="0"/>
+    </group_state>
+    <group_state name="face_ground" group="kerby_arm_group">
+        <joint name="joint1" value="0"/>
+        <joint name="joint2" value="-0.9250245"/>
+        <joint name="joint3" value="-0.2268928"/>
+        <joint name="joint4" value="0"/>
+        <joint name="joint5" value="0.436332313"/>
         <joint name="joint6" value="0"/>
         <joint name="finger1" value="0"/>
     </group_state>

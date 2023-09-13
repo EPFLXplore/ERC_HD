@@ -1,5 +1,6 @@
 import kinematics_utils.quaternion_arithmetic as qa
 from geometry_msgs.msg import Pose, Point
+from std_msgs.msg import Float64MultiArray
 import kinematics_utils.pose_tracker as pt
 from math import pi
 
@@ -85,3 +86,9 @@ def global_revert(pose):
     pose = revert_from_vision(pose)
     pose = revert_to_eef(pose)
     return pose
+
+
+# setters
+def set_camera_transform_position(position: Float64MultiArray):
+    data = position.data
+    CAMERA_TRANSFORM.position = Point(x=data[0], y=data[1], z=data[2])

@@ -1,7 +1,7 @@
 from task_execution.command.command import *
 
 
-class GripperCommand(Command):
+class RassorCommand(Command):
     OPEN = 0
     CLOSE = 1
 
@@ -21,5 +21,5 @@ class GripperCommand(Command):
         start = time.time()
         rate = self.executor.create_rate(25)    # 25 hz rate in order to release ressources
         while not time.time()-start < self.duration:
-            self.executor.sendGripperTorque(self.getTorqueSign() * self.torque_scaling_factor)
+            self.executor.sendRassorTorque(self.getTorqueSign() * self.torque_scaling_factor)
             rate.sleep()

@@ -7,8 +7,10 @@ class PlugVoltmeter(Task):
         self.artag_pose = None
         self.scan_distance = 0.13
         self.press_distance = 0.2
-        self.plug_distance = 0.015        # distance between end effector and control panel when the voltemeter is plugged
-        self.pause_time = 0.5
+        # TODO: following two measures
+        self.plug_distance = 0.03        # distance between end effector and control panel when the voltemeter is plugged touching the plug but isn't plugged
+        self.plug_depth = 0.02              # depth of the plug
+        self.pause_time = 0.2
 
     @property
     def plug_pose(self):
@@ -69,9 +71,16 @@ class PlugVoltmeter(Task):
                                          cmd.setAxisFromOrientation(self.plug_pose.orientation, reverse=True)),
             description = "click on button"
         )
+        # TODO: wiggle around
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.1),
-            pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
+            pre_operation = lambda cmd: (cmd.setDistance(self.plug_depth),
+                                         cmd.setAxisFromOrientation(self.plug_pose.orientation, reverse=True)),
+            description = "move back from button"
+        )
+        self.addCommand(
+            StraightMoveCommand(velocity_scaling_factor=0.1),
+            pre_operation = lambda cmd: (cmd.setDistance(self.press_distance + self.plug_depth),
                                          cmd.setAxisFromOrientation(self.plug_pose.orientation)),
             description = "move back from button"
         )

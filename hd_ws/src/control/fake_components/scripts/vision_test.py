@@ -59,7 +59,8 @@ def end_effector_callback(msg):
 def get_btn_pose():
     obj = Object()
     obj.pose = qa.compose_poses(end_effector_pose, artag_pose)
-    obj.type = "box"
+    obj.type = obj.BOX
+    obj.operation = obj.ADD
     obj.name = "artag"
     obj.shape = Float64MultiArray()
     obj.shape.data = [0.2, 0.1, 0.0001]
@@ -68,7 +69,8 @@ def get_btn_pose():
     obj3.shape = Float64MultiArray()
     obj3.shape.data = [0.01, 0.01, 0.1]
     obj3.pose = copy.deepcopy(obj.pose)
-    obj3.type = "box"
+    obj.type = obj.BOX
+    obj.operation = obj.ADD
     obj3.name = "artag_axis"
     axis = qa.point_image([0.0, 0.0, 1.0], obj.pose.orientation)
     obj3.pose.position = qa.make_point(qa.add(obj3.pose.position, qa.mul(0.05, axis)))
@@ -85,7 +87,8 @@ def get_btn_pose():
 
     obj2 = Object()
     obj2.pose = qa.compose_poses(end_effector_pose, btn_pose)
-    obj2.type = "box"
+    obj.type = obj.BOX
+    obj.operation = obj.ADD
     obj2.name = "btn"
     obj2.shape = Float64MultiArray()
     obj2.shape.data = [0.2, 0.1, 0.0001]
@@ -94,7 +97,8 @@ def get_btn_pose():
     obj4.shape = Float64MultiArray()
     obj4.shape.data = [0.01, 0.01, 0.1]
     obj4.pose = copy.deepcopy(obj2.pose)
-    obj4.type = "box"
+    obj.type = obj.BOX
+    obj.operation = obj.ADD
     obj4.name = "btn_axis"
     axis = qa.point_image([0.0, 0.0, 1.0], obj2.pose.orientation)
     obj4.pose.position = qa.make_point(qa.add(obj4.pose.position, qa.mul(0.05, axis)))

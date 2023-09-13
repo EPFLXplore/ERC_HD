@@ -36,7 +36,9 @@ class PressButton(Task):
     def constructCommandChain(self):
         super().constructCommandChain()
 
-        self.constructStandardDetectionCommands("button", extended=False)
+        extended = False
+        
+        self.constructStandardDetectionCommands("button", extended=extended)
 
         self.addCommand(
             PoseCommand(self.executor),
@@ -58,3 +60,4 @@ class PressButton(Task):
         )
         
         # TODO: maybe remove the objects added to the world
+        self.constructRemoveObjectsCommands("button", extended=extended)

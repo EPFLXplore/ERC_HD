@@ -66,6 +66,8 @@ private:
 
     void initCommunication() {
         m_sanity_feedback_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/kinematics/planner_sanity_feedback", 10, std::bind(&PlannerSupervisor::sanityFeedbackCallback, this, _1));
+        m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&PlannerSupervisor::modeChangeCallback, this, _1));
+
     }
 
     bool sanityFeedbackOld() {

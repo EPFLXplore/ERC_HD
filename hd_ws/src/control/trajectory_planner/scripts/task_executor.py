@@ -8,7 +8,7 @@ from task_execution.command import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal
 from hd_interfaces.msg import TargetInstruction
 from geometry_msgs.msg import Pose
-from std_msgs.msg import Bool, Float64MultiArray, Int8, String
+from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
 from motor_control_interfaces.msg import MotorCommand
 import threading
 import kinematics_utils.pose_tracker as pt
@@ -24,6 +24,8 @@ class Executor(Node):
         self.create_subscription(TargetInstruction, "HD/vision/target_pose", pt.detected_object_pose_callback, 10)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
         self.create_subscription(Int8, "/ROVER/Maintenance", self.CSMaintenanceCallback, 10)
+        self.create_subscription(UInt32, "/HD/vision/depth", pt.depth_callback, 10)
+        self.create_subscription(Float64MultiArray, "/HD/kinematics/set_camera_transform", pc.set_camera_transform_position, 10)
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
         self.add_object_pub = self.create_publisher(Object, "/HD/kinematics/add_object", 10)
@@ -87,10 +89,19 @@ class Executor(Node):
             command = torque_scaling_factor
         )
         self.motor_command_pub.publish(msg)
+    
+    def sendRassorTorque(self, torque_scaling_factor):
+        msg = MotorCommand(
+            name = "Rassor",
+            mode = MotorCommand.TORQUE,
+            command = torque_scaling_factor
+        )
+        self.motor_command_pub.publish(msg)
 
-    def addObjectToWorld(self, shape: list, pose: Pose, name: str, type="box"):
+    def addObjectToWorld(self, shape: list, pose: Pose, name: str, type=Object.BOX, operation=Object.ADD):
         msg = Object()
         msg.type = type
+        msg.operation = operation
         msg.name = name
         msg.pose = pc.revert_from_vision(pose)
         shape_ = Float64MultiArray()
@@ -129,7 +140,8 @@ class Executor(Node):
         ABORT = 2
         WAIT = 3
         RESUME = 4
-        if msg.data == ABORT:
+        CANCEL = 5
+        if msg.data == CANCEL or msg.data == ABORT:
             if self.hasTask():
                 self.abortTask()
 

@@ -28,6 +28,7 @@ void Planner::initCommunication() {
     m_pose_target_sub = this->create_subscription<kerby_interfaces::msg::PoseGoal>("/HD/kinematics/pose_goal", 10, std::bind(&Planner::poseTargetCallback, this, _1));
     m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
     m_add_object_sub = this->create_subscription<kerby_interfaces::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
+    m_add_object2_sub = this->create_subscription<moveit_msgs::msg::CollisionObject>("/HD/kinematics/add_object2", 10, std::bind(&Planner::addObjectToWorld, this, _1));
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&Planner::modeChangeCallback, this, _1));
     m_man_inv_axis_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/fsm/man_inv_axis_cmd", 10, std::bind(&Planner::manualInverseAxisCallback, this, _1));
     m_named_target_sub = this->create_subscription<std_msgs::msg::String>("/HD/kinematics/named_joint_target", 10, std::bind(&Planner::namedTargetCallback, this, _1));
@@ -118,7 +119,9 @@ Planner::TrajectoryStatus Planner::advanceAlongAxis() {
     step.y = m_man_inv_axis[1]*step_size;
     step.z = m_man_inv_axis[2]*step_size;
     geometry_msgs::msg::Pose pose = m_move_group->getCurrentPose().pose;
-    step = pointImage(step, pose.orientation);
+    if (m_man_inv_gripper_frame) {
+        step = pointImage(step, pose.orientation);
+    }
     for (int i = 1; i <= step_count; i++) {
         pose.position.x += step.x;
         pose.position.y += step.y;
@@ -231,7 +234,30 @@ void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msg
     std::vector<moveit_msgs::msg::CollisionObject> collision_objects;
     collision_objects.push_back(collision_object);
 
-    RCLCPP_INFO(this->get_logger(), "Add an object into the world");
+    RCLCPP_INFO(this->get_logger(), "Add object '%s' into the world", name);
+    m_planning_scene_interface->addCollisionObjects(collision_objects);
+}
+
+void Planner::addObjectToWorld(const moveit_msgs::msg::CollisionObject::SharedPtr object) {
+    // // std::vector<moveit_msgs::msg::CollisionObject> collision_objects;
+    // // collision_objects.push_back(object);
+    // object->header.frame_id = m_move_group->getPlanningFrame();
+
+    // RCLCPP_INFO(this->get_logger(), "Add object '%s' into the world", object->id);
+    // m_planning_scene_interface->addCollisionObjects(object);
+}
+
+void Planner::removeFromWorld(std::string &name) {
+    moveit_msgs::msg::CollisionObject collision_object;
+    collision_object.header.frame_id = m_move_group->getPlanningFrame();
+
+    collision_object.id = name;
+    collision_object.operation = collision_object.REMOVE;
+
+    std::vector<moveit_msgs::msg::CollisionObject> collision_objects;
+    collision_objects.push_back(collision_object);
+
+    RCLCPP_INFO(this->get_logger(), "Remove object '%s' from world", name);
     m_planning_scene_interface->addCollisionObjects(collision_objects);
 }
 
@@ -361,8 +387,11 @@ void Planner::manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::
 void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg)
 {
     RCLCPP_INFO(this->get_logger(), "Received new object");
-    if (msg->type == "box")
-        addBoxToWorld(msg->shape.data, msg->pose, msg->name);
+    if (msg->operation == msg->REMOVE) {
+        removeFromWorld(msg->name);
+        return;
+    }
+    if (msg->type == msg->BOX) addBoxToWorld(msg->shape.data, msg->pose, msg->name);
 }
 
 void Planner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
@@ -387,8 +416,10 @@ void Planner::CSMaintenanceCallback(const std_msgs::msg::Int8::SharedPtr msg) {
     static const int ABORT = 2;
     static const int WAIT = 3;
     static const int RESUME = 4;
+    static const int CANCEL = 5;
     switch(msg->data) {
     case ABORT:
+    case CANCEL:
         stop();
         if (m_is_executing_path) sendTrajFeedback(Planner::TrajectoryStatus::EXECUTION_ERROR);
         break;
