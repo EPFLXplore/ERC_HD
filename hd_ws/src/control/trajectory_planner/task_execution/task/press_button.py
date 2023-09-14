@@ -7,7 +7,7 @@ class PressButton(Task):
         self.btn_id = btn_id
         self.object_pose = pose
         self.artag_pose = None
-        self.press_distance = 0.2
+        self.press_distance = 0.15
         self.scan_distance = 0.13        # from end effector in the z (forward if gripper is standardly oriented) coordinate
         self.pause_time = 0.2
 
