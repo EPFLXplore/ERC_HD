@@ -113,8 +113,8 @@ Planner::TrajectoryStatus Planner::reachTargetPoseCartesian(const geometry_msgs:
 
 Planner::TrajectoryStatus Planner::advanceAlongAxis() {
     std::vector<geometry_msgs::msg::Pose> waypoints;
-    double step_size = 0.05;     // [m]
-    double limit = 0.05 + m_man_inv_velocity_scaling * 15;      // 2.0   // [m]
+    double step_size = 0.03;     // [m]
+    double limit = 0.03 + m_man_inv_velocity_scaling * 0.10;      // 2.0   // [m]
     int step_count = std::ceil(limit/step_size);
     geometry_msgs::msg::Point step;
     step.x = m_man_inv_axis[0]*step_size;

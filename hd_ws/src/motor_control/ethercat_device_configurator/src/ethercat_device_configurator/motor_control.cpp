@@ -47,8 +47,8 @@ static const double INF = 1e10;
 static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J5", "J6", "Gripper", "Rassor"};
 static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 0.5, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2};
-static const std::vector<double> POS_LOWER_LIMITS = {-PI, -PI, -PI/4, -PI, -PI/2, -PI, -INF};
-static const std::vector<double> POS_UPPER_LIMITS = {PI, PI/2, PI/4, PI, PI/2, PI, INF};
+static const std::vector<double> POS_LOWER_LIMITS = {-PI, -PI, -PI/4, -2*PI, -PI/2, -PI, -INF};
+static const std::vector<double> POS_UPPER_LIMITS = {PI, PI/2, PI/4, 2*PI, PI/2, PI, INF};
 
 //static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
 static const std::vector<double> DIRECTIONS = {1, 1, 1, -1, 1, 1, 1, 1};   // to match directions of MoveIt
@@ -111,7 +111,11 @@ public:
         case maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode:
             command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
             if (should_scan_stationary_states[motor_index]) {
-                stationary_positions[motor_index] = get_position(motor_index);
+                double pos = get_position(motor_index);
+                if (weird(motor_index, pos)) {
+                    return;
+            }
+                stationary_positions[motor_index] = pos;
             }
             command.command.setTargetPosition(stationary_positions[motor_index] * DIRECTIONS[motor_index]);
             break;
@@ -157,6 +161,10 @@ private:
         }
     }
 
+    static bool weird(size_t motor_index, double pos) {
+        return (pos > POS_UPPER_LIMITS[motor_index] * 1.5 || pos < POS_LOWER_LIMITS[motor_index] * 1.5);
+    }
+
     static void position_direct_command(size_t motor_index, double velocity_scaling_factor) {
         // velocity_scaling_factor in [-1, 1]
         auto now = std::chrono::steady_clock::now();
@@ -175,7 +183,11 @@ private:
             command.command.setTargetPosition(position_commands[motor_index] * DIRECTIONS[motor_index]);
         }
         else {  // scanning
-            position_commands[motor_index] = get_position(motor_index);
+            double pos = get_position(motor_index);
+            if (weird(motor_index, pos)) {
+                return;
+            }
+            position_commands[motor_index] = pos;
         }
         last_cmd_times[motor_index] = now;
         command.command_time = now;
