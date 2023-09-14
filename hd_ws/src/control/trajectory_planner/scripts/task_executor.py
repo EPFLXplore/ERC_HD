@@ -3,7 +3,7 @@
 import rclpy
 import time
 from rclpy.node import Node
-from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, RockSampling, BarMagnetApproach
+from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, RockSampling, BarMagnetApproach, EthernetApproach, AlignPanel
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal, JointSpaceCmd
@@ -179,7 +179,10 @@ class Executor(Node):
             self.task = RassorSampling(self)
         elif msg.type == Task.ETHERNET_CABLE:
             self.loginfo("Plug ethernet task")
-            # TODO
+            self.task = EthernetApproach(self)
+        elif msg.type == Task.ALIGN_PANEL:
+            self.loginfo("Align panel")
+            self.task = AlignPanel(self)
         else:
             self.loginfo("Unknown task")
             return

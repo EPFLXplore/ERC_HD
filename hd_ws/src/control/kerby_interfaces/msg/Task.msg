@@ -8,6 +8,7 @@ uint8               ETHERNET_CABLE = 5
 uint8               PICK_ROCK = 6
 uint8               RASSOR_SAMPLE = 7
 uint8               METAL_BAR_APPROACH = 8
+uint8               ALIGN_PANEL = 9
 
 # message variables
 uint8               type

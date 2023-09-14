@@ -33,6 +33,7 @@ class Task:
         self.pause_time = 0
         self.artag_pose = None
         self.object_pose = None
+        self.scan_distance = 0.13
 
     def constructCommandChain(self):
         """constructs the chain of the commands that constitute the task"""
@@ -130,6 +131,16 @@ class Task:
                 self.object_pose = obj.object_pose
                 self.artag_pose = obj.artag_pose
 
+    def getScanPosition(self):
+        # give a position where the camera would be aligned with the ARtag
+        # for now supposing camera has the same orientation as the end effector
+        camera_pos = pc.CAMERA_TRANSFORM.position
+        p = [camera_pos.y, -camera_pos.x, self.scan_distance]   # not sure why I need to exchange x and y here (x needs to be negated but I thing y doesn't although this hasn't been tested due to our y being 0)
+        return qa.point_object_image(p, self.artag_pose)
+    
+    def getScanOrientation(self):
+        return qa.turn_around(self.artag_pose.orientation)
+    
     def constructStandardDetectionCommands(self, object_name="object", object_box=(0.2, 0.1, 0.0001), extended=True):
         """an example of a series of commands for accurate detection of ARtag and associated object"""
         if extended:

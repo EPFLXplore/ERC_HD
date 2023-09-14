@@ -102,7 +102,9 @@ class FSM(Node):
             task_type = Task.RASSOR_SAMPLE
         elif 50 <= x <= 55:
             task_type = Task.NAMED_TARGET
-            task_str = ["home", "optimal_view", "zero", "face_ground", "science_drop", "optimal_view_high"][x-50]
+            task_str = ["home", "optimal_view", "zero", "face_ground", "science_drop", "back"][x-50]
+        elif 70 <= x <= 72:
+            task_type = Task.ALIGN_PANEL
         self.get_logger().info("AAAAAAAAAAAAAAAAAAA :   " + str(x) + "  ;  " + str(task_type))
         self.semi_autonomous_command = Task(
             type = task_type,
