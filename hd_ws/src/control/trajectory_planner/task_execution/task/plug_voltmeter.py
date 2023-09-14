@@ -45,8 +45,8 @@ class PlugVoltmeterAlign(Task):
                                                     orientation=self.getPressOrientation()),
             description = "go in front of button"
         )
-        self.constructApproachCommands()
-        self.constructVoltmeterRetractionCommands()
+        # self.constructApproachCommands()
+        # self.constructVoltmeterRetractionCommands()
 
         # TODO: maybe remove the objects added to the world
 
@@ -148,20 +148,20 @@ class PlugVoltmeterApproach(Task):
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.1),
             pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
-                                         cmd.setAxisFromOrientation(self.plug_pose.orientation, reverse=True)),
+                                         cmd.setAxisFromOrientation(pc.correct_eef_pose)),
             description = "click on button"
         )
         # TODO: wiggle around
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.1),
             pre_operation = lambda cmd: (cmd.setDistance(self.plug_depth),
-                                         cmd.setAxisFromOrientation(self.plug_pose.orientation, reverse=True)),
+                                         cmd.setAxisFromOrientation(pc.correct_eef_pose)),
             description = "move back from button"
         )
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.1),
             pre_operation = lambda cmd: (cmd.setDistance(self.press_distance + self.plug_depth),
-                                         cmd.setAxisFromOrientation(self.plug_pose.orientation)),
+                                         cmd.setAxisFromOrientation(pc.correct_eef_pose, reverse=True)),
             description = "move back from button"
         )
 

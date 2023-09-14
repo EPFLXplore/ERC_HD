@@ -86,12 +86,14 @@ class FSM(Node):
         task_type = 0   # random default
         task_str = ""
         x = msg.data
-        if 100 <= x <= 119 or x == 10:
+        if 100 <= x <= 119 or x == 10 or x ==13:
             task_type = Task.BUTTON
         elif x == 20:
             task_type = Task.PLUG_VOLTMETER_ALIGN
         elif x == 21:
             task_type = Task.PLUG_VOLTMETER_APPROACH
+        elif x == 11:
+            task_type = Task.METAL_BAR_APPROACH
         elif x == 30:
             task_type = Task.ETHERNET_CABLE
         elif x == 40:
@@ -101,7 +103,7 @@ class FSM(Node):
         elif 50 <= x <= 55:
             task_type = Task.NAMED_TARGET
             task_str = ["home", "optimal_view", "zero", "face_ground", "science_drop", "optimal_view_high"][x-50]
-        self.get_logger().info("AAAAAAAAAAAAAAAAAAA :   " + str(x))
+        self.get_logger().info("AAAAAAAAAAAAAAAAAAA :   " + str(x) + "  ;  " + str(task_type))
         self.semi_autonomous_command = Task(
             type = task_type,
             str_slot = task_str

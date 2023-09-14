@@ -115,6 +115,12 @@ class Task:
         """stops all movement"""
         self.aborted = True
 
+    def getObjectPose(self):
+        return self.object_pose
+
+    def getARTagPose(self):
+        return self.artag_pose
+    
     def scanForObjects(self):
         """try to get the pose of the ARtag and object for the task"""
         while pt.DETECTED_OBJECTS_LOCKED:
@@ -165,4 +171,32 @@ class Task:
             )
         self.addCommand(
             AddObjectCommand(name=object_name, operation=Object.REMOVE)
+        )
+        self.addCommand(
+            AddObjectCommand(name=f"{object_name}_axis", operation=Object.REMOVE)
+        )
+        self.addCommand(
+            AddObjectCommand(name="control_panel", operation=Object.REMOVE)
+        )
+
+    def addControlPanelCommand(self):
+        self.addCommand(
+            AddObjectCommand(name="control_panel"),
+            pre_operation = lambda cmd: (cmd.setPose(self.getARTagPose()),
+                                         cmd.setShape([1.0, 1.0, 0.0001])),
+            description = "add control panel to world"
+        )
+
+    def addObjectAxisCommand(self, object_name: str):
+        self.addCommand(
+            AddObjectCommand(name=f"{object_name}_axis", operation=Object.ADD),
+            pre_operation = lambda cmd: (cmd.setPose(
+                                                        Pose(
+                                                            position = qa.make_point(qa.add(self.object_pose.position, qa.mul(0.05, qa.point_image([0.0, 0.0, 1.0], self.object_pose.orientation)))),
+                                                            orientation = self.object_pose.orientation
+                                                        )
+                                                    ),
+                                         cmd.setShape([0.01, 0.01, 0.1])
+                                        ),
+            description = "add axis of the object to visualize orientation"
         )

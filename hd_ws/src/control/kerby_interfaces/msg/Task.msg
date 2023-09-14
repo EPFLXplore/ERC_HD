@@ -7,6 +7,7 @@ uint8               PLUG_VOLTMETER_APPROACH = 4
 uint8               ETHERNET_CABLE = 5
 uint8               PICK_ROCK = 6
 uint8               RASSOR_SAMPLE = 7
+uint8               METAL_BAR_APPROACH = 8
 
 # message variables
 uint8               type

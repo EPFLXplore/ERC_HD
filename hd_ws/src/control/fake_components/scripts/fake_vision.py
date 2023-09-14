@@ -32,7 +32,7 @@ def main():
             pose.position.z = 0.2 * scale
             #pose.position.x = pose.position.y = 0.0; pose.position.z = 0.00
 
-            #pose = Pose()
+            #pose = Pose(orientation=qa.quat([1.0, 0.0, 0.0], math.pi))
             pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
             msg = TargetInstruction(ar_tag_pose=pose, object_pose=pose)
             detected_element_pub.publish(msg)

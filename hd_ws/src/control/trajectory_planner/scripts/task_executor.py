@@ -3,7 +3,7 @@
 import rclpy
 import time
 from rclpy.node import Node
-from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, RockSampling, BarMagnet
+from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, RockSampling, BarMagnetApproach
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal, JointSpaceCmd
@@ -153,6 +153,7 @@ class Executor(Node):
         """listens to /HD/fsm/task_assignment topic"""
         self.loginfo("Task executor received cmd")
         if self.hasTask():
+            self.loginfo("but already has task")
             return
         if msg.type == Task.BUTTON:
             self.loginfo("Button task")
@@ -163,6 +164,9 @@ class Executor(Node):
         elif msg.type == Task.PLUG_VOLTMETER_APPROACH:
             self.loginfo("Plug voltmeter task")
             self.task = PlugVoltmeterApproach(self)
+        elif msg.type == Task.METAL_BAR_APPROACH:
+            self.loginfo("Metal bar approach task")
+            self.task = BarMagnetApproach(self)
         elif msg.type == Task.NAMED_TARGET:
             self.loginfo("Named target task")
             self.task = task_execution.task.Task(self)
@@ -177,6 +181,7 @@ class Executor(Node):
             self.loginfo("Plug ethernet task")
             # TODO
         else:
+            self.loginfo("Unknown task")
             return
         
         self.new_task = True
