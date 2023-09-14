@@ -108,6 +108,6 @@ def generate_launch_description():
         [
             kerby_trajectory_planner_node,
             kerby_task_executor_node,
-            kerby_trajectory_planner_supervisor_node,
+            #kerby_trajectory_planner_supervisor_node,
         ]
     )

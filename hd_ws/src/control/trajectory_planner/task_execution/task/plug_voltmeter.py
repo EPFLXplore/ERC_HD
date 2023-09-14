@@ -1,15 +1,15 @@
 from .task import *
 
 
-class PlugVoltmeter(Task):
+class PlugVoltmeterAlign(Task):
     def __init__(self, executor, pose=None):
         super().__init__(executor)
         self.artag_pose = None
         self.scan_distance = 0.13
-        self.press_distance = 0.2
+        self.press_distance = 0.13
         # TODO: following two measures
-        self.plug_distance = 0.03        # distance between end effector and control panel when the voltemeter is plugged touching the plug but isn't plugged
-        self.plug_depth = 0.02              # depth of the plug
+        self.plug_distance = 0.025        # distance between end effector and control panel when the voltemeter is touching the plug but isn't plugged
+        self.plug_depth = 0.01              # depth of the plug
         self.pause_time = 0.2
 
     @property
@@ -38,9 +38,15 @@ class PlugVoltmeter(Task):
         super().constructCommandChain()
         
         self.constructVoltmeterExtensionCommands()
-        # self.constructStandardDetectionCommands("plug", extended=True)
-        # self.constructApproachCommands()
-        # self.constructVoltmeterRetractionCommands()
+        self.constructStandardDetectionCommands("plug", extended=True)
+        self.addCommand(
+            PoseCommand(self.executor),
+            pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(),
+                                                    orientation=self.getPressOrientation()),
+            description = "go in front of button"
+        )
+        self.constructApproachCommands()
+        self.constructVoltmeterRetractionCommands()
 
         # TODO: maybe remove the objects added to the world
 
@@ -67,12 +73,12 @@ class PlugVoltmeter(Task):
         )
     
     def constructApproachCommands(self):
-        self.addCommand(
-            PoseCommand(self.executor),
-            pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(),
-                                                    orientation=self.getPressOrientation()),
-            description = "go in front of button"
-        )
+        # self.addCommand(
+        #     PoseCommand(self.executor),
+        #     pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(),
+        #                                             orientation=self.getPressOrientation()),
+        #     description = "go in front of button"
+        # )
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.1),
             pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
@@ -95,7 +101,11 @@ class PlugVoltmeter(Task):
 
     def constructVoltmeterRetractionCommands(self):
         self.addCommand(
-            GripperCommand(self, GripperCommand.OPEN, duration=2.0),
+            GripperCommand(self, GripperCommand.OPEN, duration=1.0, torque_scaling_factor=1.0),
+            description = "open gripper"
+        )
+        self.addCommand(
+            GripperCommand(self, GripperCommand.OPEN, duration=2.0, torque_scaling_factor=0.1),
             description = "open gripper"
         )
         self.addCommand(
@@ -103,6 +113,76 @@ class PlugVoltmeter(Task):
             description = "extend voltmeter"
         )
         self.addCommand(
-            GripperCommand(self, GripperCommand.CLOSE, duration=4.0),
+            GripperCommand(self, GripperCommand.CLOSE, duration=1.0, torque_scaling_factor=1.0),
+            description = "clamp gripper around voltmeter"
+        )
+        self.addCommand(
+            GripperCommand(self, GripperCommand.CLOSE, duration=4.0, torque_scaling_factor=0.1),
+            description = "clamp gripper around voltmeter"
+        )
+
+
+class PlugVoltmeterApproach(Task):
+    def __init__(self, executor):
+        super().__init__(executor)
+        self.artag_pose = None
+        self.scan_distance = 0.13
+        self.press_distance = 0.13
+        # TODO: following two measures
+        self.plug_distance = 0.025        # distance between end effector and control panel when the voltemeter is touching the plug but isn't plugged
+        self.plug_depth = 0.01              # depth of the plug
+        self.pause_time = 0.2
+
+    def constructCommandChain(self):
+        super().constructCommandChain()
+        self.constructApproachCommands()
+        self.constructVoltmeterRetractionCommands()
+
+    def constructApproachCommands(self):
+        # self.addCommand(
+        #     PoseCommand(self.executor),
+        #     pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(),
+        #                                             orientation=self.getPressOrientation()),
+        #     description = "go in front of button"
+        # )
+        self.addCommand(
+            StraightMoveCommand(velocity_scaling_factor=0.1),
+            pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
+                                         cmd.setAxisFromOrientation(self.plug_pose.orientation, reverse=True)),
+            description = "click on button"
+        )
+        # TODO: wiggle around
+        self.addCommand(
+            StraightMoveCommand(velocity_scaling_factor=0.1),
+            pre_operation = lambda cmd: (cmd.setDistance(self.plug_depth),
+                                         cmd.setAxisFromOrientation(self.plug_pose.orientation, reverse=True)),
+            description = "move back from button"
+        )
+        self.addCommand(
+            StraightMoveCommand(velocity_scaling_factor=0.1),
+            pre_operation = lambda cmd: (cmd.setDistance(self.press_distance + self.plug_depth),
+                                         cmd.setAxisFromOrientation(self.plug_pose.orientation)),
+            description = "move back from button"
+        )
+
+    def constructVoltmeterRetractionCommands(self):
+        self.addCommand(
+            GripperCommand(self, GripperCommand.OPEN, duration=1.0, torque_scaling_factor=1.0),
+            description = "open gripper"
+        )
+        self.addCommand(
+            GripperCommand(self, GripperCommand.OPEN, duration=2.0, torque_scaling_factor=0.1),
+            description = "open gripper"
+        )
+        self.addCommand(
+            VoltmeterCommand(self, VoltmeterCommand.RETRACT),
+            description = "extend voltmeter"
+        )
+        self.addCommand(
+            GripperCommand(self, GripperCommand.CLOSE, duration=1.0, torque_scaling_factor=1.0),
+            description = "clamp gripper around voltmeter"
+        )
+        self.addCommand(
+            GripperCommand(self, GripperCommand.CLOSE, duration=4.0, torque_scaling_factor=0.1),
             description = "clamp gripper around voltmeter"
         )

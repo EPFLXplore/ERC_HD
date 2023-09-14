@@ -3,7 +3,7 @@
 import rclpy
 import time
 from rclpy.node import Node
-from task_execution.task import PressButton, PlugVoltmeter, RassorSampling, RockSampling, BarMagnet
+from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, RockSampling, BarMagnet
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal, JointSpaceCmd
@@ -157,9 +157,12 @@ class Executor(Node):
         if msg.type == Task.BUTTON:
             self.loginfo("Button task")
             self.task = PressButton(self, msg.id, msg.pose)
-        elif msg.type == Task.PLUG_VOLTMETER:
+        elif msg.type == Task.PLUG_VOLTMETER_ALIGN:
             self.loginfo("Plug voltmeter task")
-            self.task = PlugVoltmeter(self)
+            self.task = PlugVoltmeterAlign(self)
+        elif msg.type == Task.PLUG_VOLTMETER_APPROACH:
+            self.loginfo("Plug voltmeter task")
+            self.task = PlugVoltmeterApproach(self)
         elif msg.type == Task.NAMED_TARGET:
             self.loginfo("Named target task")
             self.task = task_execution.task.Task(self)

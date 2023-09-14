@@ -89,7 +89,9 @@ class FSM(Node):
         if 100 <= x <= 119 or x == 10:
             task_type = Task.BUTTON
         elif x == 20:
-            task_type = Task.PLUG_VOLTMETER
+            task_type = Task.PLUG_VOLTMETER_ALIGN
+        elif x == 21:
+            task_type = Task.PLUG_VOLTMETER_APPROACH
         elif x == 30:
             task_type = Task.ETHERNET_CABLE
         elif x == 40:
@@ -150,7 +152,7 @@ class FSM(Node):
         return time.time()-self.received_manual_inverse_cmd_at > self.command_expiration
 
     def normal_loop_action(self):
-        if VERBOSE and self.mode != self.SEMI_AUTONOMOUS:
+        if VERBOSE:
             self.get_logger().info("MODE : " + str(self.mode))
             
         if self.mode == self.AUTONOMOUS:

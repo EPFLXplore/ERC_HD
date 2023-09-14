@@ -129,7 +129,7 @@ HD_MODES = Enum(
 SEMI_AUTO_TASKS = Enum(
     NO_TASK = Task.NO_TASK,
     BTN_TASK = Task.BUTTON,
-    PLUG_VOLTMETER = Task.PLUG_VOLTMETER,
+    PLUG_VOLTMETER = Task.PLUG_VOLTMETER_APPROACH,
     NAMED_TARGET_TASK = Task.NAMED_TARGET
 )
 
@@ -214,8 +214,8 @@ class GamePad(Node):
             elif self.semi_auto_cmd == Task.BUTTON:
                 msg = Task(type=Task.BUTTON, id=self.semi_auto_cmd_id)
                 self.task_pub.publish(msg)
-            elif self.semi_auto_cmd == Task.PLUG_VOLTMETER:
-                msg = Task(type=Task.PLUG_VOLTMETER)
+            elif self.semi_auto_cmd == Task.PLUG_VOLTMETER_APPROACH:
+                msg = Task(type=Task.PLUG_VOLTMETER_APPROACH)
                 self.task_pub.publish(msg)
             elif self.semi_auto_cmd == Task.NAMED_TARGET:
                 msg = Task(type=Task.NAMED_TARGET, str_slot="optimal_view")
