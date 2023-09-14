@@ -20,6 +20,7 @@ class Button(CPO):
         self.coords_2d_to_turn_off = (corners[0] + corners[1]) // 2
         self.coords_2d_to_turn_on = (corners[2] + corners[3]) // 2
         self.coordinates_2d_target = self.coords_2d_to_turn_on
+        self.target_on = True
         print(self.coordinates_2d_target)
 
     def get_id(self):
@@ -93,12 +94,21 @@ class Button(CPO):
         super().set_projected_coord(projected)
 
         points = projected[0]
-        if self._isOn:
-            self.projected_target = (points[0] + points[1]) // 2
-        else:
+        if self.target_on:
             self.projected_target = (points[2] + points[3]) // 2
+        else:
+            self.projected_target = (points[0] + points[1]) // 2
 
     def get_target(self):
         res = np.zeros(3)
         res[:2] = self.coordinates_2d_target
         return res.astype(int)
+
+    def target(self, to_turn_on: bool) -> None:
+        super().target()
+        if to_turn_on:
+            self.coordinates_2d_target = self.coords_2d_to_turn_on
+            self.target_on = True
+        else:
+            self.coordinates_2d_target = self.coords_2d_to_turn_off
+            self.target_on = False

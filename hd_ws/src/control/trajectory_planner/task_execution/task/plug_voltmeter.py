@@ -38,15 +38,19 @@ class PlugVoltmeter(Task):
         super().constructCommandChain()
         
         self.constructVoltmeterExtensionCommands()
-        self.constructStandardDetectionCommands("plug", extended=True)
-        self.constructApproachCommands()
-        self.constructVoltmeterRetractionCommands()
+        # self.constructStandardDetectionCommands("plug", extended=True)
+        # self.constructApproachCommands()
+        # self.constructVoltmeterRetractionCommands()
 
         # TODO: maybe remove the objects added to the world
 
     def constructVoltmeterExtensionCommands(self):
         self.addCommand(
-            GripperCommand(self, GripperCommand.OPEN, duration=3.0),
+            GripperCommand(self, GripperCommand.OPEN, duration=1.0, torque_scaling_factor=1.0),
+            description = "open gripper"
+        )
+        self.addCommand(
+            GripperCommand(self, GripperCommand.OPEN, duration=3.0, torque_scaling_factor=0.1),
             description = "open gripper"
         )
         self.addCommand(
@@ -54,7 +58,11 @@ class PlugVoltmeter(Task):
             description = "extend voltmeter"
         )
         self.addCommand(
-            GripperCommand(self, GripperCommand.CLOSE, duration=3.0),
+            GripperCommand(self, GripperCommand.CLOSE, duration=1.0, torque_scaling_factor=1.0),
+            description = "clamp gripper around voltmeter"
+        )
+        self.addCommand(
+            GripperCommand(self, GripperCommand.CLOSE, duration=3.0, torque_scaling_factor=0.1),
             description = "clamp gripper around voltmeter"
         )
     

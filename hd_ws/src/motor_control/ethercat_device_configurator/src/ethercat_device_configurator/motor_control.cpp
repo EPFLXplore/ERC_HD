@@ -45,13 +45,13 @@ struct MotorCommand
 static const double PI = 3.14159265359;
 static const double INF = 1e10;
 static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J5", "J6", "Gripper", "Rassor"};
-static const std::vector<double> MAX_VELOCITIES = {0.2, 0.07, 0.1, 0.6, 0.2, 0.5, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
+static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 0.5, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2};
 static const std::vector<double> POS_LOWER_LIMITS = {-PI, -PI/2, -PI/4, -PI, -PI/2, -PI, -INF};
 static const std::vector<double> POS_UPPER_LIMITS = {PI, PI/2, PI/4, PI, PI/2, PI, INF};
 
 //static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
-static const std::vector<double> DIRECTIONS = {-1, 1, 1, -1, 1, 1, 1, 1};   // to match directions of MoveIt
+static const std::vector<double> DIRECTIONS = {1, 1, 1, -1, 1, 1, 1, 1};   // to match directions of MoveIt
 
 static std::vector<bool> should_scan_stationary_states = {true, true, true, true, true, true, true, true};
 
@@ -422,8 +422,11 @@ void worker()
             {
                 MELO_WARN_STREAM("Maxon '" << maxon_slave_ptr->getName()
                                            << "': " << maxon_slave_ptr->getReading().getDriveState());
-                // Set maxons to operation enabled state, do not block the call!
-                //maxon_slave_ptr->setDriveStateViaPdo(maxon::DriveState::OperationEnabled, false);
+
+                if (maxon_slave_ptr->getReading().getDriveState() == maxon::DriveState::Fault) {
+                    // Set maxons to operation enabled state, do not block the call!
+                    maxon_slave_ptr->setDriveStateViaPdo(maxon::DriveState::OperationEnabled, false);
+                }
             }
 
             // Constant update rate

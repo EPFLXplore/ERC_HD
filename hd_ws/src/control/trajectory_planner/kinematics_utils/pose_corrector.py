@@ -26,7 +26,7 @@ def finger1_transform_old():    # actually joint name is finger1 but the link is
 def finger1_transform():
     transform = Pose()
     transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
-    vect = [-0.097, -0.7545, -0.3081]
+    vect = [-0.02, -0.743, -0.419]       # [-0.097, -0.7545, -0.3081]
     transform.position = qa.point_image(vect, transform.orientation)
     return transform
 
@@ -49,7 +49,7 @@ def construct_vision_tranform():
 EEF_TRANSFORM_CORRECTION = construct_eef_transform("finger1")
 
 CAMERA_TRANSFORM = Pose(                    # transform between end effector and camera
-    position = Point(x=0.0445, y=-0.009, z=-0.10)
+    position = Point(x=0.0447, y=-0.009, z=-0.10)
 )
 
 VISION_TRANSFORM_CORRECTION = Pose()

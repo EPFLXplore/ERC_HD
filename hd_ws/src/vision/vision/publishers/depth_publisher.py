@@ -22,7 +22,7 @@ class DepthPublisher(Node):
             self.publisher_.publish(depth_msg)
 
     def process(self, depth_array: np.ndarray) -> int:
-        print(depth_array.shape)
+        # print(depth_array.shape)
         # crop the center of the image
         depth_crop = depth_array[
             depth_array.shape[0] // 2
@@ -36,18 +36,6 @@ class DepthPublisher(Node):
 
         # count number of 0s
         nb_zeros = np.count_nonzero(depth_crop == 0)
-
-        # check difference between minval ( that is not zero ( invalid depth ) ) and maxval
-        zero_indexes = np.nonzero(depth_crop)
-        if np.sum(zero_indexes) > 0:
-            minval = np.min(depth_crop[zero_indexes])
-        else:
-            minval = np.min(depth_crop)
-
-        maxval = np.max(depth_crop)
-        self._logger.info(
-            f"nb zeros: {nb_zeros:4d}, minval: {minval:5d}, maxval: {maxval:5d}, diff: {maxval - minval:5d}"
-        )
 
         # sum the depth values
         sum_depth = np.sum(depth_crop)

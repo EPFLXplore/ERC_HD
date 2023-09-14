@@ -8,20 +8,24 @@ import numpy as np
 # Class PanelA represents the central panel containing the buttons
 class PanelA(Panel):
     name = "A"
-    AR_SIZE = 49 # 50 # official measure
+    AR_SIZE = 50
     BUTTON_HEIGHT = 42  # 50    # official measure
-    BUTTON_WIDTH = 21   # 25    # official measure
+    BUTTON_WIDTH = 21  # 25    # official measure
 
     # origin is in the middle of ar tag, with x going to the right and y going up
-    HORIZONTAL_DIST_BETWEEN_BUTTONS = 84 # mm
-    VERTICAL_DIST_BETWEEN_BUTTONS = 71 # mm
-    rows = {0: BUTTON_WIDTH,
-            1: BUTTON_WIDTH - VERTICAL_DIST_BETWEEN_BUTTONS,
-            2: BUTTON_WIDTH - 2 * VERTICAL_DIST_BETWEEN_BUTTONS,}
-    cols = {0: -BUTTON_WIDTH,
-            1: 0,
-            2: HORIZONTAL_DIST_BETWEEN_BUTTONS - BUTTON_WIDTH,
-            3: HORIZONTAL_DIST_BETWEEN_BUTTONS,}
+    HORIZONTAL_DIST_BETWEEN_BUTTONS = 84  # mm
+    VERTICAL_DIST_BETWEEN_BUTTONS = 71  # mm
+    rows = {
+        0: BUTTON_WIDTH,
+        1: BUTTON_WIDTH - VERTICAL_DIST_BETWEEN_BUTTONS,
+        2: BUTTON_WIDTH - 2 * VERTICAL_DIST_BETWEEN_BUTTONS,
+    }
+    cols = {
+        0: -BUTTON_WIDTH,
+        1: 0,
+        2: HORIZONTAL_DIST_BETWEEN_BUTTONS - BUTTON_WIDTH,
+        3: HORIZONTAL_DIST_BETWEEN_BUTTONS,
+    }
     buttons_top_left_corner = [
         [cols[2], rows[0]],
         [cols[3], rows[0]],
@@ -34,13 +38,12 @@ class PanelA(Panel):
         [cols[2], rows[2]],
         [cols[3], rows[2]],
     ]
-    FRACTION = 0.5
+    FRACTION = 1    # 0.5
     HORIZONTAL_CENTER_OFFSET = int(BUTTON_WIDTH / 2 * FRACTION)  # mm
-    
 
     def __init__(self, camera_matrix, dist_coeffs, values):
         super().__init__()
-        print(f'Button horizontal offset: {self.HORIZONTAL_CENTER_OFFSET}')
+        print(f"Button horizontal offset: {self.HORIZONTAL_CENTER_OFFSET}")
         self.ar_tag = ARTag(
             aruco.DICT_4X4_50, self.AR_SIZE, 2, camera_matrix, dist_coeffs
         )
@@ -50,7 +53,9 @@ class PanelA(Panel):
         ]
         left = np.array([-self.HORIZONTAL_CENTER_OFFSET, 0])
         for button in self.buttons:
-            button.coordinates_2d_target = button.coords_2d_to_turn_on + left
+            button.coords_2d_to_turn_on = button.coords_2d_to_turn_on + left
+            button.coords_2d_to_turn_off = button.coords_2d_to_turn_off + left
+
             left *= -1
         print("New offsets")
         for button in self.buttons:
@@ -63,8 +68,13 @@ class PanelA(Panel):
 
     def set_target(self, target):
         self.buttons[self.target].untarget()
-        self.target = target
-        self.buttons[target].target()
+
+        if target >= 0 and target <= 9:
+            self.target = target
+            self.buttons[target].target(to_turn_on=True)
+        if target >= 10 and target <= 19:
+            self.target = target - 10
+            self.buttons[self.target].target(to_turn_on=False)
 
     def detect_ar_tag(self, frame):
         result = self.ar_tag.detect(frame)

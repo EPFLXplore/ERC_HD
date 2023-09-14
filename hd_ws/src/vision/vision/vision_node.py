@@ -116,6 +116,10 @@ class VisionNode(Node):
         #     f"current task: {self.task:2d}, target panel {self.control_panel.get_selected_panel().name}"
         # )
 
+        self.image_publisher._logger.info(
+            f"current task: {self.task:3d}, target panel {self.control_panel.get_selected_panel().name}"
+        )
+
 
 def main(args=None):
     rclpy.init(args=args)

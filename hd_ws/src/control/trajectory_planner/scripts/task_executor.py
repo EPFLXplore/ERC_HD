@@ -7,7 +7,8 @@ from task_execution.task import PressButton, PlugVoltmeter, RassorSampling, Rock
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal, JointSpaceCmd
-from hd_interfaces.msg import TargetInstruction, ServoRequest, ServoResponse
+from hd_interfaces.msg import TargetInstruction
+from avionics_interfaces.msg import ServoRequest, ServoResponse
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
 from motor_control_interfaces.msg import MotorCommand
@@ -115,7 +116,7 @@ class Executor(Node):
         self.motor_command_pub.publish(msg)
 
     def sendVoltmeterCommand(self, angle):
-        msg = ServoRequest(destination_id=0, channel=4, angle=angle)
+        msg = ServoRequest(destination_id=0, channel=1, angle=angle)
         self.voltmeter_pub.publish(msg)
 
     def sendJointSpaceCmd(self, mode, states: list):
@@ -172,6 +173,8 @@ class Executor(Node):
         elif msg.type == Task.ETHERNET_CABLE:
             self.loginfo("Plug ethernet task")
             # TODO
+        else:
+            return
         
         self.new_task = True
     

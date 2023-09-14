@@ -36,8 +36,11 @@ class PanelB1(Panel):
         if target == 0:
             self.button.untarget()
             self.plug.target()
-        elif target == 1:
-            self.button.target()
+        elif target == 10 or target == 13:
+            if target == 10:
+                self.button.target(to_turn_on=True)
+            else:
+                self.button.target(to_turn_on=False)
             self.plug.untarget()
         else:
             # throw exception

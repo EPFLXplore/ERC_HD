@@ -64,19 +64,19 @@ class ControlPanel:
         return self.get_selected_panel().get_possible_inputs()
 
     def set_target(self, target):
-        if target == 0 or target == 10:
+        if target == 10 or target == 13 or target == 20 or target == 21:
             self.select_panel("B1")
-            if target == 0:
-                self.get_selected_panel().set_target(0)
+            if target == 10 or target == 13:
+                self.get_selected_panel().set_target(target)
             else:
-                self.get_selected_panel().set_target(1)
+                self.get_selected_panel().set_target(0)
 
-        if target == 30:
+        if target == 30 or target == 31:
             self.select_panel("B2")
 
-        if target >= 20 and target <= 29:
+        if target >= 100 and target <= 119:
             self.select_panel("A")
-            self.get_selected_panel().set_target(target - 20)
+            self.get_selected_panel().set_target(target - 100)
 
     def detect_ar_tag(self, frame):
         return self.get_selected_panel().detect_ar_tag(frame)

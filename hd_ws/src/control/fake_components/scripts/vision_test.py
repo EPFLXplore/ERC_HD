@@ -136,10 +136,10 @@ def main():
                 add_object_pub.publish(o1)
                 time.sleep(0.01)
                 add_object_pub.publish(o2)
-                time.sleep(0.01)
-                add_object_pub.publish(o3)
-                #time.sleep(0.01)
-                #add_object_pub.publish(o4)
+                # time.sleep(0.01)
+                # add_object_pub.publish(o3)
+                # time.sleep(0.01)
+                # add_object_pub.publish(o4)
             rate.sleep()
 
     except KeyboardInterrupt:

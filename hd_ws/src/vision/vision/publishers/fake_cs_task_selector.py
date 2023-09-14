@@ -5,31 +5,41 @@ from std_msgs.msg import Int8
 
 
 class FakeCSTaskSelector(Node):
-    panel_a_task_numbers = [20 + i for i in range(10)]
-    panel_b1_task_numbers = [0, 10]
-    panel_b2_task_numbers = [30]
-
     def __init__(self):
         super().__init__("fake_cs_task_selector")
-
-        self.accepted_tasks = set(
-            self.panel_a_task_numbers
-            + self.panel_b1_task_numbers
-            + self.panel_b2_task_numbers
-        )
 
         self.publisher_ = self.create_publisher(Int8, "ROVER/HD_element_id", 10)
         self.get_logger().info("Fake CS Task Selector Created")
 
         self.cs_task = 0
+        self.id_to_task = self.setup_big_dict()
+
+        self.valid_ids = set(self.id_to_task.keys())
+
+    def setup_big_dict(self):
+        id_to_task = {}
+        id_to_task.update({100 + x: f"Turn ON  button ID: {x}" for x in range(10)})
+        id_to_task.update({110 + x: f"Turn OFF button ID: {x}" for x in range(10)})
+        id_to_task[10] = "Turn ON Big Button"
+        id_to_task[13] = "Turn OFF Big Button"
+        id_to_task[20] = "Voltmeter"
+        id_to_task[21] = id_to_task[20]
+        id_to_task[30] = "Ethernet Cable"
+        id_to_task[31] = id_to_task[30]
+        return id_to_task
 
     def select_task(self):
         task = -1
-        while task not in self.accepted_tasks:
+        while task not in self.valid_ids:
             task = input("Enter task number: ")
             try:
                 task = int(task)
-                break       # to remove this break
+                if task not in self.valid_ids:
+                    break       # to remove this break
+                    print(f"The task number {task:3d} is not valid")
+                    print("Try again")
+                else:
+                    print(f"Selected task {task:3d}:  {self.id_to_task[task]}")
             except ValueError:
                 print(
                     f"The task must be a number from the following list: {self.accepted_tasks}"

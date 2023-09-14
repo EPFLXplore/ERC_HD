@@ -99,6 +99,7 @@ class FSM(Node):
         elif 50 <= x <= 55:
             task_type = Task.NAMED_TARGET
             task_str = ["home", "optimal_view", "zero", "face_ground", "science_drop", "optimal_view_high"][x-50]
+        self.get_logger().info("AAAAAAAAAAAAAAAAAAA :   " + str(x))
         self.semi_autonomous_command = Task(
             type = task_type,
             str_slot = task_str
@@ -149,7 +150,7 @@ class FSM(Node):
         return time.time()-self.received_manual_inverse_cmd_at > self.command_expiration
 
     def normal_loop_action(self):
-        if VERBOSE:
+        if VERBOSE and self.mode != self.SEMI_AUTONOMOUS:
             self.get_logger().info("MODE : " + str(self.mode))
             
         if self.mode == self.AUTONOMOUS:

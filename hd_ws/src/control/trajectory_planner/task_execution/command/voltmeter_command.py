@@ -4,8 +4,8 @@ from task_execution.command.command import *
 class VoltmeterCommand(Command):
     EXTEND = 0
     RETRACT = 1
-    EXTEND_ANGLE = 100.0
-    RETRACT_ANGLE = 20.0
+    EXTEND_ANGLE = 30.0
+    RETRACT_ANGLE = 180.0
 
     def __init__(self, executor, action=None):
         super().__init__(executor)

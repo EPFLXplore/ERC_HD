@@ -62,19 +62,19 @@
 
 <link name="steering_1">
   <inertial>
-    <origin xyz="0.0012011934772404587 -0.0360279299824664 -0.21329008413672448" rpy="0 0 0"/>
+    <origin xyz="-0.01189644601781037 -0.036027929982466456 -0.2129618322901442" rpy="0 0 0"/>
     <mass value="0.3543584805415501"/>
-    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.5e-05" iyz="-0.000205" ixz="7e-06"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="-0.000206" ixz="-0.000178"/>
   </inertial>
   <visual>
-    <origin xyz="-0.423183 -0.393882 0.038017" rpy="0 0 0"/>
+    <origin xyz="-0.421384 -0.393882 0.063562" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.423183 -0.393882 0.038017" rpy="0 0 0"/>
+    <origin xyz="-0.421384 -0.393882 0.063562" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -83,19 +83,19 @@
 
 <link name="steering_2">
   <inertial>
-    <origin xyz="-0.0012011586992952683 0.03602765244982142 -0.21329041131030588" rpy="0 0 0"/>
+    <origin xyz="0.011896575272170529 0.03602765244982159 -0.21296112839152875" rpy="0 0 0"/>
     <mass value="0.3543584805415501"/>
-    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.5e-05" iyz="0.000205" ixz="-7e-06"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="0.000206" ixz="0.000178"/>
   </inertial>
   <visual>
-    <origin xyz="-0.423183 0.353934 0.038015" rpy="0 0 0"/>
+    <origin xyz="-0.42341 0.353934 0.012408" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.423183 0.353934 0.038015" rpy="0 0 0"/>
+    <origin xyz="-0.42341 0.353934 0.012408" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -104,19 +104,19 @@
 
 <link name="steering_3">
   <inertial>
-    <origin xyz="-0.0012008437150870521 0.03602765244982081 -0.21329008413672482" rpy="0 0 0"/>
+    <origin xyz="0.011896795779964109 0.03602765244982109 -0.21296183229014454" rpy="0 0 0"/>
     <mass value="0.3543584805415501"/>
-    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.5e-05" iyz="0.000205" ixz="-7e-06"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="0.000206" ixz="0.000178"/>
   </inertial>
   <visual>
-    <origin xyz="0.40997 0.353934 0.038017" rpy="0 0 0"/>
+    <origin xyz="0.408171 0.353934 0.063562" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.40997 0.353934 0.038017" rpy="0 0 0"/>
+    <origin xyz="0.408171 0.353934 0.063562" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -125,19 +125,19 @@
 
 <link name="steering_4">
   <inertial>
-    <origin xyz="0.0012015084614502292 -0.03602792998246601 -0.21329041131030582" rpy="0 0 0"/>
+    <origin xyz="-0.011896225510015512 -0.036027929982466234 -0.21296112839152861" rpy="0 0 0"/>
     <mass value="0.3543584805415501"/>
-    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.5e-05" iyz="-0.000205" ixz="7e-06"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="-0.000206" ixz="-0.000178"/>
   </inertial>
   <visual>
-    <origin xyz="0.40997 -0.393882 0.038015" rpy="0 0 0"/>
+    <origin xyz="0.410197 -0.393882 0.012408" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.40997 -0.393882 0.038015" rpy="0 0 0"/>
+    <origin xyz="0.410197 -0.393882 0.012408" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -146,19 +146,19 @@
 
 <link name="wheel3_1">
   <inertial>
-    <origin xyz="0.0003403093441246008 -0.010196510227617528 5.950516267505535e-07" rpy="0 0 0"/>
+    <origin xyz="0.0003394916280188287 -0.010196510227617639 -2.006330920018007e-05" rpy="0 0 0"/>
     <mass value="1.592763813314383"/>
-    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-0.0" ixz="0.0"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="1.6e-05" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.410527 -0.410572 0.308015" rpy="0 0 0"/>
+    <origin xyz="0.42733 -0.410572 0.281864" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
-    <origin xyz="0.410527 -0.410572 0.308015" rpy="0 0 0"/>
+    <origin xyz="0.42733 -0.410572 0.281864" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -167,19 +167,19 @@
 
 <link name="wheel4_1">
   <inertial>
-    <origin xyz="0.00033999435991410865 -0.010196510227618472 9.222252080332005e-07" rpy="0 0 0"/>
+    <origin xyz="0.0003392711202230836 -0.010196510227618527 -1.9767207815879484e-05" rpy="0 0 0"/>
     <mass value="1.592763813314383"/>
-    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-0.0" ixz="0.0"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="1.6e-05" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.422626 -0.410572 0.308017" rpy="0 0 0"/>
+    <origin xyz="-0.404251 -0.410572 0.333019" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
-    <origin xyz="-0.422626 -0.410572 0.308017" rpy="0 0 0"/>
+    <origin xyz="-0.404251 -0.410572 0.333019" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -188,19 +188,19 @@
 
 <link name="wheel2_1">
   <inertial>
-    <origin xyz="-0.0003406445977605088 0.010197232694972469 9.22225207478089e-07" rpy="0 0 0"/>
+    <origin xyz="-0.0003399213580693172 0.010197232694972913 -1.9767207816323573e-05" rpy="0 0 0"/>
     <mass value="1.592763813314383"/>
-    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="0.0" ixz="-0.0"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-1.6e-05" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.409412 0.370625 0.308017" rpy="0 0 0"/>
+    <origin xyz="0.391037 0.370625 0.333019" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
-    <origin xyz="0.409412 0.370625 0.308017" rpy="0 0 0"/>
+    <origin xyz="0.391037 0.370625 0.333019" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -209,19 +209,19 @@
 
 <link name="wheel1_1">
   <inertial>
-    <origin xyz="-0.0003399595819693624 0.010197232694973468 5.950516264174865e-07" rpy="0 0 0"/>
+    <origin xyz="-0.0003391418658636458 0.010197232694973468 -2.0063309200568646e-05" rpy="0 0 0"/>
     <mass value="1.592763813314383"/>
-    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="0.0" ixz="-0.0"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-1.6e-05" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.42374 0.370625 0.308015" rpy="0 0 0"/>
+    <origin xyz="-0.440543 0.370625 0.281864" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
-    <origin xyz="-0.42374 0.370625 0.308015" rpy="0 0 0"/>
+    <origin xyz="-0.440543 0.370625 0.281864" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -293,8 +293,8 @@
 
 <link name="hd_link5_1">
   <inertial>
-    <origin xyz="-0.0032697164246294763 0.03846028201984417 -9.330506932347937e-05" rpy="0 0 0"/>
-    <mass value="0.06877842327462741"/>
+    <origin xyz="-0.0032697164246294763 0.03846028201984416 -9.33050693235904e-05" rpy="0 0 0"/>
+    <mass value="0.06877842327462745"/>
     <inertia ixx="4.9e-05" iyy="2.9e-05" izz="4.3e-05" ixy="1e-06" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
@@ -335,19 +335,19 @@
 
 <link name="hd_finger2_1">
   <inertial>
-    <origin xyz="-0.021359938357401687 -0.003189981527411026 -0.009061140366263154" rpy="0 0 0"/>
+    <origin xyz="0.47666706754454413 -0.7361417133269437 -0.01622358994727202" rpy="0 0 0"/>
     <mass value="0.025342855198124774"/>
     <inertia ixx="4e-06" iyy="1.8e-05" izz="1.6e-05" ixy="-2e-06" iyz="-0.0" ixz="-2e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.733648 -0.007537 -0.603917" rpy="0 0 0"/>
+    <origin xyz="1.231487 -0.764267 -0.611515" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/hd_finger2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.733648 -0.007537 -0.603917" rpy="0 0 0"/>
+    <origin xyz="1.231487 -0.764267 -0.611515" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://Assemblage_description/meshes/hd_finger2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -356,7 +356,7 @@
 
 <link name="hd_finger1_1">
   <inertial>
-    <origin xyz="0.4526525418652132 -0.7689277726084018 -0.06672236429279643" rpy="0 0 0"/>
+    <origin xyz="0.4527983426832546 -0.7504874421753438 -0.06638458975098571" rpy="0 0 0"/>
     <mass value="0.025342855198124774"/>
     <inertia ixx="4e-06" iyy="1.8e-05" izz="1.6e-05" ixy="2e-06" iyz="-0.0" ixz="2e-06"/>
   </inertial>
@@ -398,9 +398,9 @@
 
 <link name="pivot_droit_1">
   <inertial>
-    <origin xyz="0.0001437817960499941 0.11623489359260664 0.013409951855412564" rpy="0 0 0"/>
+    <origin xyz="0.0009668399350314201 0.11623489359260658 0.013375805290350871" rpy="0 0 0"/>
     <mass value="1.6615144825592312"/>
-    <inertia ixx="0.00629" iyy="0.220618" izz="0.221451" ixy="-6e-06" iyz="-0.000817" ixz="1.1e-05"/>
+    <inertia ixx="0.007103" iyy="0.220618" izz="0.220639" ixy="-5.6e-05" iyz="-0.000815" ixz="0.013196"/>
   </inertial>
   <visual>
     <origin xyz="-0.006607 -0.250474 0.021516" rpy="0 0 0"/>
@@ -419,9 +419,9 @@
 
 <link name="pivot_gauche_1">
   <inertial>
-    <origin xyz="-0.0001444320338956891 -0.11623517112525206 0.013409951855412262" rpy="0 0 0"/>
+    <origin xyz="-0.0009674901728771402 -0.11623517112525206 0.013375805290350576" rpy="0 0 0"/>
     <mass value="1.6615144825592312"/>
-    <inertia ixx="0.00629" iyy="0.220618" izz="0.221451" ixy="-6e-06" iyz="0.000817" ixz="-1.1e-05"/>
+    <inertia ixx="0.007103" iyy="0.220618" izz="0.220639" ixy="-5.6e-05" iyz="0.000815" ixz="-0.013196"/>
   </inertial>
   <visual>
     <origin xyz="-0.006607 0.210526 0.021516" rpy="0 0 0"/>
@@ -460,59 +460,59 @@
 </link>
 
 <joint name="steering1" type="continuous">
-  <origin xyz="0.416576 0.143408 -0.016501" rpy="0 0 0"/>
+  <origin xyz="0.414777 0.143408 -0.042046" rpy="0 0 0"/>
   <parent link="pivot_droit_1"/>
   <child link="steering_1"/>
-  <axis xyz="-2e-06 0.0 -1.0"/>
+  <axis xyz="-0.061399 0.0 -0.998113"/>
 </joint>
 
 <joint name="steering2" type="continuous">
-  <origin xyz="0.416576 -0.143408 -0.016499" rpy="0 0 0"/>
+  <origin xyz="0.416803 -0.143408 0.009108" rpy="0 0 0"/>
   <parent link="pivot_gauche_1"/>
   <child link="steering_2"/>
-  <axis xyz="-2e-06 0.0 1.0"/>
+  <axis xyz="-0.061399 0.0 0.998113"/>
 </joint>
 
 <joint name="steering3" type="continuous">
-  <origin xyz="-0.416577 -0.143408 -0.016501" rpy="0 0 0"/>
+  <origin xyz="-0.414778 -0.143408 -0.042046" rpy="0 0 0"/>
   <parent link="pivot_gauche_1"/>
   <child link="steering_3"/>
-  <axis xyz="2e-06 -0.0 -1.0"/>
+  <axis xyz="0.061399 -0.0 -0.998113"/>
 </joint>
 
 <joint name="steering4" type="continuous">
-  <origin xyz="-0.416577 0.143408 -0.016499" rpy="0 0 0"/>
+  <origin xyz="-0.416804 0.143408 0.009108" rpy="0 0 0"/>
   <parent link="pivot_droit_1"/>
   <child link="steering_4"/>
-  <axis xyz="2e-06 -0.0 1.0"/>
+  <axis xyz="0.061399 -0.0 0.998113"/>
 </joint>
 
 <joint name="driving4" type="continuous">
-  <origin xyz="-0.000557 0.01669 -0.27" rpy="0 0 0"/>
+  <origin xyz="-0.017133 0.01669 -0.269456" rpy="0 0 0"/>
   <parent link="steering_4"/>
   <child link="wheel3_1"/>
-  <axis xyz="-0.03333 0.999444 0.0"/>
+  <axis xyz="-0.033267 0.999444 0.002046"/>
 </joint>
 
 <joint name="driving1" type="continuous">
-  <origin xyz="-0.000557 0.01669 -0.27" rpy="0 0 0"/>
+  <origin xyz="-0.017133 0.01669 -0.269457" rpy="0 0 0"/>
   <parent link="steering_1"/>
   <child link="wheel4_1"/>
-  <axis xyz="-0.03333 0.999444 0.0"/>
+  <axis xyz="-0.033267 0.999444 0.002046"/>
 </joint>
 
 <joint name="driving3" type="continuous">
-  <origin xyz="0.000558 -0.016691 -0.27" rpy="0 0 0"/>
+  <origin xyz="0.017134 -0.016691 -0.269457" rpy="0 0 0"/>
   <parent link="steering_3"/>
   <child link="wheel2_1"/>
-  <axis xyz="0.03333 -0.999444 0.0"/>
+  <axis xyz="0.033267 -0.999444 0.002046"/>
 </joint>
 
 <joint name="driving2" type="continuous">
-  <origin xyz="0.000557 -0.016691 -0.27" rpy="0 0 0"/>
+  <origin xyz="0.017133 -0.016691 -0.269456" rpy="0 0 0"/>
   <parent link="steering_2"/>
   <child link="wheel1_1"/>
-  <axis xyz="0.03333 -0.999444 0.0"/>
+  <axis xyz="0.033267 -0.999444 0.002046"/>
 </joint>
 
 <joint name="joint2" type="revolute">
@@ -556,7 +556,7 @@
 </joint>
 
 <joint name="finger1" type="prismatic">
-  <origin xyz="-0.081447 -0.013053 0.01212" rpy="0 0 0"/>
+  <origin xyz="-0.579286 0.743677 0.019718" rpy="0 0 0"/>
   <parent link="hd_link6_1"/>
   <child link="hd_finger2_1"/>
   <axis xyz="0.007905 0.999801 0.018314"/>

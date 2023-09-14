@@ -36,7 +36,7 @@ class PressButton(Task):
     def constructCommandChain(self):
         super().constructCommandChain()
 
-        extended = False
+        extended = True
         
         self.constructStandardDetectionCommands("button", extended=extended)
 
@@ -60,4 +60,4 @@ class PressButton(Task):
         )
         
         # TODO: maybe remove the objects added to the world
-        self.constructRemoveObjectsCommands("button", extended=extended)
+        #self.constructRemoveObjectsCommands("button", extended=extended)
