@@ -5,18 +5,22 @@ from vision.controlpanel.cpo import CPO
 
 
 class ARTag:
-    def __init__(self, marker_dict, marker_size, marker_id, camera_matrix, dist_coeffs):
+    def __init__(self, marker_dict, marker_size, marker_id_1, marker_id_2, camera_matrix, dist_coeffs):
         self.marker_dict = aruco.Dictionary_get(marker_dict)
         self.marker_size = marker_size
         self.camera_matrix = camera_matrix
         self.dist_coeffs = dist_coeffs
-        self.marker_id = marker_id
+        self.marker_id_1 = marker_id_1
+        self.marker_id_2 = marker_id_2
 
     def detect(self, frame):
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         corners, ids, _rejectedImgPoints = aruco.detectMarkers(gray, self.marker_dict)
-        if ids is not None and self.marker_id in ids:
-            tag_idx = np.where(ids == self.marker_id)[0][0]
+        if ids is not None and (self.marker_id_1 in ids or self.marker_id_2 in ids):
+            if self.marker_id_1 in ids:
+                tag_idx = np.where(ids == self.marker_id_1)[0][0]
+            if self.marker_id_2 in ids:
+                tag_idx = np.where(ids == self.marker_id_2)[0][0]
             rvecs, tvecs, _objPoints = aruco.estimatePoseSingleMarkers(
                 corners, self.marker_size, self.camera_matrix, self.dist_coeffs
             )

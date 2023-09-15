@@ -40,21 +40,23 @@ class PanelA(Panel):
     ]
     FRACTION = 1    # 0.5
     HORIZONTAL_CENTER_OFFSET = int(BUTTON_WIDTH / 2 * FRACTION)  # mm
+    VERTICAL_CENTER_OFFSET = int( (1-FRACTION) * BUTTON_WIDTH/2)
 
     def __init__(self, camera_matrix, dist_coeffs, values):
         super().__init__()
         print(f"Button horizontal offset: {self.HORIZONTAL_CENTER_OFFSET}")
         self.ar_tag = ARTag(
-            aruco.DICT_4X4_50, self.AR_SIZE, 2, camera_matrix, dist_coeffs
+            aruco.DICT_4X4_50, self.AR_SIZE, 2, 11, camera_matrix, dist_coeffs
         )
         self.buttons = [
             Button(corner, self.BUTTON_HEIGHT, self.BUTTON_WIDTH, id, values)
             for id, corner in enumerate(self.buttons_top_left_corner)
         ]
         left = np.array([-self.HORIZONTAL_CENTER_OFFSET, 0])
+        up = np.array([0, self.VERTICAL_CENTER_OFFSET]) # target bottom 1/4  or top 1/4 of half of button height
         for button in self.buttons:
-            button.coords_2d_to_turn_on = button.coords_2d_to_turn_on + left
-            button.coords_2d_to_turn_off = button.coords_2d_to_turn_off + left
+            button.coords_2d_to_turn_on = button.coords_2d_to_turn_on + left + up
+            button.coords_2d_to_turn_off = button.coords_2d_to_turn_off + left - up
 
             left *= -1
         print("New offsets")

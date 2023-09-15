@@ -11,7 +11,7 @@ class PanelB2(Panel):
     def __init__(self, camera_matrix, dist_coeffs):
         super().__init__()
         self.ar_tag = ARTag(
-            aruco.DICT_4X4_50, self.AR_SIZE, 3, camera_matrix, dist_coeffs
+            aruco.DICT_4X4_50, self.AR_SIZE, 3, 13, camera_matrix, dist_coeffs
         )
         self.ether_plug = Ethernet_plug(
             [-self.AR_SIZE // 2, 71 + self.AR_SIZE // 2], self.AR_SIZE, self.AR_SIZE

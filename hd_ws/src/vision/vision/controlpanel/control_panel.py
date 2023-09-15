@@ -64,6 +64,13 @@ class ControlPanel:
         return self.get_selected_panel().get_possible_inputs()
 
     def set_target(self, target):
+        if target == 70:
+            target = 10
+        if target == 71:
+            target = 100
+        if target == 72:
+            target = 30
+            
         if target == 10 or target == 13 or target == 20 or target == 21:
             self.select_panel("B1")
             if target == 10 or target == 13:
