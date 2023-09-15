@@ -6,7 +6,11 @@ from vision.controlpanel.cpo import CPO
 
 class ARTag:
     def __init__(self, marker_dict, marker_size, marker_id_1, marker_id_2, camera_matrix, dist_coeffs):
-        self.marker_dict = aruco.Dictionary_get(marker_dict)
+        # self.marker_dict = aruco.Dictionary_get(marker_dict)
+        self.marker_dict = aruco.Dictionary_get(aruco.DICT_4X4_50)
+        # self.marker_dict = aruco.Dictionary_get(aruco.DICT_ARUCO_ORIGINAL)
+
+
         self.marker_size = marker_size
         self.camera_matrix = camera_matrix
         self.dist_coeffs = dist_coeffs

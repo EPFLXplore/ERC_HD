@@ -38,7 +38,7 @@ class PanelA(Panel):
         [cols[2], rows[2]],
         [cols[3], rows[2]],
     ]
-    FRACTION = 1    # 0.5
+    FRACTION = 0.8    # 0.5
     HORIZONTAL_CENTER_OFFSET = int(BUTTON_WIDTH / 2 * FRACTION)  # mm
     VERTICAL_CENTER_OFFSET = int( (1-FRACTION) * BUTTON_WIDTH/2)
 
@@ -46,7 +46,9 @@ class PanelA(Panel):
         super().__init__()
         print(f"Button horizontal offset: {self.HORIZONTAL_CENTER_OFFSET}")
         self.ar_tag = ARTag(
-            aruco.DICT_4X4_50, self.AR_SIZE, 2, 11, camera_matrix, dist_coeffs
+            # aruco.DICT_4X4_50, self.AR_SIZE, 2, 11, camera_matrix, dist_coeffs
+            aruco.DICT_5X5_50, self.AR_SIZE, 2, 11, camera_matrix, dist_coeffs
+
         )
         self.buttons = [
             Button(corner, self.BUTTON_HEIGHT, self.BUTTON_WIDTH, id, values)

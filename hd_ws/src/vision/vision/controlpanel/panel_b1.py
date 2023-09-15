@@ -13,10 +13,14 @@ class PanelB1(Panel):
     def __init__(self, camera_matrix, dist_coeffs):
         super().__init__()
         self.ar_tag_top = ARTag(
-            aruco.DICT_4X4_50, self.AR_SIZE, 1, 14, camera_matrix, dist_coeffs
+            # aruco.DICT_4X4_50, self.AR_SIZE, 1, 14, camera_matrix, dist_coeffs
+            aruco.DICT_5X5_50, self.AR_SIZE, 1, 14, camera_matrix, dist_coeffs
+
         )
         self.ar_tag_bottom = ARTag(
-            aruco.DICT_4X4_50, self.AR_SIZE, 0, 15, camera_matrix, dist_coeffs
+            # aruco.DICT_4X4_50, self.AR_SIZE, 0, 15, camera_matrix, dist_coeffs
+            aruco.DICT_5X5_50, self.AR_SIZE, 0, 15, camera_matrix, dist_coeffs
+
         )
         self.button = Button(
             [-62 - self.BUTTON_SIZE // 2, self.BUTTON_SIZE // 2],
