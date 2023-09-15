@@ -41,22 +41,14 @@ def generate_launch_description():
     urdf_file = run_xacro(xacro_file)
     srdf_file = get_package_file('kerby_moveit_config', 'config/kerby.srdf')
     kinematics_file = get_package_file('kerby_moveit_config', 'config/kinematics.yaml')
-    ompl_config_file = get_package_file('kerby_moveit_config', 'config/ompl_planning.yaml')
     moveit_controllers_file = get_package_file('kerby_moveit_config', 'config/moveit_controllers.yaml')
-    ros_controllers_file = get_package_file('kerby_moveit_config', 'config/ros2_controllers.yaml')
     joint_limits_file = get_package_file('kerby_moveit_config', 'config/joint_limits.yaml')
 
     robot_description = load_file(urdf_file)
     robot_description_semantic = load_file(srdf_file)
     kinematics_config = load_yaml(kinematics_file)
-    ompl_config = load_yaml(ompl_config_file)
 
     joint_limits = {"robot_description_planning": load_yaml(joint_limits_file)}
-
-    moveit_controllers = {
-        'moveit_simple_controller_manager' : load_yaml(moveit_controllers_file),
-        'moveit_controller_manager': 'moveit_simple_controller_manager/MoveItSimpleControllerManager'
-    }
     
     trajectory_execution = {
         'moveit_manage_controllers': True,
@@ -65,44 +57,6 @@ def generate_launch_description():
         'trajectory_execution.allowed_start_tolerance': 0.01
     }
     trajectory_execution.update(load_yaml(moveit_controllers_file))
-
-    planning_scene_monitor_config = {
-        'publish_planning_scene': True,
-        'publish_geometry_updates': True,
-        'publish_state_updates': True,
-        'publish_transforms_updates': True
-    }
-
-    # MoveIt node
-    move_group_node = Node(
-        package='moveit_ros_move_group',
-        executable='move_group',
-        output='screen',
-        parameters=[
-            {
-                'robot_description': robot_description,
-                'robot_description_semantic': robot_description_semantic,
-                'robot_description_kinematics': kinematics_config,
-                'ompl': ompl_config,
-                'planning_pipelines': ['ompl'],
-            },
-            moveit_controllers,
-            trajectory_execution,
-            planning_scene_monitor_config,
-            joint_limits,
-        ],
-    )
-
-    # TF information
-    robot_state_publisher = Node(
-        name='robot_state_publisher',
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        output='screen',
-        parameters=[
-            {'robot_description': robot_description}
-        ]
-    )
 
     # Visualization (parameters needed for MoveIt display plugin)
     rviz_base = os.path.join(get_package_share_directory('kerby_moveit_config'), 'config')
@@ -122,33 +76,22 @@ def generate_launch_description():
             joint_limits,
         ],
     )
-    
-    # Controller manager for realtime interactions
-    ros2_control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        parameters= [
-            {'robot_description': robot_description},
-            ros_controllers_file
-        ],
-        output="screen",
+
+    img_sub = Node(
+        package="vision",
+        executable="img_subscriber",
+        output="screen"
     )
 
-    # Startup up ROS2 controllers (will exit immediately)
-    controller_names = ['kerby_arm_moveit_controller', 'kerby_base_moveit_controller', 'joint_state_broadcaster']
-    spawn_controllers = [
-        Node(
-            package="controller_manager",
-            executable="spawner",       # spawner.py on foxy
-            arguments=[controller],
-            output="screen")
-        for controller in controller_names
-    ]
+    fake_cs_gamepad = Node(
+        package="fake_components",
+        executable="fake_cs_gamepad.py",
+        output="screen"
+    )
 
     return LaunchDescription([
-        move_group_node,
-        robot_state_publisher,
-        ros2_control_node,
         rviz,
-        ] + spawn_controllers
+        img_sub,
+        fake_cs_gamepad
+        ]
     )

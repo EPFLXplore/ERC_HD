@@ -134,12 +134,18 @@ def generate_launch_description():
         output="screen",
     )
 
+    vision_node = Node(
+        package="vision",
+        executable="vision_node",
+        output="screen"
+    )
+
     # Startup up ROS2 controllers (will exit immediately)
     controller_names = ['kerby_arm_moveit_controller', 'kerby_base_moveit_controller', 'joint_state_broadcaster']
     spawn_controllers = [
         Node(
             package="controller_manager",
-            executable="spawner",       # spawner.py on foxy
+            executable="spawner.py",
             arguments=[controller],
             output="screen")
         for controller in controller_names
@@ -149,6 +155,7 @@ def generate_launch_description():
         move_group_node,
         robot_state_publisher,
         ros2_control_node,
-        rviz,
+        #rviz,
+        vision_node
         ] + spawn_controllers
     )

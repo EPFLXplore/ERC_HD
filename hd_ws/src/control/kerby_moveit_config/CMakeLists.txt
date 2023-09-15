@@ -6,6 +6,7 @@ find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(fake_components)
+find_package(vision)
 
 
 ament_package()
