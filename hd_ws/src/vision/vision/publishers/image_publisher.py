@@ -68,6 +68,8 @@ class ImagePublisher(Node):
         # Publish the image.
         # The 'cv2_to_imgmsg' method converts an OpenCV
         # image to a ROS 2 image message
+        scale = 0.2
+        frame = cv2.resize(frame, (0,0), fx=scale, fy=scale)
         self.publisher_.publish(self.br.cv2_to_imgmsg(frame))
 
         # Display the message on the console
