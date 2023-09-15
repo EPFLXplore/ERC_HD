@@ -21,6 +21,9 @@ void Planner::config()
 
     setScalingFactors(1, 1);
 
+    addDronePlatform();
+    addLidar();
+
     initCommunication();
 }
 
@@ -210,6 +213,26 @@ void Planner::setScalingFactors(double vel, double accel)
 {
     m_move_group->setMaxVelocityScalingFactor(vel);
     m_move_group->setMaxAccelerationScalingFactor(accel);
+}
+
+void Planner::addDronePlatform() {
+    std::vector<double> shape = {0.5, 0.5, 0.02};
+    geometry_msgs::msg::Pose pose;
+    pose.position.x = 0.13;
+    pose.position.y = 0.02;
+    pose.position.z = 0.74;
+    std::string name = "drone_platform";
+    addBoxToWorld(shape, pose, name);
+}
+
+void Planner::addLidar() {
+    std::vector<double> shape = {0.1, 0.1, 0.6};
+    geometry_msgs::msg::Pose pose;
+    pose.position.x = 0.06;
+    pose.position.y = 0.2;
+    pose.position.z = 0.35;
+    std::string name = "lidar";
+    addBoxToWorld(shape, pose, name);
 }
 
 void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msgs::msg::Pose &pose, std::string &name)

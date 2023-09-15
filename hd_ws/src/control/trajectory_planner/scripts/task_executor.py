@@ -3,7 +3,7 @@
 import rclpy
 import time
 from rclpy.node import Node
-from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, RockSampling, BarMagnetApproach, EthernetApproach, AlignPanel
+from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, BarMagnetApproach, EthernetApproach, AlignPanel, RockSamplingApproach, RockSamplingDrop, RockSamplingComplete
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
 from kerby_interfaces.msg import Task, Object, PoseGoal, JointSpaceCmd
@@ -171,9 +171,6 @@ class Executor(Node):
             self.loginfo("Named target task")
             self.task = task_execution.task.Task(self)
             self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))
-        elif msg.type == Task.PICK_ROCK :
-            self.loginfo("Rock smpling task")
-            self.task = RockSampling(self)
         elif msg.type == Task.RASSOR_SAMPLE:
             self.loginfo("Rassor sample task")
             self.task = RassorSampling(self)
@@ -183,6 +180,15 @@ class Executor(Node):
         elif msg.type == Task.ALIGN_PANEL:
             self.loginfo("Align panel")
             self.task = AlignPanel(self)
+        elif msg.type == Task.ROCK_SAMPLING_APPROACH:
+            self.loginfo("Rock sampling approach")
+            self.task = RockSamplingApproach(self)
+        elif msg.type == Task.ROCK_SAMPLING_DROP:
+            self.loginfo("Rock sampling drop")
+            self.task = RockSamplingDrop(self)
+        elif msg.type == Task.ROCK_SAMPLING_COMPLETE:
+            self.loginfo("Complete rock sampling")
+            self.task = RockSamplingComplete(self)
         else:
             self.loginfo("Unknown task")
             return

@@ -96,8 +96,6 @@ class FSM(Node):
             task_type = Task.METAL_BAR_APPROACH
         elif x == 30:
             task_type = Task.ETHERNET_CABLE
-        elif x == 40:
-            task_type = Task.PICK_ROCK
         elif x == 41:
             task_type = Task.RASSOR_SAMPLE
         elif 50 <= x <= 55:
@@ -105,6 +103,12 @@ class FSM(Node):
             task_str = ["home", "optimal_view", "zero", "face_ground", "science_drop", "back"][x-50]
         elif 70 <= x <= 72:
             task_type = Task.ALIGN_PANEL
+        elif x == 80:
+            task_type = Task.ROCK_SAMPLING_APPROACH
+        elif x == 81:
+            task_type = Task.ROCK_SAMPLING_DROP
+        elif x == 82:
+            task_type = Task.ROCK_SAMPLING_COMPLETE
         self.get_logger().info("AAAAAAAAAAAAAAAAAAA :   " + str(x) + "  ;  " + str(task_type))
         self.semi_autonomous_command = Task(
             type = task_type,

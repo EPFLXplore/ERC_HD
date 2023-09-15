@@ -211,3 +211,25 @@ class Task:
                                         ),
             description = "add axis of the object to visualize orientation"
         )
+    
+    def constructOpenGripperCommands(self, high_torque=1.0, low_torque=0.1, post_completion_wait=0.0):
+        self.addCommand(
+            GripperCommand(self, GripperCommand.OPEN, duration=1.0, torque_scaling_factor=high_torque),
+            description = "open gripper high torque"
+        )
+        self.addCommand(
+            GripperCommand(self, GripperCommand.OPEN, duration=3.0, torque_scaling_factor=low_torque),
+            post_operation = lambda cmd: time.sleep(post_completion_wait),
+            description = "open gripper low torque"
+        )
+    
+    def constructCloseGripperCommands(self, high_torque=1.0, low_torque=0.1, post_completion_wait=0.0):
+        self.addCommand(
+            GripperCommand(self, GripperCommand.CLOSE, duration=1.0, torque_scaling_factor=high_torque),
+            description = "close gripper high torque"
+        )
+        self.addCommand(
+            GripperCommand(self, GripperCommand.CLOSE, duration=3.0, torque_scaling_factor=low_torque),
+            post_operation = lambda cmd: time.sleep(post_completion_wait),
+            description = "close gripper low torque"
+        )

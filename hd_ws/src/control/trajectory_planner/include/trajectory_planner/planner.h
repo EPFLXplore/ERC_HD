@@ -76,6 +76,10 @@ public:
 
     void setScalingFactors(double vel, double accel);
 
+    void addDronePlatform();
+
+    void addLidar();
+
     void addBoxToWorld(const std::vector<double> &dim, const geometry_msgs::msg::Pose &pose, std::string &name);
 
     void updateCurrentPosition();

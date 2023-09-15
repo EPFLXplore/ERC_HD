@@ -87,6 +87,33 @@
         <joint name="joint6" value="0"/>
         <joint name="finger1" value="0"/>
     </group_state>
+    <group_state name="science_rock_drop" group="kerby_arm_group">
+        <joint name="joint1" value="3.14159265"/>
+        <joint name="joint2" value="0.4537856"/>
+        <joint name="joint3" value="-0.750491578"/>
+        <joint name="joint4" value="0"/>
+        <joint name="joint5" value="0.19198621772"/>
+        <joint name="joint6" value="0"/>
+        <joint name="finger1" value="0"/>
+    </group_state>
+    <group_state name="science_rassor_drop" group="kerby_arm_group">
+        <joint name="joint1" value="3.14159265"/>
+        <joint name="joint2" value="0.41887902049"/>
+        <joint name="joint3" value="-0.7679448709"/>
+        <joint name="joint4" value="0"/>
+        <joint name="joint5" value="-0.349065850399"/>
+        <joint name="joint6" value="0"/>
+        <joint name="finger1" value="0"/>
+    </group_state>
+    <group_state name="above_science" group="kerby_arm_group">
+        <joint name="joint1" value="3.14159265"/>
+        <joint name="joint2" value="0.244346095279"/>
+        <joint name="joint3" value="-0.785398163397"/>
+        <joint name="joint4" value="0"/>
+        <joint name="joint5" value="-0.541052068118"/>
+        <joint name="joint6" value="0"/>
+        <joint name="finger1" value="0"/>
+    </group_state>
     <group_state name="face_ground" group="kerby_arm_group">
         <joint name="joint1" value="0"/>
         <joint name="joint2" value="-0.9250245"/>

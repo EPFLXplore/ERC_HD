@@ -5,10 +5,12 @@ uint8               NAMED_TARGET = 2
 uint8               PLUG_VOLTMETER_ALIGN = 3
 uint8               PLUG_VOLTMETER_APPROACH = 4
 uint8               ETHERNET_CABLE = 5
-uint8               PICK_ROCK = 6
 uint8               RASSOR_SAMPLE = 7
 uint8               METAL_BAR_APPROACH = 8
 uint8               ALIGN_PANEL = 9
+uint8               ROCK_SAMPLING_APPROACH = 10
+uint8               ROCK_SAMPLING_DROP = 11
+uint8               ROCK_SAMPLING_COMPLETE = 12
 
 # message variables
 uint8               type
