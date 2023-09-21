@@ -26,7 +26,7 @@
 </xacro:property>
 
 <xacro:property name="joint4_limits">
-  <xacro:aaa_joint_limits lower="${-1.5*pi}" upper="${1.5*pi}" velocity="${6 * rpm_to_Radps * velocity_scaling}" />
+  <xacro:aaa_joint_limits lower="${-2*pi}" upper="${2*pi}" velocity="${6 * rpm_to_Radps * velocity_scaling}" />
 </xacro:property>
 
 <xacro:property name="joint5_limits">
@@ -39,12 +39,11 @@
 
 
 
-
 <link name="base_link">
   <inertial>
-    <origin xyz="0.029969421077976347 0.10500332317031078 -0.11062962842827342" rpy="0 0 0"/>
-    <mass value="49.646028993833724"/>
-    <inertia ixx="1.707273" iyy="2.534956" izz="2.455449" ixy="-0.019527" iyz="-0.055493" ixz="-0.42303"/>
+    <origin xyz="0.05362398614035063 0.01974617698532859 0.037120813316089823" rpy="0 0 0"/>
+    <mass value="6.257043020156179"/>
+    <inertia ixx="0.340644" iyy="0.466541" izz="0.402706" ixy="0.000337" iyz="0.00055" ixz="-0.092411"/>
   </inertial>
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -63,19 +62,19 @@
 
 <link name="steering_1">
   <inertial>
-    <origin xyz="0.0029876037310107573 -0.03602767454974787 -0.21327240320670968" rpy="0 0 0"/>
+    <origin xyz="-0.01189644601781037 -0.036027929982466456 -0.2129618322901442" rpy="0 0 0"/>
     <mass value="0.3543584805415501"/>
-    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.7e-05" iyz="-0.000205" ixz="3.2e-05"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="-0.000206" ixz="-0.000178"/>
   </inertial>
   <visual>
-    <origin xyz="-0.423307 -0.476325 0.140943" rpy="0 0 0"/>
+    <origin xyz="-0.421384 -0.393882 0.063562" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.423307 -0.476325 0.140943" rpy="0 0 0"/>
+    <origin xyz="-0.421384 -0.393882 0.063562" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -84,19 +83,19 @@
 
 <link name="steering_2">
   <inertial>
-    <origin xyz="-0.0029877917009968336 0.036027907882538956 -0.21327245240653972" rpy="0 0 0"/>
+    <origin xyz="0.011896575272170529 0.03602765244982159 -0.21296112839152875" rpy="0 0 0"/>
     <mass value="0.3543584805415501"/>
-    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.7e-05" iyz="0.000205" ixz="-3.2e-05"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="0.000206" ixz="0.000178"/>
   </inertial>
   <visual>
-    <origin xyz="-0.42303 0.272491 0.147921" rpy="0 0 0"/>
+    <origin xyz="-0.42341 0.353934 0.012408" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.42303 0.272491 0.147921" rpy="0 0 0"/>
+    <origin xyz="-0.42341 0.353934 0.012408" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -105,19 +104,19 @@
 
 <link name="steering_3">
   <inertial>
-    <origin xyz="-0.0029882539688568244 0.03602790788253865 -0.21327240320671773" rpy="0 0 0"/>
+    <origin xyz="0.011896795779964109 0.03602765244982109 -0.21296183229014454" rpy="0 0 0"/>
     <mass value="0.3543584805415501"/>
-    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.7e-05" iyz="0.000205" ixz="-3.2e-05"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="0.000206" ixz="0.000178"/>
   </inertial>
   <visual>
-    <origin xyz="0.410093 0.272491 0.140943" rpy="0 0 0"/>
+    <origin xyz="0.408171 0.353934 0.063562" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.410093 0.272491 0.140943" rpy="0 0 0"/>
+    <origin xyz="0.408171 0.353934 0.063562" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -126,19 +125,19 @@
 
 <link name="steering_4">
   <inertial>
-    <origin xyz="0.002988141463151961 -0.03602767454974776 -0.21327245240653173" rpy="0 0 0"/>
+    <origin xyz="-0.011896225510015512 -0.036027929982466234 -0.21296112839152861" rpy="0 0 0"/>
     <mass value="0.3543584805415501"/>
-    <inertia ixx="0.003568" iyy="0.003121" izz="0.000552" ixy="1.7e-05" iyz="-0.000205" ixz="3.2e-05"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="-0.000206" ixz="-0.000178"/>
   </inertial>
   <visual>
-    <origin xyz="0.409817 -0.476325 0.147921" rpy="0 0 0"/>
+    <origin xyz="0.410197 -0.393882 0.012408" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.409817 -0.476325 0.147921" rpy="0 0 0"/>
+    <origin xyz="0.410197 -0.393882 0.012408" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -147,19 +146,19 @@
 
 <link name="wheel3_1">
   <inertial>
-    <origin xyz="0.0003400707098368816 -0.010197254794898913 3.6630334477316673e-06" rpy="0 0 0"/>
+    <origin xyz="0.0003394916280188287 -0.010196510227617639 -2.006330920018007e-05" rpy="0 0 0"/>
     <mass value="1.592763813314383"/>
-    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-2e-06" ixz="0.0"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="1.6e-05" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.408112 -0.493016 0.417916" rpy="0 0 0"/>
+    <origin xyz="0.42733 -0.410572 0.281864" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
-    <origin xyz="0.408112 -0.493016 0.417916" rpy="0 0 0"/>
+    <origin xyz="0.42733 -0.410572 0.281864" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -168,19 +167,19 @@
 
 <link name="wheel4_1">
   <inertial>
-    <origin xyz="0.0003405329776948185 -0.010197254794899857 3.712233269614895e-06" rpy="0 0 0"/>
+    <origin xyz="0.0003392711202230836 -0.010196510227618527 -1.9767207815879484e-05" rpy="0 0 0"/>
     <mass value="1.592763813314383"/>
-    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-2e-06" ixz="0.0"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="1.6e-05" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.425011 -0.493016 0.410938" rpy="0 0 0"/>
+    <origin xyz="-0.404251 -0.410572 0.333019" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
-    <origin xyz="-0.425011 -0.493016 0.410938" rpy="0 0 0"/>
+    <origin xyz="-0.404251 -0.410572 0.333019" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -189,19 +188,19 @@
 
 <link name="wheel2_1">
   <inertial>
-    <origin xyz="-0.0003401832155410234 0.010196488127690917 3.712233260733111e-06" rpy="0 0 0"/>
+    <origin xyz="-0.0003399213580693172 0.010197232694972913 -1.9767207816323573e-05" rpy="0 0 0"/>
     <mass value="1.592763813314383"/>
-    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="2e-06" ixz="-0.0"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-1.6e-05" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.411798 0.289181 0.410938" rpy="0 0 0"/>
+    <origin xyz="0.391037 0.370625 0.333019" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
-    <origin xyz="0.411798 0.289181 0.410938" rpy="0 0 0"/>
+    <origin xyz="0.391037 0.370625 0.333019" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -210,19 +209,19 @@
 
 <link name="wheel1_1">
   <inertial>
-    <origin xyz="-0.0003397209476816987 0.010196488127692138 3.6630334383502827e-06" rpy="0 0 0"/>
+    <origin xyz="-0.0003391418658636458 0.010197232694973468 -2.0063309200568646e-05" rpy="0 0 0"/>
     <mass value="1.592763813314383"/>
-    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="2e-06" ixz="-0.0"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-1.6e-05" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.421325 0.289181 0.417916" rpy="0 0 0"/>
+    <origin xyz="-0.440543 0.370625 0.281864" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
-    <origin xyz="-0.421325 0.289181 0.417916" rpy="0 0 0"/>
+    <origin xyz="-0.440543 0.370625 0.281864" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -231,19 +230,19 @@
 
 <link name="hd_link2_1">
   <inertial>
-    <origin xyz="0.0033070766839577714 0.06083906580288365 0.1440505220890836" rpy="0 0 0"/>
+    <origin xyz="0.007428383283974271 0.060838810370171845 0.14389716626077925" rpy="0 0 0"/>
     <mass value="2.4452075265656514"/>
-    <inertia ixx="0.038706" iyy="0.03827" izz="0.003043" ixy="3.2e-05" iyz="0.001609" ixz="-5e-05"/>
+    <inertia ixx="0.038674" iyy="0.03827" izz="0.003075" ixy="7.8e-05" iyz="0.001607" ixz="-0.00107"/>
   </inertial>
   <visual>
-    <origin xyz="0.228643 -0.044217 -0.046218" rpy="0 0 0"/>
+    <origin xyz="0.228643 0.037726 -0.152484" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="black"/>
   </visual>
   <collision>
-    <origin xyz="0.228643 -0.044217 -0.046218" rpy="0 0 0"/>
+    <origin xyz="0.228643 0.037726 -0.152484" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -252,19 +251,19 @@
 
 <link name="hd_link3_1">
   <inertial>
-    <origin xyz="-0.18542255123016124 -0.02818843505267088 0.033215191672649136" rpy="0 0 0"/>
+    <origin xyz="-0.18506431602380205 -0.028188690485378982 0.03515465538516083" rpy="0 0 0"/>
     <mass value="0.3993227194340243"/>
-    <inertia ixx="0.000838" iyy="0.00625" izz="0.006374" ixy="4.5e-05" iyz="-5e-06" ixz="0.00018"/>
+    <inertia ixx="0.000842" iyy="0.00625" izz="0.00637" ixy="4.5e-05" iyz="-5e-06" ixz="0.000238"/>
   </inertial>
   <visual>
-    <origin xyz="0.22795 -0.132217 -0.446313" rpy="0 0 0"/>
+    <origin xyz="0.2165 -0.050274 -0.552396" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="black"/>
   </visual>
   <collision>
-    <origin xyz="0.22795 -0.132217 -0.446313" rpy="0 0 0"/>
+    <origin xyz="0.2165 -0.050274 -0.552396" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -273,19 +272,19 @@
 
 <link name="hd_link4_1">
   <inertial>
-    <origin xyz="-0.026508760059289482 0.0028968395456604734 -0.000598737646716252" rpy="0 0 0"/>
+    <origin xyz="-0.02651321084424607 0.002896584112952065 -0.0003217450612928996" rpy="0 0 0"/>
     <mass value="0.16590781468918114"/>
-    <inertia ixx="0.000197" iyy="0.000349" izz="0.000476" ixy="3.9e-05" iyz="5e-06" ixz="1e-06"/>
+    <inertia ixx="0.000197" iyy="0.000349" izz="0.000476" ixy="3.9e-05" iyz="5e-06" ixz="4e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.54334 -0.102573 -0.481152" rpy="0 0 0"/>
+    <origin xyz="0.531508 -0.02063 -0.590536" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.54334 -0.102573 -0.481152" rpy="0 0 0"/>
+    <origin xyz="0.531508 -0.02063 -0.590536" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -294,19 +293,19 @@
 
 <link name="hd_link5_1">
   <inertial>
-    <origin xyz="-0.00326876427210665 0.038460537452552596 -0.0001281048652070904" rpy="0 0 0"/>
-    <mass value="0.06877842327462741"/>
-    <inertia ixx="4.9e-05" iyy="2.9e-05" izz="4.3e-05" ixy="1e-06" iyz="0.0" ixz="0.0"/>
+    <origin xyz="-0.0032697164246294763 0.03846028201984416 -9.33050693235904e-05" rpy="0 0 0"/>
+    <mass value="0.06877842327462745"/>
+    <inertia ixx="4.9e-05" iyy="2.9e-05" izz="4.3e-05" ixy="1e-06" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.63704 -0.060573 -0.481315" rpy="0 0 0"/>
+    <origin xyz="0.625201 0.02137 -0.591679" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link5_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.63704 -0.060573 -0.481315" rpy="0 0 0"/>
+    <origin xyz="0.625201 0.02137 -0.591679" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link5_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -315,19 +314,19 @@
 
 <link name="hd_link6_1">
   <inertial>
-    <origin xyz="-0.03520188089997378 -0.0007184800362615151 0.000553267969914728" rpy="0 0 0"/>
+    <origin xyz="-0.03519419436746607 -0.0007187354689699374 0.0009221743273718497" rpy="0 0 0"/>
     <mass value="0.11153016933793788"/>
-    <inertia ixx="0.000117" iyy="0.000166" izz="0.000263" ixy="-2e-06" iyz="-1e-06" ixz="-1e-06"/>
+    <inertia ixx="0.000117" iyy="0.000166" izz="0.000263" ixy="-2e-06" iyz="-1e-06" ixz="1e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.66404 -0.102533 -0.48115" rpy="0 0 0"/>
+    <origin xyz="0.652201 -0.02059 -0.591797" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link6_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="0.66404 -0.102533 -0.48115" rpy="0 0 0"/>
+    <origin xyz="0.652201 -0.02059 -0.591797" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link6_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -336,19 +335,19 @@
 
 <link name="hd_finger2_1">
   <inertial>
-    <origin xyz="0.36572155404860496 -0.7471770274512002 -0.09385171158022082" rpy="0 0 0"/>
+    <origin xyz="0.47666706754454413 -0.7361417133269437 -0.01622358994727202" rpy="0 0 0"/>
     <mass value="0.025342855198124774"/>
     <inertia ixx="4e-06" iyy="1.8e-05" izz="1.6e-05" ixy="-2e-06" iyz="-0.0" ixz="-2e-06"/>
   </inertial>
   <visual>
-    <origin xyz="1.132411 -0.857299 -0.577422" rpy="0 0 0"/>
+    <origin xyz="1.231487 -0.764267 -0.611515" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_finger2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="1.132411 -0.857299 -0.577422" rpy="0 0 0"/>
+    <origin xyz="1.231487 -0.764267 -0.611515" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_finger2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -357,19 +356,19 @@
 
 <link name="hd_finger1_1">
   <inertial>
-    <origin xyz="0.34237822893598846 -0.7617001148724551 -0.1442671674369853" rpy="0 0 0"/>
+    <origin xyz="0.4527983426832546 -0.7504874421753438 -0.06638458975098571" rpy="0 0 0"/>
     <mass value="0.025342855198124774"/>
     <inertia ixx="4e-06" iyy="1.8e-05" izz="1.6e-05" ixy="2e-06" iyz="-0.0" ixz="2e-06"/>
   </inertial>
   <visual>
-    <origin xyz="1.10949 -0.856977 -0.62175" rpy="0 0 0"/>
+    <origin xyz="1.208101 -0.764188 -0.655601" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_finger1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="1.10949 -0.856977 -0.62175" rpy="0 0 0"/>
+    <origin xyz="1.208101 -0.764188 -0.655601" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_finger1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -378,19 +377,19 @@
 
 <link name="hd_motor_j3_1">
   <inertial>
-    <origin xyz="-0.26883632684956255 0.15032394640210167 0.12504846034721717" rpy="0 0 0"/>
+    <origin xyz="-0.3146867524268133 0.14188869096939155 0.25591208107402835" rpy="0 0 0"/>
     <mass value="0.11925838600046076"/>
-    <inertia ixx="0.000514" iyy="0.000525" izz="2.4e-05" ixy="-0.0" iyz="-0.0" ixz="-7.3e-05"/>
+    <inertia ixx="0.00051" iyy="0.000525" izz="2.9e-05" ixy="-0.0" iyz="-0.0" ixz="-8.7e-05"/>
   </inertial>
   <visual>
-    <origin xyz="-0.12039 0.049107 -0.176255" rpy="0 0 0"/>
+    <origin xyz="-0.173508 0.122615 -0.149258" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_motor_j3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.12039 0.049107 -0.176255" rpy="0 0 0"/>
+    <origin xyz="-0.173508 0.122615 -0.149258" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_motor_j3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -399,125 +398,125 @@
 
 <link name="pivot_droit_1">
   <inertial>
-    <origin xyz="3.143512292182876e-05 0.11623514902532184 0.013410381880219507" rpy="0 0 0"/>
+    <origin xyz="0.0009668399350314201 0.11623489359260658 0.013375805290350871" rpy="0 0 0"/>
     <mass value="1.6615144825592312"/>
-    <inertia ixx="0.006305" iyy="0.220618" izz="0.221436" ixy="1e-06" iyz="-0.000817" ixz="-0.001791"/>
+    <inertia ixx="0.007103" iyy="0.220618" izz="0.220639" ixy="-5.6e-05" iyz="-0.000815" ixz="0.013196"/>
   </inertial>
   <visual>
-    <origin xyz="-0.006607 -0.332917 0.127932" rpy="0 0 0"/>
+    <origin xyz="-0.006607 -0.250474 0.021516" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="black"/>
   </visual>
   <collision>
-    <origin xyz="-0.006607 -0.332917 0.127932" rpy="0 0 0"/>
+    <origin xyz="-0.006607 -0.250474 0.021516" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
-
-<link name="hd_link1_1">
-  <inertial>
-    <origin xyz="0.00019077794044744523 0.01421055340514632 0.03342137346722458" rpy="0 0 0"/>
-    <mass value="0.3391136619658369"/>
-    <inertia ixx="0.001801" iyy="0.001217" izz="0.00078" ixy="1e-05" iyz="-0.000142" ixz="-8e-06"/>
-  </inertial>
-  <visual>
-    <origin xyz="0.228643 -0.101917 0.055782" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://kerby_description/meshes/hd_link1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="silver"/>
-  </visual>
-  <collision>
-    <origin xyz="0.228643 -0.101917 0.055782" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://kerby_description/meshes/hd_link1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="pivot_gauche_1">
   <inertial>
-    <origin xyz="-3.2085360767372846e-05 -0.11623491569253713 0.013410381880211292" rpy="0 0 0"/>
+    <origin xyz="-0.0009674901728771402 -0.11623517112525206 0.013375805290350576" rpy="0 0 0"/>
     <mass value="1.6615144825592312"/>
-    <inertia ixx="0.006305" iyy="0.220618" izz="0.221436" ixy="1e-06" iyz="0.000817" ixz="0.001791"/>
+    <inertia ixx="0.007103" iyy="0.220618" izz="0.220639" ixy="-5.6e-05" iyz="0.000815" ixz="-0.013196"/>
   </inertial>
   <visual>
-    <origin xyz="-0.006607 0.129083 0.127932" rpy="0 0 0"/>
+    <origin xyz="-0.006607 0.210526 0.021516" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="black"/>
   </visual>
   <collision>
-    <origin xyz="-0.006607 0.129083 0.127932" rpy="0 0 0"/>
+    <origin xyz="-0.006607 0.210526 0.021516" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
+<link name="hd_link1_1">
+  <inertial>
+    <origin xyz="0.0001907779404468346 0.014210297972432132 0.0484216801173539" rpy="0 0 0"/>
+    <mass value="0.3391136619658369"/>
+    <inertia ixx="0.001801" iyy="0.001217" izz="0.00078" ixy="1e-05" iyz="-0.000142" ixz="-8e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.228643 -0.019974 -0.035484" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.228643 -0.019974 -0.035484" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
 <joint name="steering1" type="continuous">
-  <origin xyz="0.4167 0.143408 -0.013011" rpy="0 0 0"/>
+  <origin xyz="0.414777 0.143408 -0.042046" rpy="0 0 0"/>
   <parent link="pivot_droit_1"/>
   <child link="steering_1"/>
-  <axis xyz="0.008375 0.0 -0.999965"/>
+  <axis xyz="-0.061399 0.0 -0.998113"/>
 </joint>
 
 <joint name="steering2" type="continuous">
-  <origin xyz="0.416423 -0.143408 -0.019989" rpy="0 0 0"/>
+  <origin xyz="0.416803 -0.143408 0.009108" rpy="0 0 0"/>
   <parent link="pivot_gauche_1"/>
   <child link="steering_2"/>
-  <axis xyz="0.008375 -0.0 0.999965"/>
+  <axis xyz="-0.061399 0.0 0.998113"/>
 </joint>
 
 <joint name="steering3" type="continuous">
-  <origin xyz="-0.4167 -0.143408 -0.013011" rpy="0 0 0"/>
+  <origin xyz="-0.414778 -0.143408 -0.042046" rpy="0 0 0"/>
   <parent link="pivot_gauche_1"/>
   <child link="steering_3"/>
-  <axis xyz="-0.008375 0.0 -0.999965"/>
+  <axis xyz="0.061399 -0.0 -0.998113"/>
 </joint>
 
 <joint name="steering4" type="continuous">
-  <origin xyz="-0.416424 0.143408 -0.019989" rpy="0 0 0"/>
+  <origin xyz="-0.416804 0.143408 0.009108" rpy="0 0 0"/>
   <parent link="pivot_droit_1"/>
   <child link="steering_4"/>
-  <axis xyz="-0.008375 -0.0 0.999965"/>
+  <axis xyz="0.061399 -0.0 0.998113"/>
 </joint>
 
 <joint name="driving4" type="continuous">
-  <origin xyz="0.001705 0.016691 -0.269995" rpy="0 0 0"/>
+  <origin xyz="-0.017133 0.01669 -0.269456" rpy="0 0 0"/>
   <parent link="steering_4"/>
   <child link="wheel3_1"/>
-  <axis xyz="-0.033329 0.999444 -0.000279"/>
+  <axis xyz="-0.033267 0.999444 0.002046"/>
 </joint>
 
 <joint name="driving1" type="continuous">
-  <origin xyz="0.001704 0.016691 -0.269995" rpy="0 0 0"/>
+  <origin xyz="-0.017133 0.01669 -0.269457" rpy="0 0 0"/>
   <parent link="steering_1"/>
   <child link="wheel4_1"/>
-  <axis xyz="-0.033329 0.999444 -0.000279"/>
+  <axis xyz="-0.033267 0.999444 0.002046"/>
 </joint>
 
 <joint name="driving3" type="continuous">
-  <origin xyz="-0.001705 -0.01669 -0.269995" rpy="0 0 0"/>
+  <origin xyz="0.017134 -0.016691 -0.269457" rpy="0 0 0"/>
   <parent link="steering_3"/>
   <child link="wheel2_1"/>
-  <axis xyz="0.033329 -0.999444 -0.000279"/>
+  <axis xyz="0.033267 -0.999444 0.002046"/>
 </joint>
 
 <joint name="driving2" type="continuous">
-  <origin xyz="-0.001705 -0.01669 -0.269995" rpy="0 0 0"/>
+  <origin xyz="0.017133 -0.016691 -0.269456" rpy="0 0 0"/>
   <parent link="steering_2"/>
   <child link="wheel1_1"/>
-  <axis xyz="0.033329 -0.999444 -0.000279"/>
+  <axis xyz="0.033267 -0.999444 0.002046"/>
 </joint>
 
 <joint name="joint2" type="revolute">
-  <origin xyz="0.0 -0.0577 0.102" rpy="0 0 0"/>
+  <origin xyz="0.0 -0.0577 0.117" rpy="0 0 0"/>
   <parent link="hd_link1_1"/>
   <child link="hd_link2_1"/>
   <axis xyz="0.0 1.0 0.0"/>
@@ -525,7 +524,7 @@
 </joint>
 
 <joint name="joint3" type="revolute">
-  <origin xyz="0.000693 0.088 0.400095" rpy="0 0 0"/>
+  <origin xyz="0.012143 0.088 0.399912" rpy="0 0 0"/>
   <parent link="hd_link2_1"/>
   <child link="hd_link3_1"/>
   <axis xyz="-0.0 1.0 0.0"/>
@@ -533,15 +532,15 @@
 </joint>
 
 <joint name="joint4" type="revolute">
-  <origin xyz="-0.31539 -0.029644 0.034839" rpy="0 0 0"/>
+  <origin xyz="-0.315008 -0.029644 0.03814" rpy="0 0 0"/>
   <parent link="hd_link3_1"/>
   <child link="hd_link4_1"/>
-  <axis xyz="0.999999 0.0 -0.001732"/>
+  <axis xyz="0.999926 0.0 -0.012203"/>
   <xacro:insert_block name="joint4_limits" />
 </joint>
 
 <joint name="joint5" type="revolute">
-  <origin xyz="-0.0937 -0.042 0.000163" rpy="0 0 0"/>
+  <origin xyz="-0.093693 -0.042 0.001143" rpy="0 0 0"/>
   <parent link="hd_link4_1"/>
   <child link="hd_link5_1"/>
   <axis xyz="0.0 -1.0 0.0"/>
@@ -549,57 +548,56 @@
 </joint>
 
 <joint name="joint6" type="revolute">
-  <origin xyz="-0.027 0.04196 -0.000165" rpy="0 0 0"/>
+  <origin xyz="-0.027 0.04196 0.000118" rpy="0 0 0"/>
   <parent link="hd_link5_1"/>
   <child link="hd_link6_1"/>
-  <axis xyz="-0.999981 -0.0 -0.006092"/>
+  <axis xyz="-0.99999 -0.0 0.00438"/>
   <xacro:insert_block name="joint6_limits" />
 </joint>
 
 <joint name="finger1" type="prismatic">
-  <origin xyz="-0.468371 0.754766 0.096272" rpy="0 0 0"/>
+  <origin xyz="-0.579286 0.743677 0.019718" rpy="0 0 0"/>
   <parent link="hd_link6_1"/>
   <child link="hd_finger2_1"/>
-  <axis xyz="0.007713 0.999801 0.018395"/>
+  <axis xyz="0.007905 0.999801 0.018314"/>
   <limit upper="0.0" lower="0.0" effort="100" velocity="100"/>
 </joint>
 
 <joint name="finger2" type="prismatic">
-  <origin xyz="-0.44545 0.754444 0.1406" rpy="0 0 0"/>
+  <origin xyz="-0.5559 0.743598 0.063804" rpy="0 0 0"/>
   <parent link="hd_link6_1"/>
   <child link="hd_finger1_1"/>
-  <axis xyz="0.007713 0.999801 0.018395"/>
+  <axis xyz="0.007905 0.999801 0.018314"/>
   <limit upper="0.0" lower="0.0" effort="100" velocity="100"/>
   <mimic joint="finger1" multiplier="-1" offset="0"/>
 </joint>
 
 <joint name="moteurJ3" type="fixed">
-  <origin xyz="0.349033 -0.093324 0.130037" rpy="0 0 0"/>
+  <origin xyz="0.402151 -0.084889 -0.003226" rpy="0 0 0"/>
   <parent link="hd_link2_1"/>
   <child link="hd_motor_j3_1"/>
 </joint>
 
 <joint name="pivot_gauche" type="continuous">
-  <origin xyz="0.006607 0.332917 -0.127932" rpy="0 0 0"/>
+  <origin xyz="0.006607 0.250474 -0.021516" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="pivot_droit_1"/>
-  <axis xyz="0.0 -1.0 -0.0"/>
-</joint>
-
-<joint name="joint1" type="revolute">
-  <origin xyz="-0.228643 0.101917 -0.055782" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="hd_link1_1"/>
-  <axis xyz="0.0 -0.0 1.0"/>
-  <xacro:insert_block name="joint1_limits" />
-  <!-- <limit lower="${-pi}" upper="${pi}" velocity="${2*rpm_to_Radps}" effort="100" /> -->
+  <axis xyz="-0.0 1.0 0.0"/>
 </joint>
 
 <joint name="pivot_droit" type="continuous">
-  <origin xyz="0.006607 -0.129083 -0.127932" rpy="0 0 0"/>
+  <origin xyz="0.006607 -0.210526 -0.021516" rpy="0 0 0"/>
   <parent link="base_link"/>
   <child link="pivot_gauche_1"/>
-  <axis xyz="-0.0 -1.0 -0.0"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="joint1" type="revolute">
+  <origin xyz="-0.228643 0.019974 0.035484" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="hd_link1_1"/>
+  <axis xyz="-0.0 0.0 -1.0"/>
+  <xacro:insert_block name="joint1_limits" />
 </joint>
 
 </robot>
