@@ -10,7 +10,7 @@
     <xacro:include filename="kerby.ros2_control.xacro" />
 
 
-    <xacro:kerby_arm_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
+    <xacro:kerby_arm_ros2_control name="KerbyArmSystem" initial_positions_file="$(arg initial_positions_file)"/>
     
     <xacro:kerby_base_ros2_control name="KerbyBaseSystem" initial_positions_file="$(arg initial_positions_file)"/>
 

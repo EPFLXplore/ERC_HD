@@ -83,7 +83,7 @@ def generate_launch_description():
             trajectory_execution,
             planning_scene_monitor_parameters,
             robot_description_kinematics
-        ],
+        ]
     )
 
     return LaunchDescription(

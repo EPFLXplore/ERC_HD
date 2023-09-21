@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<robot name="Assemblage" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot name="kerby" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
 <transmission name="steering1_tran">
   <type>transmission_interface/SimpleTransmission</type>
@@ -166,34 +166,34 @@
   </actuator>
 </transmission>
 
-<transmission name="pivot_gauche_tran">
+<transmission name="R�volution 30_tran">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="pivot_gauche">
+  <joint name="R�volution 30">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
   </joint>
-  <actuator name="pivot_gauche_actr">
+  <actuator name="R�volution 30_actr">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
 
-<transmission name="joint1_tran">
+<transmission name="R�volution 31_tran">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="joint1">
+  <joint name="R�volution 31">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
   </joint>
-  <actuator name="joint1_actr">
+  <actuator name="R�volution 31_actr">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
 
-<transmission name="pivot_droit_tran">
+<transmission name="R�volution 32_tran">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="pivot_droit">
+  <joint name="R�volution 32">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
   </joint>
-  <actuator name="pivot_droit_actr">
+  <actuator name="R�volution 32_actr">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>

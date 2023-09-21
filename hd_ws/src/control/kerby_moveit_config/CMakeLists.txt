@@ -1,8 +1,13 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.8)
 project(kerby_moveit_config)
 
 find_package(ament_cmake REQUIRED)
-find_package(Assemblage_description)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
+find_package(fake_components)
+find_package(vision)
+
 
 ament_package()
 

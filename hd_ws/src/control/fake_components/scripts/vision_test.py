@@ -8,32 +8,41 @@ import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_corrector as pc
 import kinematics_utils.pose_tracker as pt
 from kerby_interfaces.msg import Task, Object
+from hd_interfaces.msg import TargetInstruction
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Bool, Float64MultiArray
 import time
 from math import pi
 import copy
-from interfaces.msg import PanelObject
 
 
 end_effector_pose = Pose()
 artag_pose = Pose()
-artag_pose2 = Pose()
+btn_pose = Pose()
 
 vision_transform = Pose()
 vision_transform.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
 
 
 def artag_callback(msg):
-    pose = Pose()
-    pose.position.x = msg.pose.position.x/100
-    pose.position.y = msg.pose.position.y/100
-    pose.position.z = msg.pose.position.z/100
-    pose.orientation = msg.pose.orientation
+    pose1 = Pose()
+    pose2 = Pose()
 
-    temp = pc.correct_vision_pose(pose)
+    pose1.position.x = msg.ar_tag_pose.position.x/1000
+    pose1.position.y = msg.ar_tag_pose.position.y/1000
+    pose1.position.z = msg.ar_tag_pose.position.z/1000
+    pose1.orientation = msg.ar_tag_pose.orientation
+    temp = pc.correct_vision_pose(pose1)
     artag_pose.position = temp.position
     artag_pose.orientation = temp.orientation
+
+    pose2.position.x = msg.object_pose.position.x/1000
+    pose2.position.y = msg.object_pose.position.y/1000
+    pose2.position.z = msg.object_pose.position.z/1000
+    pose2.orientation = msg.object_pose.orientation
+    temp = pc.correct_vision_pose(pose2)
+    btn_pose.position = temp.position
+    btn_pose.orientation = temp.orientation
 
 
 def end_effector_callback(msg):
@@ -50,8 +59,9 @@ def end_effector_callback(msg):
 def get_btn_pose():
     obj = Object()
     obj.pose = qa.compose_poses(end_effector_pose, artag_pose)
-    obj.type = "box"
-    obj.name = "button"
+    obj.type = obj.BOX
+    obj.operation = obj.ADD
+    obj.name = "artag"
     obj.shape = Float64MultiArray()
     obj.shape.data = [0.2, 0.1, 0.0001]
 
@@ -59,16 +69,46 @@ def get_btn_pose():
     obj3.shape = Float64MultiArray()
     obj3.shape.data = [0.01, 0.01, 0.1]
     obj3.pose = copy.deepcopy(obj.pose)
-    obj3.type = "box"
-    obj3.name = "axis"
+    obj.type = obj.BOX
+    obj.operation = obj.ADD
+    obj3.name = "artag_axis"
     axis = qa.point_image([0.0, 0.0, 1.0], obj.pose.orientation)
     obj3.pose.position = qa.make_point(qa.add(obj3.pose.position, qa.mul(0.05, axis)))
-    
+
+    # obj2 = copy.deepcopy(obj)
+    # obj2.name = "btn"
+    # obj2.pose = qa.compose_poses(end_effector_pose, btn_pose)
+
+    # obj4 = copy.deepcopy(obj3)
+    # obj4.name = "btn_axis"
+    # obj4.pose = copy.deepcopy(obj2.pose)
+    # axis = qa.point_image([0.0, 0.0, 1.0], obj2.pose.orientation)
+    # obj4.pose.position = qa.make_point(qa.add(obj4.pose.position, qa.mul(0.05, axis)))
+
+    obj2 = Object()
+    obj2.pose = qa.compose_poses(end_effector_pose, btn_pose)
+    obj.type = obj.BOX
+    obj.operation = obj.ADD
+    obj2.name = "btn"
+    obj2.shape = Float64MultiArray()
+    obj2.shape.data = [0.2, 0.1, 0.0001]
+
+    obj4 = Object()
+    obj4.shape = Float64MultiArray()
+    obj4.shape.data = [0.01, 0.01, 0.1]
+    obj4.pose = copy.deepcopy(obj2.pose)
+    obj.type = obj.BOX
+    obj.operation = obj.ADD
+    obj4.name = "btn_axis"
+    axis = qa.point_image([0.0, 0.0, 1.0], obj2.pose.orientation)
+    obj4.pose.position = qa.make_point(qa.add(obj4.pose.position, qa.mul(0.05, axis)))
+
     obj.pose = pc.revert_from_vision(obj.pose)
+    obj2.pose = pc.revert_from_vision(obj2.pose)
     obj3.pose = pc.revert_from_vision(obj3.pose)
-    # obj.pose = qa.compose_poses(obj.pose, qa.reverse_pose(vision_transform))
-    # obj3.pose = qa.compose_poses(obj3.pose, qa.reverse_pose(vision_transform))
-    return obj, obj3
+    obj4.pose = pc.revert_from_vision(obj4.pose)
+
+    return obj, obj2, obj3, obj4
 
 
 def main():
@@ -76,7 +116,7 @@ def main():
     node = rclpy.create_node("kinematics_vision_test")
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", end_effector_callback, 10)
-    node.create_subscription(PanelObject, "/HD/vision/distance_topic", artag_callback, 10)
+    node.create_subscription(TargetInstruction, "target_pose", artag_callback, 10)
     #node.create_subscription(PanelObject, "/HD/vision/distance_topic", pt.detected_object_pose_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)
@@ -92,10 +132,14 @@ def main():
         while rclpy.ok():
             if time.time()-t > btn_refresh_time:
                 t = time.time()
-                o1, o3 = get_btn_pose()
+                o1, o2, o3, o4 = get_btn_pose()
                 add_object_pub.publish(o1)
                 time.sleep(0.01)
-                add_object_pub.publish(o3)
+                add_object_pub.publish(o2)
+                # time.sleep(0.01)
+                # add_object_pub.publish(o3)
+                # time.sleep(0.01)
+                # add_object_pub.publish(o4)
             rate.sleep()
 
     except KeyboardInterrupt:

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<robot name="Assemblage" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot name="kerby" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
 <xacro:property name="body_color" value="Gazebo/Silver" />
 
@@ -133,14 +133,14 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="hd_link1_1">
+<gazebo reference="pivot_gauche_1">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="pivot_gauche_1">
+<gazebo reference="hd_link1_1">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>

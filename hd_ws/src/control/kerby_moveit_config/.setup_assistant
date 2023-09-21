@@ -5,12 +5,13 @@ moveit_setup_assistant_config:
   srdf:
     relative_path: config/kerby.srdf
   package_settings:
-    author_name: matthias
-    author_email: matthias@gmail.com
-    generated_timestamp: 1684012584
+    author_name: Matthias Schuller
+    author_email: matthiasshuller92@gmail.com
+    generated_timestamp: 1668207535
   control_xacro:
     command:
       - position
+      - velocity
     state:
       - position
       - velocity
@@ -20,6 +21,7 @@ moveit_setup_assistant_config:
   control_xacro:
     command:
       - position
+      - velocity
     state:
       - position
       - velocity
