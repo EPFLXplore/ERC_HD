@@ -1,5 +1,5 @@
 from .command import *
-from kerby_interfaces.msg import JointSpaceCmd
+from hd_interfaces.msg import JointSpaceCmd
 
 
 class JointSpaceCommand(Command):

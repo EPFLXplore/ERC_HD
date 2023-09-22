@@ -3,12 +3,11 @@
 import rclpy
 from rclpy.node import Node
 import threading
-from task_execution.all_tasks import *
+from task_execution.task import *
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_corrector as pc
 import kinematics_utils.pose_tracker as pt
-from kerby_interfaces.msg import Task, Object
-from hd_interfaces.msg import TargetInstruction
+from hd_interfaces.msg import Task, Object, TargetInstruction
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Bool, Float64MultiArray
 import time

@@ -15,9 +15,12 @@ find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/JointSpaceCmd.msg"
+  "msg/MotorCommand.msg"
+  "msg/Object.msg"
+  "msg/PoseGoal.msg"
   "msg/TargetInstruction.msg"
-  "msg/ServoRequest.msg"
-  "msg/ServoResponse.msg"
+  "msg/Task.msg"
   DEPENDENCIES std_msgs geometry_msgs   # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 

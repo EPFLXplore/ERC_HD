@@ -15,9 +15,9 @@
 #include "std_msgs/msg/float64_multi_array.hpp"
 #include "std_msgs/msg/bool.hpp"
 
-#include "kerby_interfaces/msg/pose_goal.hpp"
-#include "kerby_interfaces/msg/object.hpp"
-#include "kerby_interfaces/msg/joint_space_cmd.hpp"
+#include "hd_interfaces/msg/pose_goal.hpp"
+#include "hd_interfaces/msg/object.hpp"
+#include "hd_interfaces/msg/joint_space_cmd.hpp"
 #include "std_msgs/msg/int8.hpp"
 #include "std_msgs/msg/string.hpp"
 
@@ -89,13 +89,13 @@ public:
     void stop();
 
 private:
-    void poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg);
+    void poseTargetCallback(const hd_interfaces::msg::PoseGoal::SharedPtr msg);
 
     void jointTargetCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
 
-    void jointTarget2Callback(const kerby_interfaces::msg::JointSpaceCmd::SharedPtr msg);
+    void jointTarget2Callback(const hd_interfaces::msg::JointSpaceCmd::SharedPtr msg);
 
-    void jointTargetIntermediary(const kerby_interfaces::msg::JointSpaceCmd::SharedPtr msg);
+    void jointTargetIntermediary(const hd_interfaces::msg::JointSpaceCmd::SharedPtr msg);
 
     void manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
 
@@ -103,7 +103,7 @@ private:
 
     void removeFromWorld(std::string &name);
 
-    void addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg);
+    void addObjectCallback(const hd_interfaces::msg::Object::SharedPtr msg);
 
     void modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg);
 
@@ -127,10 +127,10 @@ private:
     moveit::planning_interface::PlanningSceneInterface*                     m_planning_scene_interface;
     const moveit::core::JointModelGroup*                                    m_joint_model_group;
     moveit::planning_interface::MoveGroupInterface::Plan                    m_plan;
-    rclcpp::Subscription<kerby_interfaces::msg::PoseGoal>::SharedPtr        m_pose_target_sub;
+    rclcpp::Subscription<hd_interfaces::msg::PoseGoal>::SharedPtr        m_pose_target_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr       m_joint_target_sub;
-    rclcpp::Subscription<kerby_interfaces::msg::JointSpaceCmd>::SharedPtr   m_joint_target2_sub;
-    rclcpp::Subscription<kerby_interfaces::msg::Object>::SharedPtr          m_add_object_sub;
+    rclcpp::Subscription<hd_interfaces::msg::JointSpaceCmd>::SharedPtr   m_joint_target2_sub;
+    rclcpp::Subscription<hd_interfaces::msg::Object>::SharedPtr          m_add_object_sub;
     rclcpp::Subscription<moveit_msgs::msg::CollisionObject>::SharedPtr      m_add_object2_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                    m_mode_change_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr       m_man_inv_axis_sub;

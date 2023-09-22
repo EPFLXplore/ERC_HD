@@ -1,5 +1,5 @@
 from task_execution.command.command import *
-from kerby_interfaces.msg import Object
+from hd_interfaces.msg import Object
 
 
 class AddObjectCommand(Command):

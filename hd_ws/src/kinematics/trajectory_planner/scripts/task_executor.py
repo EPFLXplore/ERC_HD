@@ -6,12 +6,10 @@ from rclpy.node import Node
 from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, BarMagnetApproach, EthernetApproach, AlignPanel, RockSamplingApproach, RockSamplingDrop, RockSamplingComplete
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
-from kerby_interfaces.msg import Task, Object, PoseGoal, JointSpaceCmd
-from hd_interfaces.msg import TargetInstruction
+from hd_interfaces.msg import Task, Object, PoseGoal, JointSpaceCmd, TargetInstruction, MotorCommand
 from avionics_interfaces.msg import ServoRequest, ServoResponse
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
-from motor_control_interfaces.msg import MotorCommand
 import threading
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc

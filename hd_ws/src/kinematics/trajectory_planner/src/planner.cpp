@@ -28,10 +28,10 @@ void Planner::config()
 }
 
 void Planner::initCommunication() {
-    m_pose_target_sub = this->create_subscription<kerby_interfaces::msg::PoseGoal>("/HD/kinematics/pose_goal", 10, std::bind(&Planner::poseTargetCallback, this, _1));
+    m_pose_target_sub = this->create_subscription<hd_interfaces::msg::PoseGoal>("/HD/kinematics/pose_goal", 10, std::bind(&Planner::poseTargetCallback, this, _1));
     m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
-    m_joint_target2_sub = this->create_subscription<kerby_interfaces::msg::JointSpaceCmd>("/HD/kinematics/joint_goal2", 10, std::bind(&Planner::jointTarget2Callback, this, _1));
-    m_add_object_sub = this->create_subscription<kerby_interfaces::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
+    m_joint_target2_sub = this->create_subscription<hd_interfaces::msg::JointSpaceCmd>("/HD/kinematics/joint_goal2", 10, std::bind(&Planner::jointTarget2Callback, this, _1));
+    m_add_object_sub = this->create_subscription<hd_interfaces::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
     m_add_object2_sub = this->create_subscription<moveit_msgs::msg::CollisionObject>("/HD/kinematics/add_object2", 10, std::bind(&Planner::addObjectToWorld, this, _1));
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&Planner::modeChangeCallback, this, _1));
     m_man_inv_axis_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/fsm/man_inv_axis_cmd", 10, std::bind(&Planner::manualInverseAxisCallback, this, _1));
@@ -335,7 +335,7 @@ void Planner::stop() {
     m_man_inv_axis[2] = 0.0;
 }
 
-void Planner::poseTargetCallback(const kerby_interfaces::msg::PoseGoal::SharedPtr msg)
+void Planner::poseTargetCallback(const hd_interfaces::msg::PoseGoal::SharedPtr msg)
 {
     RCLCPP_INFO(this->get_logger(), "Received pose goal");
     //setScalingFactors(msg->velocity_scaling_factor, msg->velocity_scaling_factor);
@@ -357,14 +357,14 @@ void Planner::jointTargetCallback(const std_msgs::msg::Float64MultiArray::Shared
     executor.detach();
 }
 
-void Planner::jointTarget2Callback(const kerby_interfaces::msg::JointSpaceCmd::SharedPtr msg)
+void Planner::jointTarget2Callback(const hd_interfaces::msg::JointSpaceCmd::SharedPtr msg)
 {
     RCLCPP_INFO(this->get_logger(), "Received joint goal ***");
     std::thread executor(&Planner::jointTargetIntermediary, this, msg);
     executor.detach();
 }
 
-void Planner::jointTargetIntermediary(const kerby_interfaces::msg::JointSpaceCmd::SharedPtr msg) {
+void Planner::jointTargetIntermediary(const hd_interfaces::msg::JointSpaceCmd::SharedPtr msg) {
     moveit::core::RobotStatePtr current_state = m_move_group->getCurrentState();
     std::vector<double> joint_group_positions = {0, 0, 0, 0, 0, 0, 0};
     current_state->copyJointGroupPositions(m_joint_model_group, joint_group_positions);
@@ -429,7 +429,7 @@ void Planner::manualInverseAxisCallback(const std_msgs::msg::Float64MultiArray::
     // }
 }
 
-void Planner::addObjectCallback(const kerby_interfaces::msg::Object::SharedPtr msg)
+void Planner::addObjectCallback(const hd_interfaces::msg::Object::SharedPtr msg)
 {
     RCLCPP_INFO(this->get_logger(), "Received new object");
     if (msg->operation == msg->REMOVE) {

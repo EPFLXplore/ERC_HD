@@ -20,7 +20,7 @@
   <depend>soem_interface</depend>
   <depend>ethercat_sdk_master</depend>
   <depend>maxon_epos_ethercat_sdk</depend>
-  <depend>motor_control_interfaces</depend>
+  <depend>hd_interfaces</depend>
   <depend>yaml-cpp</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>

@@ -7,7 +7,7 @@ import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 from collections.abc import Callable
 from task_execution.command import *
-from kerby_interfaces.msg import Object
+from hd_interfaces.msg import Object
 
 
 class CommandWrapper:

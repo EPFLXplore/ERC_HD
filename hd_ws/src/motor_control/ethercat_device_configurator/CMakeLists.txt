@@ -35,10 +35,12 @@ find_package(message_logger REQUIRED)
 find_package(soem_interface REQUIRED)
 find_package(ethercat_sdk_master REQUIRED)
 find_package(maxon_epos_ethercat_sdk REQUIRED)
-find_package(motor_control_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(soem REQUIRED)
+
+find_package(hd_interfaces)
+
 add_executable(motor_control  src/${PROJECT_NAME}/motor_control.cpp src/${PROJECT_NAME}/EthercatDeviceConfigurator.cpp)
 
 # # Set the path to the third-party library folder
@@ -66,7 +68,7 @@ include_directories(
 
 ament_target_dependencies(motor_control
   yaml-cpp
-  motor_control_interfaces #rclcpp  
+  hd_interfaces
   rclcpp
   ethercat_sdk_master
   maxon_epos_ethercat_sdk
@@ -77,12 +79,9 @@ ament_target_dependencies(motor_control
   sensor_msgs
 )
 
-#target_link_directories(motor_control motor_control_interfaces)
-
 target_link_libraries(motor_control
     Threads::Threads
     ${catkin_LIBRARIES}
-  #   motor_control_interfaces
     maxon_epos_ethercat_sdk::mxn_sdk_lib
     yaml-cpp
     soem::soemrsl_lib
@@ -94,11 +93,6 @@ target_link_libraries(motor_control
      #soem
 )
 
-
-rosidl_generate_interfaces(${PROJECT_NAME} 
-  "../motor_control_interfaces/msg/MotorCommand.msg"
-  "../motor_control_interfaces/msg/MotorData.msg"
- )
 
 install(TARGETS motor_control
   DESTINATION lib/${PROJECT_NAME}/
