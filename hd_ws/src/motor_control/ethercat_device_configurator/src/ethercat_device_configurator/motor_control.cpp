@@ -5,6 +5,7 @@
 #include "hd_interfaces/msg/motor_command.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
 #include "std_msgs/msg/int8.hpp"
+#include "std_msgs/msg/float64.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 
 #include <iostream>
@@ -38,18 +39,18 @@ struct MotorCommand
     maxon::ModeOfOperationEnum stationary_mode = maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode;
  
     MotorCommand(std::string name, maxon::Command command, std::chrono::steady_clock::time_point command_time) : name(name), command(command), command_time(command_time) {}
-};
+}; 
 
 static const double PI = 3.14159265359;
 static const double INF = 1e10;
 static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J5", "J6", "Gripper", "Rassor"};
-static const std::vector<double> MAX_VELOCITIES = {0.2, 0.07, 0.1, 0.6, 0.2, 0.5, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
-static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 1, 1};
-static const std::vector<double> POS_LOWER_LIMITS = {-PI, -PI/2, -PI/4, -PI, -PI/2, -PI, -INF};
-static const std::vector<double> POS_UPPER_LIMITS = {PI, PI/2, PI/4, PI, PI/2, PI, INF};
+static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 0.5, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
+static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2};
+static const std::vector<double> POS_LOWER_LIMITS = {-2*PI, -PI, -PI/4, -2*PI, -PI/2, -PI, -INF};
+static const std::vector<double> POS_UPPER_LIMITS = {2*PI, PI/2, PI/4, 2*PI, PI/2, PI, INF};
 
 //static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
-static const std::vector<double> DIRECTIONS = {-1, 1, 1, -1, 1, 1, 1, 1};   // to match directions of MoveIt
+static const std::vector<double> DIRECTIONS = {1, 1, 1, -1, 1, 1, 1, 1};   // to match directions of MoveIt
 
 static std::vector<bool> should_scan_stationary_states = {true, true, true, true, true, true, true, true};
 
@@ -75,10 +76,12 @@ public:
             "HD/fsm/joint_vel_cmd", 10, std::bind(&MotorController::manual_direct_command_callback, this, _1));
         subscription_position_command_ = this->create_subscription<std_msgs::msg::Float64MultiArray>(
             "HD/kinematics/joint_pos_cmd", 10, std::bind(&MotorController::position_command_callback, this, _1));
-        subscription_single_motor_command_ = this->create_subscription<hd_interfaces::msg::MotorCommand>(
+        subscription_single_MotorCommand_ = this->create_subscription<hd_interfaces::msg::MotorCommand>(
             "HD/kinematics/single_joint_cmd", 10, std::bind(&MotorController::motor_command_callback, this, _1));
         subscription_shutdown_ = this->create_subscription<std_msgs::msg::Int8>(
-            "ROVER/shutdown", 10, std::bind(&MotorController::kill, this, _1));
+            "ROVER/Maintenance", 10, std::bind(&MotorController::kill, this, _1));
+        subscription_set_gripper_torque_ = this->create_subscription<std_msgs::msg::Float64>(
+            "HD/kinematics/set_gripper_torque", 10, std::bind(&MotorController::set_gripper_torque, this, _1));
         publisher_state_ = this->create_publisher<sensor_msgs::msg::JointState>("HD/motor_control/joint_telemetry", 10);
         timer_motor_data_ = this->create_wall_timer(
             10ms, std::bind(&MotorController::publish_state, this));
@@ -107,7 +110,11 @@ public:
         case maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode:
             command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
             if (should_scan_stationary_states[motor_index]) {
-                stationary_positions[motor_index] = get_position(motor_index);
+                double pos = get_position(motor_index);
+                if (weird(motor_index, pos)) {
+                    return;
+            }
+                stationary_positions[motor_index] = pos;
             }
             command.command.setTargetPosition(stationary_positions[motor_index] * DIRECTIONS[motor_index]);
             break;
@@ -133,7 +140,8 @@ private:
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr subscription_velocity_command_;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr subscription_position_command_;
-    rclcpp::Subscription<hd_interfaces::msg::MotorCommand>::SharedPtr subscription_single_motor_command_;
+    rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription_set_gripper_torque_;
+    rclcpp::Subscription<hd_interfaces::msg::MotorCommand>::SharedPtr subscription_single_MotorCommand_;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr subscription_shutdown_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr publisher_state_;
     // MATTHIAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -150,6 +158,10 @@ private:
                 torque_direct_command(i, msg->data[i]);
             }
         }
+    }
+
+    static bool weird(size_t motor_index, double pos) {
+        return (pos > POS_UPPER_LIMITS[motor_index] * 1.5 || pos < POS_LOWER_LIMITS[motor_index] * 1.5);
     }
 
     static void position_direct_command(size_t motor_index, double velocity_scaling_factor) {
@@ -170,7 +182,11 @@ private:
             command.command.setTargetPosition(position_commands[motor_index] * DIRECTIONS[motor_index]);
         }
         else {  // scanning
-            position_commands[motor_index] = get_position(motor_index);
+            double pos = get_position(motor_index);
+            if (weird(motor_index, pos)) {
+                return;
+            }
+            position_commands[motor_index] = pos;
         }
         last_cmd_times[motor_index] = now;
         command.command_time = now;
@@ -216,6 +232,12 @@ private:
         }
     }
 
+    void set_gripper_torque(const std_msgs::msg::Float64::SharedPtr msg) {
+        for (auto &motor_command : motor_command_list) {
+            if (motor_command.name == "Gripper") motor_command.max_torque = msg->data;
+        }
+    }
+
     void publish_state()
     {
         sensor_msgs::msg::JointState msg;
@@ -236,8 +258,18 @@ private:
 
     void kill(const std_msgs::msg::Int8::SharedPtr msg)
     {
-        signal_handler(0);
-        rclcpp::shutdown();
+        static const int LAUNCH = 1;
+        static const int ABORT = 2;
+        static const int WAIT = 3;
+        static const int RESUME = 4;
+        static const int CANCEL = 5;
+        switch(msg->data) {
+            case ABORT:
+            case CANCEL:
+                signal_handler(0);
+                rclcpp::shutdown();
+                break;
+        }
     }
     // MATTHIAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -401,8 +433,11 @@ void worker()
             {
                 MELO_WARN_STREAM("Maxon '" << maxon_slave_ptr->getName()
                                            << "': " << maxon_slave_ptr->getReading().getDriveState());
-                // Set maxons to operation enabled state, do not block the call!
-                //maxon_slave_ptr->setDriveStateViaPdo(maxon::DriveState::OperationEnabled, false);
+
+                if (maxon_slave_ptr->getReading().getDriveState() == maxon::DriveState::Fault) {
+                    // Set maxons to operation enabled state, do not block the call!
+                    maxon_slave_ptr->setDriveStateViaPdo(maxon::DriveState::OperationEnabled, false);
+                }
             }
 
             // Constant update rate

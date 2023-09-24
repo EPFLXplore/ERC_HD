@@ -49,7 +49,7 @@ def construct_vision_tranform():
 EEF_TRANSFORM_CORRECTION = construct_eef_transform("finger1")
 
 CAMERA_TRANSFORM = Pose(                    # transform between end effector and camera
-    position = Point(x=0.0447, y=-0.009, z=-0.115)    # y = -0.009
+    position = Point(x=0.051, y=0.0, z=-0.115)    # X = 0.0447, y = -0.009
 )
 
 VISION_TRANSFORM_CORRECTION = Pose()

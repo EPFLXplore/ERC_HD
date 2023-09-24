@@ -238,7 +238,7 @@ def Enum(**kwargs):
     if len(kwargs) == 0:
         ValType = int   # by default
     else:
-        ValType = type(list(kwargs.values)[0])
+        ValType = type(list(kwargs.values())[0])
 
     class EnumMetaClass(type):        
         def __init__(self, *args, **kwargs):
@@ -256,6 +256,12 @@ def Enum(**kwargs):
             obj = self.__SLOTS[index % len(self.__SLOTS)]
             return obj
         
+        def next(self, obj):
+            for i, slot in enumerate(self.__SLOTS):
+                if slot == obj:
+                    break
+            return self.__SLOTS[i%len(self.__SLOTS)]
+        
         def register_instance(self, name: str, value: ValType):
             setattr(self, name, value)
             self.__SLOTS.append(getattr(self, name))
@@ -265,21 +271,24 @@ def Enum(**kwargs):
             self.name = name
             self.value = value
             type(self).register_instance(name, self)
-        
+
         def __eq__(self, other: Any):
             if isinstance(other, type(self)):
                 return other.value == self.value
             elif isinstance(other, type(self.value)):
                 return other == self.value
             return False
-        
+
+        def next(self):
+            return type(self).next(self)
+
         def __repr__(self):
             return f"<name: {self.name}, value: {self.value}>"
-        
+
     EnumClass = EnumMetaClass(
         "EnumClass", 
         (object,), 
-        {"__init__": EnumClassTemplate.__init__, "__eq__": EnumClassTemplate.__eq__, "__repr__": EnumClassTemplate.__repr__}
+        {"__init__": EnumClassTemplate.__init__, "__eq__": EnumClassTemplate.__eq__, "__repr__": EnumClassTemplate.__repr__, "next": EnumClassTemplate.next}
     )
     for name, value in kwargs.items():
         EnumClass(name, value)
@@ -287,7 +296,7 @@ def Enum(**kwargs):
     return EnumClass
 
 
-HDMode = Enum(
+HDMode = EnumOld(
     MANUAL_INVERSE = 0,
     MANUAL_DIRECT = 1,
     SEMI_AUTONOMOUS = 2,
@@ -295,7 +304,7 @@ HDMode = Enum(
 )
 
 
-SemiAutoTask = Enum(
+SemiAutoTask = EnumOld(
     NO_TASK = Task.NO_TASK,
     BTN_TASK = Task.BUTTON,
     PLUG_VOLTMETER = Task.PLUG_VOLTMETER_APPROACH,
@@ -441,6 +450,7 @@ class ControlStation(Node):
                     self.gamepad_config.handle_event(event)
 
             except (TypeError, IOError) as e:
+                raise
                 self.timer.cancel()
                 self.connect()
                 print(e)
