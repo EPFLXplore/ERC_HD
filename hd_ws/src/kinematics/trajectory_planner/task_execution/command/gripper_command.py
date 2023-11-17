@@ -23,3 +23,4 @@ class GripperCommand(Command):
         while time.time()-start < self.duration:
             self.executor.sendGripperTorque(self.getTorqueSign() * self.torque_scaling_factor)
             rate.sleep()
+        self.executor.sendGripperTorque(0)  # stop the torque at the end

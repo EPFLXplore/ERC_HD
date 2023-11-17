@@ -86,6 +86,7 @@ class Executor(Node):
         self.add_obj_pub.publish(msg)"""
 
     def sendPoseGoal(self, goal: Pose, cartesian=False, velocity_scaling_factor=1.0):
+        """sends a pose goal to the trajectory planner"""
         msg = PoseGoal(
             goal = goal,
             cartesian = cartesian,
@@ -94,10 +95,12 @@ class Executor(Node):
         self.pose_target_pub.publish(msg)
     
     def sendJointGoal(self, goal: list):
+        """sends a joint goal to the trajectory planner"""
         msg = Float64MultiArray(data=goal)
         self.joint_target_pub.publish(msg)
     
-    def sendGripperTorque(self, torque_scaling_factor):
+    def sendGripperTorque(self, torque_scaling_factor: float):
+        """sends a gripper torque command to the motor control"""
         msg = MotorCommand(
             name = "Gripper",
             mode = 2,   # MotorCommand.TORQUE,
@@ -105,7 +108,8 @@ class Executor(Node):
         )
         self.motor_command_pub.publish(msg)
     
-    def sendRassorTorque(self, torque_scaling_factor):
+    def sendRassorTorque(self, torque_scaling_factor: float):
+        """sends a rassor torque command to the motor control"""
         msg = MotorCommand(
             name = "Rassor",
             mode = 2,   # MotorCommand.TORQUE,
@@ -113,11 +117,13 @@ class Executor(Node):
         )
         self.motor_command_pub.publish(msg)
 
-    def sendVoltmeterCommand(self, angle):
+    def sendVoltmeterCommand(self, angle: float):
+        """sends an extend/retract voltmeter command to Vincent's avionics"""
         msg = ServoRequest(destination_id=0, channel=1, angle=angle)
         self.voltmeter_pub.publish(msg)
 
     def sendJointSpaceCmd(self, mode, states: list):
+        """"""
         msg = JointSpaceCmd(
             mode=mode,
             states=Float64MultiArray(data=states)

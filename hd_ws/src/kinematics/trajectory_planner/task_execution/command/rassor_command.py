@@ -24,3 +24,4 @@ class RassorCommand(Command):
         while time.time()-start < self.duration:
             self.executor.sendRassorTorque(self.getTorqueSign() * self.torque_scaling_factor)
             rate.sleep()
+        self.executor.sendRassorTorque(0)   # stop the torque at the end

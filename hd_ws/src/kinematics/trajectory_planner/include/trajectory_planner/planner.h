@@ -46,8 +46,6 @@ public:
     Planner(rclcpp::NodeOptions node_options);
 
     ~Planner() {    // TODO: make the pointer shared so no need for destructor
-        delete m_move_group;
-        delete m_planning_scene_interface;
     }
 
     // configuration and workflow
@@ -123,14 +121,14 @@ private:
 
 
     const std::string                                                       m_planning_group = "kerby_arm_group";
-    moveit::planning_interface::MoveGroupInterface*                         m_move_group;
-    moveit::planning_interface::PlanningSceneInterface*                     m_planning_scene_interface;
+    std::shared_ptr<moveit::planning_interface::MoveGroupInterface>         m_move_group;
+    std::shared_ptr<moveit::planning_interface::PlanningSceneInterface>     m_planning_scene_interface;
     const moveit::core::JointModelGroup*                                    m_joint_model_group;
     moveit::planning_interface::MoveGroupInterface::Plan                    m_plan;
-    rclcpp::Subscription<hd_interfaces::msg::PoseGoal>::SharedPtr        m_pose_target_sub;
+    rclcpp::Subscription<hd_interfaces::msg::PoseGoal>::SharedPtr           m_pose_target_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr       m_joint_target_sub;
-    rclcpp::Subscription<hd_interfaces::msg::JointSpaceCmd>::SharedPtr   m_joint_target2_sub;
-    rclcpp::Subscription<hd_interfaces::msg::Object>::SharedPtr          m_add_object_sub;
+    rclcpp::Subscription<hd_interfaces::msg::JointSpaceCmd>::SharedPtr      m_joint_target2_sub;
+    rclcpp::Subscription<hd_interfaces::msg::Object>::SharedPtr             m_add_object_sub;
     rclcpp::Subscription<moveit_msgs::msg::CollisionObject>::SharedPtr      m_add_object2_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                    m_mode_change_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr       m_man_inv_axis_sub;

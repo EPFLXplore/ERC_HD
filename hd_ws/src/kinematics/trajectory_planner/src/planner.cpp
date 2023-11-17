@@ -15,8 +15,8 @@ Planner::Planner(rclcpp::NodeOptions node_options) : Node("kinematics_trajectory
 
 void Planner::config()
 {
-    m_move_group = new moveit::planning_interface::MoveGroupInterface(shared_from_this(), m_planning_group);
-    m_planning_scene_interface = new moveit::planning_interface::PlanningSceneInterface();
+    m_move_group = std::make_shared<moveit::planning_interface::MoveGroupInterface>(shared_from_this(), m_planning_group);
+    m_planning_scene_interface = std::make_shared<moveit::planning_interface::PlanningSceneInterface>();
     m_joint_model_group = m_move_group->getCurrentState()->getJointModelGroup(m_planning_group);
 
     setScalingFactors(1, 1);
