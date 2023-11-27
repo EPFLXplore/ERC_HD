@@ -2,3 +2,4 @@
 hd_ws/install/
 hd_ws/build/
 hd_ws/log/
+*.pyc
