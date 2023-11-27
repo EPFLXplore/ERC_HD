@@ -1,9 +1,13 @@
 from task_execution.command.command import *
 from hd_interfaces.msg import Object
+from typing import List
 
 
 class AddObjectCommand(Command):
-    def __init__(self, executor=None, pose=None, shape=None, type=Object.BOX, operation=Object.ADD, name="gustavo"):
+    """Command for adding, modifying or removing an object in the MoveIt world"""
+    # TODO: modify the name to manipulate instead of add
+
+    def __init__(self, executor=None, pose: Pose=None, shape: List[float]=None, type: int=Object.BOX, operation: int=Object.ADD, name: str="gustavo"):
         super().__init__(executor)
         if pose is None:
             pose = Pose()
