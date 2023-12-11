@@ -144,14 +144,14 @@ self.addCommand(
 
 
 Currently available tasks are (note that some are specific to the 2023 arm and some are not 100% functional) :
-* `PressButton`
-* AlignPanel
-* BarMagnetApproach
-* EthernetApproach
-* `PlugVoltmeterAlign`
-* `PlugVoltmeterApproach`
-* `RassorSampling`
-* `RockSamplingApproach`
-* `RockSamplingDrop`
-* `RockSamplingComplete`
+* [`PressButton`]()
+* [`AlignPanel`]()
+* [`BarMagnetApproach`]()
+* [`EthernetApproach`]()
+* [`PlugVoltmeterAlign`]()
+* [`PlugVoltmeterApproach`]()
+* [`RassorSampling`]()
+* [`RockSamplingApproach`]()
+* [`RockSamplingDrop`]()
+* [`RockSamplingComplete`]()
 
