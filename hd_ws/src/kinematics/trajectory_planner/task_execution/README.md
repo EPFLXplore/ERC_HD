@@ -28,15 +28,15 @@ The `done` method can be overriden, it returns by default True after one call of
 The `abort` method can (should) be overriden, it does nothing by default.  
 
 Currently available commands are (note that some are specific to the 2023 arm) :
-* `AddObjectCommand` : add / modify / remove an object in the MoveIt world
-* `GripperCommand` : apply torque to the gripper for a certain duration
-* `JointSpaceCommand` : reach a joint space goal for the arm
-* `NamedJointTargetCommand` : reach a named predefined pose for the arm, such as *home*, *zero*, *optimal_view*
-* `PoseCommand` : reach a 3d space pose (position + orientation) with the arm
-* `RassorCommand` : apply torque to the gripper for a certain duration
-* `RequestDetectionCommand` : wait until a new vision detection of the required object has been obtained
-* `StraightMoveCommand` : move the arm's end effector by a given distance along a given axis
-* `VoltmeterCommand` : extend or retract the voltmeter
+* [`AddObjectCommand`]() : add / modify / remove an object in the MoveIt world
+* [`GripperCommand`]() : apply torque to the gripper for a certain duration
+* [`JointSpaceCommand`]() : reach a joint space goal for the arm
+* [`NamedJointTargetCommand`]() : reach a named predefined pose for the arm, such as *home*, *zero*, *optimal_view*
+* [`PoseCommand`]() : reach a 3d space pose (position + orientation) with the arm
+* [`RassorCommand`]() : apply torque to the gripper for a certain duration
+* [`RequestDetectionCommand`]() : wait until a new vision detection of the required object has been obtained
+* [`StraightMoveCommand`]() : move the arm's end [effector] by a given distance along a given axis
+* [`VoltmeterCommand`]() : extend or retract the voltmeter
 
 
 ## BackgroundCommand
@@ -142,4 +142,16 @@ self.addCommand(
 > 
 > In this specific example no post-operation is performed.
 
+
+Currently available tasks are (note that some are specific to the 2023 arm and some are not 100% functional) :
+* `PressButton`
+* AlignPanel
+* BarMagnetApproach
+* EthernetApproach
+* `PlugVoltmeterAlign`
+* `PlugVoltmeterApproach`
+* `RassorSampling`
+* `RockSamplingApproach`
+* `RockSamplingDrop`
+* `RockSamplingComplete`
 

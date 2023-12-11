@@ -30,6 +30,8 @@ class BackgroundCommandData:
 
 
 class Task:
+    # TODO: add support for merging tasks
+    # TODO: add behaviour tree structure
     """abstract class representing a task"""
     NONE_OPERATION: OPFunction = lambda cmd: None
 
