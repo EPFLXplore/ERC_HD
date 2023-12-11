@@ -70,13 +70,6 @@ install(PROGRAMS
 )
 
 
-# Add executable for using a controller
-set(SERVO_CONTROLLER_INPUT servo_controller_input)
-add_library(${SERVO_CONTROLLER_INPUT} SHARED src/gamepad_test.cpp)
-ament_target_dependencies(${SERVO_CONTROLLER_INPUT} ${THIS_PACKAGE_INCLUDE_DEPENDS})
-rclcpp_components_register_nodes(${SERVO_CONTROLLER_INPUT} "moveit_servo::JoyToServoPub")
-
-
 add_executable(servoing_test src/servoing_test.cpp)
 ament_target_dependencies(servoing_test
   moveit_ros_planning_interface
@@ -88,6 +81,32 @@ ament_target_dependencies(servoing_test
 )
 install(TARGETS servoing_test
   DESTINATION lib/${PROJECT_NAME})
+
+
+
+
+# Add executable for using a controller
+set(SERVO_CONTROLLER_INPUT servo_controller_input)
+add_library(${SERVO_CONTROLLER_INPUT} SHARED src/servoing_test.cpp)
+ament_target_dependencies(${SERVO_CONTROLLER_INPUT} ${THIS_PACKAGE_INCLUDE_DEPENDS})
+rclcpp_components_register_nodes(${SERVO_CONTROLLER_INPUT} "fake_components::JoyToServoPub")
+
+# Install Libraries
+install(
+  TARGETS
+    ${SERVO_CONTROLLER_INPUT}
+  EXPORT export_${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+
+
 
 
 if(BUILD_TESTING)

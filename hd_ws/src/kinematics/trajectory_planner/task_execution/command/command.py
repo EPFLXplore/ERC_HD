@@ -12,7 +12,7 @@ import threading
 
 # "forward" declaration of the Executor class, used for typing purposes
 Executor = "Executor"
-AAA = 5
+
 
 class Command:
     """abstract class representing a command"""
@@ -63,6 +63,9 @@ class Command:
 
 
 class BackgroundCommand:
+    START = 0
+    STOP = 1
+    
     def __init__(self, executor: Executor = None):
         self.executor = executor
         self._has_started = False
