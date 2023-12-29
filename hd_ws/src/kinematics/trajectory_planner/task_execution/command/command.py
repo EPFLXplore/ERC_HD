@@ -6,12 +6,14 @@ import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Type
 import threading
+from rclpy.node import Node
+from rclpy.timer import Rate
 
 
 # "forward" declaration of the Executor class, used for typing purposes
-Executor = "Executor"
+Executor: Type[Node] = "Executor"
 
 
 class Command:
@@ -65,14 +67,14 @@ class Command:
 class BackgroundCommand:
     START = 0
     STOP = 1
-    
+
     def __init__(self, executor: Executor = None):
         self.executor = executor
         self._has_started = False
         self._has_finished = False
         self._stop_flag = False
         self.execution_thread = threading.Thread(target=self.execute)
-        self.rate = self.create_rate(25)
+        self.rate: Rate = self.executor.create_rate(25)
     
     def isAlive(self) -> bool:
         return self.execution_thread.is_alive()
@@ -82,7 +84,7 @@ class BackgroundCommand:
         return self._has_finished and not self.isAlive()
     
     def setRate(self, hz: int):
-        self.rate = self.create_rate(hz)
+        self.rate = self.executor.create_rate(hz)
 
     def start(self):
         self._has_started = True
@@ -97,17 +99,17 @@ class BackgroundCommand:
     def hardStop(self):     # TODO: figure out how to forcefully stop the thread or delete this method
         raise NotImplementedError("BackgroundCommand.hardStop method is not implemented")
 
-    def executeCycle(self):
+    def _executeCycle(self):
         """one cyle of the execute loop : override this method, not execute"""
         pass
 
-    def cleanup(self):
+    def _cleanup(self):
         """called before ending the execution thread"""
         pass
 
     def execute(self):
         while not self._stop_flag:
-            self.executeCycle()
+            self._executeCycle()
             self.rate.sleep()
         self._cleanup()
 

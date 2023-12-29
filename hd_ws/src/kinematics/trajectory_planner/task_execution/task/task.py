@@ -10,9 +10,10 @@ from typing import Dict, List, Optional, Union
 from task_execution.command import *
 from hd_interfaces.msg import Object
 from dataclasses import dataclass
+from rclpy.timer import Rate
 
 
-OPFunction = Callable[[Command], None]
+OPFunction = Callable[[Command], Any]
 
 
 @dataclass(frozen=True)
@@ -163,9 +164,20 @@ class Task:
         """executes all commands"""
         for _ in range(len(self.command_chain)):
             if not self._executeNextCommand():
+                self._terminate(wait=True)
                 return False    # task failed
             time.sleep(self.pause_time)
+        self._terminate(wait=True)
         return True             # task succeeded
+    
+    def _terminate(self, wait=False):
+        """make sure execution finishes gracefully"""
+        for cmd_data in self.background_commands.values():
+            if cmd_data.command.isAlive(): cmd_data.command.softStop(wait=False)
+        if not wait: return
+        rate: Rate = self.executor.create_rate(25)
+        while any(cmd_data.command.isAlive() for cmd_data in self.background_commands.values()):
+            rate.sleep()
 
     def abort(self):
         """stops all movement"""

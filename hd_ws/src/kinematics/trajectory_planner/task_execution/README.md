@@ -138,7 +138,7 @@ self.addCommand(
 > 
 > > Lambda expressions don't allow for assignment but one can get around this issue by using setters as in this example.
 > 
-> > Lambda expressions don't allow for multiline computations but one can get around this issue by using tuples as follows : `lambda ...: (line1, line2, ..., lineK)`. When called, the whole tuple will be returned, and thus evaluated. It also possible to return a specific value as follows : `lambda ...: (line1, line2, ..., lineK, return_value)[-1]` (in this case the whole tuple is still evaluated).
+> > Lambda expressions don't allow for multiline computations but one can get around this issue by using tuples as follows : `lambda ...: (line1, line2, ..., lineK)`. When called, the whole tuple will be returned, and thus evaluated. It is also possible to return a specific value as follows : `lambda ...: (line1, line2, ..., lineK, return_value)[-1]` (in this case the whole tuple is still evaluated).
 > 
 > In this specific example no post-operation is performed.
 

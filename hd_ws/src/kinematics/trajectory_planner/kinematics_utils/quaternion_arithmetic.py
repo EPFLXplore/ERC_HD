@@ -1,284 +1,442 @@
 from math import sqrt, sin, cos, asin, acos, pi
-from geometry_msgs.msg import Quaternion, Point, Pose
+import geometry_msgs.msg as gmsg
+from typing import Any, Union, Tuple, List
+from typing_extensions import Self
+import random
 
 
-def norm(x):
-    if isinstance(x, (float, int)):
-        return abs(x)
-    if isinstance(x, (tuple, list)):
-        return sqrt(sum(s**2 for s in x))
-    if isinstance(x, Point):
-        return sqrt(x.x**2+x.y**2+x.z**2)
-    if isinstance(x, Quaternion):
-        return sqrt(x.w**2+x.x**2+x.y**2+x.z**2)
+Scalar = Union[float, int]      # TODO: add support for numpy scalar types (and potentially other scalar types as well)
+Array = Union[Tuple[Scalar, ...], List[Scalar]]
+array_types_checkable = (tuple, list)   # for instance checking since subscripted generics such as List[Scalar] cannot be used for instance checking
+PointLike = Union[gmsg.Point, gmsg.Quaternion, Array]
+QuaternionLike = Union[PointLike, Scalar]
+PoseLike = Union[gmsg.Pose, Tuple[PointLike, QuaternionLike]]
 
 
-def normalize(axis):
-    if isinstance(axis, (Point, Quaternion)):
-        axis = (axis.x, axis.y, axis.z)
-    n = sqrt(axis[0]**2 + axis[1]**2 + axis[2]**2)
-    if n == 0:
-        return axis
-    axis = (axis[0]/n, axis[1]/n, axis[2]/n)
-    return axis
-
-
-def quat_normalize(q):
-    """normalize for quaternions"""
-    n = sqrt(q.x**2+q.y**2+q.z**2+q.w**2)
-    if n == 0:
-        return q
-    q.x /= n
-    q.y /= n
-    q.z /= n
-    q.w /= n
-    return q
-
-
-def quat(axis, angle):
-    """calculate the quaternion associated to a rotation of a certain angle around a certain axis"""
-    if isinstance(axis, (Point, Quaternion)):
-        axis = (axis.x, axis.y, axis.z)
-    orientation = Quaternion()
-    axis = normalize(axis)
-    orientation.w = cos(angle/2)
-    orientation.x = axis[0]*sin(angle/2)
-    orientation.y = axis[1]*sin(angle/2)
-    orientation.z = axis[2]*sin(angle/2)
-    return orientation
-
-
-def reverse_trig(cost, sint):
-    """retrieve angle from its cos and sin"""
-    if cost >= 0 and sint >= 0:
-        angle = asin(sint)
-    elif cost >= 0 and sint <= 0:
-        angle = asin(sint)
-    elif cost <= 0 and sint >= 0:
-        angle = acos(cost)
-    else:
-        angle = -acos(cost)
-    return angle
-
-
-def reverse_quat(q):
-    """retrieve axis and angle of rotation from quaternion"""
-    q = make_quat(q)
-    cost = q.w
-    sint = norm(quat_to_point(q))
-    if sint != 0:
-        axis = [q.x/sint, q.y/sint, q.z/sint]
-    else:
-        axis = [0.0, 0.0, 0.0]
-    angle = 2*reverse_trig(cost, sint)
-    return (axis, angle)
-
-
-def turn_around(q, axis=(1.0, 0.0, 0.0), angle=pi):
-    axis = point_image(axis, q)
-    r = quat(axis, angle)
-    return mul(r, q)
-
-
-def nb_to_quat(x):
-    x = float(x)
-    q = Quaternion()
-    q.w = x
-    q.x = q.y = q.z = 0.0
-    return q
-
-
-def point_to_quat(p):
-    q = Quaternion()
-    q.w = 0.0
-    q.x = p.x
-    q.y = p.y
-    q.z = p.z
-    return q
-
-
-def quat_to_point(q):
-    # only if q.w is 0
-    p = Point()
-    p.x = q.x
-    p.y = q.y
-    p.z = q.z
-    return p
-
-
-def list_to_quat(l):
-    q = Quaternion()
-    q.x = l[0]
-    q.y = l[1]
-    q.z = l[2]
-    if len(l) < 4:
-        q.w = 0.0
-    else:
-        q.w = l[3]
-
-
-def list_to_point(l):
-    p = Point()
-    p.x = l[0]
-    p.y = l[1]
-    p.z = l[2]
-    return p
-
-
-def make_quat(x):
-    """convert x to a Quaternion instance"""
-    if isinstance(x, Quaternion):
-        return x
-    if isinstance(x, (float, int)):
-        return nb_to_quat(x)
-    elif isinstance(x, Point):
-        return point_to_quat(x)
-    elif isinstance(x, (tuple, list)):
-        return list_to_quat(x)
-    #rospy.logerror("Invalid expression for making quaternion : " + str(x))
-    raise
-
-
-def make_point(x):
-    """convert x to a Point instance"""
-    if isinstance(x, Point):
-        return x
-    if isinstance(x, Quaternion):
-        return quat_to_point(x)
-    if isinstance(x, (tuple, list)):
-        return list_to_point(x)
-    raise
-
-
-def inv(q):
-    """quaternion multiplicative inverse (only works if norm of q is 1"""
-    q = make_quat(q)
-    q_ = Quaternion()
-    q_.w = q.w
-    q_.x = -q.x
-    q_.y = -q.y
-    q_.z = -q.z
-    return q_
-
-
-def add(q1, q2):
-    """quaternion addition"""
-    q1 = make_quat(q1)
-    q2 = make_quat(q2)
-    ans = Quaternion()
-    ans.w = q1.w + q2.w
-    ans.x = q1.x + q2.x
-    ans.y = q1.y + q2.y
-    ans.z = q1.z + q2.z
-    return ans
-
-
-def point_add(p1, p2):
-    """point (vector) addition"""
-    p1 = make_point(p1)
-    p2 = make_point(p2)
-    ans = Point()
-    ans.x = p1.x + p2.x
-    ans.y = p1.y + p2.y
-    ans.z = p1.z + p2.z
-    return ans
-
-
-def mul(q1, q2):
-    """quaternion multiplication"""
-    q1 = make_quat(q1)
-    q2 = make_quat(q2)
-    ans = Quaternion()
-    ans.w = q1.w*q2.w - q1.x*q2.x - q1.y*q2.y - q1.z*q2.z
-    ans.x = q1.w*q2.x + q1.x*q2.w + q1.y*q2.z - q1.z*q2.y
-    ans.y = q1.w*q2.y - q1.x*q2.z + q1.y*q2.w + q1.z*q2.x
-    ans.z = q1.w*q2.z + q1.x*q2.y - q1.y*q2.x + q1.z*q2.w
-    return ans
-
-
-def scalar_mul(t, v):
-    if isinstance(v, (list, tuple)):
-        return [t*x for x in v]
-    if isinstance(v, Point):
-        res = Point()
-        res.x = t*v.x
-        res.y = t*v.y
-        res.z = t*v.z
-        return res
-    if isinstance(v, Quaternion):
-        res = Quaternion()
-        res.x = t*v.x
-        res.y = t*v.y
-        res.z = t*v.z
-        res.w = t*v.w
-        return res
-    raise
-
-
-def point_image(point, q):
-    """calculate the image of the point under the rotation described by the quaternion q"""
-    point = make_point(point)
-    p = point_to_quat(point)
-    q_ = inv(q)
-    p = mul(mul(q, p), q_)
-    return quat_to_point(p)
-
-
-def point_object_image(point, pose):
-    """calculate the image of the point under the transformation described by the pose"""
-    p = point_image(point, pose.orientation)
-    return point_add(pose.position, p)
-
-
-def reverse_pose(pose):
-    """return rev_pose such that compose_poses(pose, rev_pose) is the trivial pose"""
-    res = Pose()
-    res.orientation = inv(pose.orientation)
-    res.position = point_image(pose.position, res.orientation)
-    res.position.x = -res.position.x
-    res.position.y = -res.position.y
-    res.position.z = -res.position.z
-    return res
-
-
-def compose_poses(pose1, pose2):
-    """pose1 with respect to origin, pose2 with respect to pose1"""
-    res = Pose()
-    v = point_image(pose2.position, pose1.orientation)
-    res.position = point_add(pose1.position, v)
-    axis2, angle2 = reverse_quat(pose2.orientation)
-    axis2 = point_image(axis2, pose1.orientation)
-    q = quat(axis2, angle2)
-    res.orientation = mul(q, pose1.orientation)
-    res.orientation = quat_normalize(res.orientation)
-    return res
-
-
-def compose_multiple_poses(*poses):
-    res = Pose()
-    for pose in poses:
-        res = compose_poses(res, pose)
-    return res
-
-
-def colinear(v1, v2):
-    for j in range(len(v1)):
-        if v1[j] != 0:
-            break
-    else:
+def is_point_like(x: Any) -> bool:
+    """
+    Verify if x is convertible into Point
+    """
+    if isinstance(x, (gmsg.Point, gmsg.Quaternion)):
         return True
-    return all(v1[j]*v2[i] == v1[i]*v2[j] for i in range(len(v1)))
+    if not isinstance(x, array_types_checkable):
+        return False
+    return 3 <= len(x) <= 4 and all(isinstance(v, Scalar) for v in x)
 
 
-def solve_2d(v1, v2):
-    pass
+def is_quaternion_like(x: Any) -> bool:
+    """
+    Verify if x is convertible into Quaternion
+    """
+    if isinstance(x, (Scalar, gmsg.Point, gmsg.Quaternion)):
+        return True
+    if not isinstance(x, array_types_checkable):
+        return False
+    return 3 <= len(x) <= 4 and all(isinstance(v, Scalar) for v in x)
 
-def solve_system(v1, v2):
-    s = v1[1]*v2[0] - v2[1]*v1[0]
-    t = v1[2]*v2[0] - v2[2]*v1[0]
-    r = v1[1]*v2[2] - v2[1]*v1[2]
-    if s == t == r == 0:
-        return [0,0,0]
-    if s == 0:
-        if t == 0:
-            pass
+
+def is_pose_like(x: Any) -> bool:
+    """
+    Verify if x is convertible into Pose
+    """
+    if isinstance(x, gmsg.Pose):
+        return True
+    if not isinstance(x, (tuple, list)):
+        return False
+    if isinstance(x, list):
+        print("Warning: lists are supposed to be a heterogenous type, you should use a tuple instead")
+    return len(x) == 2 and is_point_like(x[0]) and is_quaternion_like(x[1])
+
+
+def random_in_range(lower: float, upper: float):
+    if lower == upper:
+        return lower
+    return lower + random.random() * (upper-lower)
+
+
+class Point(gmsg.Point):    
+    @classmethod
+    def make(cls, value: PointLike) -> Self:
+        """
+        Convert a PointLike to Point
+        """
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, (gmsg.Point, gmsg.Quaternion)):
+            return cls(x=value.x, y=value.y, z=value.z)
+        if isinstance(value, array_types_checkable):
+            return cls(x=value[0], y=value[1], z=value[2])
+        raise TypeError(f"Unsuported type '{type(value).__name__}' for conversion to Point")
+    
+    @classmethod
+    def random(cls, x_range: Tuple[float, float]=(-10.0, 10.0), y_range: Tuple[float, float]=(-10.0, 10.0), z_range: Tuple[float, float]=(-10.0, 10.0)) -> Self:
+        """
+        Generate a random Point in the specified ranges
+        """
+        return cls(
+            x = random_in_range(*x_range),
+            y = random_in_range(*y_range),
+            z = random_in_range(*z_range)
+        )
+    
+    @classmethod
+    def eq(cls, p1: PointLike, p2: PointLike, precision: float=10**-10) -> bool:
+        """
+        Check whether the two points are equal within some margin of error 
+        (the precision margin is on the squared norm)
+        """
+        return (cls.make(p1) - cls.make(p2)).sq_norm() <= precision
+
+    def xyz(self) -> Tuple[float, float, float]:
+        return self.x, self.y, self.z
+    
+    def __add__(self, other: PointLike) -> Self:
+        # TODO: maybe add more direct typechecking via is_point_like (for now type checking is done indirectly in the make method), and same for __sub__ and __rsub__ methods
+        other = Point.make(other)
+        return Point(x=self.x+other.x, y=self.y+other.y, z=self.z+other.z)
+    
+    def __radd__(self, other: PointLike) -> Self:
+        return self + other
+
+    def __sub__(self, other: PointLike) -> Self:
+        other = Point.make(other)
+        return Point(x=self.x-other.x, y=self.y-other.y, z=self.z-other.z)
+    
+    def __rsub__(self, other: PointLike) -> Self:
+        other = Point.make(other)
+        return Point(x=other.x-self.x, y=other.y-self.y, z=other.z-self.z)
+    
+    def __mul__(self, other: Union[Scalar, PointLike]) -> Self:
+        if isinstance(other, Scalar):
+            return Point(x=other*self.x, y=other*self.y, z=other*self.z)
+        if is_point_like(other):
+            return self.dot(other)
+        raise TypeError(f"Unsuported operand types for *: '{Point.__name__}' and '{type(other).__name__}'")
+    
+    def __rmul__(self, other: Union[Scalar, PointLike]) -> Self:
+        try:
+            return self * other
+        except TypeError:
+            raise TypeError(f"Unsuported operand types for *: '{type(other).__name__}' and '{Point.__name__}'")
+    
+    def __neg__(self) -> Self:
+        return Point(x=-self.x, y=-self.y, z=-self.z)
+    
+    def dot(self, other: PointLike) -> float:
+        other = Point.make(other)
+        return self.x*other.x + self.y*other.y + self.z*other.z
+    
+    def sq_norm(self) -> float:
+        return self.x**2 + self.y**2 + self.z**2
+    
+    def norm(self) -> float:
+        return sqrt(self.sq_norm())
+    
+    def __abs__(self) -> float:
+        return self.norm()
+    
+    def normalized(self) -> Self:
+        n = self.norm()
+        if n == 0:
+            return Point(x=0.0, y=0.0, z=0.0)
+        return Point(x=self.x/n, y=self.y/n, z=self.z/n)
+    
+    def normalize_inplace(self):
+        n = self.norm()
+        if n > 0:
+            self.x /= n
+            self.y /= n
+            self.z /= n
+
+
+class Quaternion(gmsg.Quaternion):    
+    @classmethod
+    def make(cls, value: QuaternionLike) -> Self:
+        """
+        Convert a QuaternionLike to Quaternion
+        """
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, gmsg.Quaternion):
+            return cls(w=value.w, x=value.x, y=value.y, z=value.z)
+        if isinstance(value, gmsg.Point):
+            return cls(w=0.0, x=value.x, y=value.y, z=value.z)
+        if isinstance(value, array_types_checkable):
+            return cls(w=(value[3] if len(value) >= 4 else 0.0), x=value[0], y=value[1], z=value[2])
+        if isinstance(value, Scalar):
+            return cls(w=float(value), x=0.0, y=0.0, z=0.0)
+        raise TypeError(f"Unsuported type '{type(value).__name__}' for conversion to Quaternion")
+
+    @classmethod
+    def from_axis_angle(cls, axis: PointLike, angle: float) -> Self:
+        """
+        Return the quaternion associated to a rotation of a certain angle around a certain axis
+        """
+        axis = Point.make(axis).normalized()
+        x, y, z = axis.xyz()
+        q = Quaternion()
+        q.w = cos(angle/2)
+        q.x = x*sin(angle/2)
+        q.y = y*sin(angle/2)
+        q.z = z*sin(angle/2)
+        return q
+    
+    @classmethod
+    def random(cls) -> Self:
+        """
+        Generate a random normalized quaternion
+        """
+        x = random_in_range(-1.0, 1.0)
+        norm_limit = sqrt(1-x**2)
+        y = random_in_range(-norm_limit, norm_limit)
+        norm_limit = sqrt(1-x**2-y**2)
+        z = random_in_range(-norm_limit, norm_limit)
+        w = sqrt(1-x**2-y**2-z**2)
+        if random.random() < 0.5:
+            w = -w
+        return cls(x=x, y=y, z=z, w=w)
+    
+    @classmethod
+    def eq(cls, q1: QuaternionLike, q2: QuaternionLike, precision: float=10**-10) -> bool:
+        """
+        Check whether the two quaternions are equal within some margin of error 
+        (the precision margin is on the squared norm)
+        """
+        return (cls.make(q1) - cls.make(q2)).sq_norm() <= precision
+
+    @staticmethod
+    def reverse_trig(cost, sint) -> float:
+        """
+        Retrieve angle from its cos and sin
+        """
+        if cost >= 0 and sint >= 0:
+            angle = asin(sint)
+        elif cost >= 0 and sint <= 0:
+            angle = asin(sint)
+        elif cost <= 0 and sint >= 0:
+            angle = acos(cost)
+        else:
+            angle = -acos(cost)
+        return angle
+    
+    def wxyz(self) -> Tuple[float, float, float, float]:
+        return self.w, self.x, self.y, self.z
+    
+    def xyzw(self) -> Tuple[float, float, float, float]:
+        return self.x, self.y, self.z, self.w
+
+    def xyz(self) -> Tuple[float, float, float]:
+        return self.x, self.y, self.z
+    
+    def __add__(self, other: QuaternionLike) -> Self:
+        # TODO: maybe add more direct typechecking via is_point_like (for now type checking is done semi directly in the make method), and same for __sub__ and __rsub__ methods
+        other = Quaternion.make(other)
+        return Quaternion(w=self.w+other.w, x=self.x+other.x, y=self.y+other.y, z=self.z+other.z)
+
+    def __radd__(self, other: QuaternionLike) -> Self:
+        return self + other
+    
+    def __sub__(self, other: QuaternionLike) -> Self:
+        other = Quaternion.make(other)
+        return Quaternion(w=self.w-other.w, x=self.x-other.x, y=self.y-other.y, z=self.z-other.z)
+    
+    def __rsub__(self, other: QuaternionLike) -> Self:
+        other = Quaternion.make(other)
+        return Quaternion(w=other.w-self.w, x=other.x-self.x, y=other.y-self.y, z=other.z-self.z)
+    
+    @staticmethod
+    def _quat_mul(q1: gmsg.Quaternion, q2: gmsg.Quaternion) -> Self:
+        return Quaternion(
+            w = q1.w*q2.w - q1.x*q2.x - q1.y*q2.y - q1.z*q2.z,
+            x = q1.w*q2.x + q1.x*q2.w + q1.y*q2.z - q1.z*q2.y,
+            y = q1.w*q2.y - q1.x*q2.z + q1.y*q2.w + q1.z*q2.x,
+            z = q1.w*q2.z + q1.x*q2.y - q1.y*q2.x + q1.z*q2.w
+        )
+    
+    def _scalar_mul(self, scalar: Scalar) -> Self:
+        if not isinstance(scalar, Scalar):
+            raise TypeError     # TODO: write error message
+        return Quaternion(w=scalar*self.w, x=scalar*self.x, y=scalar*self.y, z=scalar*self.z)
+    
+    def __mul__(self, other: QuaternionLike) -> Self:
+        if isinstance(other, Scalar):
+            self._scalar_mul(other)
+        if is_quaternion_like(other):
+            other = Quaternion.make(other)
+            return self._quat_mul(self, other)
+        raise TypeError(f"Unsuported operand types for *: '{type(other).__name__}' and '{Quaternion.__name__}'")
+    
+    def __rmul__(self, other: QuaternionLike) -> Self:
+        if isinstance(other, Scalar):
+            self._scalar_mul(other)
+        if is_quaternion_like(other):
+            other = Quaternion.make(other)
+            return self._quat_mul(other, self)
+        raise TypeError(f"Unsuported operand types for *: '{Quaternion.__name__}' and '{type(other).__name__}'")
+    
+    def __neg__(self) -> Self:
+        return Quaternion(w=-self.w, x=-self.x, y=-self.y, z=-self.z)
+
+    def sq_norm(self) -> float:
+        return self.w**2 + self.x**2 + self.y**2 + self.z**2
+    
+    def norm(self) -> float:
+        return sqrt(self.sq_norm())
+    
+    def __abs__(self) -> float:
+        return self.norm()
+
+    def inv(self, suppose_unit_norm=True) -> Self:
+        """
+        Quaternion multiplicative inverse
+        """
+        n = 1.0 if suppose_unit_norm else 1/self.norm()
+        q_ = Quaternion(
+            w = self.w * n,
+            x = -self.x * n,
+            y = -self.y * n,
+            z = -self.z * n
+        )
+        return q_
+    
+    def normalized(self) -> Self:
+        n = self.norm()
+        if n == 0:
+            return Quaternion(w=0.0, x=0.0, y=0.0, z=0.0)
+        return Quaternion(w=self.w/n, x=self.x/n, y=self.y/n, z=self.z/n)
+    
+    def normalize_inplace(self):
+        n = self.norm()
+        if n > 0:
+            self.w /= n
+            self.x /= n
+            self.y /= n
+            self.z /= n
+    
+    def reverse_quat(self) -> Tuple[Point, float]:
+        """
+        Retrieve axis and angle of rotation from quaternion
+        """
+        cos_t = self.w
+        sin_t = Point.make(self).norm()
+        if sin_t != 0:
+            axis = Point(x=self.x/sin_t, y=self.y/sin_t, z=self.z/sin_t)
+        else:
+            axis = Point(x=0.0, y=0.0, z=0.0)
+        angle = 2*Quaternion.reverse_trig(cos_t, sin_t)
+        return axis, angle
+    
+    def point_image(self, point: PointLike) -> Point:
+        """
+        Calculate the image of a point under the rotation described by the quaternion
+        """
+        p = Quaternion.make(Point.make(point))
+        self_inv = self.inv()
+        p = self * p * self_inv
+        return Point.make(p)
+    
+    def turn_around(self, axis: PointLike=(1.0, 0.0, 0.0), angle: float=pi) -> Self:
+        """
+        Calculate the quaternion corresponding to the rotation described by self composed with the rotation described by the given axis and angle
+        """
+        axis = self.point_image(axis)
+        r = Quaternion.from_axis_angle(axis, angle)
+        return r * self
+
+
+class Pose(gmsg.Pose):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.position: Quaternion = Point.make(self.position)
+        self.orientation: Quaternion = Quaternion.make(self.orientation)
+    
+    @classmethod
+    def make(cls, value: PoseLike, normalize=False) -> Self:
+        """
+        Convert a PoseLike to Pose
+        :param normalize: whether to normalize the given quaternion 
+        (note that for a correct rotation description the quaternion must be normalized so this should be set to False only if an already normalized quaternion is passed)
+        """
+        if isinstance(value, gmsg.Pose):
+            orientation = Quaternion.normalized(value.orientation) if normalize else value.orientation
+            return cls(position=value.position, orientation=orientation)
+        if isinstance(value, (list, tuple)):
+            position, orientation = value
+            position = Point.make(position)
+            orientation = Quaternion.make(orientation)
+            if normalize:
+                orientation.normalize_inplace()
+            return cls(position=position, orientation=orientation)
+        raise TypeError(f"Unsuported type '{type(value).__name__}' for conversion to Pose")
+    
+    @classmethod
+    def random(cls, x_range: Tuple[float, float]=(-10.0, 10.0), y_range: Tuple[float, float]=(-10.0, 10.0), z_range: Tuple[float, float]=(-10.0, 10.0)) -> Self:
+        """
+        Generate a random Pose with position in the specified ranges
+        """
+        return Pose(
+            position = Point.random(x_range, y_range, z_range),
+            orientation = Quaternion.random()
+        )
+    
+    @classmethod
+    def eq(cls, pose1: PoseLike, pose2: PoseLike, precision: float=10**-10) -> bool:
+        """
+        Check whether the two poses are equal within some margin of error 
+        (the precision margin is on the squared norm of the position and orientation).
+        Both position and orientation need to be within the requested precision margin.
+        """
+        pose1, pose2 = cls.make(pose1), cls.make(pose2)
+        return Point.eq(pose1.position, pose2.position, precision) and Quaternion.eq(pose1.orientation, pose2.orientation, precision)
+    
+    def point_image(self, point: PointLike) -> Point:
+        return self.position + self.orientation.point_image(point)
+
+    def inv(self) -> Self:
+        """
+        Return inv_pose such that the composition of self and inv_pose is the trivial pose
+        """
+        orientation = self.orientation.inv()
+        position = -orientation.point_image(self.position)
+        return Pose(position=position, orientation=orientation)
+    
+    def compose(self, other: PoseLike) -> Self:
+        """
+        Compose the transformations corresponding to self and the other pose in the following way:
+        self with respect to origin, other with respect to self
+        """
+        if not is_pose_like(other):
+            raise TypeError(f"Cannot compose Pose with instance of non PoseLike type {type(other).__name__}")
+        other = Pose.make(other)
+        position = self.point_image(other.position)
+        # The required orientation is the rotation corresponding to the composition of the rotation of the first pose (self) 
+        # and the rotation of the second pose (other) but in the frame obtained after applying the first rotation.
+        # This is NOT equivalent to the simple composition of the first and second rotation,
+        # however it turns out it is equivalent to the simple composition in the reverse order : second then first rotation 
+        # (recall quaternion multiplication is non commutative).
+        # Due to the way quaternions are used to apply rotations, this corresponds to the following multiplication.
+        orientation = self.orientation * other.orientation
+        return Pose(position=position, orientation=orientation)
+    
+    def compose_inplace(self, other: PoseLike):
+        """
+        Same as the compose method but in place
+        """
+        if not is_pose_like(other):
+            raise TypeError(f"Cannot compose Pose with instance of non PoseLike type {type(other).__name__}")
+        self.position = self.point_image(other.position)
+        self.orientation *= other.orientation
+    
+    def __matmul__(self, other: PoseLike) -> Self:
+        return self.compose(other)
+    
+    def compose_multiple(self, *poses: PoseLike) -> Self:
+        """
+        Compose mutliple poses, can also be called without an instance 
+        in the (kinda unclean but who cares, it's python) form Pose.compose_multiple(pose1, ..., pose_k)
+        where pose1, ..., pose_k are pose-like
+        """
+        res = Pose.make(self)   # this is done in case the method is called without an instance
+        for pose in poses:
+            res.compose_inplace(pose)
+        return res

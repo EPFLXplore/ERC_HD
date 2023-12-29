@@ -14,15 +14,15 @@ import threading
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 import kinematics_utils.quaternion_arithmetic as qa
-from typing import List
+from typing import List, Type
+from dataclasses import dataclass
 
 
+@dataclass(frozen=True)
 class TaskSelect:
     """simple wrapper for selecting a task"""
-    
-    def __init__(self, info_msg: str, task_type: type):
-        self.info_msg = info_mgs
-        self.task_type = task_type
+    info_msg: str
+    task_type: Type[task_execution.task.Task]
     
     def select(self, executor):
         executor.loginfo(self.info_msg)
@@ -30,11 +30,11 @@ class TaskSelect:
 
 
 class Executor(Node):
-    KNWON_TASKS = {
+    KNOWN_TASKS = {
         Task.BUTTON:                    TaskSelect("Button task",               PressButton),
         Task.PLUG_VOLTMETER_ALIGN:      TaskSelect("Plug voltmeter task",       PlugVoltmeterAlign),
         Task.METAL_BAR_APPROACH:        TaskSelect("Metal bar approach task",   BarMagnetApproach),
-        Task.NAMED_TARGET:              TaskSelect("Named target task",         NamedJointTargetCommand),
+        Task.NAMED_TARGET:              TaskSelect("Named target task",         task_execution.task.Task),
         Task.RASSOR_SAMPLE:             TaskSelect("Rassor sample task",        RassorSampling),
         Task.ETHERNET_CABLE:            TaskSelect("Plug ethernet task",        EthernetApproach),
         Task.ALIGN_PANEL:               TaskSelect("Align panel",               AlignPanel),
@@ -194,6 +194,8 @@ class Executor(Node):
         if msg.type not in self.KNOWN_TASKS:
             self.loginfo("Unknown task")
             return
+        if msg.type == Task.NAMED_TARGET:
+            self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))
         self.task = self.KNOWN_TASKS[msg.type].select(self)
         self.new_task = True
     
