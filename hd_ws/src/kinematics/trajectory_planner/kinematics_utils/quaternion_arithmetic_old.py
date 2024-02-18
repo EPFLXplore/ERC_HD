@@ -1,7 +1,7 @@
 # Deprecated: use quaternion_arithmetic instead
 
 import kinematics_utils.quaternion_arithmetic as new_qa
-print(f"Warnning: the module {__name__} is deprecated: use {new_qa.__name__} instead")
+print(f"Warnning: the module '{__name__}' is deprecated: use '{new_qa.__name__}' instead")
 from math import sqrt, sin, cos, asin, acos, pi
 from geometry_msgs.msg import Quaternion, Point, Pose
 from typing import Callable
@@ -9,8 +9,8 @@ from typing import Callable
 
 def deprecate(func: Callable) -> Callable:
     def deprecated_func(*args, **kwargs):
-        print(f"Warning: function {func.__module__}.{func.__name__} is deprecated, use functions from {new_qa.__name__} instead")
-        func(*args, **kwargs)
+        print(f"Warning: function '{func.__module__}.{func.__name__}' is deprecated, use functions from '{new_qa.__name__}' instead")
+        return func(*args, **kwargs)
     return deprecated_func
 
 

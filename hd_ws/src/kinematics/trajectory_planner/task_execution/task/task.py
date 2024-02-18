@@ -43,7 +43,7 @@ class Task:
         self.background_commands: Dict[str, BackgroundCommandData] = {}
         self.constructCommandChain()
         self.aborted = False
-        self.pause_time = 0
+        self.pause_time = 0.0
         self.artag_pose = Pose()
         self.object_pose = Pose()
         self.scan_distance = 0.13   # from end effector in the local z coordinate (forward if gripper is standardly oriented)

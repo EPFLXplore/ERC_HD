@@ -4,6 +4,8 @@ import xacro
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python import get_package_share_directory
+from launch.actions import DeclareLaunchArgument
+
 
 def get_package_file(package, file_path):
     """Get the location of a file installed in an ament package"""
@@ -36,6 +38,16 @@ def run_xacro(xacro_file):
     return urdf_file
 
 
+def declare_binary_launch_argument(name, default=True, *, in_str_form=False):
+    if not isinstance(default, bool):
+        raise ValueError(f"Default value of binary launch argument should be of type bool not {type(default)}")
+    arg = DeclareLaunchArgument(
+        name, default_value=("true" if default else "false"),
+        choices=["true", "false"]
+    )
+    return arg if in_str_form else (arg == "true")
+
+
 def generate_launch_description():
     xacro_file = get_package_file('kerby_moveit_config', 'config/kerby.urdf.xacro')
     urdf_file = run_xacro(xacro_file)
@@ -50,6 +62,8 @@ def generate_launch_description():
     robot_description_semantic = load_file(srdf_file)
     kinematics_config = load_yaml(kinematics_file)
     ompl_config = load_yaml(ompl_config_file)
+
+    rviz_arg = declare_binary_launch_argument("rviz", default=True)
 
     joint_limits = {"robot_description_planning": load_yaml(joint_limits_file)}
 
@@ -145,10 +159,11 @@ def generate_launch_description():
         for controller in controller_names
     ]
 
+    maybe_rviz = [rviz] if rviz_arg else []
     return LaunchDescription([
         move_group_node,
         robot_state_publisher,
         ros2_control_node,
-        rviz,
-        ] + spawn_controllers
+        rviz
+        ] + spawn_controllers + maybe_rviz
     )

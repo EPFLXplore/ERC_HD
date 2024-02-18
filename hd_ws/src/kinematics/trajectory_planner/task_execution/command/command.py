@@ -45,7 +45,7 @@ class Command:
         if not hasattr(self, setter_name):
             setattr(self, setter_name, setter)
 
-    def createSetters(self, *attributes):
+    def createSetters(self, *attributes: str):
         for attr in attributes:
             self.createSetter(attr)
 
@@ -100,7 +100,7 @@ class BackgroundCommand:
         raise NotImplementedError("BackgroundCommand.hardStop method is not implemented")
 
     def _executeCycle(self):
-        """one cyle of the execute loop : override this method, not execute"""
+        """one cyle of the execute loop: override this method, not execute"""
         pass
 
     def _cleanup(self):

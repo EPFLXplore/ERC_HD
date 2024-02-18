@@ -3,7 +3,8 @@ import kinematics_utils.quaternion_arithmetic as qan
 import geometry_msgs.msg as gmsg
 from math import sqrt, pi
 import random
-from typing import Callable, Dict, Any, Tuple, Union
+from typing import Callable, Dict, Any, Tuple, Union, Type, List
+import itertools
 
 
 class Angle(float):
@@ -51,7 +52,10 @@ def generate_random_params(func: Callable) -> Dict[str, Any]:
     return params
 
 
-def unit_test(test_func: Callable[..., bool]) -> Callable[[int], list]:
+SingleTest = Callable[..., bool]
+UnitTest = Callable[[int], list]
+
+def unit_test(test_func: SingleTest) -> UnitTest:
     """
     Create a function that tests a given test_func on several random parameter sets.
 
@@ -87,7 +91,7 @@ def eq(*values: GeometryType) -> bool:
     values = tuple(map(convert, values))
     if len(values) < 2:
         return True
-    value_type = type(values[0])
+    value_type: Type[NewGeometryType] = type(values[0])
     return all(value_type.eq(values[0], x, precision) for x in values)
 
 
@@ -135,7 +139,7 @@ def test_compose_multiple_poses(pose1: qan.Pose, pose2: qan.Pose, pose3: qan.Pos
     )
 
 
-tests = [
+tests: List[UnitTest] = [
     test_quat, 
     test_turn_around, 
     test_mul, 
@@ -147,5 +151,96 @@ tests = [
 ]
 
 
-def validate(test_func, n=100):
-    return len(test_func(n)) == 0
+def validate(test: UnitTest, n=100):
+    return len(test(n)) == 0
+
+
+
+def instance_checker(arg: Any, arg_type: Type, *, complete: bool=False, max_depth: int=-1, max_breadth: int=-1) -> bool:
+    # for now python 3.10 is required for this function (because of match statement syntax)
+    if max_depth == 0:
+        return True
+    max_depth = -1 if max_depth == -1 else max_depth-1
+    _slice = lambda it: itertools.islice(it, None if max_breadth == -1 else max_breadth)
+    import sys
+    if sys.version_info.minor < 10:
+        return isinstance(arg, arg_type)
+
+    try:
+        return isinstance(arg, arg_type)
+    except TypeError:
+        pass
+
+    match arg_type.__name__:
+        case "List" | "list":
+            elem_type = arg_type.__args__[0]
+            if not isinstance(arg, list):
+                return False
+            if len(arg) == 0:
+                return True
+            if complete:
+                return all(instance_checker(elem, elem_type, complete=True, max_depth=max_depth, max_breadth=max_breadth)
+                           for elem in _slice(arg))
+            else:
+                return instance_checker(arg[0], elem_type, max_depth=max_depth, max_breadth=max_breadth)
+        case "Tuple" | "tuple":
+            for i, elem_type in enumerate(_slice(arg_type.__args__)):
+                if not instance_checker(arg[i], )
+    return isinstance(arg, arg_type)
+
+
+def fully_annotated(func: Callable) -> bool:
+    return True
+
+
+def special_args(func: Callable) -> Tuple[str, str]:
+    # bug: doesn't work if **kwargs is present but not *args
+    argnames = set(func.__code__.co_varnames[:func.__code__.co_argcount])
+    annot: Dict[str, Type] = func.__annotations__
+    has_var_pos_args = False
+    var_pos_args_name = ""
+    has_var_kw_args = False
+    var_kw_args_name = ""
+    for arg in annot:
+        if arg != "return" and arg not in argnames:
+            if not has_var_pos_args:
+                has_var_pos_args = True
+                var_pos_args_name = arg
+            elif not has_var_kw_args:
+                has_var_kw_args = True
+                var_kw_args_name = arg
+            else:
+                raise KeyError("wtf this shouldn't happen")
+    return var_pos_args_name, var_kw_args_name
+
+
+def type_check(func: Callable) -> Callable:
+    if not fully_annotated(func):
+        raise ValueError(f"only a fully annotated function can be converted into a type checked function")
+    argnames = func.__code__.co_varnames[:func.__code__.co_argcount]
+    type_hints: Dict[str, Type] = func.__annotations__
+    var_pos_args_name, var_kw_args_name = special_args(func)
+
+    def type_checked(*args, **kwargs):
+        def _raise(arg, value): raise TypeError(f"function '{func.__name__}' expected type '{type_hints[arg].__name__}', not '{type(value).__name__}', for argument '{arg}'")
+        if len(args) > len(argnames) and var_pos_args_name == "":
+            raise TypeError("wrong number of positional arguments")
+        for arg, value in zip(argnames, args):
+            if not instance_checker(value, type_hints[arg]):
+                _raise(arg, value)
+        for value in args[len(argnames):]:
+            if not instance_checker(value, type_hints[var_pos_args_name]):
+                raise TypeError(f"function '{func.__name__}' expected type '{type_hints[var_pos_args_name].__name__}', not '{type(value).__name__}', for additional positional arguments")
+        for arg, value in kwargs.items():
+            if arg in argnames:
+                if not instance_checker(value, type_hints[arg]):
+                    _raise(arg, value)
+            else:
+                if var_kw_args_name == "":
+                    raise TypeError("unexpected keyword argument")
+                if not instance_checker(value, type_hints[var_kw_args_name]):
+                    raise TypeError(f"function '{func.__name__}' expected type '{type_hints[var_kw_args_name].__name__}', not '{type(value).__name__}', for additional keyword arguments")
+        return func(*args, **kwargs)
+    
+    type_checked.__annotations__ = func.__annotations__
+    return type_checked

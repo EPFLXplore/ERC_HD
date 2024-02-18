@@ -205,7 +205,7 @@ class Quaternion(gmsg.Quaternion):
         return (cls.make(q1) - cls.make(q2)).sq_norm() <= precision
 
     @staticmethod
-    def reverse_trig(cost, sint) -> float:
+    def reverse_trig(cost: float, sint: float) -> float:
         """
         Retrieve angle from its cos and sin
         """
