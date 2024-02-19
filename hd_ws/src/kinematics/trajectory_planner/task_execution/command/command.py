@@ -2,7 +2,7 @@ import time
 import math
 import copy
 from geometry_msgs.msg import Pose, Quaternion, Point
-import kinematics_utils.quaternion_arithmetic as qa
+import kinematics.trajectory_planner.kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 from collections.abc import Callable

@@ -13,7 +13,7 @@ from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
 import threading
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
-import kinematics_utils.quaternion_arithmetic as qa
+import kinematics.trajectory_planner.kinematics_utils.quaternion_arithmetic as qa
 from typing import List, Type
 from dataclasses import dataclass
 

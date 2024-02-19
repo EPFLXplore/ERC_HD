@@ -1,5 +1,5 @@
 import kinematics_utils.quaternion_arithmetic_old as qao
-import kinematics_utils.quaternion_arithmetic as qan
+import kinematics.trajectory_planner.kinematics_utils.quaternion_arithmetic as qan
 import geometry_msgs.msg as gmsg
 from math import sqrt, pi
 import random

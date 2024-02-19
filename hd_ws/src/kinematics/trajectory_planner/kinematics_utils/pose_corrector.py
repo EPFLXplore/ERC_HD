@@ -1,4 +1,4 @@
-import kinematics_utils.quaternion_arithmetic as qa
+import kinematics.trajectory_planner.kinematics_utils.quaternion_arithmetic as qa
 from geometry_msgs.msg import Pose, Point
 from std_msgs.msg import Float64MultiArray
 import kinematics_utils.pose_tracker as pt
