@@ -2,13 +2,10 @@ from .task import *
 
 
 class PressButton(Task):
-    def __init__(self, executor, btn_id, pose=None):
+    def __init__(self, executor):
         super().__init__(executor)
-        self.btn_id = btn_id
-        self.object_pose = pose
-        self.artag_pose = None
         self.press_distance = 0.15
-        self.scan_distance = 0.13        # from end effector in the z (forward if gripper is standardly oriented) coordinate
+        self.scan_distance = 0.13        # from end effector in the local z coordinate (forward if gripper is standardly oriented)
         self.pause_time = 0.2
 
     @property

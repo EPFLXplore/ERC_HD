@@ -54,15 +54,6 @@ def generate_launch_description():
     )
     servo_params = {"moveit_servo": servo_params_config}
 
-    servo_params2 = (
-        ParameterBuilder("kerby_moveit_config")
-        .yaml(
-            parameter_namespace="moveit_servo",
-            file_path="config/servo_config.yaml",
-        )
-        .to_dict()
-    )
-
     kinematics_yaml = load_yaml(
         "kerby_moveit_config", "config/kinematics.yaml"
     )
@@ -90,7 +81,7 @@ def generate_launch_description():
 
     servoing_test = Node(
         package="fake_components",
-        executable="servoing_test",
+        executable="servo_controller_input",
         parameters=[
             robot_description,
             robot_description_semantic,

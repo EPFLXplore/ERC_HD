@@ -2,10 +2,12 @@ from task_execution.command.command import *
 
 
 class GripperCommand(Command):
+    """Command for applying torque to the gripper for a certain duration"""
+
     OPEN = 0
     CLOSE = 1
 
-    def __init__(self, executor=None, action=None, duration=1.0, torque_scaling_factor=1.0):
+    def __init__(self, executor=None, action: int=None, duration: float=1.0, torque_scaling_factor: float=1.0):
         super().__init__(executor)
         if action is None:
             action = self.OPEN

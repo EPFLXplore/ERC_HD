@@ -44,13 +44,13 @@ struct MotorCommand
 static const double PI = 3.14159265359;
 static const double INF = 1e10;
 static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J5", "J6", "Gripper", "Rassor"};
-static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 0.5, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
+static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 1, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2};
 static const std::vector<double> POS_LOWER_LIMITS = {-2*PI, -PI, -PI/4, -2*PI, -PI/2, -PI, -INF};
 static const std::vector<double> POS_UPPER_LIMITS = {2*PI, PI/2, PI/4, 2*PI, PI/2, PI, INF};
 
 //static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
-static const std::vector<double> DIRECTIONS = {1, 1, 1, -1, 1, 1, 1, 1};   // to match directions of MoveIt
+static const std::vector<double> DIRECTIONS = {1, 1, 1, -1, 1, -1, 1, 1};   // to match directions of MoveIt
 
 static std::vector<bool> should_scan_stationary_states = {true, true, true, true, true, true, true, true};
 
@@ -151,12 +151,8 @@ private:
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     void manual_direct_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
         for (uint i=0; i < motor_command_list.size(); i++) {
-            if (i < 6) {
-                position_direct_command(i, msg->data[i]);
-            }
-            else {
-                torque_direct_command(i, msg->data[i]);
-            }
+            if (i < 6) position_direct_command(i, msg->data[i]);
+            else torque_direct_command(i, msg->data[i]);
         }
     }
 
@@ -220,15 +216,22 @@ private:
     {
         for (uint i = 0; i < 6; i++)     // only accepting position commands for j1-6
         {
-            motor_command_list[i].command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
-            double new_pos = msg->data[i] * DIRECTIONS[i];
-            //new_pos = std::min(std::max(new_pos, POS_LOWER_LIMITS[i]), POS_UPPER_LIMITS[i]);
-            if (new_pos < POS_LOWER_LIMITS[i]) new_pos = POS_LOWER_LIMITS[i];
-            if (new_pos > POS_UPPER_LIMITS[i]) new_pos = POS_UPPER_LIMITS[i];
-            motor_command_list[i].command.setTargetPosition(new_pos);
-            motor_command_list[i].command_time = std::chrono::steady_clock::now();
-            should_scan_stationary_states[i] = true;
-            enforce_limits(i);
+            if (i == 5) {
+                motor_command_list[i].command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
+                motor_command_list[i].command_time = std::chrono::steady_clock::now();
+                should_scan_stationary_states[i] = true;
+            }
+            else {
+                motor_command_list[i].command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
+                double new_pos = msg->data[i] * DIRECTIONS[i];
+                //new_pos = std::min(std::max(new_pos, POS_LOWER_LIMITS[i]), POS_UPPER_LIMITS[i]);
+                if (new_pos < POS_LOWER_LIMITS[i]) new_pos = POS_LOWER_LIMITS[i];
+                if (new_pos > POS_UPPER_LIMITS[i]) new_pos = POS_UPPER_LIMITS[i];
+                motor_command_list[i].command.setTargetPosition(new_pos);
+                motor_command_list[i].command_time = std::chrono::steady_clock::now();
+                should_scan_stationary_states[i] = true;
+                enforce_limits(i);
+            }
         }
     }
 
@@ -487,8 +490,13 @@ void signal_handler(int sig)
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     exit(0);
 }
- 
- 
+
+
+#include <unistd.h>
+#include <stdio.h>
+#include <limits.h>
+
+
 /*
 spin file as first command line argument.
  */
@@ -497,14 +505,16 @@ int main(int argc, char**argv)
     // Set the abrt_ flag upon receiving an interrupt signal (e.g. Ctrl-c)
     std::signal(SIGINT, signal_handler);
  
-    if (argc < 2)
-    {
-        std::cerr << "pass path to 'setup.yaml' as command line argument" << std::endl;
-        return EXIT_FAILURE;
-    }
+    // if (argc < 2)
+    // {
+    //     std::cerr << "pass path to 'setup.yaml' as command line argument" << std::endl;
+    //     return EXIT_FAILURE;
+    // }
     // a new EthercatDeviceConfigurator object (path to setup.yaml as constructor argument)
-    configurator = std::make_shared<EthercatDeviceConfigurator>(argv[1]);
- 
+    
+    char* path = "src/motor_control/ethercat_device_configurator/config_mot/setup.yaml";
+    configurator = std::make_shared<EthercatDeviceConfigurator>(path);
+
     /*
     ** Start all masters.
     ** There is exactly one bus per master which is also started.

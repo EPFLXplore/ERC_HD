@@ -41,6 +41,10 @@ find_package(soem REQUIRED)
 
 find_package(hd_interfaces)
 
+
+#install(DIRECTORY config_mot DESTINATION share/${PROJECT_NAME})
+
+
 add_executable(motor_control  src/${PROJECT_NAME}/motor_control.cpp src/${PROJECT_NAME}/EthercatDeviceConfigurator.cpp)
 
 # # Set the path to the third-party library folder

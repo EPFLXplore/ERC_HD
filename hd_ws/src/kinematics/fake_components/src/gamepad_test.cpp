@@ -58,8 +58,8 @@
 const std::string JOY_TOPIC = "/joy";
 const std::string TWIST_TOPIC = "/servo_node/delta_twist_cmds";
 const std::string JOINT_TOPIC = "/servo_node/delta_joint_cmds";
-const std::string EEF_FRAME_ID = "panda_hand";
-const std::string BASE_FRAME_ID = "panda_link0";
+const std::string EEF_FRAME_ID = "hd_finger1_1";
+const std::string BASE_FRAME_ID = "base_link";
 
 // Enums for button names -> axis/button array index
 // For XBOX 1 controller
@@ -112,15 +112,15 @@ bool convertJoyToCmd(const std::vector<float>& axes, const std::vector<int>& but
   if (buttons[A] || buttons[B] || buttons[X] || buttons[Y] || axes[D_PAD_X] || axes[D_PAD_Y])
   {
     // Map the D_PAD to the proximal joints
-    joint->joint_names.push_back("panda_joint1");
+    joint->joint_names.push_back("joint1");
     joint->velocities.push_back(axes[D_PAD_X]);
-    joint->joint_names.push_back("panda_joint2");
+    joint->joint_names.push_back("joinit2");
     joint->velocities.push_back(axes[D_PAD_Y]);
 
     // Map the diamond to the distal joints
-    joint->joint_names.push_back("panda_joint7");
+    joint->joint_names.push_back("joint6");
     joint->velocities.push_back(buttons[B] - buttons[X]);
-    joint->joint_names.push_back("panda_joint6");
+    joint->joint_names.push_back("joint5");
     joint->velocities.push_back(buttons[Y] - buttons[A]);
     return false;
   }
@@ -155,7 +155,7 @@ void updateCmdFrame(std::string& frame_name, const std::vector<int>& buttons)
     frame_name = EEF_FRAME_ID;
 }
 
-namespace moveit_servo
+namespace fake_components
 {
 class JoyToServoPub : public rclcpp::Node
 {
@@ -183,7 +183,7 @@ public:
       rclcpp::sleep_for(std::chrono::seconds(3));
       // Create collision object, in the way of servoing
       moveit_msgs::msg::CollisionObject collision_object;
-      collision_object.header.frame_id = "panda_link0";
+      collision_object.header.frame_id = "base_link";
       collision_object.id = "box";
 
       shape_msgs::msg::SolidPrimitive table_1;
@@ -247,7 +247,7 @@ public:
     {
       // publish the JointJog
       joint_msg->header.stamp = this->now();
-      joint_msg->header.frame_id = "panda_link3";
+      joint_msg->header.frame_id = "hd_link3_1";
       joint_pub_->publish(std::move(joint_msg));
     }
   }
@@ -264,8 +264,8 @@ private:
   std::thread collision_pub_thread_;
 };  // class JoyToServoPub
 
-}  // namespace moveit_servo
+}  // namespace fake_components
 
 // Register the component with class_loader
 #include <rclcpp_components/register_node_macro.hpp>
-RCLCPP_COMPONENTS_REGISTER_NODE(moveit_servo::JoyToServoPub)
+RCLCPP_COMPONENTS_REGISTER_NODE(fake_components::JoyToServoPub)

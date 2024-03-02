@@ -4,8 +4,6 @@ import xacro
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python import get_package_share_directory
-from launch.actions import DeclareLaunchArgument
-
 
 def get_package_file(package, file_path):
     """Get the location of a file installed in an ament package"""
@@ -38,16 +36,6 @@ def run_xacro(xacro_file):
     return urdf_file
 
 
-def declare_binary_launch_argument(name, default=True, *, in_str_form=False):
-    if not isinstance(default, bool):
-        raise ValueError(f"Default value of binary launch argument should be of type bool not {type(default)}")
-    arg = DeclareLaunchArgument(
-        name, default_value=("true" if default else "false"),
-        choices=["true", "false"]
-    )
-    return arg if in_str_form else (arg == "true")
-
-
 def generate_launch_description():
     xacro_file = get_package_file('kerby_moveit_config', 'config/kerby.urdf.xacro')
     urdf_file = run_xacro(xacro_file)
@@ -62,8 +50,6 @@ def generate_launch_description():
     robot_description_semantic = load_file(srdf_file)
     kinematics_config = load_yaml(kinematics_file)
     ompl_config = load_yaml(ompl_config_file)
-
-    rviz_arg = declare_binary_launch_argument("rviz", default=True)
 
     joint_limits = {"robot_description_planning": load_yaml(joint_limits_file)}
 
@@ -86,6 +72,11 @@ def generate_launch_description():
         'publish_state_updates': True,
         'publish_transforms_updates': True
     }
+
+    servo_params_config = load_yaml(get_package_file(
+        "kerby_moveit_config", "config/servo_config.yaml"
+    ))
+    servo_params = {"moveit_servo": servo_params_config}
 
     # MoveIt node
     move_group_node = Node(
@@ -136,34 +127,25 @@ def generate_launch_description():
             joint_limits,
         ],
     )
-    
-    # Controller manager for realtime interactions
-    ros2_control_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        parameters= [
-            {'robot_description': robot_description},
-            ros_controllers_file
-        ],
-        output="screen",
+
+    servoing_test = Node(
+        package="fake_components",
+        executable="servo_controller_input",
+        parameters=[
+            robot_description,
+            robot_description_semantic,
+            planning_scene_monitor_config,
+            servo_params_config,
+            servo_params,
+            kinematics_config
+        ]
     )
 
-    # Startup up ROS2 controllers (will exit immediately)
-    controller_names = ['kerby_arm_moveit_controller', 'kerby_base_moveit_controller', 'joint_state_broadcaster']
-    spawn_controllers = [
-        Node(
-            package="controller_manager",
-            executable="spawner",       # spawner.py on foxy
-            arguments=[controller],
-            output="screen")
-        for controller in controller_names
-    ]
-
-    maybe_rviz = [rviz] if rviz_arg else []
     return LaunchDescription([
-        move_group_node,
-        robot_state_publisher,
-        ros2_control_node,
-        rviz
-        ] + spawn_controllers + maybe_rviz
+        #move_group_node,
+        #robot_state_publisher,
+        #ros2_control_node,
+        #rviz,
+        servoing_test
+        ]
     )

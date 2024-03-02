@@ -1,8 +1,22 @@
+# Deprecated: use quaternion_arithmetic instead
+
+#import kinematics.trajectory_planner.kinematics_utils.quaternion_arithmetic as new_qa
+#print(f"Warnning: the module '{__name__}' is deprecated: use '{new_qa.__name__}' instead")
 from math import sqrt, sin, cos, asin, acos, pi
 from geometry_msgs.msg import Quaternion, Point, Pose
+from typing import Callable
 
 
+def deprecate(func: Callable) -> Callable:
+    def deprecated_func(*args, **kwargs):
+        #print(f"Warning: function '{func.__module__}.{func.__name__}' is deprecated, use functions from '{new_qa.__name__}' instead")
+        return func(*args, **kwargs)
+    return deprecated_func
+
+
+@deprecate
 def norm(x):
+    # migrated
     if isinstance(x, (float, int)):
         return abs(x)
     if isinstance(x, (tuple, list)):
@@ -13,7 +27,9 @@ def norm(x):
         return sqrt(x.w**2+x.x**2+x.y**2+x.z**2)
 
 
+@deprecate
 def normalize(axis):
+    # migrated
     if isinstance(axis, (Point, Quaternion)):
         axis = (axis.x, axis.y, axis.z)
     n = sqrt(axis[0]**2 + axis[1]**2 + axis[2]**2)
@@ -23,7 +39,9 @@ def normalize(axis):
     return axis
 
 
+@deprecate
 def quat_normalize(q):
+    # migrated
     """normalize for quaternions"""
     n = sqrt(q.x**2+q.y**2+q.z**2+q.w**2)
     if n == 0:
@@ -35,7 +53,9 @@ def quat_normalize(q):
     return q
 
 
+@deprecate
 def quat(axis, angle):
+    # migrated
     """calculate the quaternion associated to a rotation of a certain angle around a certain axis"""
     if isinstance(axis, (Point, Quaternion)):
         axis = (axis.x, axis.y, axis.z)
@@ -48,7 +68,9 @@ def quat(axis, angle):
     return orientation
 
 
+@deprecate
 def reverse_trig(cost, sint):
+    # migrated
     """retrieve angle from its cos and sin"""
     if cost >= 0 and sint >= 0:
         angle = asin(sint)
@@ -61,7 +83,9 @@ def reverse_trig(cost, sint):
     return angle
 
 
+@deprecate
 def reverse_quat(q):
+    # migrated
     """retrieve axis and angle of rotation from quaternion"""
     q = make_quat(q)
     cost = q.w
@@ -74,13 +98,17 @@ def reverse_quat(q):
     return (axis, angle)
 
 
+@deprecate
 def turn_around(q, axis=(1.0, 0.0, 0.0), angle=pi):
+    # migrated
     axis = point_image(axis, q)
     r = quat(axis, angle)
     return mul(r, q)
 
 
+@deprecate
 def nb_to_quat(x):
+    # migrated
     x = float(x)
     q = Quaternion()
     q.w = x
@@ -88,7 +116,9 @@ def nb_to_quat(x):
     return q
 
 
+@deprecate
 def point_to_quat(p):
+    # migrated
     q = Quaternion()
     q.w = 0.0
     q.x = p.x
@@ -97,7 +127,9 @@ def point_to_quat(p):
     return q
 
 
+@deprecate
 def quat_to_point(q):
+    # migrated
     # only if q.w is 0
     p = Point()
     p.x = q.x
@@ -106,7 +138,9 @@ def quat_to_point(q):
     return p
 
 
+@deprecate
 def list_to_quat(l):
+    # migrated
     q = Quaternion()
     q.x = l[0]
     q.y = l[1]
@@ -117,7 +151,9 @@ def list_to_quat(l):
         q.w = l[3]
 
 
+@deprecate
 def list_to_point(l):
+    # migrated
     p = Point()
     p.x = l[0]
     p.y = l[1]
@@ -125,7 +161,9 @@ def list_to_point(l):
     return p
 
 
+@deprecate
 def make_quat(x):
+    # migrated
     """convert x to a Quaternion instance"""
     if isinstance(x, Quaternion):
         return x
@@ -139,7 +177,9 @@ def make_quat(x):
     raise
 
 
+@deprecate
 def make_point(x):
+    # migrated
     """convert x to a Point instance"""
     if isinstance(x, Point):
         return x
@@ -150,7 +190,9 @@ def make_point(x):
     raise
 
 
+@deprecate
 def inv(q):
+    # migrated
     """quaternion multiplicative inverse (only works if norm of q is 1"""
     q = make_quat(q)
     q_ = Quaternion()
@@ -161,7 +203,9 @@ def inv(q):
     return q_
 
 
+@deprecate
 def add(q1, q2):
+    # migrated
     """quaternion addition"""
     q1 = make_quat(q1)
     q2 = make_quat(q2)
@@ -173,7 +217,9 @@ def add(q1, q2):
     return ans
 
 
+@deprecate
 def point_add(p1, p2):
+    # migrated
     """point (vector) addition"""
     p1 = make_point(p1)
     p2 = make_point(p2)
@@ -184,7 +230,9 @@ def point_add(p1, p2):
     return ans
 
 
+@deprecate
 def mul(q1, q2):
+    # migrated
     """quaternion multiplication"""
     q1 = make_quat(q1)
     q2 = make_quat(q2)
@@ -196,7 +244,9 @@ def mul(q1, q2):
     return ans
 
 
+@deprecate
 def scalar_mul(t, v):
+    # migrated
     if isinstance(v, (list, tuple)):
         return [t*x for x in v]
     if isinstance(v, Point):
@@ -215,7 +265,9 @@ def scalar_mul(t, v):
     raise
 
 
+@deprecate
 def point_image(point, q):
+    # migrated
     """calculate the image of the point under the rotation described by the quaternion q"""
     point = make_point(point)
     p = point_to_quat(point)
@@ -224,13 +276,17 @@ def point_image(point, q):
     return quat_to_point(p)
 
 
+@deprecate
 def point_object_image(point, pose):
+    # migrated
     """calculate the image of the point under the transformation described by the pose"""
     p = point_image(point, pose.orientation)
     return point_add(pose.position, p)
 
 
+@deprecate
 def reverse_pose(pose):
+    # migrated
     """return rev_pose such that compose_poses(pose, rev_pose) is the trivial pose"""
     res = Pose()
     res.orientation = inv(pose.orientation)
@@ -241,7 +297,9 @@ def reverse_pose(pose):
     return res
 
 
+@deprecate
 def compose_poses(pose1, pose2):
+    # migrated
     """pose1 with respect to origin, pose2 with respect to pose1"""
     res = Pose()
     v = point_image(pose2.position, pose1.orientation)
@@ -254,13 +312,24 @@ def compose_poses(pose1, pose2):
     return res
 
 
+@deprecate
+def compose_poses2(pose1, pose2):
+    # migrated
+    position = point_object_image(pose2.position, pose1)
+    orientation = mul(pose1.orientation, pose2.orientation)
+    return Pose(position=position, orientation=orientation)
+
+
+@deprecate
 def compose_multiple_poses(*poses):
+    # migrated
     res = Pose()
     for pose in poses:
         res = compose_poses(res, pose)
     return res
 
 
+@deprecate
 def colinear(v1, v2):
     for j in range(len(v1)):
         if v1[j] != 0:
@@ -270,9 +339,12 @@ def colinear(v1, v2):
     return all(v1[j]*v2[i] == v1[i]*v2[j] for i in range(len(v1)))
 
 
+@deprecate
 def solve_2d(v1, v2):
     pass
 
+
+@deprecate
 def solve_system(v1, v2):
     s = v1[1]*v2[0] - v2[1]*v1[0]
     t = v1[2]*v2[0] - v2[2]*v1[0]

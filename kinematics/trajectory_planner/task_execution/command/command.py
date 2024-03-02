@@ -6,51 +6,130 @@ import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 from collections.abc import Callable
+from typing import Any, Type
+import threading
+from rclpy.node import Node
+from rclpy.timer import Rate
+
+
+# "forward" declaration of the Executor class, used for typing purposes
+Executor: Type[Node] = "Executor"
 
 
 class Command:
     """abstract class representing a command"""
-    def __init__(self, executor=None):
+
+    def __init__(self, executor: Executor = None):
         self.executor = executor
         self.execute_count = 0
         self.has_failed = False
 
     def createSetter(self, attribute: str):
         """create a setter for the given attribute"""
-        def setter(val):
+        def setter(val: Any):
             setattr(self, attribute, val)
+        
+        def camelCasify(s: str):
+            if len(s) == 0:
+                return ""
+            camel_s = ""
+            next_capital = True
+            for c in s:
+                if c == "_":
+                    next_capital = True
+                    continue
+                camel_s += c.capitalize() if next_capital else c
+                next_capital = False
 
-        if not hasattr(self, "set" + attribute.capitalize()):
-            setattr(self, "set" + attribute.capitalize(), setter)
+        setter_name = "set" + camelCasify(attribute)
+        if not hasattr(self, setter_name):
+            setattr(self, setter_name, setter)
 
-    def createSetters(self, *attributes):
+    def createSetters(self, *attributes: str):
         for attr in attributes:
             self.createSetter(attr)
 
     def execute(self):
-        """attempts to execute command
-        returns a bool indicating if it succeeded"""
+        """attempts to execute command"""
         self.execute_count += 1
 
     def abort(self):
         """stops all movement"""
 
-    def done(self):
+    def done(self) -> bool:
         """indicate if command has executed correctly (by default returns true as soon as the commands has been executed once)"""
         return self.execute_count > 0
 
-    def hasFailed(self):
+    def hasFailed(self) -> bool:
         return self.has_failed
 
 
 class BackgroundCommand:
-    def __init__(self, executor=None):
-        self.executor = executor
-        self.has_started = False
-        self.has_finished = False
-    
-    def start(self):
-        self.has_started = True
+    START = 0
+    STOP = 1
 
-    def stop(self):
-        self.has_finished = True
+    def __init__(self, executor: Executor = None):
+        self.executor = executor
+        self._has_started = False
+        self._has_finished = False
+        self._stop_flag = False
+        self.execution_thread = threading.Thread(target=self.execute)
+        self.rate: Rate = self.executor.create_rate(25)
+    
+    def isAlive(self) -> bool:
+        return self.execution_thread.is_alive()
+    
+    @property
+    def has_finished(self) -> bool:
+        return self._has_finished and not self.isAlive()
+    
+    def setRate(self, hz: int):
+        self.rate = self.executor.create_rate(hz)
+
+    def start(self):
+        self._has_started = True
+        self.execution_thread.start()
+
+    def softStop(self, wait: bool = True):
+        self._stop_flag = True
+        if wait:
+            self.execution_thread.join()
+        self._has_finished = True
+    
+    def hardStop(self):     # TODO: figure out how to forcefully stop the thread or delete this method
+        raise NotImplementedError("BackgroundCommand.hardStop method is not implemented")
+
+    def _executeCycle(self):
+        """one cyle of the execute loop: override this method, not execute"""
+        pass
+
+    def _cleanup(self):
+        """called before ending the execution thread"""
+        pass
+
+    def execute(self):
+        while not self._stop_flag:
+            self._executeCycle()
+            self.rate.sleep()
+        self._cleanup()
+
+
+class BackgroundCommandStart(Command):
+    def __init__(self, executor: Executor, background_command: BackgroundCommand):
+        super().__init__(executor)
+        self.background_command = background_command
+    
+    def execute(self):
+        super().execute()
+        self.background_command.start()
+
+
+class BackgroundCommandStop(Command):
+    def __init__(self, executor: Executor, background_command: BackgroundCommand, wait: bool = True):
+        super().__init__(executor)
+        self.background_command = background_command
+        self.wait = wait
+    
+    def execute(self):
+        super().execute()
+        self.background_command.softStop(wait=self.wait)

@@ -1,3 +1,4 @@
+from .command import *
 from .add_object_command import *
 from .pose_command import *
 from .request_detection_command import *

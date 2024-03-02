@@ -13,12 +13,51 @@ from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
 import threading
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
-import kinematics_utils.quaternion_arithmetic as qa
+import kinematics.trajectory_planner.kinematics_utils.quaternion_arithmetic as qa
+from typing import List, Type
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class TaskSelect:
+    """simple wrapper for selecting a task"""
+    info_msg: str
+    task_type: Type[task_execution.task.Task]
+    
+    def select(self, executor):
+        executor.loginfo(self.info_msg)
+        return self.task_type(executor)
 
 
 class Executor(Node):
+    KNOWN_TASKS = {
+        Task.BUTTON:                    TaskSelect("Button task",               PressButton),
+        Task.PLUG_VOLTMETER_ALIGN:      TaskSelect("Plug voltmeter task",       PlugVoltmeterAlign),
+        Task.METAL_BAR_APPROACH:        TaskSelect("Metal bar approach task",   BarMagnetApproach),
+        Task.NAMED_TARGET:              TaskSelect("Named target task",         task_execution.task.Task),
+        Task.RASSOR_SAMPLE:             TaskSelect("Rassor sample task",        RassorSampling),
+        Task.ETHERNET_CABLE:            TaskSelect("Plug ethernet task",        EthernetApproach),
+        Task.ALIGN_PANEL:               TaskSelect("Align panel",               AlignPanel),
+        Task.ROCK_SAMPLING_APPROACH:    TaskSelect("Rock sampling approach",    RockSamplingApproach),
+        Task.ROCK_SAMPLING_DROP:        TaskSelect("Rock sampling drop",        RockSamplingDrop),
+        Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",    RockSamplingComplete),
+    }
+
     def __init__(self):
         super().__init__("kinematics_task_executor")
+        self.createRosInterfaces()
+
+        self.task: task_execution.task.Task = None
+        self.new_task = False
+
+        # indicates whether trajectory feedback has been updated
+        self.traj_feedback_update = False
+        # the feedback from the last MoveIt trajectory : True for success, False for fail (variable only usable when self.traj_feedback_update is True)
+        self.traj_feedback = False
+
+        self.received_voltmeter_response = False
+    
+    def createRosInterfaces(self):
         self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignementCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
         self.create_subscription(TargetInstruction, "HD/vision/target_pose", pt.detected_object_pose_callback, 10)
@@ -36,34 +75,32 @@ class Executor(Node):
         self.voltmeter_pub = self.create_publisher(ServoRequest, "EL/servo_req", 10)
         self.joint_space_cmd_pub = self.create_publisher(JointSpaceCmd, "HD/kinematics/joint_goal2", 10)
 
-        self.task = None    # usually a Task from task_execution.task but could also be just a Command
-        self.new_task = False
-
-        self.traj_feedback_update = False
-        self.traj_feedback = False
-
-        self.received_voltmeter_response = False
-
-    def loginfo(self, text):
+    def loginfo(self, text: str):
         self.get_logger().info(text)
     
-    def logwarn(self, text):
+    def logwarn(self, text: str):
         self.get_logger().warn(text)
     
-    def logerror(self, text):
+    def logerror(self, text: str):
         self.get_logger().error(text)
     
     def getTrajFeedback(self):
+        """return the stored trajectory feedback"""
         self.traj_feedback_update = False
         return self.traj_feedback
     
-    def waitForFeedback(self, hz=10):
+    def waitForFeedback(self, hz: int=10) -> bool:
+        """wait until trajectory feedback has been updated (it will be updated in a callback in another thread), then return the feedback"""
         rate = self.create_rate(hz)
         while not self.traj_feedback_update:
             rate.sleep()
         return self.getTrajFeedback()
 
-    def waitForVoltmeterResponse(self, timeout=1, hz=10):
+    def waitForVoltmeterResponse(self, timeout: float=1.0, hz: int=10) -> bool:
+        """
+        wait until either timeout or a voltmeter response is received from avionics
+        return: False if timed out else True
+        """
         self.received_voltmeter_response = False
         rate = self.create_rate(hz)
         start = time.time()
@@ -73,19 +110,10 @@ class Executor(Node):
             rate.sleep()
         return True
 
-    def hasTask(self):
+    def hasTask(self) -> bool:
         return self.task is not None
 
-    """def add_panel(self, name, pose):
-        dims = (2, 2, 0.05)
-        msg = Object()
-        msg.type == "box"
-        msg.name = name
-        msg.pose = pose
-        msg.dims = dims
-        self.add_obj_pub.publish(msg)"""
-
-    def sendPoseGoal(self, goal: Pose, cartesian=False, velocity_scaling_factor=1.0):
+    def sendPoseGoal(self, goal: Pose, cartesian: bool=False, velocity_scaling_factor: float=1.0):
         """sends a pose goal to the trajectory planner"""
         msg = PoseGoal(
             goal = goal,
@@ -94,7 +122,7 @@ class Executor(Node):
         )
         self.pose_target_pub.publish(msg)
     
-    def sendJointGoal(self, goal: list):
+    def sendJointGoal(self, goal: List[float]):
         """sends a joint goal to the trajectory planner"""
         msg = Float64MultiArray(data=goal)
         self.joint_target_pub.publish(msg)
@@ -103,7 +131,7 @@ class Executor(Node):
         """sends a gripper torque command to the motor control"""
         msg = MotorCommand(
             name = "Gripper",
-            mode = 2,   # MotorCommand.TORQUE,
+            mode = MotorCommand.TORQUE,
             command = torque_scaling_factor
         )
         self.motor_command_pub.publish(msg)
@@ -112,7 +140,7 @@ class Executor(Node):
         """sends a rassor torque command to the motor control"""
         msg = MotorCommand(
             name = "Rassor",
-            mode = 2,   # MotorCommand.TORQUE,
+            mode = MotorCommand.TORQUE,
             command = torque_scaling_factor
         )
         self.motor_command_pub.publish(msg)
@@ -122,34 +150,38 @@ class Executor(Node):
         msg = ServoRequest(destination_id=0, channel=1, angle=angle)
         self.voltmeter_pub.publish(msg)
 
-    def sendJointSpaceCmd(self, mode, states: list):
-        """"""
+    def sendJointSpaceCmd(self, mode: int, states: List[float]):
+        """sends a joint space command which can be relative or absolute depending on the mode"""
         msg = JointSpaceCmd(
-            mode=mode,
-            states=Float64MultiArray(data=states)
+            mode = mode,
+            states = Float64MultiArray(data=states)
         )
         self.joint_space_cmd_pub.publish(msg)
 
-    def addObjectToWorld(self, shape: list, pose: Pose, name: str, type=Object.BOX, operation=Object.ADD):
-        msg = Object()
-        msg.type = type
-        msg.operation = operation
-        msg.name = name
-        msg.pose = pc.revert_from_vision(pose)
-        shape_ = Float64MultiArray()
-        shape_.data = shape
-        msg.shape = shape_
+    def addObjectToWorld(self, shape: List[float], pose: Pose, name: str, type: int=Object.BOX, operation: int=Object.ADD):
+        """sends an object to the planner, to be added to the world"""
+        # TODO: modify this function and its interface to send a moveit_msgs.msg.CollisionObject instead of hd_interfaces.msg.Object + change its name to manipulate or something
+        msg = Object(
+            type = type,
+            operation = operation,
+            name = name,
+            pose = pc.revert_from_vision(pose),
+            shape = Float64MultiArray(data=shape)
+        )
         self.add_object_pub.publish(msg)
 
     def sendNamedJointTarget(self, target: str):
+        """named joint targets are predefined poses for the whole arm like "home" or "optimal_view" """
         msg = String(data=target)
         self.named_joint_target_pub.publish(msg)
 
     def trajFeedbackUpdate(self, msg: Bool):
+        """listens to /HD/kinematics/traj_feedback topic"""
         self.traj_feedback_update = True
         self.traj_feedback = msg.data
     
     def voltmeterResponseCallback(self, msg: ServoResponse):
+        """listens to /EL/servo_response topic"""
         if msg.success:
             self.received_voltmeter_response = True
 
@@ -157,49 +189,19 @@ class Executor(Node):
         """listens to /HD/fsm/task_assignment topic"""
         self.loginfo("Task executor received cmd")
         if self.hasTask():
-            self.loginfo("but already has task")
+            self.loginfo("but already has task : ignoring")
             return
-        if msg.type == Task.BUTTON:
-            self.loginfo("Button task")
-            self.task = PressButton(self, msg.id, msg.pose)
-        elif msg.type == Task.PLUG_VOLTMETER_ALIGN:
-            self.loginfo("Plug voltmeter task")
-            self.task = PlugVoltmeterAlign(self)
-        elif msg.type == Task.PLUG_VOLTMETER_APPROACH:
-            self.loginfo("Plug voltmeter task")
-            self.task = PlugVoltmeterApproach(self)
-        elif msg.type == Task.METAL_BAR_APPROACH:
-            self.loginfo("Metal bar approach task")
-            self.task = BarMagnetApproach(self)
-        elif msg.type == Task.NAMED_TARGET:
-            self.loginfo("Named target task")
-            self.task = task_execution.task.Task(self)
-            self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))
-        elif msg.type == Task.RASSOR_SAMPLE:
-            self.loginfo("Rassor sample task")
-            self.task = RassorSampling(self)
-        elif msg.type == Task.ETHERNET_CABLE:
-            self.loginfo("Plug ethernet task")
-            self.task = EthernetApproach(self)
-        elif msg.type == Task.ALIGN_PANEL:
-            self.loginfo("Align panel")
-            self.task = AlignPanel(self)
-        elif msg.type == Task.ROCK_SAMPLING_APPROACH:
-            self.loginfo("Rock sampling approach")
-            self.task = RockSamplingApproach(self)
-        elif msg.type == Task.ROCK_SAMPLING_DROP:
-            self.loginfo("Rock sampling drop")
-            self.task = RockSamplingDrop(self)
-        elif msg.type == Task.ROCK_SAMPLING_COMPLETE:
-            self.loginfo("Complete rock sampling")
-            self.task = RockSamplingComplete(self)
-        else:
+        if msg.type not in self.KNOWN_TASKS:
             self.loginfo("Unknown task")
             return
-        
+        if msg.type == Task.NAMED_TARGET:
+            self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))
+        self.task = self.KNOWN_TASKS[msg.type].select(self)
         self.new_task = True
     
     def CSMaintenanceCallback(self, msg: Int8):
+        """listens to /ROVER/Maintenance topic"""
+        # TODO: put those constants in the message definition
         LAUNCH = 1
         ABORT = 2
         WAIT = 3
@@ -237,9 +239,11 @@ class Executor(Node):
         self.addObjectToWorld(shape, pose, name)
 
     def run(self):
+        """main loop of the task executor"""
         rate = self.create_rate(25)   # 25hz
         while rclpy.ok():
             if self.new_task:
+                # initiate the task in a new thread
                 thread = threading.Thread(target=self.initiateTask)
                 thread.start()
             #self.testVision()
