@@ -1,6 +1,7 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
+from launch.actions import GroupAction, DeclareLaunchArgument, LogInfo
+from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.conditions import IfCondition
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -9,20 +10,27 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
 
-def declare_binary_launch_argument(name, default=True, *, in_str_form=False):
+def declare_binary_launch_argument(name, default=True, description=""):
     if not isinstance(default, bool):
         raise ValueError(f"Default value of binary launch argument should be of type bool not {type(default)}")
-    arg = DeclareLaunchArgument(
-        name, default_value=("true" if default else "false"),
-        choices=["true", "false"]
+    
+    # Initialize the LaunchConfiguration
+    arg = LaunchConfiguration(name)
+
+    # Declare the launch argument with a default value
+    declare_arg = DeclareLaunchArgument(
+        name,
+        default_value='True' if default else 'False',
+        description=description,
+        choices=['True', 'False']
     )
-    return arg if in_str_form else (arg == "true")
+    return arg, declare_arg
 
 
 def generate_launch_description():
-    sim_arg = declare_binary_launch_argument("sim", default=False)
-    rviz_arg = declare_binary_launch_argument("rviz", default=True, in_str_form=True)
-    fake_cs_arg = declare_binary_launch_argument("fake_cs", default=True)
+    sim_arg, sim_declaration = declare_binary_launch_argument("sim", default=False, description="Run in simulation mode")
+    rviz_arg, rviz_declaration = declare_binary_launch_argument("rviz", default=True, description="Run RViz")
+    fake_cs_arg, fake_cs_declaration = declare_binary_launch_argument("fake_cs", default=True, description="Run fake control station")
 
     kerby_nodes = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
@@ -35,7 +43,6 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('trajectory_planner'), 'launch'),
             '/task_execution.launch.py']),
-        launch_arguments={'rviz': rviz_arg}.items(),
     )
 
     fsm_node = Node(
@@ -45,28 +52,32 @@ def generate_launch_description():
 
     fake_cs_node = Node(
         package="fake_components",
-        executable="fake_cs_gamepad.py"
+        executable="fake_cs_gamepad.py",
+        condition=IfCondition(PythonExpression([fake_cs_arg, "== True"])) # Run if the fake CS is needed 
     )
-
-    maybe_fake_cs = [fake_cs_node] if fake_cs_arg else []
 
     fake_motor_control_node = Node(
         package="fake_components",
-        executable="fake_motor_control.py"
+        executable="fake_motor_control.py",
+        condition=IfCondition(PythonExpression([sim_arg, "== True"])) # Run if we are in simulation
     )
 
     real_motor_control_node = Node(     # TODO: edit motor_control node in order to be runnable like that (without the path to the cofig)
-        package="motor_control",
-        executable="motor_control"
+        package="ethercat_device_configurator",
+        executable="motor_control",
+        condition=IfCondition(PythonExpression([sim_arg, "== False"])) # Do not run if we are in simulation
     )
 
-    motor_control_node = fake_motor_control_node if sim_arg else real_motor_control_node
-
-
+    # Declare all the steps of the launch file process
     return LaunchDescription([
+        sim_declaration,
+        rviz_declaration,
+        fake_cs_declaration,
         kerby_nodes,
         trajectory_planner_nodes,
         fsm_node,
-        motor_control_node,
-        ] + maybe_fake_cs
+        fake_cs_node,
+        fake_motor_control_node,
+        real_motor_control_node
+        ]
     )

@@ -4,7 +4,10 @@ import xacro
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python import get_package_share_directory
-from launch.actions import DeclareLaunchArgument
+from launch import LaunchDescription
+from launch.actions import GroupAction, DeclareLaunchArgument, LogInfo
+from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.conditions import IfCondition
 
 
 def get_package_file(package, file_path):
@@ -38,14 +41,21 @@ def run_xacro(xacro_file):
     return urdf_file
 
 
-def declare_binary_launch_argument(name, default=True, *, in_str_form=False):
+def declare_binary_launch_argument(name, default=True, description=""):
     if not isinstance(default, bool):
         raise ValueError(f"Default value of binary launch argument should be of type bool not {type(default)}")
-    arg = DeclareLaunchArgument(
-        name, default_value=("true" if default else "false"),
-        choices=["true", "false"]
+    
+    # Initialize the LaunchConfiguration
+    arg = LaunchConfiguration(name)
+
+    # Declare the launch argument with a default value
+    declare_arg = DeclareLaunchArgument(
+        name,
+        default_value='True' if default else 'False',
+        description=description,
+        choices=['True', 'False']
     )
-    return arg if in_str_form else (arg == "true")
+    return arg, declare_arg
 
 
 def generate_launch_description():
@@ -63,7 +73,7 @@ def generate_launch_description():
     kinematics_config = load_yaml(kinematics_file)
     ompl_config = load_yaml(ompl_config_file)
 
-    rviz_arg = declare_binary_launch_argument("rviz", default=True)
+    rviz_arg, rviz_declaration = declare_binary_launch_argument("rviz", default=True, description="Run RViz")
 
     joint_limits = {"robot_description_planning": load_yaml(joint_limits_file)}
 
@@ -135,6 +145,7 @@ def generate_launch_description():
             },
             joint_limits,
         ],
+        condition=IfCondition(PythonExpression([rviz_arg, "== True"]))
     )
     
     # Controller manager for realtime interactions
@@ -159,11 +170,11 @@ def generate_launch_description():
         for controller in controller_names
     ]
 
-    maybe_rviz = [rviz] if rviz_arg else []
     return LaunchDescription([
+        rviz_declaration,
         move_group_node,
         robot_state_publisher,
         ros2_control_node,
         rviz
-        ] + spawn_controllers + maybe_rviz
+        ] + spawn_controllers
     )
