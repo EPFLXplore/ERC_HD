@@ -8,3 +8,5 @@ hd_ws/install/
 hd_ws/log/
 hd_ws/tttt/
 
+
+*.pyc
