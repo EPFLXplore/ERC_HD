@@ -151,8 +151,7 @@ private:
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     void manual_direct_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
         for (uint i=0; i < motor_command_list.size(); i++) {
-            if (i == 3 or i == 5) velocity_direct_command(i, msg->data[i]);
-            else if (i < 5) position_direct_command(i, msg->data[i]);
+            if (i < 6) position_direct_command(i, msg->data[i]);
             else torque_direct_command(i, msg->data[i]);
         }
     }
@@ -217,15 +216,22 @@ private:
     {
         for (uint i = 0; i < 6; i++)     // only accepting position commands for j1-6
         {
-            motor_command_list[i].command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
-            double new_pos = msg->data[i] * DIRECTIONS[i];
-            //new_pos = std::min(std::max(new_pos, POS_LOWER_LIMITS[i]), POS_UPPER_LIMITS[i]);
-            if (new_pos < POS_LOWER_LIMITS[i]) new_pos = POS_LOWER_LIMITS[i];
-            if (new_pos > POS_UPPER_LIMITS[i]) new_pos = POS_UPPER_LIMITS[i];
-            motor_command_list[i].command.setTargetPosition(new_pos);
-            motor_command_list[i].command_time = std::chrono::steady_clock::now();
-            should_scan_stationary_states[i] = true;
-            enforce_limits(i);
+            if (i == 5) {
+                motor_command_list[i].command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
+                motor_command_list[i].command_time = std::chrono::steady_clock::now();
+                should_scan_stationary_states[i] = true;
+            }
+            else {
+                motor_command_list[i].command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
+                double new_pos = msg->data[i] * DIRECTIONS[i];
+                //new_pos = std::min(std::max(new_pos, POS_LOWER_LIMITS[i]), POS_UPPER_LIMITS[i]);
+                if (new_pos < POS_LOWER_LIMITS[i]) new_pos = POS_LOWER_LIMITS[i];
+                if (new_pos > POS_UPPER_LIMITS[i]) new_pos = POS_UPPER_LIMITS[i];
+                motor_command_list[i].command.setTargetPosition(new_pos);
+                motor_command_list[i].command_time = std::chrono::steady_clock::now();
+                should_scan_stationary_states[i] = true;
+                enforce_limits(i);
+            }
         }
     }
 
