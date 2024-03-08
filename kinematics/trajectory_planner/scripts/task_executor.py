@@ -124,6 +124,7 @@ class Executor(Node):
     
     def sendJointGoal(self, goal: List[float]):
         """sends a joint goal to the trajectory planner"""
+        # TODO: this method may be an outdated equivalent of sendJointSpaceCmd
         msg = Float64MultiArray(data=goal)
         self.joint_target_pub.publish(msg)
     
@@ -169,6 +170,9 @@ class Executor(Node):
             shape = Float64MultiArray(data=shape)
         )
         self.add_object_pub.publish(msg)
+    
+    def detectionUpdated(self):
+        return pt.DETECTION_UPDATED
 
     def sendNamedJointTarget(self, target: str):
         """named joint targets are predefined poses for the whole arm like "home" or "optimal_view" """
@@ -194,9 +198,9 @@ class Executor(Node):
         if msg.type not in self.KNOWN_TASKS:
             self.loginfo("Unknown task")
             return
+        self.task = self.KNOWN_TASKS[msg.type].select(self)
         if msg.type == Task.NAMED_TARGET:
             self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))
-        self.task = self.KNOWN_TASKS[msg.type].select(self)
         self.new_task = True
     
     def CSMaintenanceCallback(self, msg: Int8):
@@ -219,7 +223,7 @@ class Executor(Node):
         msg = Int8()
         if success:
             msg.data = 0
-            self.loginfo("Executed task successfully")
+            self.loginfo("Executed task successfully\n")
         else:
             msg.data = 1
             self.loginfo("Task failed")
