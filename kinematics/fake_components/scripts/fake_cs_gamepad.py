@@ -211,7 +211,7 @@ class EnumOld:
     def __init__(self, **kwargs):
         self.items = kwargs
         self.slots = list(kwargs)
-        print(self.slots)
+        #print(self.slots)
         for k in self.slots:
             setattr(self, k, kwargs[k])
 
@@ -260,13 +260,13 @@ def Enum(**kwargs):
             for i, slot in enumerate(self.__SLOTS):
                 if slot == obj:
                     break
-            return self.__SLOTS[i%len(self.__SLOTS)]
+            return self.__SLOTS[(i+1)%len(self.__SLOTS)]
         
         def register_instance(self, name: str, value: ValType):
             setattr(self, name, value)
             self.__SLOTS.append(getattr(self, name))
 
-    class EnumClassTemplate:
+    class EnumClassTemplate(metaclass=EnumMetaClass):
         def __init__(self, name: str, value: ValType):
             self.name = name
             self.value = value
@@ -280,7 +280,7 @@ def Enum(**kwargs):
             return False
 
         def next(self):
-            return type(self).next(self)
+            return type(type(self)).next(type(self), self)
 
         def __repr__(self):
             return f"<name: {self.name}, value: {self.value}>"
@@ -407,8 +407,7 @@ class ControlStation(Node):
         if not do:
             return
         self.hd_mode = (self.hd_mode + 1) % len(HDMode)
-        msg = Int8()
-        msg.data = self.hd_mode
+        msg = Int8(data=self.hd_mode)
         self.mode_change_pub.publish(msg)
 
     def set_manual_velocity(self, joint_index, value):
