@@ -8,8 +8,31 @@ from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8
 
 import keyboard
 import threading
-from typing import Any
+from typing import Any, Union
+from typing_extensions import Self
 import math
+
+
+RectangleLike = Union[list[int], tuple[int, int, int, int]]
+
+
+class Rectangle:
+    def __init__(self, posx: int=0, posy: int=0, dimx: int=0, dimy: int=0):
+        self.posx, self.posy, self.dimx, self.dimy = posx, posy, dimx, dimy
+    
+    @classmethod
+    def make(cls, rect: Union[RectangleLike, Self]):
+        if isinstance(rect, cls):
+            return rect
+        if isinstance(rect, (list, tuple)):
+            return cls(*rect[:4])
+        raise TypeError
+
+
+class TextBox:
+    def __init__(self, hitbox: RectangleLike):
+        self.hitbox = Rectangle.make(hitbox)
+        
 
 
 class FakeCSKeyboard(Node):

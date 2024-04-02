@@ -108,6 +108,42 @@ ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 
 
+set(SERVO_LIB_NAME moveit_servo_lib)
+set(SERVO_PARAM_LIB_NAME ${SERVO_LIB_NAME}_parameters)
+set(SERVO_COMPONENT_NODE servo_node)
+set(SERVO_NODE_MAIN_NAME servo_node_main)
+
+# This library provides a way of loading parameters for servo
+add_library(${SERVO_PARAM_LIB_NAME} SHARED
+  servo_src/servo_parameters.cpp
+  servo_src/parameter_descriptor_builder.cpp
+)
+set_target_properties(${SERVO_PARAM_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+ament_target_dependencies(${SERVO_PARAM_LIB_NAME} ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+add_library(${SERVO_COMPONENT_NODE} SHARED servo_src/servo_node.cpp)
+ament_target_dependencies(${SERVO_COMPONENT_NODE} ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+add_executable(${SERVO_NODE_MAIN_NAME} servo_src/servo_node_main.cpp)
+target_link_libraries(${SERVO_NODE_MAIN_NAME} ${SERVO_COMPONENT_NODE})
+ament_target_dependencies(${SERVO_NODE_MAIN_NAME} ${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+install(
+  TARGETS
+    ${SERVO_NODE_MAIN_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+
+
+
+
+
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

@@ -43,6 +43,7 @@ class FakeMotorControl(Node):
 
     def init_state(self):
         self.state.position = [0.0]*self.MOTOR_COUNT
+        self.state.position = [0.0, -0.244346095, -0.104719755, 0.0, -0.366519143, 0.0]
         self.state.velocity = [0.0]*self.MOTOR_COUNT
         self.state.effort = [0.0]*self.MOTOR_COUNT
 
