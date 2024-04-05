@@ -32,7 +32,7 @@ current_dir=$(pwd)
 parent_dir=$(dirname "$current_dir")
 
 docker run -it \
-    --name hd_humble_desktop \
+    --name hd_humble_jetson \
     --rm \
     --runtime=nvidia \
     --gpus all \
@@ -47,4 +47,4 @@ docker run -it \
     -v /dev:/dev \
     -v $parent_dir:/home/xplore/dev_ws/src \
     -v hd_humble_desktop_home_volume:/home/xplore \
-    ghcr.io/epflxplore/hd:humble-desktop
+    ghcr.io/epflxplore/hd:humble-jetson
