@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+
+<xacro:include filename="$(find rover_description)/description/inertial_macros.xacro" />
+
+    <joint name="stereo_joint1" type="fixed">
+        <!-- <origin xyz=" 0 -0.210526 0" rpy="0 0 0"/> -->
+        <origin xyz=" 0 -0.24 0" rpy="0 0 0"/>
+        <parent link="chassis_link"/>
+        <child link="stereo_link1"/>
+    </joint>
+
+
+    <link name="stereo_link1">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box> 
+                    <size>0.1 0.1 0.1</size> 
+                </box> 
+            </geometry> 
+        </collision>
+        <visual>
+            <geometry>
+                <box>
+                  <size>0.1 0.1 0.1</size>
+                </box> 
+            </geometry> 
+        </visual>
+        <xacro:inertial_box mass="0.1" x="0.1" y="0.1" z="0.1" >
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_box>   
+    </link>
+
+    <gazebo reference="stereo_link1">
+        <material>Gazebo/Red</material>
+        <!-- <sensor type="camera" name="stereo1">
+          <update_rate>30.0</update_rate>
+          <camera name="head">
+            <horizontal_fov>1.3962634</horizontal_fov>
+            <image>
+              <width>1280</width>
+              <height>720</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.02</near>
+              <far>300</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+
+              <mean>0.0</mean>
+              <stddev>0.007</stddev>
+            </noise>
+          </camera>
+          <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>0.0</updateRate>
+            <cameraName>stereo1</cameraName>
+            <imageTopicName>image_raw</imageTopicName>
+            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <frameName>stereo_link1</frameName>
+            <hackBaseline>0.07</hackBaseline>
+            <distortionK1>0.0</distortionK1>
+            <distortionK2>0.0</distortionK2>
+            <distortionK3>0.0</distortionK3>
+            <distortionT1>0.0</distortionT1>
+            <distortionT2>0.0</distortionT2>
+          </plugin>
+        </sensor> -->
+    </gazebo>
+
+
+  
+</robot>
