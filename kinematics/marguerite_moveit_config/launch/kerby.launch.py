@@ -5,6 +5,8 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python import get_package_share_directory
 from launch.actions import DeclareLaunchArgument
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 
 def get_package_file(package, file_path):
@@ -49,7 +51,7 @@ def declare_binary_launch_argument(name, default=True, *, in_str_form=False):
 
 
 def generate_launch_description():
-    xacro_file = get_package_file('marguerite_moveit_config', 'config/kerby.urdf.xacro')
+    xacro_file = get_package_file('marguerite_moveit_config', 'config/kerby_gazebo.urdf.xacro')
     urdf_file = run_xacro(xacro_file)
     srdf_file = get_package_file('marguerite_moveit_config', 'config/kerby.srdf')
     kinematics_file = get_package_file('marguerite_moveit_config', 'config/kinematics.yaml')
@@ -160,10 +162,41 @@ def generate_launch_description():
         for controller in controller_names
     ]
     print("FFFFFFFFFFFFFFFFFFFFFf")
+    
+    
+    
+    # GAZEBO
+    
+    gazebo_launch=os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')
+    gazebo2 = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(gazebo_launch),
+                 launch_arguments={
+                    #'world': world_path2  
+                }.items(),
+    )
+    
+    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+                        arguments=['-topic', 'robot_description',
+                                   '-entity', 'robot', 
+                                   '-x', '0.0',
+                                    '-y', '0.0',
+                                    '-z', '4.0',
+                                    '-Y','0.0'
+                                ],
+                        output='screen'
+                        ) 
+    
+    
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='true',
+            description='Use sim time if true'),
+        gazebo2,
+        spawn_entity,
         move_group_node,
         robot_state_publisher,
         ros2_control_node,
-        rviz
+        #rviz
         ] + spawn_controllers
     )

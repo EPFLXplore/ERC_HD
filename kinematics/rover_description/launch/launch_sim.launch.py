@@ -73,31 +73,31 @@ def generate_launch_description():
 
     joint_broad_spawner = Node(
         package="controller_manager",
-        executable="spawner.py",
+        executable="spawner",
         arguments=["joint_state_broadcaster"],
     )
 
     wheel_steering_spawner = Node(
         package="controller_manager",
-        executable="spawner.py",
+        executable="spawner",
         arguments=["position_controller"],
     )
 
     wheel_velocity_spawner = Node(
         package="controller_manager",
-        executable="spawner.py",
+        executable="spawner",
         arguments=["velocity_controller"],
     ) 
   
     hd_pos_spawner = Node(
         package="controller_manager",
-        executable="spawner.py",
-        arguments=["hd_pos_controller"],
+        executable="spawner",
+        arguments=["kerby_arm_moveit_controller"],
     ) 
 
     hd_vel_spawner = Node(
         package="controller_manager",
-        executable="spawner.py",
+        executable="spawner",
         arguments=["hd_vel_controller"],
     ) 
   
@@ -109,9 +109,9 @@ def generate_launch_description():
         gazebo1,
         gazebo2,
         spawn_entity,
-        joint_broad_spawner,
+        #joint_broad_spawner,
         # wheel_steering_spawner,
         # wheel_velocity_spawner,
-        hd_pos_spawner,
+        #hd_pos_spawner,
         
     ])
