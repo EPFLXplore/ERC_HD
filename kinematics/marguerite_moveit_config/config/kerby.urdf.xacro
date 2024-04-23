@@ -6,7 +6,7 @@
     <xacro:include filename="$(find rover_description)/description/assemblage.urdf.xacro" />
 
     <!-- Import control_xacro -->
-    <xacro:include filename="kerby.ros2_control.xacro" />
+    <xacro:include filename="kerby2.ros2_control.xacro" />
 
 
     <xacro:kerby_ros2_control name="FakeSystem" initial_positions_file="$(arg initial_positions_file)"/>
