@@ -1,7 +1,7 @@
 ###########################################
 # Xplore Handling Device image
 ###########################################
-FROM ghcr.io/epflxplore/docker_commons:humble-desktop
+FROM ghcr.io/epflxplore/docker_commons:humble-desktop-nvidia
 
 ARG DEBIAN_FRONTEND=noninteractive
 
