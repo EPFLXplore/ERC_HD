@@ -3,6 +3,7 @@ import threading
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8
+from geometry_msgs.msg import Twist, TwistStamped
 from hd_interfaces.msg import Task
 import array
 import math
@@ -51,14 +52,17 @@ class FSM(Node):
         self.mode_transitioning = False
         self.manual_inverse_axis = [0.0, 0.0, 0.0]
         self.manual_inverse_velocity_scaling = 0.0
+        self.manual_inverse_twist = Twist()
     
     def create_ros_interfaces(self):
         self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/joint_vel_cmd", 10)
-        self.manual_inverse_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/man_inv_axis_cmd", 10)
+        #self.manual_inverse_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/man_inv_axis_cmd", 10)
+        self.manual_inverse_twist_pub = self.create_publisher(TwistStamped, "/HD/fsm/man_inv_twist", 10)
         self.task_pub = self.create_publisher(Task, "/HD/fsm/task_assignment", 10)
         self.mode_change_pub = self.create_publisher(Int8, "/HD/fsm/mode_change", 10)
         self.create_subscription(Float32MultiArray, "/CS/HD_gamepad", self.manual_cmd_callback, 10)
-        self.create_subscription(Float32MultiArray, "/ROVER/HD_man_inv_axis", self.manual_cmd_callback, 10)
+        # self.create_subscription(Float32MultiArray, "/ROVER/HD_man_inv_axis", self.manual_cmd_callback, 10)
+        self.create_subscription(Twist, "/ROVER/HD_man_inv_twist", self.manual_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_mode", self.mode_callback, 10)
         self.create_subscription(Task, "/ROVER/semi_auto_task", self.task_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_element_id", self.task_cmd_callback2, 10)
@@ -75,8 +79,9 @@ class FSM(Node):
             self.manual_direct_velocity_scaling = msg.data[0]
             self.received_manual_direct_cmd_at = time.time()
         elif self.mode == self.MANUAL_INVERSE:  # TODO: standardize this
-            self.manual_inverse_axis = normalize(msg.data[1:4])
-            self.manual_inverse_velocity_scaling = msg.data[0]
+            self.manual_inverse_twist = msg
+            # self.manual_inverse_axis = normalize(msg.data[1:4])
+            # self.manual_inverse_velocity_scaling = msg.data[0]
             self.received_manual_inverse_cmd_at = time.time()
 
     def task_cmd_callback(self, msg: Task):
@@ -137,6 +142,17 @@ class FSM(Node):
             self.get_logger().info("FSM manual inverse cmd :   " + str_pad_list(list(msg.data)))
         self.manual_inverse_cmd_pub.publish(msg)
 
+    def send_manual_inverse_cmd2(self):
+        if self.manual_inverse_command_old():
+            return
+        msg = TwistStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = "hd_link6_1"
+        msg.twist = self.manual_inverse_twist
+        if VERBOSE:
+            self.get_logger().info("FSM manual inverse cmd :    " + str(msg))
+        self.manual_inverse_twist_pub.publish(msg)
+        
     def send_semi_autonomous_cmd(self):
         if self.semi_autonomous_command is not None:
             if VERBOSE:
@@ -168,7 +184,7 @@ class FSM(Node):
         elif self.mode == self.SEMI_AUTONOMOUS:
             self.send_semi_autonomous_cmd()
         elif self.mode == self.MANUAL_INVERSE:
-            self.send_manual_inverse_cmd()
+            self.send_manual_inverse_cmd2()
         elif self.mode == self.MANUAL_DIRECT:
             self.send_manual_direct_cmd()
 

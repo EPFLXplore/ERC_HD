@@ -108,11 +108,6 @@
 
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="hd_link1_1" reason="Adjacent"/>
-    <disable_collisions link1="hd_finger1_1" link2="hd_finger2_1" reason="Default"/>
-    <disable_collisions link1="hd_finger1_1" link2="hd_link5_1" reason="Never"/>
-    <disable_collisions link1="hd_finger1_1" link2="hd_link6_1" reason="Adjacent"/>
-    <disable_collisions link1="hd_finger2_1" link2="hd_link5_1" reason="Never"/>
-    <disable_collisions link1="hd_finger2_1" link2="hd_link6_1" reason="Adjacent"/>
     <disable_collisions link1="hd_link1_1" link2="hd_link2_1" reason="Adjacent"/>
     <disable_collisions link1="hd_link2_1" link2="hd_link3_1" reason="Adjacent"/>
     <disable_collisions link1="hd_link2_1" link2="hd_motor_j3_1" reason="Adjacent"/>

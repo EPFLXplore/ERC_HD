@@ -207,6 +207,22 @@
   </collision>
 </link>
 
+<!-- <link name="fake_gripper">
+  <visual>
+    <origin xyz="0.652201 -0.02059 -0.591797" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.652201 -0.02059 -0.591797" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kerby_description/meshes/hd_link6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link> -->
+
 
 <joint name="joint2" type="revolute">
   <origin xyz="0.0 -0.0577 0.117" rpy="0 0 0"/>

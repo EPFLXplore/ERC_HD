@@ -30,33 +30,62 @@ def load_yaml(package_name, file_path):
 
 
 def generate_launch_description():
-
+    truncated = True
+    
     # planning_context
-    robot_description_config = xacro.process_file(
-        os.path.join(
-            get_package_share_directory("kerby_moveit_config"),
-            "config",
-            "kerby.urdf.xacro",
+    if truncated:
+        robot_description_config = xacro.process_file(
+            os.path.join(
+                get_package_share_directory("kerby_moveit_config"),
+                "config_truncated",
+                "kerby_truncated.urdf.xacro",
+            )
         )
-    )
-    robot_description = {"robot_description": robot_description_config.toxml()}
+        robot_description = {"robot_description": robot_description_config.toxml()}
 
-    robot_description_semantic_config = load_file(
-        "kerby_moveit_config", "config/kerby.srdf"
-    )
-    robot_description_semantic = {
-        "robot_description_semantic": robot_description_semantic_config
-    }
+        robot_description_semantic_config = load_file(
+            "kerby_moveit_config", "config_truncated/kerby_truncated.srdf"
+        )
+        robot_description_semantic = {
+            "robot_description_semantic": robot_description_semantic_config
+        }
 
-    kinematics_yaml = load_yaml(
-        "kerby_moveit_config", "config/kinematics.yaml"
-    )
-    robot_description_kinematics = {"robot_description_kinematics": kinematics_yaml}
+        kinematics_yaml = load_yaml(
+            "kerby_moveit_config", "config/kinematics.yaml"
+        )
+        robot_description_kinematics = {"robot_description_kinematics": kinematics_yaml}
 
-    # Trajectory Execution Functionality
-    moveit_simple_controllers_yaml = load_yaml(
-        "kerby_moveit_config", "config/moveit_controllers.yaml"
-    )
+        # Trajectory Execution Functionality
+        moveit_simple_controllers_yaml = load_yaml(
+            "kerby_moveit_config", "config_truncated/moveit_controllers.yaml"
+        )
+    else:
+        robot_description_config = xacro.process_file(
+            os.path.join(
+                get_package_share_directory("kerby_moveit_config"),
+                "config",
+                "kerby.urdf.xacro",
+            )
+        )
+        robot_description = {"robot_description": robot_description_config.toxml()}
+
+        robot_description_semantic_config = load_file(
+            "kerby_moveit_config", "config/kerby.srdf"
+        )
+        robot_description_semantic = {
+            "robot_description_semantic": robot_description_semantic_config
+        }
+
+        kinematics_yaml = load_yaml(
+            "kerby_moveit_config", "config/kinematics.yaml"
+        )
+        robot_description_kinematics = {"robot_description_kinematics": kinematics_yaml}
+
+        # Trajectory Execution Functionality
+        moveit_simple_controllers_yaml = load_yaml(
+            "kerby_moveit_config", "config/moveit_controllers.yaml"
+        )
+
 
     trajectory_execution = {
         "moveit_manage_controllers": True,
@@ -104,10 +133,16 @@ def generate_launch_description():
         ]
     )
 
+    gripper_frame_broadcaster = Node(
+        package='trajectory_planner',
+        executable='gripper_frame_broadcaster.py',
+    )
+    
     return LaunchDescription(
         [
             kerby_trajectory_planner_node,
             kerby_task_executor_node,
+            gripper_frame_broadcaster
             #kerby_trajectory_planner_supervisor_node,
         ]
     )

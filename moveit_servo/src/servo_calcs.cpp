@@ -1157,11 +1157,14 @@ void ServoCalcs::twistStampedCB(const geometry_msgs::msg::TwistStamped::ConstSha
   latest_twist_stamped_ = msg;
   latest_twist_cmd_is_nonzero_ = isNonZero(*latest_twist_stamped_);
 
-  if (msg->header.stamp != rclcpp::Time(0.))
+  if (msg->header.stamp != rclcpp::Time(0.)) {
+    //RCLCPP_ERROR(LOGGER, "NOT ZERO");
     latest_twist_command_stamp_ = msg->header.stamp;
+  }
 
   // notify that we have a new input
   new_input_cmd_ = true;
+  //RCLCPP_ERROR(LOGGER, "NEW CMD");
   input_cv_.notify_all();
 }
 

@@ -64,7 +64,7 @@ struct ServoParameters
   // Properties of incoming commands
   std::string cartesian_command_in_topic{ "~/delta_twist_cmds" };
   std::string joint_command_in_topic{ "~/delta_joint_cmds" };
-  std::string robot_link_command_frame{ "base_link" };
+  std::string robot_link_command_frame{ "hd_link6_1" };
   std::string command_in_type{ "unitless" };
   double linear_scale{ 0.4 };
   double rotational_scale{ 0.8 };
@@ -84,7 +84,7 @@ struct ServoParameters
   // MoveIt properties
   std::string move_group_name{ "kerby_arm_group" };
   std::string planning_frame{ "base_link" };
-  std::string ee_frame_name{ "hd_finger2_1" };
+  std::string ee_frame_name{ "hd_link6_1" };
   //int x = 0/0;
   bool is_primary_planning_scene_monitor = { true };
   std::string monitored_planning_scene_topic{

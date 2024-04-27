@@ -210,12 +210,14 @@ void KerbyArmInterface::mode_change_callback(const std_msgs::msg::Int8::SharedPt
     static int SEMI_AUTONOMOUS = 2;
     static int AUTONOMOUS = 3;
     int mode = msg->data;
-    if (mode == MANUAL_DIRECT) sending_commands_ = false;
+    if (mode != MANUAL_DIRECT) sending_commands_ = false;
 }
 
 void KerbyArmInterface::position_mode_switch_callback(const std_msgs::msg::Int8::SharedPtr msg) {
-    if (msg->data == 1)
+    if (msg->data == 1) {
         sending_commands_ = true;
+        RCLCPP_INFO(rclcpp::get_logger("KerbyArmInterface"), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    }
 }
 
 
