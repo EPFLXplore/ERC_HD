@@ -10,8 +10,9 @@ class StereoCamera:
         # TODO: Add a configuration object for the pipeline.
         config = rs.config()
 
-        res = {"x": 640, "y": 480}
+        # res = {"x": 640, "y": 480}
         # res = {"x": 1280, "y": 720}
+        res = {"x": 848, "y": 480}
 
         FPS = 15
 

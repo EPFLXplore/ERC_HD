@@ -1,0 +1,23 @@
+# Launch Manual
+
+## start arm
+
+./run.sh
+sudo -i
+cd /home/xplore/dev_ws/
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 launch hd_launch test.launch.py
+pip install evdev
+
+## start camera node ( hd docker must already be running)
+
+docker exec -it hd_humble_jetson bash
+source install/setup.bash
+export PYTHONPATH=$PYTHONPATH:/usr/local/OFF
+
+# Common issues
+
+- ModuleNotFoundError: No module named 'pyrealsense2' --> export PYTHONPATH=$PYTHONPATH:/usr/local/OFF
+
+

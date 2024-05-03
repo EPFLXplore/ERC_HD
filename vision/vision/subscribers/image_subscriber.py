@@ -49,10 +49,10 @@ class ImageSubscriber(Node):
         current_frame = self.br.compressed_imgmsg_to_cv2(data)
         
         # Logging image like a boss
-        current_time = time.time()
-        if current_time - self.last_image_time > 1:
-            cv2.imwrite(os.path.join(self.path, str(time.time()).replace('.', '') + '.png'), current_frame)
-            self.last_image_time = current_time
+        # current_time = time.time()
+        # if current_time - self.last_image_time > 1:
+        #     cv2.imwrite(os.path.join(self.path, str(time.time()).replace('.', '') + '.png'), current_frame)
+        #     self.last_image_time = current_time
 
         # Display image
         cv2.imshow("camera", current_frame)

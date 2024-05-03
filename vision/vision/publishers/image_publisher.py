@@ -33,7 +33,7 @@ class ImagePublisher(Node):
         # Create the publisher. This publisher will publish an Image
         # to the HD/vision/video_frames topic. The queue size is 10 messages.
         self.publisher_ = self.create_publisher(
-            CompressedImage, "HD/vision/video_frames", 10
+            CompressedImage, "HD/vision/video_frames", 1
         )
         self.get_logger().info("Image Publisher Created")
 
