@@ -66,6 +66,7 @@ install(PROGRAMS
   scripts/test_gamepad.py
   scripts/fake_rover_control.py
   scripts/limbs_control.py
+  scripts/servo_fake_cs_gamepad.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

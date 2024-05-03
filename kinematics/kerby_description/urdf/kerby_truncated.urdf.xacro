@@ -7,7 +7,7 @@
 
 
 <xacro:property name="rpm_to_Radps" value="${2*pi/60.0}" />     <!-- rotations per minute to Rad per second conversion -->
-<xacro:property name="velocity_scaling" value="10.0" />     <!-- allows to scale all max velocities down at once -->
+<xacro:property name="velocity_scaling" value="2.0" />     <!-- allows to scale all max velocities down at once -->
 
 <xacro:macro name="aaa_joint_limits" params="lower:=0.0 upper:=0.0 velocity:=${rpm_to_Radps} effort:=100.0">
   <limit lower="${lower}" upper="${upper}" velocity="${velocity}" effort="${effort}"/>
@@ -207,9 +207,9 @@
   </collision>
 </link>
 
-<!-- <link name="fake_gripper">
-  <visual>
-    <origin xyz="0.652201 -0.02059 -0.591797" rpy="0 0 0"/>
+<link name="fake_gripper">
+  <!-- <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link6_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -220,8 +220,8 @@
     <geometry>
       <mesh filename="package://kerby_description/meshes/hd_link6_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-  </collision>
-</link> -->
+  </collision> -->
+</link>
 
 
 <joint name="joint2" type="revolute">
@@ -276,6 +276,12 @@
   <child link="hd_link1_1"/>
   <axis xyz="-0.0 0.0 -1.0"/>
   <xacro:insert_block name="joint1_limits" />
+</joint>
+
+<joint name="fake_gripper_joint" type="fixed">
+  <origin xyz="-0.12 0 0" rpy="0 0 0"/>
+  <parent link="hd_link6_1"/>
+  <child link="fake_gripper"/>
 </joint>
 
 </robot>

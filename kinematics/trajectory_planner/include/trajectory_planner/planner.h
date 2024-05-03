@@ -23,8 +23,8 @@
 
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-#include <moveit_servo/servo_parameters.h>
-#include <moveit_servo/servo.h>
+// #include <moveit_servo/servo_parameters.h>
+// #include <moveit_servo/servo.h>
 
 
 using std::placeholders::_1;
@@ -150,6 +150,6 @@ private:
     bool                                                                    m_mode_transition_ready = true;
     bool                                                                    m_is_executing_path = false;
     bool                                                                    m_man_inv_gripper_frame = true;
-    rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr          m_twist_cmd_pub;
-    std::unique_ptr<moveit_servo::Servo>                                    m_servo;
+    // rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr          m_twist_cmd_pub;
+    // std::unique_ptr<moveit_servo::Servo>                                    m_servo;
 };
