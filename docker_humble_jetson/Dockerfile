@@ -79,3 +79,6 @@ WORKDIR /home/$USERNAME/dev_ws
 
 # Clean up
 RUN sudo rm -rf /var/lib/apt/lists/*
+
+# Remove all the confidential Xplore source code from the image
+RUN sudo rm -rf /home/$USERNAME/dev_ws/src/*

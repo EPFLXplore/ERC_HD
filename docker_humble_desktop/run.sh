@@ -47,4 +47,5 @@ docker run -it \
     -v /dev:/dev \
     -v $parent_dir:/home/xplore/dev_ws/src \
     -v hd_humble_desktop_home_volume:/home/xplore \
-    ghcr.io/epflxplore/hd:humble-desktop
+    ghcr.io/epflxplore/hd:humble-desktop \
+    /bin/bash -c "sudo chown -R $USERNAME:$USERNAME /home/$USERNAME; /bin/bash"
