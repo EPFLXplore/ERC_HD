@@ -58,3 +58,8 @@ class PressButton(Task):
         
         # TODO: maybe remove the objects added to the world
         #self.constructRemoveObjectsCommands("button", extended=extended)
+
+
+    def set_pos(self, cmd):
+        cmd.position = 5
+        cmd.setPose(...)

@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<robot name="kerby" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find rover_description)/description/materials.xacro" />
+<xacro:include filename="$(find rover_description)/description/kerby.trans" />
+<xacro:include filename="$(find rover_description)/description/kerby.gazebo" />
+<!-- <xacro:include filename="$(find rover_description)/description/ouster.xacro" />
+<xacro:include filename="$(find rover_description)/description/imu.xacro" />  -->
+<xacro:include filename="$(find rover_description)/description/inertial_macros.xacro" />
+<!-- <xacro:include filename="$(find rover_description)/description/oakd_camera.xacro" /> -->
+<xacro:include filename="$(find rover_description)/description/URDF3.urdf.xacro" /> 
+<xacro:include filename="$(find rover_description)/description/ros2_control_arm.xacro" />
+
+
+<link name="base_link"></link>
+
+
+
+<joint name="chassis_joint" type="fixed">
+
+    <parent link="base_link"/>
+    <child link="chassis_link"/>
+    <origin xyz="0 0 0 " rpy="0 0 0"/>
+    <axis xyz="0.0 1.0 0.0"/>
+  </joint>
+
+
+<link name="chassis_link">
+  <inertial>
+    <origin xyz="0.05362398614035063 0.01974617698532859 0.037120813316089823" rpy="0 0 0"/>
+    <!-- <mass value="6.257043020156179"/> -->
+    <mass value="50"/>
+    <inertia ixx="0.340644" iyy="0.466541" izz="0.402706" ixy="0.000337" iyz="0.00055" ixz="-0.092411"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.05362398614035063 0.01974617698532859 0.037120813316089823" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="$(find rover_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="blue"/>
+  </visual>
+  <!-- <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="$(find rover_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision> -->
+</link>
+
+
+
+</robot>

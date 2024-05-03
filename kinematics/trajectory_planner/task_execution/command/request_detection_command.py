@@ -5,7 +5,7 @@ class RequestDetectionCommand(Command):
     def __init__(self, executor=None):
         super().__init__(executor)
         self.preliminary_wait_duration = 2
-        self.max_wait_duration = 10
+        self.timeout = 10
     
     def execute(self):
         super().execute()
@@ -13,8 +13,8 @@ class RequestDetectionCommand(Command):
         pt.deprecate_detection()
         start = time.time()
         rate = self.executor.create_rate(25)    # 25 hz rate in order to release ressources
-        while not pt.DETECTION_UPDATED:
-            if time.time()-start > self.max_wait_duration:
+        while not self.executor.detectionUpdated():
+            if time.time()-start > self.timeout:
                 self.has_failed = True
                 return
             rate.sleep()

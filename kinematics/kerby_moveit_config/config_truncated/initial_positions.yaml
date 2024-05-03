@@ -1,0 +1,20 @@
+# Default initial positions for Assemblage's ros2_control fake system
+
+initial_positions:
+  joint1: 0
+  joint2: 0.296706
+  joint3: -0.785398
+  joint4: 0
+  joint5: -0.48869
+  joint6: 0
+  # finger1: 0
+  # pivot_gauche: 0
+  # steering1: 0
+  # driving1: 0
+  # steering4: 0
+  # driving4: 0
+  # pivot_droit: 0
+  # steering2: 0
+  # driving2: 0
+  # steering3: 0
+  # driving3: 0

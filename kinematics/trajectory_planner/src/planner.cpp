@@ -180,7 +180,7 @@ void Planner::enforceCurrentState()     // TODO: maybe add in this method the ca
     moveit::core::RobotState current_state(*m_move_group->getCurrentState());
     const double *positions = current_state.getVariablePositions();
     std::vector<double> target;
-    static size_t MOTOR_COUNT = 7;
+    static size_t MOTOR_COUNT = 6;
     for (size_t i = 0; i < MOTOR_COUNT; i++)
     {
         target.push_back(positions[i]);
@@ -302,11 +302,11 @@ void Planner::loop()
             case Planner::CommandMode::MANUAL_DIRECT:
                 updateCurrentPosition();
                 break;
-            case Planner::CommandMode::MANUAL_INVERSE:
-                if (manualInverseCommandOld() && m_executing_man_inv_cmd) {
-                    stop();
-                }
-                break;
+            // case Planner::CommandMode::MANUAL_INVERSE:
+            //     if (manualInverseCommandOld() && m_executing_man_inv_cmd) {
+            //         stop();
+            //     }
+            //     break;
         }
         rate.sleep();
     }
