@@ -10,3 +10,4 @@ hd_ws/tttt/
 
 
 *.pyc
+*/__pycache__/**
