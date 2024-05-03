@@ -47,7 +47,7 @@ class FSM(Node):
         self.manual_direct_command = array.array('d', [0.0]*motor_count)
         #self.semi_autonomous_command_id = None
         self.semi_autonomous_command = None
-        self.mode = self.MANUAL_DIRECT
+        self.mode = self.MANUAL_INVERSE#self.MANUAL_DIRECT
         self.target_mode = self.MANUAL_DIRECT
         self.mode_transitioning = False
         self.manual_inverse_axis = [0.0, 0.0, 0.0]
