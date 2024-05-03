@@ -179,7 +179,7 @@ class FSM(Node):
         else:
             msg = TwistStamped()
             msg.header.stamp = self.get_clock().now().to_msg()
-            msg.header.frame_id = "fake_gripper"    #"hd_link6_1"
+            msg.header.frame_id = "fake_gripper"   #"hd_motor_j3_1"   #"hd_link6_1"
             msg.twist = self.manual_inverse_twist
             if VERBOSE:
                 self.get_logger().info("FSM manual inverse cmd :    " + str(msg))

@@ -282,6 +282,7 @@
   <origin xyz="-0.12 0 0" rpy="0 0 0"/>
   <parent link="hd_link6_1"/>
   <child link="fake_gripper"/>
+  <!-- <limit lower="0" upper="0" velocity="0" effort="0"/> -->
 </joint>
 
 </robot>

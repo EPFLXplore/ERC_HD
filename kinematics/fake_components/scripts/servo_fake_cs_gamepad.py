@@ -9,7 +9,7 @@ import evdev.events
 import threading
 from time import sleep
 from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
-from hd_interfaces.msg import Task
+from hd_interfaces.msg import Task, MotorCommand
 import math
 import itertools
 from collections.abc import Callable
@@ -325,6 +325,7 @@ class ControlStation(Node):
         super().__init__("fake_cs_gamepad")
 
         self.vel_cmd = [0.0]*8
+        self.torque_scaling_factor = 0.0
         self.axis_cmd = [0.0]*3
         #self.man_inv_axis = [0.0]*3
         self.man_inv_twist = Twist()
@@ -345,6 +346,7 @@ class ControlStation(Node):
         self.task_pub = self.create_publisher(Task, "/ROVER/semi_auto_task", 10)
         self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
         self.sub_mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_sub_mode", 10)
+        self.gripper_torque_pub = self.create_publisher(MotorCommand, "HD/kinematics/single_joint_cmd", 10)
         self.timer_period = 1/30
         self.timer = None
         self.gamepad = None
@@ -401,6 +403,13 @@ class ControlStation(Node):
         self.gamepad_config = GamePadConfig.from_name(name)
 
     def publish_cmd(self):
+        if self.torque_scaling_factor != 0:    # gripper
+            msg = MotorCommand(
+                name = "Gripper",
+                mode = MotorCommand.TORQUE,
+                command = self.torque_scaling_factor
+            )
+            self.gripper_torque_pub.publish(msg)
         if self.hd_mode == HDMode.MANUAL_DIRECT:
             l = list(map(clean, map(float, self.vel_cmd)))
             l[2] *= self.joint3_dir
@@ -450,8 +459,9 @@ class ControlStation(Node):
     
     def set_gripper_speed(self, value, event_value):
         #if self.hd_mode != HDMode.MANUAL_DIRECT: return
-        if self.hd_sub_mode != HDSubMode.JOINTSPACE: return
+        #if self.hd_sub_mode != HDSubMode.JOINTSPACE: return
         self.vel_cmd[6] = value * event_value
+        self.torque_scaling_factor = value * event_value
     
     def set_rassor_speed(self, value, event_value):
         #if self.hd_mode != HDMode.MANUAL_DIRECT: return

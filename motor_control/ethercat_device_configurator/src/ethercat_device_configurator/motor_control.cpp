@@ -512,7 +512,7 @@ int main(int argc, char**argv)
     // }
     // a new EthercatDeviceConfigurator object (path to setup.yaml as constructor argument)
     
-    char* path = "src/motor_control/ethercat_device_configurator/config_mot/setup.yaml";
+    char* path = "motor_control/ethercat_device_configurator/config_mot/setup.yaml";
     configurator = std::make_shared<EthercatDeviceConfigurator>(path);
 
     /*

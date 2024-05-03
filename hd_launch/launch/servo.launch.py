@@ -22,7 +22,7 @@ def declare_binary_launch_argument(name, default=True, description=""):
         name,
         default_value='True' if default else 'False',
         description=description,
-        choices=['True', 'False']
+        choices=['True', 'False', 'None']
     )
     return arg, declare_arg
 
