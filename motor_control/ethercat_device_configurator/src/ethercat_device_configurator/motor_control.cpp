@@ -44,15 +44,15 @@ struct MotorCommand
 static const double PI = 3.14159265359;
 static const double INF = 1e10;
 static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J5", "J6", "Gripper", "Rassor"};
-static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 1, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
-static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2};
-static const std::vector<double> POS_LOWER_LIMITS = {-2*PI, -PI, -PI/4, -2*PI, -PI/2, -PI, -INF};
-static const std::vector<double> POS_UPPER_LIMITS = {2*PI, PI/2, PI/4, 2*PI, PI/2, PI, INF};
+static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 1, 1, 1,, 1, 1};        // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
+static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2, 1, 1};
+static const std::vector<double> POS_LOWER_LIMITS = {-2*PI, -PI, -PI/4, -2*PI, -PI/2, -PI, -INF, 0, 0};
+static const std::vector<double> POS_UPPER_LIMITS = {2*PI, PI/2, PI/4, 2*PI, PI/2, PI, INF, 0, 0};
 
 //static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
 static const std::vector<double> DIRECTIONS = {1, 1, 1, -1, 1, -1, 1, 1};   // to match directions of MoveIt
 
-static std::vector<bool> should_scan_stationary_states = {true, true, true, true, true, true, true, true};
+static std::vector<bool> should_scan_stationary_states = {true, true, true, true, true, true, true, true, true, true};
 
 std::vector<MotorCommand> motor_command_list;
 
