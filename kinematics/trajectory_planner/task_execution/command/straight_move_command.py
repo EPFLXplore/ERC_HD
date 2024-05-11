@@ -11,8 +11,9 @@ class StraightMoveCommand(Command):
         self.velocity_scaling_factor = velocity_scaling_factor
         self.createSetters("axis", "distance")
     
-    def setAxisFromOrientation(self, orientation: Quaternion, reverse=False):
-        self.axis = qa.point_image([0.0, 0.0, 1.0], orientation)
+    def setAxisFromOrientation(self, orientation: Quaternion, axis: Point = (0.0, 0.0, 1.0), reverse=False):
+        frame_axis = qa.make_point(axis)
+        self.axis = qa.point_image(frame_axis, orientation)
         if reverse:
             self.axis = qa.mul(-1, self.axis)
 

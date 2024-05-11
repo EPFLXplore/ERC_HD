@@ -246,7 +246,7 @@ class Executor(Node):
                 # initiate the task in a new thread
                 thread = threading.Thread(target=self.initiateTask)
                 thread.start()
-            #self.testVision()
+            self.testVision()
             rate.sleep()
 
 

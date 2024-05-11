@@ -5,6 +5,7 @@
 from math import sqrt, sin, cos, asin, acos, pi
 from geometry_msgs.msg import Quaternion, Point, Pose
 from typing import Callable
+import numpy as np
 
 
 def deprecate(func: Callable) -> Callable:
@@ -12,6 +13,17 @@ def deprecate(func: Callable) -> Callable:
         #print(f"Warning: function '{func.__module__}.{func.__name__}' is deprecated, use functions from '{new_qa.__name__}' instead")
         return func(*args, **kwargs)
     return deprecated_func
+
+
+@deprecate
+def to_np_array(x):
+    try:
+        return np.array(x)
+    except:
+        try:
+            return np.array([x.x, x.y, x.z, x.w])
+        except:
+            return np.array([x.x, x.y, x.z])
 
 
 @deprecate

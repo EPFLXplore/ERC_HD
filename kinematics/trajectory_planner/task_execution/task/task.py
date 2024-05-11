@@ -3,6 +3,7 @@ import math
 import copy
 from geometry_msgs.msg import Pose, Quaternion, Point
 import kinematics_utils.quaternion_arithmetic as qa
+import kinematics_utils.quaternion_arithmetic_new as qan
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 from collections.abc import Callable
@@ -89,7 +90,7 @@ class Task:
         """
         self.setBackgrounCommandActionPoint(id, BackgroundCommand.START, pre_operation, post_operation, description)
     
-    def setBackgroundCommanquaternion_arithmeticdStopPoint(self, id: str, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = ""):
+    def setBackgroundCommandStopPoint(self, id: str, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = ""):
         """
         Set the stoping point of the BackgroundCommand identified by id at the current point in the workflow.
         If the given description is empty, it will be replace by "Stoping background command '{description of the background command}'".
@@ -195,8 +196,8 @@ class Task:
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:
             if 1:   # TODO: check if obj.id corresponds to task id here
-                self.object_pose = obj.object_pose
-                self.artag_pose = obj.artag_pose
+                self.object_pose = qan.Pose.make(obj.object_pose)
+                self.artag_pose = qan.Pose.make(obj.artag_pose)
 
     def getScanPosition(self) -> Point:
         # give a position where the camera would be aligned with the ARtag

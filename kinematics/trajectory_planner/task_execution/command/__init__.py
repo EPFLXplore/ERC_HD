@@ -8,3 +8,4 @@ from .gripper_command import *
 from .voltmeter_command import *
 from .joint_space_command import *
 from .rassor_command import *
+from .background_gripper_torque_command import *

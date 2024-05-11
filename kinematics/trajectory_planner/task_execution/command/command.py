@@ -40,6 +40,7 @@ class Command:
                     continue
                 camel_s += c.capitalize() if next_capital else c
                 next_capital = False
+            return camel_s
 
         setter_name = "set" + camelCasify(attribute)
         if not hasattr(self, setter_name):

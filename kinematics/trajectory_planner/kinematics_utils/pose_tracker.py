@@ -5,6 +5,7 @@ import kinematics_utils.quaternion_arithmetic as qa
 import math
 import copy
 import kinematics_utils.pose_corrector as pc
+import rclpy
 
 
 END_EFFECTOR_POSE = Pose()
