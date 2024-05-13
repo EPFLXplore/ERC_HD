@@ -133,7 +133,7 @@ hardware_interface::return_type KerbyArmInterface::read(const rclcpp::Time & tim
 hardware_interface::return_type KerbyArmInterface::write(const rclcpp::Time & time, const rclcpp::Duration & period) {
     // command the hardware based onthe values stored in internal varialbes defined in export_command_interfaces
 
-    sending_commands_ = true;    // TODO: remove this
+    //sending_commands_ = true;    // TODO: remove this
     if (scanning_ || !sending_commands_) return hardware_interface::return_type::OK;
 
     std_msgs::msg::Float64MultiArray msg;

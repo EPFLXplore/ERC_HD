@@ -1,0 +1,9 @@
+<launch>
+
+<rosparam file="$(find URDF3_description)/launch/controller.yaml" command="load"/>
+<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="URDF3" args="Revolute 23_position_controller Revolute 24_position_controller Revolute 25_position_controller Revolute 26_position_controller Revolute 27_position_controller Revolute 28_position_controller Revolute 29_position_controller Revolute 30_position_controller Revolute 31_position_controller Revolute 32_position_controller joint_state_controller "/>
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+  <remap from="/joint_states" to="/URDF3/joint_states"/>
+</node>
+
+</launch>

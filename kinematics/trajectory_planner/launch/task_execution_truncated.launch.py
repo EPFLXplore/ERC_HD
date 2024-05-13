@@ -37,14 +37,14 @@ def generate_launch_description():
         robot_description_config = xacro.process_file(
             os.path.join(
                 get_package_share_directory("kerby_moveit_config"),
-                "config",
-                "kerby.urdf.xacro",
+                "config_truncated",
+                "kerby_truncated.urdf.xacro",
             )
         )
         robot_description = {"robot_description": robot_description_config.toxml()}
 
         robot_description_semantic_config = load_file(
-            "kerby_moveit_config", "config/kerby.srdf"
+            "kerby_moveit_config", "config_truncated/kerby_truncated.srdf"
         )
         robot_description_semantic = {
             "robot_description_semantic": robot_description_semantic_config
@@ -57,7 +57,7 @@ def generate_launch_description():
 
         # Trajectory Execution Functionality
         moveit_simple_controllers_yaml = load_yaml(
-            "kerby_moveit_config", "config/moveit_controllers.yaml"
+            "kerby_moveit_config", "config_truncated/moveit_controllers.yaml"
         )
     else:
         robot_description_config = xacro.process_file(

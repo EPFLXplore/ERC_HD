@@ -42,12 +42,12 @@ def generate_launch_description():
     # trajectory_planner_nodes = IncludeLaunchDescription(
     #     PythonLaunchDescriptionSource([os.path.join(
     #         get_package_share_directory('trajectory_planner'), 'launch'),
-    #         '/task_execution.launch.py']),
+    #         '/task_execution_truncated.launch.py']),
     # )
 
     fsm_node = Node(
         package="hd_fsm",
-        executable="fsm"
+        executable="fsm_servo"
     )
 
     fake_cs_node = Node(

@@ -331,7 +331,7 @@ class ControlStation(Node):
         self.joint3_dir = 1
         self.joint4_dir = 1
 
-        self.hd_mode = HDMode.MANUAL_INVERSE #HDMode.MANUAL_DIRECT
+        self.hd_mode = HDMode.MANUAL_DIRECT #HDMode.MANUAL_INVERSE
 
         self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, "/CS/HD_gamepad", 10)
         #self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
