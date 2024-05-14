@@ -30,10 +30,17 @@ def main():
             pose.position.x = 0.1 * scale
             pose.position.y = -0.2 * scale
             pose.position.z = 0.2 * scale
-            #pose.position.x = pose.position.y = 0.0; pose.position.z = 0.00
+            #pose.position.x = pose.position.y = pose.position.z = 0.0
 
             #pose = Pose(orientation=qa.quat([1.0, 0.0, 0.0], math.pi))
+            pose = Pose()
+            rev = qa.reverse_pose(pc.CAMERA_TRANSFORM)
+            pose = qa.compose_multiple_poses(pose, rev)
             pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
+            pose.position.x *= scale
+            pose.position.y *= scale
+            pose.position.z *= scale
+            node.get_logger().info(str(pose))
             msg = TargetInstruction(ar_tag_pose=pose, object_pose=pose)
             detected_element_pub.publish(msg)
 
