@@ -54,6 +54,10 @@ static const std::vector<double> DIRECTIONS = {-1, 1, 1, -1, -1, -1, 1, 1};   //
 
 static std::vector<bool> should_scan_stationary_states = {true, true, true, true, true, true, true, true, true, true};
 
+static double j5_initial_pos = 0.0;
+static double j56_coupling = 1.0;
+static bool set_j5_initial_pos = false;
+
 std::vector<MotorCommand> motor_command_list;
 
 std::unique_ptr<std::thread> worker_thread;
@@ -214,6 +218,9 @@ private:
 
     void position_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
     {
+        double j5_pos = 0.0;    // for decoupling of j5 and j6
+        bool j6_on_hall = true;
+
         for (uint i = 0; i < 6; i++)     // only accepting position commands for j1-6
         {
             if (i == 50) {
@@ -224,6 +231,13 @@ private:
             else {
                 motor_command_list[i].command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
                 double new_pos = msg->data[i] * DIRECTIONS[i];
+                if (j6_on_hall) {
+                    if (i == 4) j5_pos = new_pos;
+                    else if (i == 5) {
+                        double j5_delta = j5_pos - j5_initial_pos;
+                        new_pos += j56_coupling * j5_delta;
+                    }
+                }
                 //new_pos = std::min(std::max(new_pos, POS_LOWER_LIMITS[i]), POS_UPPER_LIMITS[i]);
                 if (new_pos < POS_LOWER_LIMITS[i]) new_pos = POS_LOWER_LIMITS[i];
                 if (new_pos > POS_UPPER_LIMITS[i]) new_pos = POS_UPPER_LIMITS[i];
@@ -243,6 +257,9 @@ private:
 
     void publish_state()
     {
+        double j5_pos = 0.0;    // for decoupling of j5 and j6
+        bool j6_on_hall = true;
+
         sensor_msgs::msg::JointState msg;
         for (size_t i = 0; i < motor_command_list.size(); i++)
         {
@@ -252,7 +269,18 @@ private:
             msg.name.push_back(slave->getName());
 
             auto getReading = maxon_slave_ptr->getReading();
-            msg.position.push_back(getReading.getActualPosition() * DIRECTIONS[i]);
+            double pos = getReading.getActualPosition() * DIRECTIONS[i];
+            if (j6_on_hall) {
+                if (i == 4) {
+                    j5_pos = pos;
+                    if (!set_j5_initial_pos) { j5_initial_pos = j5_pos; set_j5_initial_pos = true; }
+                }
+                else if (i == 5) {
+                    double j5_delta = j5_pos - j5_initial_pos;
+                    pos -= j56_coupling * j5_delta;
+                }
+            }
+            msg.position.push_back(pos);
             msg.velocity.push_back(getReading.getActualVelocity() * DIRECTIONS[i]);
             msg.effort.push_back(getReading.getActualCurrent() * DIRECTIONS[i]);
         }

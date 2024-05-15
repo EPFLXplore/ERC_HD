@@ -35,7 +35,7 @@ def main():
             #pose = Pose(orientation=qa.quat([1.0, 0.0, 0.0], math.pi))
             pose = Pose()
             rev = qa.reverse_pose(pc.CAMERA_TRANSFORM)
-            pose = qa.compose_multiple_poses(pose, rev)
+            #pose = qa.compose_multiple_poses(pose, rev)
             pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
             pose.position.x *= scale
             pose.position.y *= scale
