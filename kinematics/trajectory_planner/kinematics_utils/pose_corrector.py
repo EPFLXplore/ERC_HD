@@ -47,10 +47,12 @@ def construct_vision_tranform():
 # STATIC TRANSFORMS
 
 EEF_TRANSFORM_CORRECTION = construct_eef_transform("finger1")
+EEF_TRANSFORM_CORRECTION.position = qa.point_add(EEF_TRANSFORM_CORRECTION.position, Point(x=-0.028))
 
 CAMERA_TRANSFORM = Pose(                    # transform between end effector and camera
     position = Point(x=0.051, y=0.0, z=-0.115)    # X = 0.0447, y = -0.009
 )
+CAMERA_TRANSFORM.position = qa.point_add(CAMERA_TRANSFORM.position, Point(z=-0.028))
 
 VISION_TRANSFORM_CORRECTION = Pose()
 VISION_TRANSFORM_CORRECTION.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)    # vision has different frame than MoveIt

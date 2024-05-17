@@ -3,6 +3,14 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
+    rviz = Node(
+        name="rviz",
+        package="rviz2",
+        executable="rviz2",
+        output="screen",
+        arguments=["-d"],
+    )
+
     return LaunchDescription(
         [
             Node(
@@ -13,5 +21,6 @@ def generate_launch_description():
                 package="fake_components",
                 executable="fake_cs_gamepad.py",
             ),
+            # rviz
         ]
     )

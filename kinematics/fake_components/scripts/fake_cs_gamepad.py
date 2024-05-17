@@ -322,7 +322,7 @@ class ControlStation(Node):
 
         self.vel_cmd = [0.0]*8
         self.axis_cmd = [0.0]*3
-        #self.man_inv_axis = [0.0]*3
+        self.man_inv_axis = [0.0]*3
         self.man_inv_twist = Twist()
         self.man_inv_velocity_scaling = 1.0
         self.semi_auto_cmd = Task.NO_TASK
@@ -334,7 +334,7 @@ class ControlStation(Node):
         self.hd_mode = HDMode.MANUAL_DIRECT #HDMode.MANUAL_INVERSE
 
         self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, "/CS/HD_gamepad", 10)
-        #self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
+        self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
         self.man_inv_twist_pub = self.create_publisher(Twist, "/ROVER/HD_man_inv_twist", 10)
         self.task_pub = self.create_publisher(Task, "/ROVER/semi_auto_task", 10)
         self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
@@ -394,12 +394,12 @@ class ControlStation(Node):
             l = [1.0] + l   # add dummy velocity scaling factor
             self.joint_vel_cmd_pub.publish(Float32MultiArray(data = l))
         elif self.hd_mode == HDMode.MANUAL_INVERSE:
-            #axis = normalized(self.man_inv_axis[:3])
-            #print("[", ", ".join(map(str_pad, axis)), "]")
-            print(self.man_inv_twist)
-            #data = [self.man_inv_velocity_scaling] + axis
-            #self.man_inv_axis_pub.publish(Float32MultiArray(data = data))
-            self.man_inv_twist_pub.publish(self.man_inv_twist)
+            axis = normalized(self.man_inv_axis[:3])
+            print("[", ", ".join(map(str_pad, axis)), "]")
+            data = [self.man_inv_velocity_scaling] + axis
+            self.man_inv_axis_pub.publish(Float32MultiArray(data = data))
+            #print(self.man_inv_twist)
+            #self.man_inv_twist_pub.publish(self.man_inv_twist)
         elif self.hd_mode == HDMode.SEMI_AUTONOMOUS:
             msg = Task(type=self.semi_auto_cmd)
             if self.semi_auto_cmd == Task.NO_TASK:
@@ -438,7 +438,8 @@ class ControlStation(Node):
     
     def set_man_inv_axis(self, coordinate, value, multiplier=1):
         if self.hd_mode != HDMode.MANUAL_INVERSE: return
-        #self.man_inv_axis[coordinate] = 0.0 if value < 0.5 else 1.0 * multiplier
+        self.man_inv_axis[coordinate] = 0.0 if value < 0.5 else 1.0 * multiplier
+        return
         v = 0.0 if value < 0.5 else 1.0 * multiplier
         if coordinate == 0:
             self.man_inv_twist.linear.x = v
