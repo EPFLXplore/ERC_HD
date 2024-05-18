@@ -206,12 +206,13 @@ void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::S
 }
 
 void KerbyArmInterface::mode_change_callback(const std_msgs::msg::Int8::SharedPtr msg) {
+    static int IDLE = -1;
     static int MANUAL_INVERSE = 0;
     static int MANUAL_DIRECT = 1;
     static int SEMI_AUTONOMOUS = 2;
     static int AUTONOMOUS = 3;
     int mode = msg->data;
-    if (mode != MANUAL_DIRECT) sending_commands_ = false;
+    if (mode != MANUAL_DIRECT && mode != IDLE) sending_commands_ = false;   // TODO: maybe always put it to false (if manual direct mode, we don't want to move through here anyway)
 }
 
 void KerbyArmInterface::position_mode_switch_callback(const std_msgs::msg::Int8::SharedPtr msg) {

@@ -40,6 +40,7 @@ public:
     };
 
     enum CommandMode {
+        IDLE = -1,
         MANUAL_INVERSE = 0,
         MANUAL_DIRECT = 1,
         SEMI_AUTONOMOUS = 2,

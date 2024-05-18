@@ -299,6 +299,7 @@ void Planner::loop()
         publishEEFPose();
         publishSanityFeedback();
         switch(m_mode) {
+            case Planner::CommandMode::IDLE:
             case Planner::CommandMode::MANUAL_DIRECT:
                 updateCurrentPosition();
                 break;
@@ -442,7 +443,7 @@ void Planner::addObjectCallback(const hd_interfaces::msg::Object::SharedPtr msg)
 void Planner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
 {
     Planner::CommandMode new_mode = static_cast<Planner::CommandMode>(msg->data);
-    if (new_mode != Planner::CommandMode::MANUAL_DIRECT) {
+    if (new_mode != Planner::CommandMode::MANUAL_DIRECT && new_mode != Planner::CommandMode::IDLE) {
         m_mode_transition_ready = false;
         std::thread executor(&Planner::enforceCurrentState, this);
         executor.detach();

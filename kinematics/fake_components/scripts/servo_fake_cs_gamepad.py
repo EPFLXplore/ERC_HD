@@ -224,6 +224,11 @@ class EnumOld:
     def __getitem__(self, index):
         k = self.slots[index % len(self.slots)]
         return self.items[k]
+    
+    def next(self, val):
+        i = (self.slots.index(val)+1) % len(self.slots)
+        return self.slots[i]
+
 
 
 def Enum(**kwargs):
@@ -296,6 +301,7 @@ def Enum(**kwargs):
 
 
 HDMode = EnumOld(
+    IDLE = -1,
     MANUAL_INVERSE = 0,
     MANUAL_DIRECT = 1,
     SEMI_AUTONOMOUS = 2,
@@ -403,6 +409,8 @@ class ControlStation(Node):
         self.gamepad_config = GamePadConfig.from_name(name)
 
     def publish_cmd(self):
+        if self.hd_mode == HDMode.IDLE:
+            return
         if self.torque_scaling_factor != 0:    # gripper
             msg = MotorCommand(
                 name = "Gripper",
