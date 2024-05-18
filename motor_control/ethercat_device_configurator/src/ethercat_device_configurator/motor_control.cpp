@@ -219,11 +219,11 @@ private:
     void position_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
     {
         double j5_pos = 0.0;    // for decoupling of j5 and j6
-        bool j6_on_hall = true;
+        bool j6_on_hall = false;
 
         for (uint i = 0; i < 6; i++)     // only accepting position commands for j1-6
         {
-            if (i == 50) {
+            if (i == 50) {  // check if i = 50
                 motor_command_list[i].command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
                 motor_command_list[i].command_time = std::chrono::steady_clock::now();
                 should_scan_stationary_states[i] = true;
@@ -258,7 +258,7 @@ private:
     void publish_state()
     {
         double j5_pos = 0.0;    // for decoupling of j5 and j6
-        bool j6_on_hall = true;
+        bool j6_on_hall = false;
 
         sensor_msgs::msg::JointState msg;
         for (size_t i = 0; i < motor_command_list.size(); i++)
@@ -380,8 +380,8 @@ private:
         {
         case maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode: {
             double pos = get_target_position(i);
-            if (pos < POS_LOWER_LIMITS[i]) command.command.setTargetPosition(POS_LOWER_LIMITS[i] * DIRECTIONS[i]);
-            if (pos > POS_UPPER_LIMITS[i]) command.command.setTargetPosition(POS_UPPER_LIMITS[i] * DIRECTIONS[i]);
+            if (pos < POS_LOWER_LIMITS[i]) command.command.setTargetPosition(POS_LOWER_LIMITS[i]);
+            if (pos > POS_UPPER_LIMITS[i]) command.command.setTargetPosition(POS_UPPER_LIMITS[i]);
             break;
             }
         case maxon::ModeOfOperationEnum::CyclicSynchronousVelocityMode:

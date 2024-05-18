@@ -32,6 +32,7 @@ def normalize(l):
     return [x/n for x in l]
 
 class FSM(Node):
+    IDLE = -1
     MANUAL_INVERSE = 0
     MANUAL_DIRECT = 1
     SEMI_AUTONOMOUS = 2
@@ -48,8 +49,8 @@ class FSM(Node):
         self.manual_direct_command = array.array('d', [0.0]*motor_count)
         #self.semi_autonomous_command_id = None
         self.semi_autonomous_command = None
-        self.mode = self.MANUAL_DIRECT#self.MANUAL_INVERSE
-        self.target_mode = self.MANUAL_DIRECT
+        self.mode = self.IDLE#self.MANUAL_DIRECT
+        self.target_mode = self.IDLE
         self.mode_transitioning = False
         self.manual_inverse_axis = [0.0, 0.0, 0.0]
         self.manual_inverse_velocity_scaling = 0.0
@@ -185,8 +186,10 @@ class FSM(Node):
     def normal_loop_action(self):
         if VERBOSE:
             self.get_logger().info("MODE : " + str(self.mode))
-            
-        if self.mode == self.AUTONOMOUS:
+        
+        if self.mode == self.IDLE:
+            pass
+        elif self.mode == self.AUTONOMOUS:
             pass
         elif self.mode == self.SEMI_AUTONOMOUS:
             self.send_semi_autonomous_cmd()
@@ -196,7 +199,9 @@ class FSM(Node):
             self.send_manual_direct_cmd()
 
     def transition_loop_action(self):
-        if self.mode == self.AUTONOMOUS:
+        if self.mode == self.IDLE:
+            pass
+        elif self.mode == self.AUTONOMOUS:
             pass
         elif self.mode == self.SEMI_AUTONOMOUS:
             pass

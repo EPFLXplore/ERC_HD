@@ -211,6 +211,7 @@ class EnumOld:
     def __init__(self, **kwargs):
         self.items = kwargs
         self.slots = list(kwargs)
+        self.slot_values = [kwargs[slot] for slot in self.slots]
         #print(self.slots)
         for k in self.slots:
             setattr(self, k, kwargs[k])
@@ -225,6 +226,10 @@ class EnumOld:
     def __getitem__(self, index):
         k = self.slots[index % len(self.slots)]
         return self.items[k]
+    
+    def next(self, val):
+        i = (self.slot_values.index(val)+1) % len(self.slots)
+        return self.slot_values[i]
 
 
 def Enum(**kwargs):
@@ -297,8 +302,9 @@ def Enum(**kwargs):
 
 
 HDMode = EnumOld(
-    MANUAL_INVERSE = 0,
+    IDLE = -1,
     MANUAL_DIRECT = 1,
+    MANUAL_INVERSE = 0,
     SEMI_AUTONOMOUS = 2,
     #AUTONOMOUS = 3
 )
@@ -331,7 +337,7 @@ class ControlStation(Node):
         self.joint3_dir = 1
         self.joint4_dir = 1
 
-        self.hd_mode = HDMode.MANUAL_DIRECT #HDMode.MANUAL_INVERSE
+        self.hd_mode = HDMode.IDLE #HDMode.MANUAL_DIRECT
 
         self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, "/CS/HD_gamepad", 10)
         self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
@@ -386,7 +392,9 @@ class ControlStation(Node):
         self.gamepad_config = GamePadConfig.from_name(name)
 
     def publish_cmd(self):
-        if self.hd_mode == HDMode.MANUAL_DIRECT:
+        if self.hd_mode == HDMode.IDLE:
+            return
+        elif self.hd_mode == HDMode.MANUAL_DIRECT:
             l = list(map(clean, map(float, self.vel_cmd)))
             l[2] *= self.joint3_dir
             l[3] *= self.joint4_dir
@@ -413,7 +421,8 @@ class ControlStation(Node):
     def switch_mode(self, do=1):
         if not do:
             return
-        self.hd_mode = (self.hd_mode + 1) % len(HDMode)
+        #self.hd_mode = (self.hd_mode + 1) % len(HDMode)
+        self.hd_mode = HDMode.next(self.hd_mode)
         msg = Int8(data=self.hd_mode)
         self.mode_change_pub.publish(msg)
 

@@ -32,6 +32,7 @@ def normalize(l):
     return [x/n for x in l]
 
 class FSM(Node):
+    IDLE = -1
     MANUAL_INVERSE = 0
     MANUAL_DIRECT = 1
     SEMI_AUTONOMOUS = 2
@@ -212,7 +213,9 @@ class FSM(Node):
             self.get_logger().info("MODE : " + str(self.mode))
             self.get_logger().info("SUBMODE : " + str(self.submode))
             
-        if self.mode == self.AUTONOMOUS:
+        if self.mode == self.IDLE:
+            pass
+        elif self.mode == self.AUTONOMOUS:
             pass
         elif self.mode == self.SEMI_AUTONOMOUS:
             self.send_semi_autonomous_cmd()
@@ -222,7 +225,9 @@ class FSM(Node):
             self.send_manual_direct_cmd()
 
     def transition_loop_action(self):
-        if self.mode == self.AUTONOMOUS:
+        if self.mode == self.IDLE:
+            pass
+        elif self.mode == self.AUTONOMOUS:
             pass
         elif self.mode == self.SEMI_AUTONOMOUS:
             pass
