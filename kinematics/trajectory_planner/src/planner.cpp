@@ -302,11 +302,11 @@ void Planner::loop()
             case Planner::CommandMode::MANUAL_DIRECT:
                 updateCurrentPosition();
                 break;
-            // case Planner::CommandMode::MANUAL_INVERSE:
-            //     if (manualInverseCommandOld() && m_executing_man_inv_cmd) {
-            //         stop();
-            //     }
-            //     break;
+            case Planner::CommandMode::MANUAL_INVERSE:
+                if (manualInverseCommandOld() && m_executing_man_inv_cmd) {
+                    stop();
+                }
+                break;
         }
         rate.sleep();
     }

@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             "fsm = hd_fsm.fsm:main",
+            "fsm_servo = hd_fsm.fsm_servo:main",
         ],
     },
 )
