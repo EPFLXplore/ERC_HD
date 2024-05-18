@@ -14,7 +14,7 @@ class StereoCamera:
         # res = {"x": 1280, "y": 720}
         res = {"x": 848, "y": 480}
 
-        FPS = 15
+        FPS = 30
 
         config.enable_stream(rs.stream.depth, res["x"], res["y"], rs.format.z16, FPS)
         config.enable_stream(rs.stream.color, res["x"], res["y"], rs.format.rgb8, FPS)
