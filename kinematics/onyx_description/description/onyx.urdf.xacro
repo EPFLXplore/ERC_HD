@@ -1,0 +1,399 @@
+<?xml version="1.0" ?>
+<robot name="kerby" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find rover_description)/description/materials.xacro" />
+<xacro:include filename="$(find rover_description)/description/kerby.trans" />
+<xacro:include filename="$(find rover_description)/description/kerby.gazebo" />
+<!-- <xacro:include filename="package://rover_description/description/ouster.xacro" />
+<xacro:include filename="package://rover_description/description/imu.xacro" />  -->
+<xacro:include filename="$(find rover_description)/description/inertial_macros.xacro" />
+<!-- <xacro:include filename="package://rover_description/description/oakd_camera.xacro" /> -->
+<xacro:include filename="$(find rover_description)/description/URDF3.urdf.xacro" /> 
+<!-- <xacro:include filename="package://rover_description/description/ros2_control_arm.xacro" /> -->
+
+
+
+
+
+
+<link name="base_link"></link>
+
+
+
+<joint name="chassis_joint" type="fixed">
+
+    <parent link="base_link"/>
+    <child link="chassis_link"/>
+    <origin xyz="0 0 0 " rpy="0 0 0"/>
+    <axis xyz="0.0 1.0 0.0"/>
+  </joint>
+
+
+<link name="chassis_link">
+  <inertial>
+    <origin xyz="0.05362398614035063 0.01974617698532859 0.037120813316089823" rpy="0 0 0"/>
+    <!-- <mass value="6.257043020156179"/> -->
+    <mass value="50"/>
+    <inertia ixx="0.340644" iyy="0.466541" izz="0.402706" ixy="0.000337" iyz="0.00055" ixz="-0.092411"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="blue"/>
+  </visual>
+  <!-- <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision> -->
+</link>
+
+<link name="steering3_link">
+  <inertial>
+    <origin xyz="-0.01189644601781037 -0.036027929982466456 -0.2129618322901442" rpy="0 0 0"/>
+    <mass value="0.3543584805415501"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="-0.000206" ixz="-0.000178"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.421384 -0.393882 0.063562" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.421384 -0.393882 0.063562" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="steering4_link">
+  <inertial>
+    <origin xyz="0.011896575272170529 0.03602765244982159 -0.21296112839152875" rpy="0 0 0"/>
+    <mass value="0.3543584805415501"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="0.000206" ixz="0.000178"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.42341 0.353934 0.012408" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.42341 0.353934 0.012408" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="steering1_link">
+  <inertial>
+    <origin xyz="0.011896795779964109 0.03602765244982109 -0.21296183229014454" rpy="0 0 0"/>
+    <mass value="0.3543584805415501"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="0.000206" ixz="0.000178"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.408171 0.353934 0.063562" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.408171 0.353934 0.063562" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="steering2_link">
+  <inertial>
+    <origin xyz="-0.011896225510015512 -0.036027929982466234 -0.21296112839152861" rpy="0 0 0"/>
+    <mass value="0.3543584805415501"/>
+    <inertia ixx="0.003558" iyy="0.003121" izz="0.000562" ixy="2e-06" iyz="-0.000206" ixz="-0.000178"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.410197 -0.393882 0.012408" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.410197 -0.393882 0.012408" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel2_1ink">
+  <inertial>
+    <origin xyz="0.0003394916280188287 -0.010196510227617639 -2.006330920018007e-05" rpy="0 0 0"/>
+    <mass value="1.592763813314383"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="1.6e-05" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.42733 -0.410572 0.281864" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="pink"/>
+  </visual>
+  <collision>
+    <origin xyz="0.42733 -0.410572 0.281864" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel3_1ink">
+  <inertial>
+    <origin xyz="0.0003392711202230836 -0.010196510227618527 -1.9767207815879484e-05" rpy="0 0 0"/>
+    <mass value="1.592763813314383"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="1.6e-05" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.404251 -0.410572 0.333019" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="pink"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.404251 -0.410572 0.333019" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="wheel1_1ink">
+  <inertial>
+    <origin xyz="-0.0003399213580693172 0.010197232694972913 -1.9767207816323573e-05" rpy="0 0 0"/>
+    <mass value="1.592763813314383"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-1.6e-05" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.391037 0.370625 0.333019" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="pink"/>
+  </visual>
+  <collision>
+    <origin xyz="0.391037 0.370625 0.333019" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+
+<link name="wheel4_1ink">
+  <inertial>
+    <origin xyz="-0.0003391418658636458 0.010197232694973468 -2.0063309200568646e-05" rpy="0 0 0"/>
+    <mass value="1.592763813314383"/>
+    <inertia ixx="0.010896" iyy="0.018605" izz="0.010887" ixy="-0.000257" iyz="-1.6e-05" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.440543 0.370625 0.281864" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="pink"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.440543 0.370625 0.281864" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+
+
+<link name="right_leg">
+  <inertial>
+    <origin xyz="0.0009668399350314201 0.11623489359260658 0.013375805290350871" rpy="0 0 0"/>
+    <mass value="1.6615144825592312"/>
+    <inertia ixx="0.007103" iyy="0.220618" izz="0.220639" ixy="-5.6e-05" iyz="-0.000815" ixz="0.013196"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.006607 -0.250474 0.021516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.006607 -0.250474 0.021516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_leg">
+  <inertial>
+    <origin xyz="-0.0009674901728771402 -0.11623517112525206 0.013375805290350576" rpy="0 0 0"/>
+    <mass value="1.6615144825592312"/>
+    <inertia ixx="0.007103" iyy="0.220618" izz="0.220639" ixy="-5.6e-05" iyz="0.000815" ixz="-0.013196"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.006607 0.210526 0.021516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.006607 0.210526 0.021516" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://rover_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+
+
+<joint name="chassis_to_lidar_axis" type="fixed">
+  <origin xyz="0.2 0.20 0.12" rpy="0 0 0"/>
+  <parent link="chassis_link"/>
+  <child link="lidar_axis"/>
+</joint>
+<link name="lidar_axis">
+    <visual>
+      <geometry>
+        <cylinder length="0.24" radius="0.005"/>
+      </geometry> 
+       <material name="white"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.24" radius="0.005"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_cylinder mass="0.25" length="0.24" radius="0.005">
+      <origin xyz="0 0 0" />
+    </xacro:inertial_cylinder>
+  </link>
+
+
+<joint name="steering3" type="fixed">
+  <origin xyz="0.414777 0.143408 -0.042046" rpy="0 0 0"/>
+  <parent link="right_leg"/>
+  <child link="steering3_link"/>
+  <axis xyz="-0.061399 0.0 -0.998113"/>
+</joint>
+
+<joint name="steering4" type="fixed">
+  <origin xyz="0.416803 -0.143408 0.009108" rpy="0 0 0"/>
+  <parent link="left_leg"/>
+  <child link="steering4_link"/>
+  <axis xyz="-0.061399 0.0 0.998113"/>
+</joint>
+
+<joint name="steering1" type="fixed">
+  <origin xyz="-0.414778 -0.143408 -0.042046" rpy="0 0 0"/>
+  <parent link="left_leg"/>
+  <child link="steering1_link"/>
+  <axis xyz="0.061399 -0.0 -0.998113"/>
+</joint>
+
+<joint name="steering2" type="fixed">
+  <origin xyz="-0.416804 0.143408 0.009108" rpy="0 0 0"/>
+  <parent link="right_leg"/>
+  <child link="steering2_link"/>
+  <axis xyz="0.061399 -0.0 0.998113"/>
+</joint>
+
+<joint name="driving2" type="fixed">
+  <origin xyz="-0.017133 0.01669 -0.269456" rpy="0 0 0"/>
+  <parent link="steering2_link"/>
+  <child link="wheel2_1ink"/>
+  <axis xyz="-0.033267 0.999444 0.002046"/>
+</joint>
+
+<joint name="driving3" type="fixed">
+  <origin xyz="-0.017133 0.01669 -0.269457" rpy="0 0 0"/>
+  <parent link="steering3_link"/>
+  <child link="wheel3_1ink"/>
+  <axis xyz="-0.033267 0.999444 0.002046"/>
+</joint>
+
+<joint name="driving1" type="fixed">
+  <origin xyz="0.017134 -0.016691 -0.269457" rpy="0 0 0"/>
+  <parent link="steering1_link"/>
+  <child link="wheel1_1ink"/>
+  <axis xyz="0.033267 -0.999444 0.002046"/>
+</joint>
+
+<joint name="driving4" type="fixed">
+  <origin xyz="0.017133 -0.016691 -0.269456" rpy="0 0 0"/>
+  <parent link="steering4_link"/>
+  <child link="wheel4_1ink"/>
+  <axis xyz="0.033267 -0.999444 0.002046"/>
+</joint>
+
+
+
+<!--  Controllable rover base -->
+<!-- <joint name="right_pivot" type="fixed">
+  <origin xyz="-0.1 0.250474 -0.021516" rpy="0 0 0"/>
+  <parent link="chassis_link"/>
+  <child link="right_leg"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="left_pivot" type="fixed">
+  <origin xyz="-0.1 -0.210526 -0.021516" rpy="0 0 0"/>
+  <parent link="chassis_link"/>
+  <child link="left_leg"/>
+   <mimic joint="right_pivot" multiplier="-1.0" />
+  <axis xyz="0.0 1.0 0.0"/>
+</joint> -->
+
+
+
+
+<joint name="right_pivot" type="fixed">
+  <origin xyz="0 0.250474 -0.021516" rpy="0 0 0"/>
+  <parent link="chassis_link"/>
+  <child link="right_leg"/>
+  <axis xyz="0.0 1.0 0.0"/>
+  <!-- <limit>
+    <lower>-0.1</lower>
+    <upper>0.1</upper>
+    <effort>300</effort>
+    <velocity>5</velocity>
+  </limit>  -->
+</joint>
+
+
+
+<joint name="left_pivot" type="fixed">
+  <origin xyz="0 -0.210526 -0.021516" rpy="0 0 0"/>
+  <parent link="chassis_link"/>
+  <child link="left_leg"/>
+  <mimic joint="right_pivot" multiplier="-1.0" />
+  <axis xyz="0.0 1.0 0.0"/>
+  <!-- <limit>
+    <lower>-0.1</lower>
+    <upper>0.1</upper>
+    <effort>300</effort>
+    <velocity>5</velocity>
+  </limit> -->
+  
+</joint>
+
+</robot>
