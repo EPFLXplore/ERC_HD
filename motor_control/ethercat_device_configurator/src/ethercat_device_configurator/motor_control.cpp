@@ -171,6 +171,7 @@ private:
             {
                 velocity_direct_command(i, msg->data[i]);
             }
+            if (i == 6) torque_direct_command(i, msg->data[i]);
             // if (i < 6)
             //     position_direct_command(i, msg->data[i]);
             // else
@@ -600,7 +601,7 @@ int main(int argc, char **argv)
     // a new EthercatDeviceConfigurator object (path to setup.yaml as constructor argument)
 
     // char *path = "src/motor_control/ethercat_device_configurator/config_mot/kerby_setup.yaml"; // kerby setup
-    char *path = "src/motor_control/ethercat_device_configurator/config_mot/onyx_setup.yaml"; // onyx setup
+    char *path = "motor_control/ethercat_device_configurator/config_mot/onyx_setup.yaml"; // onyx setup
 
     configurator = std::make_shared<EthercatDeviceConfigurator>(path);
 
