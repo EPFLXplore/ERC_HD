@@ -627,7 +627,7 @@ int main(int argc, char **argv)
     // a new EthercatDeviceConfigurator object (path to setup.yaml as constructor argument)
 
     // char *path = "src/motor_control/ethercat_device_configurator/config_mot/kerby_setup.yaml"; // kerby setup
-    char *path = "src/motor_control/ethercat_device_configurator/config_mot/onyx_setup.yaml"; // onyx setup
+    char *path = "motor_control/ethercat_device_configurator/config_mot/onyx_setup.yaml"; // onyx setup
 
     std::cout << "=== Creating Ethercat Device Configurator ===" << std::endl;
     configurator = std::make_shared<EthercatDeviceConfigurator>(path);
