@@ -43,16 +43,21 @@ struct MotorCommand
 
 static const double PI = 3.14159265359;
 static const double INF = 1e10;
-static const std::vector<std::string> DEVICE_NAMES = {"J5"}; //{"J1", "J2", "J3", "J4", "J5", "J6", "Gripper", "Rassor"};
+static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J5", "J6", "Gripper"};
+//static const std::vector<std::string> DEVICE_NAMES = {"J2"};
 // static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 1, 1, 1, 1, 1}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
-static const std::vector<double> MAX_VELOCITIES = {0.00145, 0.001, 0.001, 0.00145, 0.00145, 0.00145, 1, 1}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
+// below is used for the control in velocity
+// static const std::vector<double> MAX_VELOCITIES = {0.00145, 0.001, 0.001, 0.00145, 0.00145, 0.00145, 1, 1}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
+static const std::vector<double> MAX_VELOCITIES = {0.2, 0.13, 0.13, 0.2, 0.2, 0.2, 2}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 
 static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2, 1, 1};
-static const std::vector<double> POS_LOWER_LIMITS = {-2 * PI, -PI, -PI / 4, -2 * PI, -PI / 2, -PI, -INF, 0, 0};
-static const std::vector<double> POS_UPPER_LIMITS = {2 * PI, PI / 2, PI / 4, 2 * PI, PI / 2, PI, INF, 0, 0};
+// static const std::vector<double> POS_LOWER_LIMITS = {-2 * PI, -PI, -PI / 4, -2 * PI, -PI / 2, -PI, -INF, 0, 0};
+// static const std::vector<double> POS_UPPER_LIMITS = {2 * PI, PI / 2, PI / 4, 2 * PI, PI / 2, PI, INF, 0, 0};
+static const std::vector<double> POS_LOWER_LIMITS = {-2 * PI, -PI, -5 * PI / 6, -2 * PI, -PI / 2, -PI, -INF, 0, 0};
+static const std::vector<double> POS_UPPER_LIMITS = {2 * PI, PI / 2, 5 * PI / 6, 2 * PI, PI / 2, PI, INF, 0, 0};
 
 // static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
-static const std::vector<double> DIRECTIONS = {-1, 1, 1, -1, -1, -1, 1, 1}; // to match directions of MoveIt
+static const std::vector<double> DIRECTIONS = {1, 1, 1, -1, -1, -1, 1, 1}; // to match directions of MoveIt
 
 static std::vector<bool> should_scan_stationary_states = {true, true, true, true, true, true, true, true, true, true};
 
@@ -97,7 +102,7 @@ public:
     static void setup_command_list()
     {
         reorder_command_list();
-        for (int i = 0; i < motor_command_list.size(); i++)
+        for (size_t i = 0; i < motor_command_list.size(); i++)
         {
             motor_command_list[i].max_velocity = MAX_VELOCITIES[i];
             motor_command_list[i].max_torque = MAX_TORQUES[i];
@@ -137,6 +142,9 @@ public:
             command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode);
             command.command.setTargetTorque(0);
             break;
+            // case maxon::ModeOfOperationEnum::NA:
+            //     // TODO Address this case IMPORTANT
+            //     break;
         }
         should_scan_stationary_states[motor_index] = false;
     }
@@ -162,20 +170,22 @@ private:
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     void manual_direct_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
     {
-        RCLCPP_ERROR(this->get_logger(), "CACA");
-        std::cout << "PIPI" << std::endl;
+        RCLCPP_INFO(this->get_logger(), "manual_direct_command_callback", msg->data);
 
         for (uint i = 0; i < motor_command_list.size(); i++)
         {
+            // if (i < 6)
+            // {
+            //     velocity_direct_command(i, msg->data[i]);
+            // }
             if (i < 6)
             {
                 position_direct_command(i, msg->data[i]);
             }
-            if (i == 6) torque_direct_command(i, msg->data[i]);
-            // if (i < 6)
-            //     position_direct_command(i, msg->data[i]);
-            // else
-            //     torque_direct_command(i, msg->data[i]);
+            else
+            {
+                torque_direct_command(i, msg->data[i]);
+            }
         }
     }
 
@@ -186,7 +196,7 @@ private:
 
     static void position_direct_command(size_t motor_index, double velocity_scaling_factor)
     {
-        std::cout << "Position direct command" << std::endl;
+        std::cout << "Position direct command, motor index: " << motor_index << " | velocity factor: " << velocity_scaling_factor << std::endl;
 
         // RCLCPP_INFO(this->get_logger(), "setting default velocity %s \n", default_velocity);
 
@@ -209,6 +219,7 @@ private:
             double dt = std::chrono::duration_cast<std::chrono::milliseconds>(time_since_last_cmd).count() * ms_to_s;
             position_commands[motor_index] += dt * velocity;
             // RCLCPP_INFO(this->get_logger(), "setting position command to %s \n", position_commands[motor_index]);
+            std::cout << "setting position command to " << position_commands[motor_index] << std::endl;
 
             command.command.setTargetPosition(position_commands[motor_index] * DIRECTIONS[motor_index]);
         }
@@ -256,6 +267,8 @@ private:
 
     void position_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
     {
+        RCLCPP_INFO(this->get_logger(), "position_command_callback");
+
         double j5_pos = 0.0; // for decoupling of j5 and j6
         bool j6_on_hall = false;
 
@@ -305,13 +318,21 @@ private:
 
     void publish_state()
     {
+
         double j5_pos = 0.0; // for decoupling of j5 and j6
         bool j6_on_hall = false;
 
         sensor_msgs::msg::JointState msg;
         for (size_t i = 0; i < motor_command_list.size(); i++)
         {
+            // std::cout << "   about to publish state of " << DEVICE_NAMES[i] << std::endl;
+            // if (DEVICE_NAMES[i] != "J6")
+            // {
+            //     continue;
+            // }
             auto slave = configurator->getSlave(DEVICE_NAMES[i]);
+            // std::cout << "   Done to publish state of " << DEVICE_NAMES[i] << std::endl;
+
             std::shared_ptr<maxon::Maxon> maxon_slave_ptr = std::dynamic_pointer_cast<maxon::Maxon>(slave);
 
             msg.name.push_back(slave->getName());
@@ -344,6 +365,8 @@ private:
 
     void kill(const std_msgs::msg::Int8::SharedPtr msg)
     {
+        RCLCPP_INFO(this->get_logger(), "kill_command_callback");
+
         static const int LAUNCH = 1;
         static const int ABORT = 2;
         static const int WAIT = 3;
@@ -362,6 +385,8 @@ private:
 
     void motor_command_callback(const hd_interfaces::msg::MotorCommand::SharedPtr msg)
     {
+        RCLCPP_INFO(this->get_logger(), "motor_command_callback");
+
         // TODO: add the multiplication by the direction of the corresponding joint in this function
         for (uint i = 0; i < motor_command_list.size(); i++)
         {
@@ -413,9 +438,9 @@ private:
     static void reorder_command_list()
     {
         // sorting motor_command_list by real order of motors in the arm
-        for (int i = 0; i < motor_command_list.size(); i++)
+        for (size_t i = 0; i < motor_command_list.size(); i++)
         {
-            for (int j = i; j < motor_command_list.size(); j++)
+            for (size_t j = i; j < motor_command_list.size(); j++)
             {
                 if (motor_command_list[j].name == DEVICE_NAMES[i])
                 {
@@ -493,7 +518,7 @@ void worker()
         ** Your lowlevel control input / measurement logic goes here.
         ** Different logic can be implemented for each device.
         */
-        for (int i = 0; i < motor_command_list.size(); i++)
+        for (size_t i = 0; i < motor_command_list.size(); i++)
         {
             auto &motor_command = motor_command_list[i];
 
@@ -590,6 +615,7 @@ spin file as first command line argument.
  */
 int main(int argc, char **argv)
 {
+    std::cout << "=== Starting motor control node ===" << std::endl;
     // Set the abrt_ flag upon receiving an interrupt signal (e.g. Ctrl-c)
     std::signal(SIGINT, signal_handler);
 
@@ -603,6 +629,7 @@ int main(int argc, char **argv)
     // char *path = "src/motor_control/ethercat_device_configurator/config_mot/kerby_setup.yaml"; // kerby setup
     char *path = "motor_control/ethercat_device_configurator/config_mot/onyx_setup.yaml"; // onyx setup
 
+    std::cout << "=== Creating Ethercat Device Configurator ===" << std::endl;
     configurator = std::make_shared<EthercatDeviceConfigurator>(path);
 
     /*
@@ -612,8 +639,11 @@ int main(int argc, char **argv)
     ** The EtherCAT interface is active afterwards, all drives are in Operational
     ** EtherCAT state and PDO communication may begin.
     */
+    std::cout << "=== Starting all masters ===" << std::endl;
     for (auto &master : configurator->getMasters())
     {
+        // std::cout << "   Master: " << master->getConfiguration() << std::endl;
+
         if (!master->startup())
         {
             std::cerr << "Master Startup not successful." << std::endl;
@@ -621,20 +651,30 @@ int main(int argc, char **argv)
         }
     }
 
+    std::cout << "=== Setting up motor command list ===" << std::endl;
     maxon::Command command;
     command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousTorqueMode);
     command.setTargetTorque(0.0);
 
+    std::cout << "=== Setting commands to slaves ===" << std::endl;
     for (auto &slave : configurator->getSlaves())
     {
+        std::cout << "   Slave: " << slave->getName() << std::endl;
         motor_command_list.push_back(MotorCommand({slave->getName(), command, std::chrono::steady_clock::now()}));
         std::cout << slave->getName() << std::endl;
     }
     MotorController::setup_command_list();
 
+    for (auto &motor_command : motor_command_list)
+    {
+        std::cout << "   " << motor_command.name << std::endl;
+    }
+
+    std::cout << "=== Starting worker thread ===" << std::endl;
     // Start the PDO loop in a new thread.
     worker_thread = std::make_unique<std::thread>(&worker);
 
+    std::cout << "=== Waiting for PDO cycles to pass ===" << std::endl;
     /*
     ** Wait for a few PDO cycles to pass.
     ** Set anydrives into to ControlOp state (internal state machine, not EtherCAT states)
