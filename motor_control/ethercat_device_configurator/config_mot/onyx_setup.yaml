@@ -3,29 +3,29 @@ ethercat_master:
   update_rate_too_low_warn_threshold: 100
 
 ethercat_devices:
-  - type: Maxon
-    name: J1
-    configuration_file: onyx_device_configurations/conf_j1.yaml
-    ethercat_bus: enp4s0 #enp0s31f6
-    ethercat_address: 1
+  # - type: Maxon
+  #   name: J1
+  #   configuration_file: onyx_device_configurations/conf_j1.yaml
+  #   ethercat_bus: enp4s0 #enp0s31f6
+  #   ethercat_address: 1
 
-  - type: Maxon
-    name: J2
-    configuration_file: onyx_device_configurations/conf_j2.yaml
-    ethercat_bus: enp4s0
-    ethercat_address: 3
+  # - type: Maxon
+  #   name: J2
+  #   configuration_file: onyx_device_configurations/conf_j2.yaml
+  #   ethercat_bus: enp4s0
+  #   ethercat_address: 3
 
-  - type: Maxon
-    name: J3
-    configuration_file: onyx_device_configurations/conf_j3.yaml
-    ethercat_bus: enp4s0
-    ethercat_address: 4
+  # - type: Maxon
+  #   name: J3
+  #   configuration_file: onyx_device_configurations/conf_j3.yaml
+  #   ethercat_bus: enp4s0
+  #   ethercat_address: 4
 
-  - type: Maxon
-    name: J4
-    configuration_file: onyx_device_configurations/conf_j4.yaml
-    ethercat_bus: enp4s0
-    ethercat_address: 6
+  # - type: Maxon
+  #   name: J4
+  #   configuration_file: onyx_device_configurations/conf_j4.yaml
+  #   ethercat_bus: enp4s0
+  #   ethercat_address: 6
 
   - type: Maxon
     name: J5
@@ -33,14 +33,14 @@ ethercat_devices:
     ethercat_bus: enp4s0
     ethercat_address: 7
 
-  - type: Maxon
-    name: J6
-    configuration_file: onyx_device_configurations/conf_j6.yaml
-    ethercat_bus: enp4s0
-    ethercat_address: 9
+  # - type: Maxon
+  #   name: J6
+  #   configuration_file: onyx_device_configurations/conf_j6.yaml
+  #   ethercat_bus: enp4s0
+  #   ethercat_address: 9
 
-  - type: Maxon
-    name: Gripper
-    configuration_file: onyx_device_configurations/conf_gripper.yaml
-    ethercat_bus: enp4s0
-    ethercat_address: 8
+  # - type: Maxon
+  #   name: Gripper
+  #   configuration_file: onyx_device_configurations/conf_gripper.yaml
+  #   ethercat_bus: enp4s0
+  #   ethercat_address: 8

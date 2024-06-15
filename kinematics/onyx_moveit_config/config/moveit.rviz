@@ -94,16 +94,6 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          caster_axis:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          caster_wheel:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
           chassis_link:
             Alpha: 1
             Show Axes: false
@@ -198,7 +188,7 @@ Visualization Manager:
         Robot Alpha: 0.5
         Robot Color: 150; 50; 150
         Show Robot Collision: false
-        Show Robot Visual: true
+        Show Robot Visual: false
         Show Trail: false
         State Display Time: 0.05 s
         Trail Step Size: 1
@@ -269,16 +259,6 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          caster_axis:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
-          caster_wheel:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-            Value: true
           chassis_link:
             Alpha: 1
             Show Axes: false
@@ -421,16 +401,6 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        caster_axis:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        caster_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         chassis_link:
           Alpha: 1
           Show Axes: false

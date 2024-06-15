@@ -43,7 +43,7 @@ struct MotorCommand
 
 static const double PI = 3.14159265359;
 static const double INF = 1e10;
-static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J5", "J6", "Gripper", "Rassor"};
+static const std::vector<std::string> DEVICE_NAMES = {"J5"}; //{"J1", "J2", "J3", "J4", "J5", "J6", "Gripper", "Rassor"};
 // static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 1, 1, 1, 1, 1}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 static const std::vector<double> MAX_VELOCITIES = {0.00145, 0.001, 0.001, 0.00145, 0.00145, 0.00145, 1, 1}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 
@@ -169,7 +169,7 @@ private:
         {
             if (i < 6)
             {
-                velocity_direct_command(i, msg->data[i]);
+                position_direct_command(i, msg->data[i]);
             }
             if (i == 6) torque_direct_command(i, msg->data[i]);
             // if (i < 6)
