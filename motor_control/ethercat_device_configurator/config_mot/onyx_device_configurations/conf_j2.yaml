@@ -14,14 +14,14 @@ Reading:
 
 Hardware:
   mode_of_operation:
-  - CyclicSynchronousTorqueMode
-  - CyclicSynchronousPositionMode
-  - CyclicSynchronousVelocityMode
-  position_encoder_resolution: 524288    # 131072
-  gear_ratio: [486, 1]
+    - CyclicSynchronousTorqueMode
+    - CyclicSynchronousPositionMode
+    - CyclicSynchronousVelocityMode
+  position_encoder_resolution: 1 # 16384
+  gear_ratio: [1, 1] #7260  # doesn't seem to change anything
   motor_constant: 1.0
-  working_voltage: 24
-  pole_pairs: 2
+  working_voltage: 48
+  pole_pairs: 11
   speed_constant: 1
   torque_constant: 0.312
   max_current: 4.9
