@@ -304,8 +304,8 @@ def Enum(**kwargs):
 HDMode = EnumOld(
     IDLE = -1,
     MANUAL_DIRECT = 1,
-    MANUAL_INVERSE = 0,
     SEMI_AUTONOMOUS = 2,
+    MANUAL_INVERSE = 0,
     #AUTONOMOUS = 3
 )
 
