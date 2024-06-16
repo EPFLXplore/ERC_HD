@@ -44,7 +44,7 @@ struct MotorCommand
 static const double PI = 3.14159265359;
 static const double INF = 1e10;
 static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J5", "J6", "Gripper"};
-//static const std::vector<std::string> DEVICE_NAMES = {"J2"};
+//static const std::vector<std::string> DEVICE_NAMES = {"J5"};
 // static const std::vector<double> MAX_VELOCITIES = {0.4, 0.1, 0.2, 0.6, 0.2, 1, 1, 1, 1, 1}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 // below is used for the control in velocity
 // static const std::vector<double> MAX_VELOCITIES = {0.00145, 0.001, 0.001, 0.00145, 0.00145, 0.00145, 1, 1}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
@@ -54,10 +54,13 @@ static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2, 1, 1};
 // static const std::vector<double> POS_LOWER_LIMITS = {-2 * PI, -PI, -PI / 4, -2 * PI, -PI / 2, -PI, -INF, 0, 0};
 // static const std::vector<double> POS_UPPER_LIMITS = {2 * PI, PI / 2, PI / 4, 2 * PI, PI / 2, PI, INF, 0, 0};
 static const std::vector<double> POS_LOWER_LIMITS = {-2 * PI, -PI, -5 * PI / 6, -2 * PI, -PI / 2, -PI, -INF, 0, 0};
-static const std::vector<double> POS_UPPER_LIMITS = {2 * PI, PI / 2, 5 * PI / 6, 2 * PI, PI / 2, PI, INF, 0, 0};
+static const std::vector<double> POS_UPPER_LIMITS = {2 * PI, PI, 5 * PI / 6, 2 * PI, PI / 2, PI, INF, 0, 0};
 
 // static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
-static const std::vector<double> DIRECTIONS = {1, 1, 1, -1, -1, -1, 1, 1}; // to match directions of MoveIt
+static const std::vector<double> DIRECTIONS = {-1, -1, -1, -1, -1, -1, 1, 1}; // to match directions of MoveIt
+//static const std::vector<double> POSITION_OFFSETS = {0, -0.959505, -2.424073, 0, 0, 0, 0};
+static const std::vector<double> POSITION_OFFSETS = {0, -0.959505, -2.424073, 0, -1.27857, -1.88833, 0};
+//static const std::vector<double> POSITION_OFFSETS = {-1.27857};
 
 static std::vector<bool> should_scan_stationary_states = {true, true, true, true, true, true, true, true, true, true};
 
@@ -126,13 +129,13 @@ public:
             if (should_scan_stationary_states[motor_index])
             {
                 double pos = get_position(motor_index);
-                if (weird(motor_index, pos))
+                if (weird(motor_index))
                 {
                     return;
                 }
                 stationary_positions[motor_index] = pos;
             }
-            command.command.setTargetPosition(stationary_positions[motor_index] * DIRECTIONS[motor_index]);
+            command.command.setTargetPosition((stationary_positions[motor_index] - POSITION_OFFSETS[motor_index]) * DIRECTIONS[motor_index]);
             break;
         case maxon::ModeOfOperationEnum::CyclicSynchronousVelocityMode:
             command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousVelocityMode);
@@ -189,9 +192,14 @@ private:
         }
     }
 
-    static bool weird(size_t motor_index, double pos)
+    static bool weird(size_t motor_index)
     {
-        return (pos > POS_UPPER_LIMITS[motor_index] * 1.5 || pos < POS_LOWER_LIMITS[motor_index] * 1.5);
+        double pos = get_position(motor_index, true);
+        bool res = (pos > POS_UPPER_LIMITS[motor_index] * 1.5 || pos < POS_LOWER_LIMITS[motor_index] * 1.5);
+        if (res) {
+            RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "Weird pos at motor index %ld: lower: %g;    upper: %g;    actual: %g", motor_index, POS_LOWER_LIMITS[motor_index], POS_UPPER_LIMITS[motor_index], pos);
+        }
+        return res;
     }
 
     static void position_direct_command(size_t motor_index, double velocity_scaling_factor)
@@ -221,12 +229,12 @@ private:
             // RCLCPP_INFO(this->get_logger(), "setting position command to %s \n", position_commands[motor_index]);
             std::cout << "setting position command to " << position_commands[motor_index] << std::endl;
 
-            command.command.setTargetPosition(position_commands[motor_index] * DIRECTIONS[motor_index]);
+            command.command.setTargetPosition((position_commands[motor_index] - POSITION_OFFSETS[motor_index]) * DIRECTIONS[motor_index]);
         }
         else
         { // scanning
             double pos = get_position(motor_index);
-            if (weird(motor_index, pos))
+            if (weird(motor_index))
             {
                 return;
             }
@@ -283,7 +291,7 @@ private:
             else
             {
                 motor_command_list[i].command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
-                double new_pos = msg->data[i] * DIRECTIONS[i];
+                double new_pos = (msg->data[i] - POSITION_OFFSETS[i]) * DIRECTIONS[i];
                 if (j6_on_hall)
                 {
                     if (i == 4)
@@ -295,10 +303,14 @@ private:
                     }
                 }
                 // new_pos = std::min(std::max(new_pos, POS_LOWER_LIMITS[i]), POS_UPPER_LIMITS[i]);
-                if (new_pos < POS_LOWER_LIMITS[i])
+                if (new_pos < POS_LOWER_LIMITS[i]) {
+                    RCLCPP_ERROR(this->get_logger(), "Position command too low for motor index %d: lower limit: %g;    actual: %g", i, POS_LOWER_LIMITS[i], new_pos);
                     new_pos = POS_LOWER_LIMITS[i];
-                if (new_pos > POS_UPPER_LIMITS[i])
+                }
+                if (new_pos > POS_UPPER_LIMITS[i]) {
+                    RCLCPP_ERROR(this->get_logger(), "Position command too high for motor index %d: upper limit: %g;    actual: %g", i, POS_UPPER_LIMITS[i], new_pos);
                     new_pos = POS_UPPER_LIMITS[i];
+                }
                 motor_command_list[i].command.setTargetPosition(new_pos);
                 motor_command_list[i].command_time = std::chrono::steady_clock::now();
                 should_scan_stationary_states[i] = true;
@@ -338,7 +350,7 @@ private:
             msg.name.push_back(slave->getName());
 
             auto getReading = maxon_slave_ptr->getReading();
-            double pos = getReading.getActualPosition() * DIRECTIONS[i];
+            double pos = getReading.getActualPosition() * DIRECTIONS[i] + POSITION_OFFSETS[i];
             if (j6_on_hall)
             {
                 if (i == 4)
@@ -398,7 +410,7 @@ private:
                 {
                 case MotorMode::POSITION:
                     motor_command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
-                    motor_command.command.setTargetPosition(msg->command);
+                    motor_command.command.setTargetPosition((msg->command - POSITION_OFFSETS[i]) * DIRECTIONS[i]);
                     break;
                 case MotorMode::VELOCITY:
                     motor_command.command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousVelocityMode);
@@ -422,12 +434,14 @@ private:
     }
 
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    static double get_position(size_t motor_index)
+    static double get_position(size_t motor_index, bool raw = false)
     {
         auto slave = configurator->getSlave(DEVICE_NAMES[motor_index]);
         std::shared_ptr<maxon::Maxon> maxon_slave_ptr = std::dynamic_pointer_cast<maxon::Maxon>(slave);
         auto getReading = maxon_slave_ptr->getReading();
-        return getReading.getActualPosition() * DIRECTIONS[motor_index];
+        double actual_pos = getReading.getActualPosition();
+        if (raw) return actual_pos;
+        return actual_pos * DIRECTIONS[motor_index] + POSITION_OFFSETS[motor_index];
     }
 
     static double get_target_position(size_t motor_index)
@@ -465,10 +479,14 @@ private:
         case maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode:
         {
             double pos = get_target_position(i);
-            if (pos < POS_LOWER_LIMITS[i])
+            if (pos < POS_LOWER_LIMITS[i]) {
+                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "LOWER LIMIT on motor index %ld", motor_index);
                 command.command.setTargetPosition(POS_LOWER_LIMITS[i]);
-            if (pos > POS_UPPER_LIMITS[i])
+            }
+            if (pos > POS_UPPER_LIMITS[i]) {
+                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "UPPER LIMIT on motor index %ld", motor_index);
                 command.command.setTargetPosition(POS_UPPER_LIMITS[i]);
+            }
             break;
         }
         case maxon::ModeOfOperationEnum::CyclicSynchronousVelocityMode:
