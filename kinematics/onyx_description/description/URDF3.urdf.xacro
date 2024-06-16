@@ -265,12 +265,13 @@
 </joint>
 
 <joint name="hd_joint2" type="continuous">
-  <origin xyz="0.104169 0.1185 0.056489" rpy="-0.4079707 0.1795091 -0.8207109"/>
+  <origin xyz="0.104169 0.1185 0.056489" rpy="0 0 0"/>
   <parent link="hd_link1"/>
   <child link="hd_link2"/>
   <axis xyz="0.879067 0.0 0.476699"/>
 </joint>
 <!-- [ x: -0.8207109, y: 0.1795091, z: -0.4079707 ] -->
+
 <joint name="hd_joint3" type="continuous">
   <origin xyz="-0.14594 0.209699 0.269123" rpy="0 0 0"/>
   <parent link="hd_link2"/>
