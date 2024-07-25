@@ -8,6 +8,8 @@ from launch import LaunchDescription
 from launch.actions import GroupAction, DeclareLaunchArgument, LogInfo
 from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.conditions import IfCondition
+from launch_ros.actions import ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
 
 
 def get_package_file(package, file_path):
@@ -30,6 +32,16 @@ def load_yaml(file_path):
         with open(file_path, 'r') as file:
             return yaml.safe_load(file)
     except EnvironmentError: # parent of IOError, OSError *and* WindowsError where available
+        return None
+
+def load_yaml2(package_name, file_path):
+    package_path = get_package_share_directory(package_name)
+    absolute_file_path = os.path.join(package_path, file_path)
+
+    try:
+        with open(absolute_file_path, "r") as file:
+            return yaml.safe_load(file)
+    except EnvironmentError:  # parent of IOError, OSError *and* WindowsError where available
         return None
 
 def run_xacro(xacro_file):
@@ -72,6 +84,7 @@ def generate_launch_description():
     robot_description_semantic = load_file(srdf_file)
     kinematics_config = load_yaml(kinematics_file)
     ompl_config = load_yaml(ompl_config_file)
+    servo_yaml = load_yaml2("onyx_moveit_config", "config/kerby_simulated_config.yaml")
 
     rviz_arg, rviz_declaration = declare_binary_launch_argument("rviz", default=True, description="Run RViz")
 
@@ -169,12 +182,72 @@ def generate_launch_description():
             output="screen")
         for controller in controller_names
     ]
+    
+    
+    container = ComposableNodeContainer(
+        name="moveit_servo_demo_container",
+        namespace="/",
+        package="rclcpp_components",
+        executable="component_container_mt",
+        composable_node_descriptions=[
+            # Example of launching Servo as a node component
+            # Assuming ROS2 intraprocess communications works well, this is a more efficient way.
+            # ComposableNode(
+            #     package="moveit_servo",
+            #     plugin="moveit_servo::ServoServer",
+            #     name="servo_server",
+            #     parameters=[
+            #         {
+            #             'moveit_servo': servo_yaml,
+            #             'robot_description': robot_description,
+            #             'robot_description_semantic': robot_description_semantic,
+            #         }
+            #     ],
+            # ),
+            ComposableNode(
+                package="robot_state_publisher",
+                plugin="robot_state_publisher::RobotStatePublisher",
+                name="robot_state_publisher",
+                parameters=[{'robot_description': robot_description}],
+            ),
+            ComposableNode(
+                package="tf2_ros",
+                plugin="tf2_ros::StaticTransformBroadcasterNode",
+                name="static_tf2_broadcaster",
+                parameters=[{"child_frame_id": "/base_link", "frame_id": "/world"}],
+            ),
+            ComposableNode(
+                package="moveit_servo",
+                plugin="moveit_servo::JoyToServoPub",
+                name="controller_to_servo_node",
+            ),
+        ],
+        output="screen",
+    )
+    
+    
+    servo_node = Node(
+        package="moveit_servo",
+        executable="servo_node_main",
+        parameters=[
+            {
+                'moveit_servo': servo_yaml,
+                'robot_description': robot_description,
+                'robot_description_semantic': robot_description_semantic,
+                'robot_description_kinematics': kinematics_config,
+            },
+        ],
+        output="screen",
+    )
+    
 
     return LaunchDescription([
         rviz_declaration,
         move_group_node,
         robot_state_publisher,
         ros2_control_node,
-        rviz
+        rviz,
+        container,
+        servo_node,
         ] + spawn_controllers
     )

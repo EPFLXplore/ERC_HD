@@ -68,6 +68,8 @@ install(PROGRAMS
   scripts/limbs_control.py
   scripts/servo_fake_cs_gamepad.py
   scripts/new_servo_fake_cs.py
+  scripts/new_fake_cs.py
+  
   input_handling/test_input_handling.py
   DESTINATION lib/${PROJECT_NAME}
 )

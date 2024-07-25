@@ -9,7 +9,7 @@ import evdev.events
 import threading
 from time import sleep
 from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
-from hd_interfaces.msg import Task, MotorCommand
+from hd_interfaces.msg import Task
 import math
 import itertools
 from collections.abc import Callable
@@ -44,6 +44,7 @@ class EnumOld:
     def __init__(self, **kwargs):
         self.items = kwargs
         self.slots = list(kwargs)
+        self.slot_values = [kwargs[slot] for slot in self.slots]
         #print(self.slots)
         for k in self.slots:
             setattr(self, k, kwargs[k])
@@ -60,9 +61,8 @@ class EnumOld:
         return self.items[k]
     
     def next(self, val):
-        i = (self.slots.index(val)+1) % len(self.slots)
-        return self.slots[i]
-
+        i = (self.slot_values.index(val)+1) % len(self.slots)
+        return self.slot_values[i]
 
 
 def Enum(**kwargs):
@@ -136,15 +136,10 @@ def Enum(**kwargs):
 
 HDMode = EnumOld(
     IDLE = -1,
-    MANUAL_INVERSE = 0,
     MANUAL_DIRECT = 1,
     SEMI_AUTONOMOUS = 2,
+    MANUAL_INVERSE = 0,
     #AUTONOMOUS = 3
-)
-
-HDSubMode = EnumOld(
-    JOINTSPACE = 0,
-    CARTESIAN = 1,
 )
 
 
@@ -164,12 +159,11 @@ class ControlStation(Node):
     def __init__(self):
         super().__init__("fake_cs_gamepad")
         
-        keyboard_control = True
+        keyboard_control = False
 
         self.vel_cmd = [0.0]*8
-        self.torque_scaling_factor = 0.0
         self.axis_cmd = [0.0]*3
-        #self.man_inv_axis = [0.0]*3
+        self.man_inv_axis = [0.0]*3
         self.man_inv_twist = Twist()
         self.man_inv_velocity_scaling = 1.0
         self.semi_auto_cmd = Task.NO_TASK
@@ -178,17 +172,13 @@ class ControlStation(Node):
         self.joint3_dir = 1
         self.joint4_dir = 1
 
-        self.hd_mode = HDMode.MANUAL_INVERSE #HDMode.MANUAL_DIRECT
-        self.hd_sub_mode = HDSubMode.JOINTSPACE
+        self.hd_mode = HDMode.IDLE #HDMode.MANUAL_DIRECT
 
         self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, "/CS/HD_gamepad", 10)
-        #self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
+        self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
         self.man_inv_twist_pub = self.create_publisher(Twist, "/ROVER/HD_man_inv_twist", 10)
-        self.man_inv_joint_pub = self.create_publisher(Float64MultiArray, "/ROVER/HD_man_inv_joint", 10)
         self.task_pub = self.create_publisher(Task, "/ROVER/semi_auto_task", 10)
         self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
-        self.sub_mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_sub_mode", 10)
-        self.gripper_torque_pub = self.create_publisher(MotorCommand, "HD/kinematics/single_joint_cmd", 10)
 
         if keyboard_control:
             from input_handling.keyboard import KeyboardConfig
@@ -253,28 +243,21 @@ class ControlStation(Node):
             self.input_config.bind(input, self.set_semi_auto_cmd, "event_value", index=i)
     
         
-        self.input_config.bind(GamePadConfig.L2, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
-        self.input_config.bind(GamePadConfig.R2, self.set_man_inv_axis, "value", coordinate=0, multiplier=-1)
-        self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=1, multiplier=1)
-        self.input_config.bind(GamePadConfig.RV, self.set_man_inv_axis, "value", coordinate=2, multiplier=-1)
+        self.input_config.bind(GamePadConfig.RV, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
+        self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=2, multiplier=-1)
+        self.input_config.bind(GamePadConfig.R2, self.set_man_inv_axis, "value", coordinate=1, multiplier=-1)
+        self.input_config.bind(GamePadConfig.L2, self.set_man_inv_axis, "value", coordinate=1, multiplier=1)
         
-        self.input_config.bind(GamePadConfig.L1, self.set_man_inv_angular, "value", coordinate=0, multiplier=1)
-        self.input_config.bind(GamePadConfig.R1, self.set_man_inv_angular, "value", coordinate=0, multiplier=-1)
-        self.input_config.bind(GamePadConfig.LV, self.set_man_inv_angular, "value", coordinate=1, multiplier=-1)
-        self.input_config.bind(GamePadConfig.LH, self.set_man_inv_angular, "value", coordinate=2, multiplier=-1)
-
+        self.input_config.bind(GamePadConfig.LH, self.set_man_inv_angular, "value", coordinate=0, multiplier=1)
+        self.input_config.bind(GamePadConfig.LV, self.set_man_inv_angular, "value", coordinate=2, multiplier=-1)
+        self.input_config.bind(GamePadConfig.L1, self.set_man_inv_angular, "value", coordinate=1, multiplier=1)
+        self.input_config.bind(GamePadConfig.R1, self.set_man_inv_angular, "value", coordinate=1, multiplier=-1)
+        
     def publish_cmd(self):
         verbose = True
         if self.hd_mode == HDMode.IDLE:
             return
-        if self.torque_scaling_factor != 0:    # gripper
-            msg = MotorCommand(
-                name = "Gripper",
-                mode = MotorCommand.TORQUE,
-                command = self.torque_scaling_factor
-            )
-            self.gripper_torque_pub.publish(msg)
-        if self.hd_mode == HDMode.MANUAL_DIRECT:
+        elif self.hd_mode == HDMode.MANUAL_DIRECT:
             l = list(map(clean, map(float, self.vel_cmd)))
             l[2] *= self.joint3_dir
             l[3] *= self.joint4_dir
@@ -283,17 +266,9 @@ class ControlStation(Node):
             l = [1.0] + l   # add dummy velocity scaling factor
             self.joint_vel_cmd_pub.publish(Float32MultiArray(data = l))
         elif self.hd_mode == HDMode.MANUAL_INVERSE:
-            if self.hd_sub_mode == HDSubMode.JOINTSPACE:
-                l = list(map(clean, map(float, self.vel_cmd)))
-                l[2] *= self.joint3_dir
-                l[3] *= self.joint4_dir
-                if verbose:
-                    print("[", ", ".join(map(str_pad, l)), "]")
-                self.man_inv_joint_pub.publish(Float64MultiArray(data=l))
-            else:
-                if verbose:
-                    print(self.man_inv_twist)
-                self.man_inv_twist_pub.publish(self.man_inv_twist)
+            if verbose:
+                print(self.man_inv_twist)
+            self.man_inv_twist_pub.publish(self.man_inv_twist)
         elif self.hd_mode == HDMode.SEMI_AUTONOMOUS:
             msg = Task(type=self.semi_auto_cmd)
             if self.semi_auto_cmd == Task.NO_TASK:
@@ -307,38 +282,34 @@ class ControlStation(Node):
     def switch_mode(self, do=1):
         if not do:
             return
-        self.hd_sub_mode = (self.hd_sub_mode + 1) % len(HDSubMode)
-        msg = Int8(data=self.hd_sub_mode)
-        self.sub_mode_change_pub.publish(msg)
+        #self.hd_mode = (self.hd_mode + 1) % len(HDMode)
+        self.hd_mode = HDMode.next(self.hd_mode)
+        msg = Int8(data=self.hd_mode)
+        self.mode_change_pub.publish(msg)
 
-    def set_manual_velocity(self, joint_index, value, multiplier=1):
-        #if self.hd_mode != HDMode.MANUAL_DIRECT: return
-        if self.hd_sub_mode != HDSubMode.JOINTSPACE: return
-        self.vel_cmd[joint_index] = value * multiplier
+    def set_manual_velocity(self, joint_index, value):
+        if self.hd_mode != HDMode.MANUAL_DIRECT: return
+        self.vel_cmd[joint_index] = value
     
     def flip_manual_velocity_dir(self, joint_index, value):
-        #if self.hd_mode != HDMode.MANUAL_DIRECT: return
-        if self.hd_sub_mode != HDSubMode.JOINTSPACE: return
+        if self.hd_mode != HDMode.MANUAL_DIRECT: return
         if joint_index == 2:
             self.joint3_dir *= -1
         elif joint_index == 3:
             self.joint4_dir *= -1
     
     def set_gripper_speed(self, value, event_value):
-        #if self.hd_mode != HDMode.MANUAL_DIRECT: return
-        #if self.hd_sub_mode != HDSubMode.JOINTSPACE: return
+        if self.hd_mode != HDMode.MANUAL_DIRECT: return
         self.vel_cmd[6] = value * event_value
-        self.torque_scaling_factor = value * event_value
     
     def set_rassor_speed(self, value, event_value):
-        #if self.hd_mode != HDMode.MANUAL_DIRECT: return
-        if self.hd_sub_mode != HDSubMode.JOINTSPACE: return
+        if self.hd_mode != HDMode.MANUAL_DIRECT: return
         self.vel_cmd[7] = value * event_value
     
     def set_man_inv_axis(self, coordinate, value, multiplier=1):
-        #if self.hd_mode != HDMode.MANUAL_INVERSE: return
-        if self.hd_sub_mode != HDSubMode.CARTESIAN: return
-        #self.man_inv_axis[coordinate] = 0.0 if value < 0.5 else 1.0 * multiplier
+        print("IIIIIIINNNNNNNN")
+        if self.hd_mode != HDMode.MANUAL_INVERSE: return
+        print("AAAAAAAAAAAAAAAAAAAAAAAA")
         v = clean(value * multiplier)
         if coordinate == 0:
             self.man_inv_twist.linear.x = v
@@ -348,8 +319,7 @@ class ControlStation(Node):
             self.man_inv_twist.linear.z = v
         
     def set_man_inv_angular(self, coordinate, value, multiplier=1):
-        #if self.hd_mode != HDMode.MANUAL_INVERSE: return
-        if self.hd_sub_mode != HDSubMode.CARTESIAN: return
+        if self.hd_mode != HDMode.MANUAL_INVERSE: return
         v = clean(value * multiplier)
         if coordinate == 0:
             self.man_inv_twist.angular.x = v
@@ -364,7 +334,6 @@ class ControlStation(Node):
         self.semi_auto_cmd = SemiAutoTask[index]
     
     def set_man_inv_velocity_scaling(self, value):
-        return
         if self.hd_mode != HDMode.MANUAL_INVERSE: return
         self.man_inv_velocity_scaling = 1.0 - abs(value)
 
@@ -372,19 +341,7 @@ class ControlStation(Node):
 def main():
     rclpy.init()
     node = ControlStation()
-
-    # Spin in a separate thread
     rclpy.spin(node)
-    # thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
-    # thread.start()
-
-    # try:
-    #     node.read_gamepad()
-    # except KeyboardInterrupt:
-    #     pass
-
-    # rclpy.shutdown()
-    # thread.join()
 
 
 if __name__ == '__main__':

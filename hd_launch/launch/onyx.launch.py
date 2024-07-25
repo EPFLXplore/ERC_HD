@@ -52,7 +52,7 @@ def generate_launch_description():
 
     fake_cs_node = Node(
         package="fake_components",
-        executable="fake_cs_gamepad.py",
+        executable="new_fake_cs.py",    # "fake_cs_gamepad.py",
         condition=IfCondition(PythonExpression([fake_cs_arg, "== True"])) # Run if the fake CS is needed 
     )
 

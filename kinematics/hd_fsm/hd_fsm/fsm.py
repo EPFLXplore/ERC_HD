@@ -87,9 +87,9 @@ class FSM(Node):
             self.manual_direct_velocity_scaling = msg.data[0]
             self.received_manual_direct_cmd_at = time.time()
         elif self.mode == self.MANUAL_INVERSE:  # TODO: standardize this
-            # self.manual_inverse_twist = msg
-            self.manual_inverse_axis = normalize(msg.data[1:4])
-            self.manual_inverse_velocity_scaling = msg.data[0]
+            self.manual_inverse_twist = msg
+            # self.manual_inverse_axis = normalize(msg.data[1:4])
+            # self.manual_inverse_velocity_scaling = msg.data[0]
             self.received_manual_inverse_cmd_at = time.time()
 
     def task_cmd_callback(self, msg: Task):
@@ -155,7 +155,7 @@ class FSM(Node):
             return
         msg = TwistStamped()
         msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = "fake_gripper"   #"hd_motor_j3_1"   #"hd_link6_1"
+        msg.header.frame_id = "hd_link6"     #hd_link6   #Gripper_Finger_v1__1__1
         msg.twist = self.manual_inverse_twist
         if VERBOSE:
             self.get_logger().info("FSM manual inverse cmd :    " + str(msg))
@@ -194,7 +194,7 @@ class FSM(Node):
         elif self.mode == self.SEMI_AUTONOMOUS:
             self.send_semi_autonomous_cmd()
         elif self.mode == self.MANUAL_INVERSE:
-            self.send_manual_inverse_cmd()
+            self.send_manual_inverse_cmd2()
         elif self.mode == self.MANUAL_DIRECT:
             self.send_manual_direct_cmd()
 

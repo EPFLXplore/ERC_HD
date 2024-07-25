@@ -3,7 +3,7 @@
 
 <xacro:include filename="$(find onyx_description)/description/materials.xacro" />
 <xacro:include filename="$(find onyx_description)/description/kerby.trans" />
-<xacro:include filename="$(find onyx_description)/description/kerby.gazebo" />
+<!-- <xacro:include filename="$(find onyx_description)/description/kerby.gazebo" /> -->
 <!-- <xacro:include filename="package://onyx_description/description/ouster.xacro" />
 <xacro:include filename="package://onyx_description/description/imu.xacro" />  -->
 <xacro:include filename="$(find onyx_description)/description/inertial_macros.xacro" />

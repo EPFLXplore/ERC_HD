@@ -101,7 +101,6 @@ def generate_launch_description():
         [
             kerby_trajectory_planner_node,
             kerby_task_executor_node,
-            gripper_frame_broadcaster
-            #kerby_trajectory_planner_supervisor_node,
+            #gripper_frame_broadcaster,
         ]
     )

@@ -61,7 +61,7 @@ class FakeMotorControl(Node):
         self.state.position = [0.0]*self.MOTOR_COUNT
         #self.state.position = [0.0, -0.244346095, -0.104719755, 0.0, -0.366519143, 0.0]
         self.state.position = pad([0.0, -0.9199, -0.7463, -0.0174, -1.2323, 1.2323], self.MOTOR_COUNT)
-        self.state.position = pad([0.0, -0.9199, -0.7463 + 0.17, -0.0174, -1.2323 + 0.17, 1.2323], self.MOTOR_COUNT)
+        self.state.position = pad([0.0, -0.9199, -0.7463 + 0.3, -0.0174, -1.2323 + 0.3, 1.2323], self.MOTOR_COUNT)
         self.state.position = list_add(self.state.position, list_neg(self.POSITION_OFFSETS))
         self.state.velocity = [0.0]*self.MOTOR_COUNT
         self.state.effort = [0.0]*self.MOTOR_COUNT
