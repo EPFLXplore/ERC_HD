@@ -34,7 +34,7 @@ def generate_launch_description():
 
     kerby_nodes = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('kerby_moveit_config'), 'launch'),
+            get_package_share_directory('onyx_moveit_config'), 'launch'),
             '/servo.launch.py']),
         launch_arguments={'rviz': rviz_arg}.items(),
     )
@@ -52,7 +52,7 @@ def generate_launch_description():
 
     fake_cs_node = Node(
         package="fake_components",
-        executable="servo_fake_cs_gamepad.py",
+        executable="new_servo_fake_cs.py",
         condition=IfCondition(PythonExpression([fake_cs_arg, "== True"])) # Run if the fake CS is needed 
     )
 

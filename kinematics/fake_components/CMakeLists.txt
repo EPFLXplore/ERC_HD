@@ -67,6 +67,8 @@ install(PROGRAMS
   scripts/fake_rover_control.py
   scripts/limbs_control.py
   scripts/servo_fake_cs_gamepad.py
+  scripts/new_servo_fake_cs.py
+  input_handling/test_input_handling.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -106,6 +108,8 @@ install(
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
 
+
+ament_python_install_package(input_handling)
 
 
 

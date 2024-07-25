@@ -1,10 +1,10 @@
 <?xml version="1.0" ?>
 <robot name="new_hd" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<!-- <xacro:include filename="$(find rover_description)/description/materials3.xacro" /> -->
-<!-- <xacro:include filename="$(find rover_description)/description/URDF3.trans" /> -->
-<xacro:include filename="$(find rover_description)/description/URDF3.gazebo" />
-<!-- <xacro:include filename="$(find rover_description)/description/ros2_control_arm.xacro" /> -->
+<!-- <xacro:include filename="$(find onyx_description)/description/materials3.xacro" /> -->
+<!-- <xacro:include filename="$(find onyx_description)/description/URDF3.trans" /> -->
+<xacro:include filename="$(find onyx_description)/description/URDF3.gazebo" />
+<!-- <xacro:include filename="$(find onyx_description)/description/ros2_control_arm.xacro" /> -->
 
 
 
@@ -34,14 +34,14 @@
   <visual>
     <origin xyz="0 0.47 -0.12" rpy="${pi/2} 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0 0.47 -0.12" rpy="${pi/2} 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -55,14 +55,14 @@
   <visual>
     <origin xyz="-0.007012 -0.143312 -0.484988" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.007012 -0.143312 -0.484988" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -76,14 +76,14 @@
   <visual>
     <origin xyz="-0.111181 -0.261812 -0.541477" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.111181 -0.261812 -0.541477" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -97,14 +97,14 @@
   <visual>
     <origin xyz="0.034759 -0.471511 -0.8106" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.034759 -0.471511 -0.8106" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -118,14 +118,14 @@
   <visual>
     <origin xyz="0.082848 -0.485732 -0.650695" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.082848 -0.485732 -0.650695" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -139,14 +139,14 @@
   <visual>
     <origin xyz="-0.030684 -0.519236 -0.405724" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_5_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.030684 -0.519236 -0.405724" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_5_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -160,14 +160,14 @@
   <visual>
     <origin xyz="-0.148761 -0.629862 -0.449364" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_6_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.148761 -0.629862 -0.449364" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/link_6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/link_6_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -181,14 +181,14 @@
   <visual>
     <origin xyz="-0.139762 -0.725909 -0.421506" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/Gripper_Arcs_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/Gripper_Arcs_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.139762 -0.725909 -0.421506" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/Gripper_Arcs_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/Gripper_Arcs_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -202,14 +202,14 @@
   <visual>
     <origin xyz="-0.153478 -0.800615 -0.379727" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/Gripper_Finger_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/Gripper_Finger_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.153478 -0.800615 -0.379727" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/Gripper_Finger_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/Gripper_Finger_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -223,14 +223,14 @@
   <visual>
     <origin xyz="-0.135804 -0.729418 -0.451036" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/Gripper_Arcs_v1__2__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/Gripper_Arcs_v1__2__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.135804 -0.729418 -0.451036" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/Gripper_Arcs_v1__2__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/Gripper_Arcs_v1__2__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -244,14 +244,14 @@
   <visual>
     <origin xyz="-0.142591 -0.81484 -0.464138" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/Gripper_Finger_v1__1__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/Gripper_Finger_v1__1__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.142591 -0.81484 -0.464138" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/new_hd/Gripper_Finger_v1__1__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/new_hd/Gripper_Finger_v1__1__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>

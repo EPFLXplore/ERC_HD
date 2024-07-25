@@ -4,12 +4,12 @@
 <xacro:include filename="$(find onyx_description)/description/materials.xacro" />
 <xacro:include filename="$(find onyx_description)/description/kerby.trans" />
 <xacro:include filename="$(find onyx_description)/description/kerby.gazebo" />
-<!-- <xacro:include filename="package://rover_description/description/ouster.xacro" />
-<xacro:include filename="package://rover_description/description/imu.xacro" />  -->
+<!-- <xacro:include filename="package://onyx_description/description/ouster.xacro" />
+<xacro:include filename="package://onyx_description/description/imu.xacro" />  -->
 <xacro:include filename="$(find onyx_description)/description/inertial_macros.xacro" />
-<!-- <xacro:include filename="package://rover_description/description/oakd_camera.xacro" /> -->
+<!-- <xacro:include filename="package://onyx_description/description/oakd_camera.xacro" /> -->
 <xacro:include filename="$(find onyx_description)/description/URDF3.urdf.xacro" /> 
-<!-- <xacro:include filename="package://rover_description/description/ros2_control_arm.xacro" /> -->
+<!-- <xacro:include filename="package://onyx_description/description/ros2_control_arm.xacro" /> -->
 
 
 
@@ -39,14 +39,14 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="blue"/>
   </visual>
   <!-- <collision>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision> -->
 </link>
@@ -60,14 +60,14 @@
   <visual>
     <origin xyz="-0.421384 -0.393882 0.063562" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.421384 -0.393882 0.063562" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/steering_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -81,14 +81,14 @@
   <visual>
     <origin xyz="-0.42341 0.353934 0.012408" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="-0.42341 0.353934 0.012408" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/steering_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -102,14 +102,14 @@
   <visual>
     <origin xyz="0.408171 0.353934 0.063562" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.408171 0.353934 0.063562" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/steering_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -123,14 +123,14 @@
   <visual>
     <origin xyz="0.410197 -0.393882 0.012408" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin xyz="0.410197 -0.393882 0.012408" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/steering_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -144,14 +144,14 @@
   <visual>
     <origin xyz="0.42733 -0.410572 0.281864" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
     <origin xyz="0.42733 -0.410572 0.281864" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/wheel3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -165,14 +165,14 @@
   <visual>
     <origin xyz="-0.404251 -0.410572 0.333019" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
     <origin xyz="-0.404251 -0.410572 0.333019" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/wheel4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -186,14 +186,14 @@
   <visual>
     <origin xyz="0.391037 0.370625 0.333019" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
     <origin xyz="0.391037 0.370625 0.333019" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/wheel2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -208,14 +208,14 @@
   <visual>
     <origin xyz="-0.440543 0.370625 0.281864" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="pink"/>
   </visual>
   <collision>
     <origin xyz="-0.440543 0.370625 0.281864" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/wheel1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -231,14 +231,14 @@
   <visual>
     <origin xyz="-0.006607 -0.250474 0.021516" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="black"/>
   </visual>
   <collision>
     <origin xyz="-0.006607 -0.250474 0.021516" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/pivot_droit_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -252,14 +252,14 @@
   <visual>
     <origin xyz="-0.006607 0.210526 0.021516" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="black"/>
   </visual>
   <collision>
     <origin xyz="-0.006607 0.210526 0.021516" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://rover_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://onyx_description/meshes/pivot_gauche_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>

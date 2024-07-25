@@ -10,7 +10,7 @@ import array
 import math
 
 
-VERBOSE = True
+VERBOSE = False
 
 
 def str_pad(x, length=5):
@@ -42,7 +42,7 @@ class FSM(Node):
     CARTESIAN = 1
 
     def __init__(self):
-        super().__init__("HD_fsm")
+        super().__init__("HD_fsm", allow_undeclared_parameters=True)
         self.create_ros_interfaces()
         self.velocity = 0
         self.command_expiration = .5   # seconds
@@ -52,14 +52,20 @@ class FSM(Node):
         self.manual_direct_command = array.array('d', [0.0]*motor_count)
         #self.semi_autonomous_command_id = None
         self.semi_autonomous_command = None
-        self.mode = self.MANUAL_DIRECT#self.MANUAL_INVERSE
+        self.mode = self.MANUAL_INVERSE#self.MANUAL_DIRECT
         self.submode = self.JOINTSPACE
-        self.target_mode = self.MANUAL_DIRECT
+        self.target_mode = self.MANUAL_INVERSE
         self.mode_transitioning = False
         self.manual_inverse_axis = [0.0, 0.0, 0.0]
         self.manual_inverse_velocity_scaling = 0.0
         self.manual_inverse_twist = Twist()
         self.manual_inverse_joint = array.array('d', [0.0]*6)
+        
+        # moveit_servo = "moveit_servo"
+        # self.declare_parameter(moveit_servo, "")    # TODO: figure out how to pass a dict parameter and not use eval!
+        # self.moveit_servo = eval(self.get_parameter(moveit_servo).get_parameter_value().string_value)
+        # self.moveit_servo_frame_id = self.moveit_servo["planning_frame"]
+        # self.get_logger().info(str(self.moveit_servo_frame_id))
     
     def create_ros_interfaces(self):
         self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/joint_vel_cmd", 10)
@@ -172,7 +178,8 @@ class FSM(Node):
             msg = JointJog()
             msg.header.stamp = self.get_clock().now().to_msg()
             msg.header.frame_id = "base_link"   # aaaaa
-            msg.joint_names = ["joint1", "joint2", "joint3", "joint4", "joint5", "joint6"]
+            #msg.joint_names = ["joint1", "joint2", "joint3", "joint4", "joint5", "joint6"]
+            msg.joint_names = ["hd_joint1", "hd_joint2", "hd_joint3", "hd_joint4", "hd_joint5", "hd_joint6"]
             msg.velocities = self.manual_inverse_joint.data
             if VERBOSE:
                 self.get_logger().info("FSM manual inverse cmd :   " + str_pad_list(list(msg.velocities)))
@@ -180,7 +187,7 @@ class FSM(Node):
         else:
             msg = TwistStamped()
             msg.header.stamp = self.get_clock().now().to_msg()
-            msg.header.frame_id = "fake_gripper"   #"hd_motor_j3_1"   #"hd_link6_1"
+            msg.header.frame_id = "hd_link6"   # hd_link6    # Gripper_Finger_v1__1__1
             msg.twist = self.manual_inverse_twist
             if VERBOSE:
                 self.get_logger().info("FSM manual inverse cmd :    " + str(msg))

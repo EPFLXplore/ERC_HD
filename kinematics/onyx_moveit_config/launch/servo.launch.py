@@ -71,22 +71,22 @@ def declare_binary_launch_argument(name, default=True, description=""):
 
 def generate_launch_description():
     print("AAAAAAAAAAAAAAAAAAAAAAAA")
-    xacro_file = get_package_file('kerby_moveit_config', 'config_truncated/kerby_truncated.urdf.xacro')
+    xacro_file = get_package_file('onyx_moveit_config', 'config/kerby.urdf.xacro')
     urdf_file = run_xacro(xacro_file)
-    srdf_file = get_package_file('kerby_moveit_config', 'config_truncated/kerby_truncated.srdf')
-    kinematics_file = get_package_file('kerby_moveit_config', 'config/kinematics.yaml')
+    srdf_file = get_package_file('onyx_moveit_config', 'config/kerby.srdf')
+    kinematics_file = get_package_file('onyx_moveit_config', 'config/kinematics.yaml')
     print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-    ompl_config_file = get_package_file('kerby_moveit_config', 'config/ompl_planning.yaml')
-    moveit_controllers_file = get_package_file('kerby_moveit_config', 'config_truncated/moveit_controllers.yaml')
-    ros_controllers_file = get_package_file('kerby_moveit_config', 'config_truncated/ros2_controllers.yaml')
-    joint_limits_file = get_package_file('kerby_moveit_config', 'config/joint_limits.yaml')
+    ompl_config_file = get_package_file('onyx_moveit_config', 'config/ompl_planning.yaml')
+    moveit_controllers_file = get_package_file('onyx_moveit_config', 'config/moveit_controllers.yaml')
+    ros_controllers_file = get_package_file('onyx_moveit_config', 'config/ros2_controllers.yaml')
+    joint_limits_file = get_package_file('onyx_moveit_config', 'config/joint_limits.yaml')
     print("CCCCCCCCCCCCCCCCCCCC")
 
     robot_description = load_file(urdf_file)
     robot_description_semantic = load_file(srdf_file)
     kinematics_config = load_yaml(kinematics_file)
     ompl_config = load_yaml(ompl_config_file)
-    servo_yaml = load_yaml2("kerby_moveit_config", "config_truncated/kerby_simulated_config.yaml")
+    servo_yaml = load_yaml2("onyx_moveit_config", "config/kerby_simulated_config.yaml")
     print("DDDDDDDDDDDDDDDDDDDDDDDDd")
     
     rviz_arg, rviz_declaration = declare_binary_launch_argument("rviz", default=True, description="Run RViz")
@@ -153,7 +153,7 @@ def generate_launch_description():
     )
     print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEe")
     # Visualization (parameters needed for MoveIt display plugin)
-    rviz_base = os.path.join(get_package_share_directory('kerby_moveit_config'), 'config')
+    rviz_base = os.path.join(get_package_share_directory('onyx_moveit_config'), 'config')
     rviz_full_config = os.path.join(rviz_base, 'moveit.rviz')
     rviz = Node(
         name='rviz',
@@ -184,7 +184,7 @@ def generate_launch_description():
     )
     print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEe")
     # Startup up ROS2 controllers (will exit immediately)
-    controller_names = ['kerby_arm_moveit_controller', 'kerby_base_moveit_controller', 'joint_state_broadcaster']
+    controller_names = ['kerby_arm_moveit_controller', 'joint_state_broadcaster']   # 'kerby_base_moveit_controller'
     spawn_controllers = [
         Node(
             package="controller_manager",
