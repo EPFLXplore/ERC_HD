@@ -55,11 +55,11 @@
 
 
 
-        <gazebo>
+        <!-- <gazebo>
           <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-              <parameters>$(find marguerite_moveit_config)/config/ros2_controllers.yaml</parameters>
+              <parameters>$(find onyx_descriptioni)/config/ros2_controllers.yaml</parameters>
           </plugin>
-        </gazebo>  
+        </gazebo>   -->
 
 
         <gazebo>

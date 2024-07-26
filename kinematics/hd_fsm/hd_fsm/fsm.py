@@ -2,12 +2,14 @@ import time
 import threading
 import rclpy
 from rclpy.node import Node
+from rclpy.client import Client
 from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8
 from geometry_msgs.msg import Twist, TwistStamped
 from control_msgs.msg import JointJog
 from hd_interfaces.msg import Task
 import array
 import math
+from std_srvs.srv import Trigger
 
 
 VERBOSE = True
@@ -55,6 +57,8 @@ class FSM(Node):
         self.manual_inverse_axis = [0.0, 0.0, 0.0]
         self.manual_inverse_velocity_scaling = 0.0
         self.manual_inverse_twist = Twist()
+        
+        self.servo_start_cli = self.create_client(Trigger, '/servo_node/start_servo')
     
     def create_ros_interfaces(self):
         self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/joint_vel_cmd", 10)
@@ -183,6 +187,16 @@ class FSM(Node):
     def manual_inverse_command_old(self):
         return time.time()-self.received_manual_inverse_cmd_at > self.command_expiration
 
+    def send_trigger_request(self, client: Client):
+        while not client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting again...')
+
+        req = Trigger.Request()
+        future = client.call_async(req)
+        return
+        # rclpy.spin_until_future_complete(self, future)
+        # return future.result()
+
     def normal_loop_action(self):
         if VERBOSE:
             self.get_logger().info("MODE : " + str(self.mode))
@@ -199,6 +213,9 @@ class FSM(Node):
             self.send_manual_direct_cmd()
 
     def transition_loop_action(self):
+        if self.target_mode == self.MANUAL_INVERSE:
+            self.send_trigger_request(self.servo_start_cli)
+            
         if self.mode == self.IDLE:
             pass
         elif self.mode == self.AUTONOMOUS:
