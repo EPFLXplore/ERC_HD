@@ -1,0 +1,3 @@
+[submodule "xplore_msgs"]
+	path = xplore_msgs
+	url = git@github.com:EPFLXplore/ERC_SE_CustomMessages.git
