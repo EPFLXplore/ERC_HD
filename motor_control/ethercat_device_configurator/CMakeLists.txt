@@ -39,7 +39,7 @@ find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(soem REQUIRED)
 
-find_package(hd_interfaces)
+find_package(custom_msg)
 
 
 #install(DIRECTORY config_mot DESTINATION share/${PROJECT_NAME})
@@ -72,7 +72,7 @@ include_directories(
 
 ament_target_dependencies(motor_control
   yaml-cpp
-  hd_interfaces
+  custom_msg
   rclcpp
   ethercat_sdk_master
   maxon_epos_ethercat_sdk

@@ -2,7 +2,7 @@
 #include <maxon_epos_ethercat_sdk/Maxon.hpp>
 
 #include "rclcpp/rclcpp.hpp"
-#include "hd_interfaces/msg/motor_command.hpp"
+#include "custom_msg/msg/motor_command.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
 #include "std_msgs/msg/int8.hpp"
 #include "std_msgs/msg/float64.hpp"
@@ -90,7 +90,7 @@ public:
             "HD/fsm/joint_vel_cmd", 10, std::bind(&MotorController::manual_direct_command_callback, this, _1));
         subscription_position_command_ = this->create_subscription<std_msgs::msg::Float64MultiArray>(
             "HD/kinematics/joint_pos_cmd", 10, std::bind(&MotorController::position_command_callback, this, _1));
-        subscription_single_MotorCommand_ = this->create_subscription<hd_interfaces::msg::MotorCommand>(
+        subscription_single_MotorCommand_ = this->create_subscription<custom_msg::msg::MotorCommand>(
             "HD/kinematics/single_joint_cmd", 10, std::bind(&MotorController::motor_command_callback, this, _1));
         subscription_shutdown_ = this->create_subscription<std_msgs::msg::Int8>(
             "ROVER/Maintenance", 10, std::bind(&MotorController::kill, this, _1));
@@ -163,7 +163,7 @@ private:
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr subscription_velocity_command_;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr subscription_position_command_;
     rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscription_set_gripper_torque_;
-    rclcpp::Subscription<hd_interfaces::msg::MotorCommand>::SharedPtr subscription_single_MotorCommand_;
+    rclcpp::Subscription<custom_msg::msg::MotorCommand>::SharedPtr subscription_single_MotorCommand_;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr subscription_shutdown_;
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr publisher_state_;
     // MATTHIAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -395,7 +395,7 @@ private:
     }
     // MATTHIAS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-    void motor_command_callback(const hd_interfaces::msg::MotorCommand::SharedPtr msg)
+    void motor_command_callback(const custom_msg::msg::MotorCommand::SharedPtr msg)
     {
         RCLCPP_INFO(this->get_logger(), "motor_command_callback");
 

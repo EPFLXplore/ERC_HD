@@ -9,7 +9,7 @@ import kinematics_utils.pose_corrector as pc
 from collections.abc import Callable
 from typing import Dict, List, Optional, Union
 from task_execution.command import *
-from hd_interfaces.msg import Object
+from custom_msg.msg import Object
 from dataclasses import dataclass
 from rclpy.timer import Rate
 from typing import List, Dict, Callable

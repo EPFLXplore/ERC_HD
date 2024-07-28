@@ -1,5 +1,5 @@
 from geometry_msgs.msg import Pose
-from hd_interfaces.msg import TargetInstruction
+from custom_msg.msg import TargetInstruction
 from std_msgs.msg import UInt32
 import kinematics_utils.quaternion_arithmetic as qa
 import math

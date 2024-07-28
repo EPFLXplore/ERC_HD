@@ -10,7 +10,7 @@ find_package(moveit_common REQUIRED)
 moveit_package()
 find_package(trajectory_planner)
 find_package(kerby_moveit_config)
-find_package(hd_interfaces)
+find_package(custom_msg)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
   control_msgs
@@ -81,7 +81,7 @@ ament_target_dependencies(servoing_test
   rclcpp
   std_msgs
   control_msgs
-  hd_interfaces
+  custom_msg
   moveit_servo
 )
 install(TARGETS servoing_test

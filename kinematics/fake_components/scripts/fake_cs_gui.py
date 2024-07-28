@@ -3,7 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray, Float32MultiArray
-from hd_interfaces.msg import Task
+from custom_msg.msg import Task
 from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8
 
 import keyboard

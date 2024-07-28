@@ -1,5 +1,5 @@
 from task_execution.command.command import *
-from hd_interfaces.msg import Object
+from custom_msg.msg import Object
 from typing import List
 
 

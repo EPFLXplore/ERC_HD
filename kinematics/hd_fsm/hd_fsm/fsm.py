@@ -6,7 +6,7 @@ from rclpy.client import Client
 from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8
 from geometry_msgs.msg import Twist, TwistStamped
 from control_msgs.msg import JointJog
-from hd_interfaces.msg import Task
+from custom_msg.msg import Task
 import array
 import math
 from std_srvs.srv import Trigger

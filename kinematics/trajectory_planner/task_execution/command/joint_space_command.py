@@ -1,5 +1,5 @@
 from .command import *
-from hd_interfaces.msg import JointSpaceCmd
+from custom_msg.msg import JointSpaceCmd
 
 
 class JointSpaceCommand(Command):
