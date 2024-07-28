@@ -93,7 +93,7 @@ ament_python_install_package(task_execution)
 # Install Python executables
 
 install(PROGRAMS
-  scripts/task_executor.py
+  task_execution/task_executor.py
   scripts/gripper_frame_broadcaster.py
   DESTINATION lib/${PROJECT_NAME}
 )
