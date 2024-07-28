@@ -1,3 +1,4 @@
+from __future__ import annotations
 import time
 import math
 import copy
@@ -10,10 +11,9 @@ from typing import Any, Type
 import threading
 from rclpy.node import Node
 from rclpy.timer import Rate
-
-
-# "forward" declaration of the Executor class, used for typing purposes
-Executor: Type[Node] = "Executor"
+from typing import TYPE_CHECKING, List, Dict, Callable
+if TYPE_CHECKING:   # fake import, only for annotations
+    from task_execution.task_executor import Executor
 
 
 class Command:

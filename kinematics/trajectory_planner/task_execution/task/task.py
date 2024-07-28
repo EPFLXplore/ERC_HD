@@ -1,3 +1,4 @@
+from __future__ import annotations
 import time
 import math
 import copy
@@ -11,6 +12,7 @@ from task_execution.command import *
 from hd_interfaces.msg import Object
 from dataclasses import dataclass
 from rclpy.timer import Rate
+from typing import List, Dict, Callable
 
 
 OPFunction = Callable[[Command], Any]
