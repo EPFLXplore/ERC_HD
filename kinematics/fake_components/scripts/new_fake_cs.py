@@ -14,6 +14,7 @@ import math
 import itertools
 from collections.abc import Callable
 from typing import List, Dict, Any, Union
+# from enum_test import Enum
 
 
 def clean(x: float, tol=0.05) -> float:
@@ -65,75 +66,6 @@ class EnumOld:
         return self.slot_values[i]
 
 
-def Enum(**kwargs):
-    """
-    *** very overkill and very useless but I was bored ***
-    Tries to mimic a C-style enum with some additional useful properties.
-    :param kwargs: the members of the enum
-    :return: A class type having as class attributes instances of that class corresponding to the members of the enum.
-        Thanks to the class being constructed on a custom metaclass, iteration, len computation and item query can be performed directly on the enum class object.
-    """
-    if len(kwargs) == 0:
-        ValType = int   # by default
-    else:
-        ValType = type(list(kwargs.values())[0])
-
-    class EnumMetaClass(type):        
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.__SLOTS = []
-
-        def __iter__(self):
-            for obj in self.__SLOTS:
-                yield obj
-        
-        def __len__(self):
-            return len(self.__SLOTS)
-        
-        def __getitem__(self, index: int):
-            obj = self.__SLOTS[index % len(self.__SLOTS)]
-            return obj
-        
-        def next(self, obj):
-            for i, slot in enumerate(self.__SLOTS):
-                if slot == obj:
-                    break
-            return self.__SLOTS[(i+1)%len(self.__SLOTS)]
-        
-        def register_instance(self, name: str, value: ValType):
-            setattr(self, name, value)
-            self.__SLOTS.append(getattr(self, name))
-
-    class EnumClassTemplate(metaclass=EnumMetaClass):
-        def __init__(self, name: str, value: ValType):
-            self.name = name
-            self.value = value
-            type(self).register_instance(name, self)
-
-        def __eq__(self, other: Any):
-            if isinstance(other, type(self)):
-                return other.value == self.value
-            elif isinstance(other, type(self.value)):
-                return other == self.value
-            return False
-
-        def next(self):
-            return type(type(self)).next(type(self), self)
-
-        def __repr__(self):
-            return f"<name: {self.name}, value: {self.value}>"
-
-    EnumClass = EnumMetaClass(
-        "EnumClass", 
-        (object,), 
-        {"__init__": EnumClassTemplate.__init__, "__eq__": EnumClassTemplate.__eq__, "__repr__": EnumClassTemplate.__repr__, "next": EnumClassTemplate.next}
-    )
-    for name, value in kwargs.items():
-        EnumClass(name, value)
-    EnumClass.__new__ = lambda *args, **kwargs: None    # class won't be instantiable anymore
-    return EnumClass
-
-
 HDMode = EnumOld(
     IDLE = -1,
     MANUAL_DIRECT = 1,
@@ -151,6 +83,14 @@ SemiAutoTask = EnumOld(
 )
 
 
+def map_param(node: Node, name: str,choices: Dict[str, Any], default: str = "", ):
+    node.declare_parameter(name, default)    # TODO: figure out how to pass a dict parameter and not use eval!
+    value = node.get_parameter(name).get_parameter_value().string_value
+    if not value in choices:
+        raise ValueError("invalid value for parameter")
+    return choices[value]
+
+
 class ControlStation(Node):
     """
     Class reading gamepad and sending commands (to handling device) accordingly
@@ -159,7 +99,7 @@ class ControlStation(Node):
     def __init__(self):
         super().__init__("fake_cs_gamepad")
         
-        keyboard_control = False
+        keyboard_control = map_param(self, "input_device", {"gamepad": False, "keyboard": True})
 
         self.vel_cmd = [0.0]*8
         self.axis_cmd = [0.0]*3
@@ -225,24 +165,27 @@ class ControlStation(Node):
     
     def create_gamepad_bindings(self):
         from input_handling.gamepad import GamePadConfig
-        for i, input in enumerate([GamePadConfig.RH, GamePadConfig.RV, GamePadConfig.R2, GamePadConfig.L2, GamePadConfig.LV, GamePadConfig.LH]):
-            self.input_config.bind(input, self.set_manual_velocity, "value", joint_index=i)
-
-        self.input_config.bind(GamePadConfig.R1, self.flip_manual_velocity_dir, "value", joint_index=2)
-        self.input_config.bind(GamePadConfig.L1, self.flip_manual_velocity_dir, "value", joint_index=3)
+        
+        # ==== mode switch ====
         self.input_config.bind(GamePadConfig.PS, self.switch_mode, "do")
-
+        
+        # ==== manual direct ====
+        inputs = [GamePadConfig.RH, GamePadConfig.RV, GamePadConfig.R2, GamePadConfig.L2, GamePadConfig.LV, GamePadConfig.LH]
+        multipliers = [-1, -1, -1, 1, -1, 1]
+        for i, (input, mult) in enumerate(zip(inputs, multipliers)):
+            self.input_config.bind(input, self.set_manual_velocity, "value", joint_index=i, multiplier=mult)
+        self.input_config.bind(GamePadConfig.R1, self.flip_manual_velocity_dir, joint_index=2)
+        self.input_config.bind(GamePadConfig.L1, self.flip_manual_velocity_dir, joint_index=3)
+        # gripper
         for val, input in zip([1.0, -1.0, 0.1, -0.1], [GamePadConfig.CIRCLE, GamePadConfig.SQUARE, GamePadConfig.TRIANGLE, GamePadConfig.CROSS]):
             self.input_config.bind(input, self.set_gripper_speed, "event_value", value=val)
 
-        self.input_config.bind(GamePadConfig.DIRH, self.set_rassor_speed, "event_value", value=1.0)
-        self.input_config.bind(GamePadConfig.DIRV, self.set_rassor_speed, "event_value", value=-0.1)
-
+        # ==== semi auto ====
         for i, input in enumerate([GamePadConfig.L2, GamePadConfig.R2, GamePadConfig.CIRCLE, GamePadConfig.SQUARE, GamePadConfig.TRIANGLE, GamePadConfig.CROSS]):
             #self.input_config.bind(input, self.set_man_inv_axis, "value", coordinate=i//2, multiplier=(-1)**i)
             self.input_config.bind(input, self.set_semi_auto_cmd, "event_value", index=i)
     
-        
+        # ==== manual inverse ====
         self.input_config.bind(GamePadConfig.RV, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
         self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=2, multiplier=-1)
         self.input_config.bind(GamePadConfig.R2, self.set_man_inv_axis, "value", coordinate=1, multiplier=-1)
@@ -278,38 +221,46 @@ class ControlStation(Node):
                 msg.str_slot = "optimal_view"
             self.task_pub.publish(msg)
             self.semi_auto_cmd = Task.NO_TASK
-
-    def switch_mode(self, do=1):
+    
+    @staticmethod
+    def restrict_mode(target_mode: int):
+        def ensure_mode_decorator(func: Callable) -> Callable:
+            def wrapper(*args, **kwargs) -> Any:
+                cs: ControlStation = args[0]
+                if cs.hd_mode != target_mode:
+                    return
+                return func(*args, **kwargs)
+            return wrapper
+        return ensure_mode_decorator
+        
+    def switch_mode(self, do: int = 1):
         if not do:
             return
-        #self.hd_mode = (self.hd_mode + 1) % len(HDMode)
         self.hd_mode = HDMode.next(self.hd_mode)
         msg = Int8(data=self.hd_mode)
         self.mode_change_pub.publish(msg)
 
-    def set_manual_velocity(self, joint_index, value):
-        if self.hd_mode != HDMode.MANUAL_DIRECT: return
-        self.vel_cmd[joint_index] = value
+    @restrict_mode(HDMode.MANUAL_DIRECT)
+    def set_manual_velocity(self, joint_index: int, value: float, multiplier: int = 1):
+        self.vel_cmd[joint_index] = value * multiplier
     
-    def flip_manual_velocity_dir(self, joint_index, value):
-        if self.hd_mode != HDMode.MANUAL_DIRECT: return
+    @restrict_mode(HDMode.MANUAL_DIRECT)
+    def flip_manual_velocity_dir(self, joint_index: int):
         if joint_index == 2:
             self.joint3_dir *= -1
         elif joint_index == 3:
             self.joint4_dir *= -1
     
-    def set_gripper_speed(self, value, event_value):
-        if self.hd_mode != HDMode.MANUAL_DIRECT: return
+    @restrict_mode(HDMode.MANUAL_DIRECT)
+    def set_gripper_speed(self, value: float, event_value: float):
         self.vel_cmd[6] = value * event_value
     
+    @restrict_mode(HDMode.MANUAL_DIRECT)
     def set_rassor_speed(self, value, event_value):
-        if self.hd_mode != HDMode.MANUAL_DIRECT: return
         self.vel_cmd[7] = value * event_value
     
-    def set_man_inv_axis(self, coordinate, value, multiplier=1):
-        print("IIIIIIINNNNNNNN")
-        if self.hd_mode != HDMode.MANUAL_INVERSE: return
-        print("AAAAAAAAAAAAAAAAAAAAAAAA")
+    @restrict_mode(HDMode.MANUAL_INVERSE)
+    def set_man_inv_axis(self, coordinate: int, value: float, multiplier: int = 1):
         v = clean(value * multiplier)
         if coordinate == 0:
             self.man_inv_twist.linear.x = v
@@ -317,9 +268,9 @@ class ControlStation(Node):
             self.man_inv_twist.linear.y = v
         else:
             self.man_inv_twist.linear.z = v
-        
-    def set_man_inv_angular(self, coordinate, value, multiplier=1):
-        if self.hd_mode != HDMode.MANUAL_INVERSE: return
+    
+    @restrict_mode(HDMode.MANUAL_INVERSE)
+    def set_man_inv_angular(self, coordinate: int, value: float, multiplier: int = 1):
         v = clean(value * multiplier)
         if coordinate == 0:
             self.man_inv_twist.angular.x = v
@@ -328,13 +279,13 @@ class ControlStation(Node):
         else:
             self.man_inv_twist.angular.z = v
     
-    def set_semi_auto_cmd(self, index, event_value):
-        if self.hd_mode != HDMode.SEMI_AUTONOMOUS: return
+    @restrict_mode(HDMode.SEMI_AUTONOMOUS)
+    def set_semi_auto_cmd(self, index: int, event_value: float):
         if event_value != 1: return
         self.semi_auto_cmd = SemiAutoTask[index]
     
-    def set_man_inv_velocity_scaling(self, value):
-        if self.hd_mode != HDMode.MANUAL_INVERSE: return
+    @restrict_mode(HDMode.MANUAL_INVERSE)
+    def set_man_inv_velocity_scaling(self, value: float):
         self.man_inv_velocity_scaling = 1.0 - abs(value)
 
 

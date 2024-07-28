@@ -22,10 +22,10 @@ class EventFuncWrapper:
     """
     keeping information about a function to be called upon a certain event, the function must take the event value as a parameter
     """
-    def __init__(self, func: Callable = None, event_value_arg_name="event_value", **kwargs):
+    def __init__(self, func: Callable = None, event_value_arg_name: str = "", **kwargs):
         """
         :param func: the function to call
-        :param event_value_arg_name: the name of the function's parameter for the event value
+        :param event_value_arg_name: the name of the function's parameter for the event value (if none is given, the event value won't be passed to the function)
         :param kwargs: additional arguments of the function
         """
         if func is None:
@@ -33,10 +33,12 @@ class EventFuncWrapper:
         self.func = func
         self.event_value_arg_name = event_value_arg_name
         self.kwargs = kwargs
-        self.kwargs[event_value_arg_name] = None
+        if event_value_arg_name:
+            self.kwargs[event_value_arg_name] = None
     
     def __call__(self, event_value) -> Any:
-        self.kwargs[self.event_value_arg_name] = event_value
+        if self.event_value_arg_name:
+            self.kwargs[self.event_value_arg_name] = event_value
         return self.func(**self.kwargs)
 
 
@@ -92,12 +94,12 @@ class EventHandlerConfig(metaclass=MetaEventHandler):
         # list of functions to be called on event for every input
         self.event_signals : Dict[int, List[Callable]] = {k: [] for k in self.INPUTS}
 
-    def bind(self, input: EventHandlerConfig.InputType, func: Callable, event_value_arg_name: str, **kwargs) -> None:
+    def bind(self, input: EventHandlerConfig.InputType, func: Callable, event_value_arg_name: str = "", **kwargs) -> None:
         """
         Bind a function call to the trigger event of a certain input.
         :param input: an input type
         :param func: the function to bind (it needs to take the event value as a parameter)
-        :param event_value_arg_name: the name of the function's parameter for the event value
+        :param event_value_arg_name: the name of the function's parameter for the event value (if none is given, the event value won't be passed to the function)
         :param kwargs: other arguments of the function given as keyword arguments
         """
         if input in self.INPUTS:

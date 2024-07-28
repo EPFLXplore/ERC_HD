@@ -193,6 +193,7 @@ class FSM(Node):
 
         req = Trigger.Request()
         future = client.call_async(req)
+        # TODO: wait for result (callback or other)
         return
         # rclpy.spin_until_future_complete(self, future)
         # return future.result()
