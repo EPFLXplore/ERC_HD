@@ -40,12 +40,23 @@ def declare_binary_launch_argument(name: str, default: bool = True, description:
     return arg, declare_arg
 
 
+def get_package_file(package, file_path):
+    """Get the location of a file installed in an ament package"""
+    package_path = get_package_share_directory(package)
+    absolute_file_path = os.path.join(package_path, file_path)
+    return absolute_file_path
+
+
+
 def generate_launch_description():
     sim_arg, sim_declaration = declare_binary_launch_argument("sim", default=False, description="Run in simulation mode")
     rviz_arg, rviz_declaration = declare_binary_launch_argument("rviz", default=True, description="Run RViz")
     fake_cs_arg, fake_cs_declaration = declare_binary_launch_argument("fake_cs", default=True, description="Run fake control station")
     keyboard_arg, keyboard_declaration = declare_binary_launch_argument("keyboard", default=False, description="Use keyboard as an input source for the fake CS (otherwise assuming gamepad)")
 
+    hd_topic_names_file = get_package_file('custom_msg', 'config/hd_interface_names.yaml')
+    rover_topic_names_file = get_package_file('custom_msg', 'config/rover_interface_names.yaml')
+    
     kerby_nodes = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('onyx_moveit_config'), 'launch'),
@@ -61,7 +72,11 @@ def generate_launch_description():
 
     fsm_node = Node(
         package="hd_fsm",
-        executable="fsm"
+        executable="fsm",
+        parameters=[
+            hd_topic_names_file,
+            rover_topic_names_file,
+        ]
     )
 
     fake_cs_node_gamepad = Node(
@@ -69,7 +84,9 @@ def generate_launch_description():
         executable="new_fake_cs.py",    # "fake_cs_gamepad.py",
         condition=IfCondition(PythonExpression([fake_cs_arg, "== True and ", keyboard_arg, "== False"])), # Run if the fake CS is needed
         parameters=[
-            {"input_device": "gamepad"}
+            {"input_device": "gamepad"},
+            hd_topic_names_file,
+            rover_topic_names_file,
         ]
     )
     
@@ -78,7 +95,9 @@ def generate_launch_description():
         executable="new_fake_cs.py",    # "fake_cs_gamepad.py",
         condition=IfCondition(PythonExpression([fake_cs_arg, "== True and ", keyboard_arg, "== True"])), # Run if the fake CS is needed
         parameters=[
-            {"input_device": "keyboard"}
+            {"input_device": "keyboard"},
+            hd_topic_names_file,
+            rover_topic_names_file,
         ]
     )
 
