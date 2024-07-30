@@ -10,6 +10,7 @@ import threading
 from time import sleep
 from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
 from custom_msg.msg import Task
+from custom_msg.srv import HDMode
 import math
 import itertools
 from collections.abc import Callable
@@ -66,7 +67,7 @@ class EnumOld:
         return self.slot_values[i]
 
 
-HDMode = EnumOld(
+Mode = EnumOld(
     IDLE = -1,
     MANUAL_DIRECT = 1,
     SEMI_AUTONOMOUS = 2,
@@ -103,7 +104,6 @@ class ControlStation(Node):
 
         self.vel_cmd = [0.0]*8
         self.axis_cmd = [0.0]*3
-        self.man_inv_axis = [0.0]*3
         self.man_inv_twist = Twist()
         self.man_inv_velocity_scaling = 1.0
         self.semi_auto_cmd = Task.NO_TASK
@@ -112,13 +112,13 @@ class ControlStation(Node):
         self.joint3_dir = 1
         self.joint4_dir = 1
 
-        self.hd_mode = HDMode.IDLE #HDMode.MANUAL_DIRECT
+        self.hd_mode = Mode.IDLE
 
-        self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, "/CS/HD_gamepad", 10)
-        self.man_inv_axis_pub = self.create_publisher(Float32MultiArray, "/ROVER/HD_man_inv_axis", 10)
-        self.man_inv_twist_pub = self.create_publisher(Twist, "/ROVER/HD_man_inv_twist", 10)
+        self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, self.get_param("rover_hd_man_dir_topic"), 10)
+        self.man_inv_twist_pub = self.create_publisher(Float32MultiArray, self.get_param("rover_hd_man_inv_topic"), 10)
         self.task_pub = self.create_publisher(Task, "/ROVER/semi_auto_task", 10)
-        self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
+        # self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
+        self.mode_cli = self.create_client(HDMode, self.get_param("hd_fsm_mode_srv"))
 
         if keyboard_control:
             from input_handling.keyboard import KeyboardConfig
@@ -133,6 +133,10 @@ class ControlStation(Node):
         self.timer_period = 1/30
         self.timer = self.create_timer(self.timer_period, self.publish_cmd)
 
+    def get_param(self, name: str, default: str = ""):
+        self.declare_parameter(name, default)
+        return self.get_parameter(name).get_parameter_value().string_value
+    
     def create_bindings(self, keyboard_control: bool = False):
         if keyboard_control:
             self.create_keyboard_bindings()
@@ -198,21 +202,25 @@ class ControlStation(Node):
         
     def publish_cmd(self):
         verbose = True
-        if self.hd_mode == HDMode.IDLE:
+        if self.hd_mode == Mode.IDLE:
             return
-        elif self.hd_mode == HDMode.MANUAL_DIRECT:
+        elif self.hd_mode == Mode.MANUAL_DIRECT:
             l = list(map(clean, map(float, self.vel_cmd)))
             l[2] *= self.joint3_dir
             l[3] *= self.joint4_dir
             if verbose:
                 print("[", ", ".join(map(str_pad, l)), "]")
-            l = [1.0] + l   # add dummy velocity scaling factor
-            self.joint_vel_cmd_pub.publish(Float32MultiArray(data = l))
-        elif self.hd_mode == HDMode.MANUAL_INVERSE:
+            # l = [1.0] + l   # add dummy velocity scaling factor
+            self.joint_vel_cmd_pub.publish(Float32MultiArray(data=l))
+        elif self.hd_mode == Mode.MANUAL_INVERSE:
             if verbose:
                 print(self.man_inv_twist)
-            self.man_inv_twist_pub.publish(self.man_inv_twist)
-        elif self.hd_mode == HDMode.SEMI_AUTONOMOUS:
+            linear = self.man_inv_twist.linear
+            angular = self.man_inv_twist.angular
+            gripper_torque = 0.0   # TODO
+            data = [linear.x, linear.y, linear.z, angular.x, angular.y, angular.z, gripper_torque]
+            self.man_inv_twist_pub.publish(Float32MultiArray(data=data))
+        elif self.hd_mode == Mode.SEMI_AUTONOMOUS:
             msg = Task(type=self.semi_auto_cmd)
             if self.semi_auto_cmd == Task.NO_TASK:
                 return
@@ -232,34 +240,35 @@ class ControlStation(Node):
                 return func(*args, **kwargs)
             return wrapper
         return ensure_mode_decorator
-        
+
     def switch_mode(self, do: int = 1):
         if not do:
             return
-        self.hd_mode = HDMode.next(self.hd_mode)
-        msg = Int8(data=self.hd_mode)
-        self.mode_change_pub.publish(msg)
+        self.hd_mode = Mode.next(self.hd_mode)
+        req = HDMode.Request(mode=self.hd_mode)
+        future = self.mode_cli.call_async(req)
+        # TODO: check result
 
-    @restrict_mode(HDMode.MANUAL_DIRECT)
+    @restrict_mode(Mode.MANUAL_DIRECT)
     def set_manual_velocity(self, joint_index: int, value: float, multiplier: int = 1):
         self.vel_cmd[joint_index] = value * multiplier
     
-    @restrict_mode(HDMode.MANUAL_DIRECT)
+    @restrict_mode(Mode.MANUAL_DIRECT)
     def flip_manual_velocity_dir(self, joint_index: int):
         if joint_index == 2:
             self.joint3_dir *= -1
         elif joint_index == 3:
             self.joint4_dir *= -1
     
-    @restrict_mode(HDMode.MANUAL_DIRECT)
+    @restrict_mode(Mode.MANUAL_DIRECT)
     def set_gripper_speed(self, value: float, event_value: float):
         self.vel_cmd[6] = value * event_value
     
-    @restrict_mode(HDMode.MANUAL_DIRECT)
+    @restrict_mode(Mode.MANUAL_DIRECT)
     def set_rassor_speed(self, value, event_value):
         self.vel_cmd[7] = value * event_value
     
-    @restrict_mode(HDMode.MANUAL_INVERSE)
+    @restrict_mode(Mode.MANUAL_INVERSE)
     def set_man_inv_axis(self, coordinate: int, value: float, multiplier: int = 1):
         v = clean(value * multiplier)
         if coordinate == 0:
@@ -269,7 +278,7 @@ class ControlStation(Node):
         else:
             self.man_inv_twist.linear.z = v
     
-    @restrict_mode(HDMode.MANUAL_INVERSE)
+    @restrict_mode(Mode.MANUAL_INVERSE)
     def set_man_inv_angular(self, coordinate: int, value: float, multiplier: int = 1):
         v = clean(value * multiplier)
         if coordinate == 0:
@@ -279,12 +288,12 @@ class ControlStation(Node):
         else:
             self.man_inv_twist.angular.z = v
     
-    @restrict_mode(HDMode.SEMI_AUTONOMOUS)
+    @restrict_mode(Mode.SEMI_AUTONOMOUS)
     def set_semi_auto_cmd(self, index: int, event_value: float):
         if event_value != 1: return
         self.semi_auto_cmd = SemiAutoTask[index]
     
-    @restrict_mode(HDMode.MANUAL_INVERSE)
+    @restrict_mode(Mode.MANUAL_INVERSE)
     def set_man_inv_velocity_scaling(self, value: float):
         self.man_inv_velocity_scaling = 1.0 - abs(value)
 
