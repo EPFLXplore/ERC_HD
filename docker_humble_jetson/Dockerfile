@@ -1,5 +1,5 @@
 
-FROM ghcr.io/epflxplore/docker_commons:humble-jetson
+FROM ghcr.io/epflxplore/docker_commons:humble-jetson-torch
 
 # Avoid interactive dialogue from apt-get
 ENV DEBIAN_FRONTEND=noninteractive
@@ -42,6 +42,34 @@ RUN sleep 2
 RUN sudo make -j$(($(nproc)-1)) && sudo make install
 
 
+# Downloads to user config dir for Ultralytics
+ADD https://github.com/ultralytics/assets/releases/download/v0.0.0/Arial.ttf \
+    https://github.com/ultralytics/assets/releases/download/v0.0.0/Arial.Unicode.ttf \
+    /root/.config/Ultralytics/
+
+# Install linux packages for Ultralytics
+# g++ required to build 'tflite_support' and 'lap' packages
+# libusb-1.0-0 required for 'tflite_support' package when exporting to TFLite
+# pkg-config and libhdf5-dev (not included) are needed to build 'h5py==3.11.0' aarch64 wheel required by 'tensorflow'
+RUN apt update \
+    && apt install --no-install-recommends -y gcc git zip unzip  wget curl htop libgl1 libglib2.0-0 libpython3-dev gnupg g++ libusb-1.0-0
+
+# Create working directory
+WORKDIR /ultralytics
+
+# Copy contents and assign permissions for Ultralytics
+COPY . .
+RUN git remote set-url origin https://github.com/ultralytics/ultralytics.git
+ADD https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8n.pt .
+
+# Remove opencv-python from Ultralytics dependencies as it conflicts with opencv-python installed in base image
+RUN grep -v "opencv-python" pyproject.toml > temp.toml && mv temp.toml pyproject.toml
+
+# Download onnxruntime-gpu 1.15.1 for Jetson Linux 35.2.1 (JetPack 5.1). Other versions can be seen in https://elinux.org/Jetson_Zoo#ONNX_Runtime
+ADD https://nvidia.box.com/shared/static/mvdcltm9ewdy2d5nurkiqorofz1s53ww.whl onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl
+
+
+
 # Install ROS 2 HD packages
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y --no-install-recommends \
@@ -68,6 +96,12 @@ RUN pip install --no-cache-dir --upgrade pip
 # Install the necessary Python packageslibrealsense
 RUN pip install --no-cache-dir -v evdev 
 # pyrealsense2 wrapper has to be build from source 
+
+# Install Ultralytics pip packages manually for TensorRT compatibility https://github.com/NVIDIA/TensorRT/issues/2567
+RUN python3 -m pip install --upgrade pip wheel
+RUN pip install onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl
+RUN pip install --no-cache-dir -e ".[export]"
+RUN rm *.whl
 
 
 # Set a diretory to store the project
