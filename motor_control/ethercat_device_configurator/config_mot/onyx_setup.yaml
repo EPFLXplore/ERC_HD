@@ -37,10 +37,10 @@ ethercat_devices:
     name: J6
     configuration_file: onyx_device_configurations/conf_j6.yaml
     ethercat_bus: enp4s0
-    ethercat_address: 9
+    ethercat_address: 8
 
   - type: Maxon
     name: Gripper
-    configuration_file: onyx_device_configurations/conf_gripper.yaml
+    configuration_file: onyx_device_configurations/conf_j6.yaml
     ethercat_bus: enp4s0
-    ethercat_address: 8
+    ethercat_address: 9
