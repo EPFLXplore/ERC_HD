@@ -71,20 +71,20 @@ def declare_binary_launch_argument(name, default=True, description=""):
 
 
 def generate_launch_description():
-    xacro_file = get_package_file('onyx_moveit_config', 'config/kerby.urdf.xacro')
+    xacro_file = get_package_file('new_moveit_config', 'config/kerby.urdf.xacro')
     urdf_file = run_xacro(xacro_file)
-    srdf_file = get_package_file('onyx_moveit_config', 'config/kerby.srdf')
-    kinematics_file = get_package_file('onyx_moveit_config', 'config/kinematics.yaml')
-    ompl_config_file = get_package_file('onyx_moveit_config', 'config/ompl_planning.yaml')
-    moveit_controllers_file = get_package_file('onyx_moveit_config', 'config/moveit_controllers.yaml')
-    ros_controllers_file = get_package_file('onyx_moveit_config', 'config/ros2_controllers.yaml')
-    joint_limits_file = get_package_file('onyx_moveit_config', 'config/joint_limits.yaml')
+    srdf_file = get_package_file('new_moveit_config', 'config/kerby.srdf')
+    kinematics_file = get_package_file('new_moveit_config', 'config/kinematics.yaml')
+    ompl_config_file = get_package_file('new_moveit_config', 'config/ompl_planning.yaml')
+    moveit_controllers_file = get_package_file('new_moveit_config', 'config/moveit_controllers.yaml')
+    ros_controllers_file = get_package_file('new_moveit_config', 'config/ros2_controllers.yaml')
+    joint_limits_file = get_package_file('new_moveit_config', 'config/joint_limits.yaml')
 
     robot_description = load_file(urdf_file)
     robot_description_semantic = load_file(srdf_file)
     kinematics_config = load_yaml(kinematics_file)
     ompl_config = load_yaml(ompl_config_file)
-    servo_yaml = load_yaml2("onyx_moveit_config", "config/kerby_simulated_config.yaml")
+    servo_yaml = load_yaml2("new_moveit_config", "config/kerby_simulated_config.yaml")
 
     rviz_arg, rviz_declaration = declare_binary_launch_argument("rviz", default=True, description="Run RViz")
 
@@ -142,7 +142,7 @@ def generate_launch_description():
     )
 
     # Visualization (parameters needed for MoveIt display plugin)
-    rviz_base = os.path.join(get_package_share_directory('onyx_moveit_config'), 'config')
+    rviz_base = os.path.join(get_package_share_directory('new_moveit_config'), 'config')
     rviz_full_config = os.path.join(rviz_base, 'moveit.rviz')
     rviz = Node(
         name='rviz',

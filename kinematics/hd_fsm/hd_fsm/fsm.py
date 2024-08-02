@@ -88,12 +88,18 @@ class FSM(Node):
         self.received_manual_inverse_cmd_at = time.time() - 2*self.command_expiration
     
     def new_mode_callback(self, request: HDMode.Request, response: HDMode.Response) -> HDMode.Response:
-        self.target_mode = request.mode
+        temp_mode_map = {
+            HDMode.Request.OFF: FSM.IDLE,
+            HDMode.Request.MANUAL_DIRECT: FSM.MANUAL_DIRECT,
+            HDMode.Request.MANUAL_INVERSE: FSM.MANUAL_INVERSE,
+            HDMode.Request.AUTO: FSM.SEMI_AUTONOMOUS,
+        }
+        self.target_mode = temp_mode_map[request.mode]
         self.mode_transitioning = True
         # while self.mode_transitioning:
         #     pass
         # TODO:
-        response.system_mode = self.target_mode
+        response.system_mode = request.mode
         return response
     
     def mode_callback(self, msg: Int8):
@@ -189,7 +195,7 @@ class FSM(Node):
             return
         msg = TwistStamped()
         msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = "hd_link6"     #hd_link6   #Gripper_Finger_v1__1__1
+        # msg.header.frame_id = "base_link"     #hd_link6   #Gripper_Finger_v1__1__1
         msg.twist = self.manual_inverse_twist
         if VERBOSE:
             self.get_logger().info("FSM manual inverse cmd :    " + str(msg))

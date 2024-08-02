@@ -8,6 +8,40 @@
 
 
 
+<xacro:property name="rpm_to_Radps" value="${2*pi/60.0}" />     <!-- rotations per minute to Rad per second conversion -->
+<xacro:property name="velocity_scaling" value="5.0" />     <!-- allows to scale all max velocities down at once -->
+
+<xacro:macro name="aaa_joint_limits" params="lower:=0.0 upper:=0.0 velocity:=${rpm_to_Radps} effort:=100.0">
+  <limit lower="${lower}" upper="${upper}" velocity="${velocity}" effort="${effort}"/>
+</xacro:macro>
+
+<xacro:property name="joint1_limits">
+  <xacro:aaa_joint_limits lower="${-10*pi}" upper="${10*pi}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint2_limits">
+  <xacro:aaa_joint_limits lower="${-10*pi}" upper="${10*pi}" velocity="${1.377 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint3_limits">
+  <xacro:aaa_joint_limits lower="${-10*pi}" upper="${10*pi}" velocity="${1.377 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint4_limits">
+  <xacro:aaa_joint_limits lower="${-10*pi}" upper="${10*pi}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint5_limits">
+  <xacro:aaa_joint_limits lower="${-10*pi}" upper="${10*pi}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint6_limits">
+  <xacro:aaa_joint_limits lower="${-10*pi}" upper="${10*pi}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+
+
+
 <!-- <link name="base_link"/> -->
 
 <joint name="hd_joint0" type="fixed">
@@ -256,48 +290,54 @@
   </collision>
 </link>
 
-<joint name="hd_joint1" type="continuous">
+<joint name="hd_joint1" type="revolute">
   <!-- <origin xyz="0.007012 0.143312 0.484988" rpy="0 0 0"/> -->
   <origin xyz="0 0 0" rpy="${pi/2} 0 -1.091427"/>
   <parent link="base"/>
   <child link="hd_link1"/>
-  <axis xyz="0 1 0"/> 
+  <axis xyz="0 1 0"/>
+  <xacro:insert_block name="joint1_limits"/>
 </joint>
 
-<joint name="hd_joint2" type="continuous">
+<joint name="hd_joint2" type="revolute">
   <origin xyz="0.104169 0.1185 0.056489" rpy="0 0 0"/>
   <parent link="hd_link1"/>
   <child link="hd_link2"/>
   <axis xyz="0.879067 0.0 0.476699"/>
+  <xacro:insert_block name="joint2_limits"/>
 </joint>
 <!-- [ x: -0.8207109, y: 0.1795091, z: -0.4079707 ] -->
 
-<joint name="hd_joint3" type="continuous">
+<joint name="hd_joint3" type="revolute">
   <origin xyz="-0.14594 0.209699 0.269123" rpy="0 0 0"/>
   <parent link="hd_link2"/>
   <child link="hd_link3"/>
   <axis xyz="-0.879067 -0.0 -0.476699"/>
+  <xacro:insert_block name="joint3_limits"/>
 </joint>
 
-<joint name="hd_joint4" type="continuous">
+<joint name="hd_joint4" type="revolute">
   <origin xyz="-0.048089 0.014221 -0.159905" rpy="0 0 0"/>
   <parent link="hd_link3"/>
   <child link="hd_link4"/>
   <axis xyz="0.473254 0.120008 -0.872713"/>
+  <xacro:insert_block name="joint4_limits"/>
 </joint>
 
-<joint name="hd_joint5" type="continuous">
+<joint name="hd_joint5" type="revolute">
   <origin xyz="0.113532 0.033504 -0.244971" rpy="0 0 0"/>
   <parent link="hd_link4"/>
   <child link="hd_link5"/>
   <axis xyz="0.880882 -0.054511 0.470187"/>
+  <xacro:insert_block name="joint5_limits"/>
 </joint>
 
-<joint name="hd_joint6" type="continuous">
+<joint name="hd_joint6" type="revolute">
   <origin xyz="0.118077 0.110626 0.04364" rpy="0 0 0"/>
   <parent link="hd_link5"/>
   <child link="hd_link6"/>
   <axis xyz="0.115545 0.98806 -0.101919"/>
+  <xacro:insert_block name="joint6_limits"/>
 </joint>
 
 <joint name="hd_joint7" type="fixed">

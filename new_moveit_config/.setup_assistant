@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: new_description
+    relative_path: urdf/onyx.urdf.xacro
+  srdf:
+    relative_path: config/onyx.srdf
+  package_settings:
+    author_name: ""
+    author_email: ""
+    generated_timestamp: 1722602295

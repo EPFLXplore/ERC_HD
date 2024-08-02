@@ -16,7 +16,7 @@ scale:
 # override_velocity_scaling_factor = 0.0 # valid range [0.0:1.0]
 
 ## Properties of outgoing commands
-publish_period: 0.01  #0.034  # 1/Nominal publish rate [seconds]
+publish_period: 0.02  #0.034  # 1/Nominal publish rate [seconds]
 low_latency_mode: true  # Set this to true to publish as soon as an incoming Twist command is received (publish_period is ignored)
 
 # What type of topic does your robot driver expect?
@@ -42,8 +42,8 @@ move_group_name:  kerby_arm_group  # Often 'manipulator' or 'arm'
 planning_frame: base_link  # base_link  # The MoveIt planning frame. Often 'base_link' or 'world'
 
 ## Other frames
-ee_frame_name: hd_link6  # hd_link6  # Gripper_Finger_v1__1__1  # The name of the end effector link, used to return the EE pose
-robot_link_command_frame:  hd_link6  # commands must be given in the frame of a robot link. Usually either the base or end effector
+ee_frame_name: link6  # link6  # Gripper_Finger_v1__1__1  # The name of the end effector link, used to return the EE pose
+robot_link_command_frame:  base_link  # commands must be given in the frame of a robot link. Usually either the base or end effector
 
 ## Stopping behaviour
 incoming_command_timeout:  0.1  # Stop servoing if X seconds elapse without a new command
@@ -52,8 +52,8 @@ incoming_command_timeout:  0.1  # Stop servoing if X seconds elapse without a ne
 num_outgoing_halt_msgs_to_publish: 4
 
 ## Configure handling of singularities and joint limits
-lower_singularity_threshold:  17.0  # Start decelerating when the condition number hits this (close to singularity)
-hard_stop_singularity_threshold: 30.0 # Stop when the condition number hits this
+lower_singularity_threshold:  1000.0  # Start decelerating when the condition number hits this (close to singularity)
+hard_stop_singularity_threshold: 1500.0 # Stop when the condition number hits this
 joint_limit_margin: 0.1 # added as a buffer to joint limits [radians]. If moving quickly, make this larger.
 leaving_singularity_threshold_multiplier: 2.0 # Multiply the hard stop limit by this when leaving singularity (see https://github.com/ros-planning/moveit2/pull/620)
 

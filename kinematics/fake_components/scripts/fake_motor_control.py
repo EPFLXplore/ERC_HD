@@ -8,6 +8,7 @@ import threading
 import copy
 import time
 import array
+from math import pi
 
 
 def pad(l: list, length: int, default:float = 0.0) -> list:
@@ -37,9 +38,11 @@ class Timer:
 
 class FakeMotorControl(Node):
     MOTOR_COUNT = 10     # number of motors
-    MAX_VEL = pad([3.0, 1.5, 2.0, 4.0, 2.0, 3.0, 0.15], MOTOR_COUNT)    # max velocity of each motor in rad/s
-    POSITION_OFFSETS = pad([0, -0.959505, -2.424073, 0, -1.27857, -1.88833], MOTOR_COUNT)
-    #POSITION_OFFSETS = [0.0] * MOTOR_COUNT
+    rads2rpm = lambda x: x/pi*30
+    rmp2rads = lambda x: x*pi/30
+    MAX_VEL = list(map(rmp2rads, pad([1.83, 1.377, 1.377, 1.83, 1.83, 1.83, 0.15], MOTOR_COUNT)))    # max velocity of each motor in rad/s
+    # POSITION_OFFSETS = pad([0, -0.959505, -2.424073, 0, -1.27857, -1.88833], MOTOR_COUNT)
+    POSITION_OFFSETS = [0.0] * MOTOR_COUNT
     VELOCITY = 0
     POSITION = 1
 
@@ -59,10 +62,9 @@ class FakeMotorControl(Node):
 
     def init_state(self):
         self.state.position = [0.0]*self.MOTOR_COUNT
-        #self.state.position = [0.0, -0.244346095, -0.104719755, 0.0, -0.366519143, 0.0]
-        self.state.position = pad([0.0, -0.9199, -0.7463, -0.0174, -1.2323, 1.2323], self.MOTOR_COUNT)
-        self.state.position = pad([0.0, -0.9199, -0.7463 + 0.3, -0.0174, -1.2323 + 0.3, 1.2323], self.MOTOR_COUNT)
-        self.state.position = list_add(self.state.position, list_neg(self.POSITION_OFFSETS))
+        # self.state.position = pad([0.0, -0.9199, -0.7463, -0.0174, -1.2323, 1.2323], self.MOTOR_COUNT)
+        # self.state.position = pad([0.0, -0.9199, -0.7463 + 0.3, -0.0174, -1.2323 + 0.3, 1.2323], self.MOTOR_COUNT)
+        # self.state.position = list_add(self.state.position, list_neg(self.POSITION_OFFSETS))
         self.state.velocity = [0.0]*self.MOTOR_COUNT
         self.state.effort = [0.0]*self.MOTOR_COUNT
 
@@ -104,7 +106,7 @@ class FakeMotorControl(Node):
         self.state.position = [pos + vel*t for pos, vel in zip(self.state.position, self.cmd_velocities)]
 
     def loop(self):
-        rate = self.create_rate(25)
+        rate = self.create_rate(50)
         while rclpy.ok():
             self.update()
             self.publish_state()

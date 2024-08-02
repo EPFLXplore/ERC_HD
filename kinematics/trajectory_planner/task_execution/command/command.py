@@ -16,6 +16,11 @@ if TYPE_CHECKING:   # fake import, only for annotations
     from task_execution.task_executor import Executor
 
 
+def get_executor() -> Executor:
+    from task_execution.task_executor import Executor
+    return Executor.get_instance()
+
+
 class Command:
     """abstract class representing a command"""
 
@@ -23,13 +28,14 @@ class Command:
         self.executor = executor
         self.execute_count = 0
         self.has_failed = False
+        self.is_background = False
 
     def createSetter(self, attribute: str):
         """create a setter for the given attribute"""
         def setter(val: Any):
             setattr(self, attribute, val)
         
-        def camelCasify(s: str):
+        def camelCasify(s: str) -> str:
             if len(s) == 0:
                 return ""
             camel_s = ""
@@ -50,6 +56,9 @@ class Command:
         for attr in attributes:
             self.createSetter(attr)
 
+    def isBackground(self) -> bool:
+        return self.is_background
+    
     def execute(self):
         """attempts to execute command"""
         self.execute_count += 1

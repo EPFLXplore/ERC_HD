@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
 import rclpy
 import time
 from rclpy.node import Node
@@ -30,6 +31,7 @@ class TaskSelect:
 
 
 class Executor(Node):
+    INSTANCE: Executor = None
     KNOWN_TASKS = {
         Task.BUTTON:                    TaskSelect("Button task",               PressButton),
         Task.PLUG_VOLTMETER_ALIGN:      TaskSelect("Plug voltmeter task",       PlugVoltmeterAlign),
@@ -43,6 +45,17 @@ class Executor(Node):
         Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",    RockSamplingComplete),
     }
 
+    def __new__(cls):
+        if cls.INSTANCE is not None:
+            raise RuntimeError("Executor class can only have one instance")
+        instance = super().__new__(cls)
+        cls.INSTANCE = instance
+        return instance
+    
+    @classmethod
+    def get_instance(cls) -> Executor:
+        return cls.INSTANCE
+    
     def __init__(self):
         super().__init__("kinematics_task_executor")
         self.createRosInterfaces()

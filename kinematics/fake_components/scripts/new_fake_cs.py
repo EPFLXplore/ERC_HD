@@ -242,10 +242,17 @@ class ControlStation(Node):
         return ensure_mode_decorator
 
     def switch_mode(self, do: int = 1):
+        temp_mode_map = {
+            Mode.IDLE: HDMode.Request.OFF,
+            Mode.MANUAL_DIRECT: HDMode.Request.MANUAL_DIRECT,
+            Mode.MANUAL_INVERSE: HDMode.Request.MANUAL_INVERSE,
+            Mode.SEMI_AUTONOMOUS: HDMode.Request.AUTO,
+        }
+        
         if not do:
             return
         self.hd_mode = Mode.next(self.hd_mode)
-        req = HDMode.Request(mode=self.hd_mode)
+        req = HDMode.Request(mode=temp_mode_map[self.hd_mode])
         future = self.mode_cli.call_async(req)
         # TODO: check result
 
