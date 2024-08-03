@@ -37,6 +37,16 @@ jobs:
             context: .
             tag: humble-desktop
             platform: linux/amd64
+          - dockerfile: ./docker_humble_jetson/Dockerfile
+            context: .
+            tag: humble-jetson
+            target: hd-ros
+            platform: linux/arm64
+          - dockerfile: ./docker_humble_jetson/Dockerfile
+            context: .
+            tag: humble-jetson-torch
+            target: hd-ros-torch
+            platform: linux/arm64
 
     permissions:
       contents: read
