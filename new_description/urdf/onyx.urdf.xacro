@@ -7,7 +7,7 @@
 
 
 <xacro:property name="rpm_to_Radps" value="${2*pi/60.0}" />     <!-- rotations per minute to Rad per second conversion -->
-<xacro:property name="velocity_scaling" value="5.0" />     <!-- allows to scale all max velocities down at once -->
+<xacro:property name="velocity_scaling" value="3.0" />     <!-- allows to scale all max velocities down at once -->
 
 <xacro:macro name="aaa_joint_limits" params="lower:=0.0 upper:=0.0 velocity:=${rpm_to_Radps} effort:=100.0">
   <limit lower="${lower}" upper="${upper}" velocity="${velocity}" effort="${effort}"/>

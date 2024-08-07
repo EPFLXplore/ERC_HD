@@ -191,9 +191,9 @@ class ControlStation(Node):
     
         # ==== manual inverse ====
         self.input_config.bind(GamePadConfig.RV, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
-        self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=2, multiplier=-1)
-        self.input_config.bind(GamePadConfig.R2, self.set_man_inv_axis, "value", coordinate=1, multiplier=-1)
-        self.input_config.bind(GamePadConfig.L2, self.set_man_inv_axis, "value", coordinate=1, multiplier=1)
+        self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=1, multiplier=1)
+        self.input_config.bind(GamePadConfig.R2, self.set_man_inv_axis, "value", coordinate=2, multiplier=1)
+        self.input_config.bind(GamePadConfig.L2, self.set_man_inv_axis, "value", coordinate=2, multiplier=-1)
         
         self.input_config.bind(GamePadConfig.LH, self.set_man_inv_angular, "value", coordinate=0, multiplier=1)
         self.input_config.bind(GamePadConfig.LV, self.set_man_inv_angular, "value", coordinate=2, multiplier=-1)

@@ -183,7 +183,30 @@ void KerbyArmInterface::init_communication() {
 
 }
 
+// void topic_callback(const sensor_msgs::msg::JointState::SharedPtr msg) const {
+//     RCLCPP_INFO(this->get_logger(), "Logging JointState message:");
+//     RCLCPP_INFO(this->get_logger(), "  Name: %s", format_vector(msg->name).c_str());
+//     RCLCPP_INFO(this->get_logger(), "  Position: %s", format_vector(msg->position).c_str());
+//     RCLCPP_INFO(this->get_logger(), "  Velocity: %s", format_vector(msg->velocity).c_str());
+//     RCLCPP_INFO(this->get_logger(), "  Effort: %s", format_vector(msg->effort).c_str());
+// }
+
+template<typename T>
+std::string format_vector(const std::vector<T> &vec) {
+    std::ostringstream oss;
+    for (size_t i = 0; i < vec.size(); ++i)
+    {
+        oss << vec[i];
+        if (i != vec.size() - 1)
+        {
+            oss << ", ";
+        }
+    }
+    return oss.str();
+}
+
 void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
+    RCLCPP_INFO(rclcpp::get_logger("KerbyArmInterface"), "  Position: %s", format_vector(msg->position).c_str());
     uint size = (hw_position_states_.size() < msg->position.size()) ? hw_position_states_.size() : msg->position.size();
     for (uint i = 0; i < size; i++) {
         hw_position_states_[i] = msg->position[i];

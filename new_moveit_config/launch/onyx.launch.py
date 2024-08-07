@@ -184,48 +184,6 @@ def generate_launch_description():
     ]
     
     
-    container = ComposableNodeContainer(
-        name="moveit_servo_demo_container",
-        namespace="/",
-        package="rclcpp_components",
-        executable="component_container_mt",
-        composable_node_descriptions=[
-            # Example of launching Servo as a node component
-            # Assuming ROS2 intraprocess communications works well, this is a more efficient way.
-            # ComposableNode(
-            #     package="moveit_servo",
-            #     plugin="moveit_servo::ServoServer",
-            #     name="servo_server",
-            #     parameters=[
-            #         {
-            #             'moveit_servo': servo_yaml,
-            #             'robot_description': robot_description,
-            #             'robot_description_semantic': robot_description_semantic,
-            #         }
-            #     ],
-            # ),
-            ComposableNode(
-                package="robot_state_publisher",
-                plugin="robot_state_publisher::RobotStatePublisher",
-                name="robot_state_publisher",
-                parameters=[{'robot_description': robot_description}],
-            ),
-            ComposableNode(
-                package="tf2_ros",
-                plugin="tf2_ros::StaticTransformBroadcasterNode",
-                name="static_tf2_broadcaster",
-                parameters=[{"child_frame_id": "/base_link", "frame_id": "/world"}],
-            ),
-            # ComposableNode(
-            #     package="moveit_servo",
-            #     plugin="moveit_servo::JoyToServoPub",
-            #     name="controller_to_servo_node",
-            # ),
-        ],
-        output="screen",
-    )
-    
-    
     servo_node = Node(
         package="moveit_servo",
         executable="servo_node_main",
@@ -247,7 +205,6 @@ def generate_launch_description():
         robot_state_publisher,
         ros2_control_node,
         rviz,
-        # container,
         servo_node,
         ] + spawn_controllers
     )
