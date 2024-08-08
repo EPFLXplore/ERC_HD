@@ -17,8 +17,8 @@ Hardware:
     - CyclicSynchronousTorqueMode
     - CyclicSynchronousPositionMode
     - CyclicSynchronousVelocityMode
-  position_encoder_resolution: 1 # 16384
-  gear_ratio: [1, 1] #7260  # doesn't seem to change anything
+  position_encoder_resolution: 16384
+  gear_ratio: [7260, 1] #7260  # doesn't seem to change anything
   motor_constant: 1.0
   working_voltage: 48
   pole_pairs: 11

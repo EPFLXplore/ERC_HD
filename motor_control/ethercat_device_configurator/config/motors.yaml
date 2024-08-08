@@ -1,0 +1,57 @@
+used_joints:
+  - j1
+  - j2
+  - j3
+  - j4
+  - j5
+  - j6
+  - gripper
+
+j1:
+  max_velocity: 0.2
+  min_position: -2 * PI
+  max_position: 2 * PI
+  direction: -1
+  max_torque: 1
+
+j2:
+  max_velocity: 0.5
+  min_position: -PI
+  max_position: PI / 2
+  direction: 1
+  max_torque: 1
+
+j3:
+  max_velocity: 0.3
+  min_position: -PI / 4
+  max_position: PI / 4
+  direction: 1
+  max_torque: 1
+
+j4:
+  max_velocity: 0.3
+  min_position: -2 * PI
+  max_position: 2 * PI
+  direction: -1
+  max_torque: 1
+
+j5:
+  max_velocity: 0.15
+  min_position: -PI / 2
+  max_position: PI / 2
+  direction: -1
+  max_torque: 1
+
+j6:
+  max_velocity: 0.3
+  min_position: -PI
+  max_position: PI
+  direction: -1
+  max_torque: 1
+
+gripper:
+  max_velocity: 4
+  min_position: -5
+  max_position: 5
+  direction: 1
+  max_torque: 1
