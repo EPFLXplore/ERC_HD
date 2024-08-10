@@ -21,8 +21,8 @@ void Planner::config()
 
     setScalingFactors(1, 1);
 
-    addDronePlatform();
-    addLidar();
+    // addDronePlatform();
+    // addLidar();
 
     initCommunication();
 }

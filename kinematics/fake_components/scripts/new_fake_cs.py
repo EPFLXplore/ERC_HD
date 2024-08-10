@@ -153,12 +153,12 @@ class ControlStation(Node):
         for i, input in enumerate([KeyboardConfig.A, KeyboardConfig.Z, KeyboardConfig.E, KeyboardConfig.R, KeyboardConfig.T, KeyboardConfig.Y]):
             self.input_config.bind(input, self.set_manual_velocity, "value", joint_index=i, multiplier=-1)
     
-        self.input_config.bind(KeyboardConfig.U, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
-        self.input_config.bind(KeyboardConfig.u, self.set_man_inv_axis, "value", coordinate=0, multiplier=-1)
-        self.input_config.bind(KeyboardConfig.down, self.set_man_inv_axis, "value", coordinate=1, multiplier=1)
-        self.input_config.bind(KeyboardConfig.up, self.set_man_inv_axis, "value", coordinate=1, multiplier=-1)
-        self.input_config.bind(KeyboardConfig.left, self.set_man_inv_axis, "value", coordinate=2, multiplier=1)
-        self.input_config.bind(KeyboardConfig.right, self.set_man_inv_axis, "value", coordinate=2, multiplier=-1)
+        self.input_config.bind(KeyboardConfig.U, self.set_man_inv_axis, "value", coordinate=1, multiplier=1)
+        self.input_config.bind(KeyboardConfig.u, self.set_man_inv_axis, "value", coordinate=1, multiplier=-1)
+        self.input_config.bind(KeyboardConfig.down, self.set_man_inv_axis, "value", coordinate=2, multiplier=1)
+        self.input_config.bind(KeyboardConfig.up, self.set_man_inv_axis, "value", coordinate=2, multiplier=-1)
+        self.input_config.bind(KeyboardConfig.left, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
+        self.input_config.bind(KeyboardConfig.right, self.set_man_inv_axis, "value", coordinate=0, multiplier=-1)
         
         self.input_config.bind(KeyboardConfig._7, self.set_man_inv_angular, "value", coordinate=0, multiplier=1)
         self.input_config.bind(KeyboardConfig._9, self.set_man_inv_angular, "value", coordinate=0, multiplier=-1)
@@ -190,8 +190,8 @@ class ControlStation(Node):
             self.input_config.bind(input, self.set_semi_auto_cmd, "event_value", index=i)
     
         # ==== manual inverse ====
-        self.input_config.bind(GamePadConfig.RV, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
-        self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=1, multiplier=1)
+        self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
+        self.input_config.bind(GamePadConfig.RV, self.set_man_inv_axis, "value", coordinate=1, multiplier=1)
         self.input_config.bind(GamePadConfig.R2, self.set_man_inv_axis, "value", coordinate=2, multiplier=1)
         self.input_config.bind(GamePadConfig.L2, self.set_man_inv_axis, "value", coordinate=2, multiplier=-1)
         

@@ -55,8 +55,8 @@ class FSM(Node):
         self.mode = self.IDLE
         self.target_mode = self.mode
         self.mode_transitioning = False
-        self.manual_inverse_axis = [0.0, 0.0, 0.0]
-        self.manual_inverse_velocity_scaling = 0.0
+        #self.manual_inverse_axis = [0.0, 0.0, 0.0]
+        #self.manual_inverse_velocity_scaling = 0.0
         self.manual_inverse_twist = Twist()
     
     def get_param(self, name: str, default: str = ""):
@@ -69,6 +69,8 @@ class FSM(Node):
         self.manual_inverse_twist_pub = self.create_publisher(TwistStamped, self.get_param("hd_fsm_man_inv_twist_topic"), 10)
         self.task_pub = self.create_publisher(Task, self.get_param("hd_fsm_task_assignment_topic"), 10)
         self.mode_change_pub = self.create_publisher(Int8, self.get_param("hd_fsm_mode_transmission_topic"), 10)
+        # old
+        self.manual_inverse_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/man_inv_axis_cmd", 10)
         
         # servers
         self.srv = self.create_service(HDMode, self.get_param("hd_fsm_mode_srv"), self.new_mode_callback)
@@ -114,16 +116,30 @@ class FSM(Node):
         self.received_manual_direct_cmd_at = time.time()
     
     def manual_inverse_cmd_callback(self, msg: Float32MultiArray):
+        x = 1; y = 2; z = 3
+        axis_mapping = {    # from urdf to convention (with Ugo) (negative index means that direction should be reversed)
+            x: -z,
+            y: y,
+            z: x
+        }
+        ang_mapping = {
+            x: x,
+            y: y,
+            z: z
+        }
+        sign = lambda x: 1 if x >= 0 else -1
+        get_lin = lambda coord: sign(axis_mapping[coord]) * msg.data[abs(axis_mapping[coord])-1]
+        get_ang = lambda coord: sign(ang_mapping[coord]) * msg.data[3 + abs(ang_mapping[coord])-1]
         self.manual_inverse_twist = Twist(
             linear=Vector3(
-                x=msg.data[0],
-                y=msg.data[1],
-                z=msg.data[2]
+                x=get_lin(x),
+                y=get_lin(y),
+                z=get_lin(z)
             ),
             angular=Vector3(
-                x=msg.data[3],
-                y=msg.data[4],
-                z=msg.data[5]
+                x=get_ang(x),
+                y=get_ang(y),
+                z=get_ang(z)
             )
         )
         # TODO: deal with msg.data[6] containing gripper command
@@ -190,6 +206,19 @@ class FSM(Node):
             self.get_logger().info("FSM direct cmd :   " + str_pad_list(list(msg.data)))
         self.manual_direct_cmd_pub.publish(msg)
 
+    def send_manual_inverse_cmd_old(self):
+        if self.manual_inverse_command_old():
+            return
+        #msg = Float64MultiArray()
+        lin = self.manual_inverse_twist.linear
+        ang = self.manual_inverse_twist.angular
+        data = [lin.x, lin.y, lin.z, 1.0]     # 1 for velocity scaling
+        #msg.data = array.array('d', data)
+        msg = Float64MultiArray(data=data)
+        if VERBOSE:
+            self.get_logger().info("FSM manual inverse cmd :   " + str_pad_list(list(msg.data)))
+        self.manual_inverse_cmd_pub.publish(msg)
+        
     def send_manual_inverse_cmd(self):
         if self.manual_inverse_command_old():
             return
@@ -245,7 +274,7 @@ class FSM(Node):
         elif self.mode == self.SEMI_AUTONOMOUS:
             self.send_semi_autonomous_cmd()
         elif self.mode == self.MANUAL_INVERSE:
-            self.send_manual_inverse_cmd()
+            self.send_manual_inverse_cmd_old()
         elif self.mode == self.MANUAL_DIRECT:
             self.send_manual_direct_cmd()
 
