@@ -19,6 +19,7 @@ RUN apt-get install -y --no-install-recommends \
     ros-${ROS_DISTRO}-moveit-servo \
     ros-${ROS_DISTRO}-controller-manager \
     ros-${ROS_DISTRO}-gazebo-ros \
+    ros-${ROS_DISTRO}-ros-testing \
     python3-zmq \
     libyaml-cpp-dev \
     lcov \

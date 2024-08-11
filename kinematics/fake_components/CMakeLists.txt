@@ -67,6 +67,7 @@ install(PROGRAMS
   scripts/fake_rover_control.py
   scripts/limbs_control.py
   scripts/servo_fake_cs_gamepad.py
+  scripts/keyboard_motor_command.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -142,6 +143,7 @@ ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 
 
+ament_python_install_package(input_handling)
 
 
 

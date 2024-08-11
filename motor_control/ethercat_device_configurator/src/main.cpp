@@ -43,6 +43,8 @@ void worker()
     */
     while (!abrt)
     {
+         // Keep constant update rate
+        std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
         /*
         ** Update each master.
         ** This sends tha last staged commands and reads the latest readings over EtherCAT.
@@ -62,8 +64,7 @@ void worker()
         for (Motor& motor : motor_controller->getMotors())
         {
 
-            // Keep constant update rate
-            // std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
+           
 
             auto slave = configurator->getSlave(motor.getName());
 
@@ -96,7 +97,7 @@ void worker()
                     // command.setTargetPosition(reading.getActualPosition() + 10);
                     // maxon_slave_ptr->stageCommand(command);
                     maxon_slave_ptr->stageCommand(motor.getCommand());
-
+                    // spdlog::info("Command staged at time t");
                 }
 
             }
@@ -112,10 +113,11 @@ void worker()
                 }
             }
 
-            // Constant update rate
-            // std::this_thread::sleep_until(start_time + std::chrono::milliseconds(1));
+            
         }
         maxonEnabledAfterStartup = true;
+        // Constant update rate
+        // std::this_thread::sleep_until(start_time + std::chrono::milliseconds(8  ));
     }
 }
 

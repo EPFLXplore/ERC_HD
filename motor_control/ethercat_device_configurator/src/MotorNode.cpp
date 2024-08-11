@@ -13,7 +13,7 @@ MotorNode::MotorNode(const std::string &config_path)
         std::bind(&MotorNode::command_callback, this, std::placeholders::_1));
 
     timer_ = this->create_wall_timer(
-        std::chrono::milliseconds(1),
+        std::chrono::milliseconds(10),
         std::bind(&MotorNode::motor_state_callback, this));
 
     motor_controller_ = std::make_unique<MotorController>(config_path);

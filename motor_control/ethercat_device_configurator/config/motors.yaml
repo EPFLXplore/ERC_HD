@@ -1,11 +1,11 @@
 used_joints:
   - J1
-  # - J2
-  # - J3
-  # - J4
-  # - J5
-  # - J6
-  # - Gripper
+  - J2
+  - J3
+  - J4
+  - J5
+  - J6
+  - Gripper
 
 J1:
   max_velocity: 0.2

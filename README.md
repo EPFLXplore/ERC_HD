@@ -11,3 +11,4 @@ Contains Xplore's code to control the robotic arm.
 - launch: Contains the launch files to start the robotic arm.
 - planning/control: Contains the code to control the robotic arm.
 - fsm: Contains the code to control the finite state machine of the robotic arm.
+- configs: Contains the configuration files for the robotic arm.
