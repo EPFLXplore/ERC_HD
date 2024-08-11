@@ -22,41 +22,57 @@ set(CMAKE_USE_WIN32_THREADS_INIT 0)
 set(CMAKE_USE_PTHREADS_INIT 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-# find dependencies
+# =============================================================================
+# FIND DEPENDENCIES
 find_package(rclcpp REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(Threads REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(hd_interfaces)
+find_package(spdlog REQUIRED)
 
-
+# Ethercat Device Configurator
 find_package(message_logger REQUIRED)
 find_package(soem_interface REQUIRED)
 find_package(ethercat_sdk_master REQUIRED)
 find_package(maxon_epos_ethercat_sdk REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
 find_package(soem REQUIRED)
 
-find_package(hd_interfaces)
+
 
 
 #install(DIRECTORY config_mot DESTINATION share/${PROJECT_NAME})
 
-
+# =============================================================================
+# ADD EXECUTABLES
 add_executable(motor_control  src/${PROJECT_NAME}/motor_control.cpp src/${PROJECT_NAME}/EthercatDeviceConfigurator.cpp)
+
+add_executable(MotorControllerProject
+    src/main.cpp
+    src/Motor.cpp
+    src/MotorController.cpp
+    src/MotorConfigLoader.cpp
+    src/utils/expression_parser.cpp
+    src/MotorNode.cpp
+    src/${PROJECT_NAME}/EthercatDeviceConfigurator.cpp
+)
+
 
 # # Set the path to the third-party library folder
 # set(OSHW include/ethercat_device_configurator/soem/oshw)
 # set(OSAL include/ethercat_device_configurator/soem/osal)
 
-
+# =============================================================================
+# DIRECTORIES TO INCLUDE
 # # Find all .cpp files in the third-party library folder
-
 include_directories( 
+  src/
+  src/ethercat_device_configurator
   include/
-  include/ethercat_device_configurator
+  include/ethercat_device_configurator/
   yaml-cpp/include/
   ${soem_interface_INCLUDE_DIRS}
   ${soem_INCLUDE_DIRS}
@@ -69,7 +85,8 @@ include_directories(
 
 
 
-
+# =============================================================================
+# TARGET DEPENDENCIES
 ament_target_dependencies(motor_control
   yaml-cpp
   hd_interfaces
@@ -83,6 +100,16 @@ ament_target_dependencies(motor_control
   sensor_msgs
 )
 
+ament_target_dependencies(MotorControllerProject
+  hd_interfaces
+  rclcpp
+  std_msgs
+  sensor_msgs
+)
+
+
+# =============================================================================
+# LINK LIBRARIES
 target_link_libraries(motor_control
     Threads::Threads
     ${catkin_LIBRARIES}
@@ -97,8 +124,20 @@ target_link_libraries(motor_control
      #soem
 )
 
+target_link_libraries(MotorControllerProject 
+  ${catkin_LIBRARIES}
+  spdlog::spdlog 
+  spdlog::spdlog_header_only 
+  yaml-cpp
+  maxon_epos_ethercat_sdk::mxn_sdk_lib
+  ethercat_sdk_master::eth_sdk_lib
+  soem::soemrsl_lib
+  soem_interface::soem_lib
+  )
 
-install(TARGETS motor_control
+# =============================================================================
+# INSTALL TARGETS
+install(TARGETS motor_control MotorControllerProject
   DESTINATION lib/${PROJECT_NAME}/
 )
 
@@ -115,5 +154,4 @@ endif()
 
 
 ament_package()
-
 

@@ -13,7 +13,7 @@ class MotorConfigLoader
 public:
     MotorConfigLoader(const std::string &filePath);
 
-    std::vector<Motor> loadDeviceConfigs();
+    std::vector<std::unique_ptr<Motor>> loadDeviceConfigs();
 
 private:
     std::string filePath;

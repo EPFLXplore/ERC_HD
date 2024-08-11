@@ -2,10 +2,14 @@
 #define MOTOR_H
 
 #include <string>
-#include <optional>
 #include <iostream>
 #include <stdexcept>
+#include <atomic>
+#include <mutex>
 #include <spdlog/spdlog.h>
+#include <maxon_epos_ethercat_sdk/Maxon.hpp>
+#include "hd_interfaces/msg/motor_commands.hpp"
+
 
 class Motor
 {
@@ -17,16 +21,26 @@ private:
     const float max_position;
     const int direction;
 
-    std::optional<float> target_position;
-    std::optional<float> read_position;
-    std::optional<float> target_velocity;
-    std::optional<float> read_velocity;
-    std::optional<float> target_torque;
-    std::optional<float> read_torque;
+    std::atomic<int> mode;
+    std::atomic<double> target_position;
+    std::atomic<double> read_position;
+    std::atomic<double> target_velocity;
+    std::atomic<double> read_velocity;
+    std::atomic<double> target_torque;
+    std::atomic<double> read_torque;
+    std::atomic<double> read_current;
 
 public:
     Motor(const std::string &name, float max_velocity, float max_torque,
           float min_position, float max_position, int direction);
+
+    // Delete copy constructor and copy assignment operator
+    Motor(const Motor&) = delete;
+    Motor& operator=(const Motor&) = delete;
+
+    // Allow move constructor and move assignment operator
+    Motor(Motor&&) noexcept = default;
+    Motor& operator=(Motor&&) noexcept = default;
 
     std::string getName() const;
     float getMaxVelocity() const;
@@ -34,21 +48,28 @@ public:
     float getMinPosition() const;
     float getMaxPosition() const;
     int getDirection() const;
+    int getMode() const;
+    double getReadCurrent() const;
+    
 
-    std::optional<float> getTargetPosition() const;
-    void setTargetPosition(float position);
-    std::optional<float> getReadPosition() const;
-    void setReadPosition(float position);
+    double getTargetPosition() const;
+    void setTargetPosition(double position);
+    double getReadPosition() const;
+    void setReadPosition(double position);
 
-    std::optional<float> getTargetVelocity() const;
-    void setTargetVelocity(float velocity);
-    std::optional<float> getReadVelocity() const;
-    void setReadVelocity(float velocity);
+    double getTargetVelocity() const;
+    void setTargetVelocity(double velocity);
+    double getReadVelocity() const;
+    void setReadVelocity(double velocity);
 
-    std::optional<float> getTargetTorque() const;
-    void setTargetTorque(float torque);
-    std::optional<float> getReadTorque() const;
-    void setReadTorque(float torque);
+    double getTargetTorque() const;
+    void setTargetTorque(double torque);
+    double getReadTorque() const;
+    void setReadTorque(double torque);
+    void setMode(int new_mode);
+    void setReadCurrent(double current);
+
+    maxon::Command getCommand() const;
 
     friend std::ostream &operator<<(std::ostream &os, const Motor &motor);
 };

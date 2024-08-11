@@ -5,9 +5,9 @@ MotorConfigLoader::MotorConfigLoader(const std::string &filePath) : filePath(fil
     parser = ExpressionParser();
 }
 
-std::vector<Motor> MotorConfigLoader::loadDeviceConfigs()
+std::vector<std::unique_ptr<Motor>> MotorConfigLoader::loadDeviceConfigs()
 {
-    std::vector<Motor> motors;
+    std::vector<std::unique_ptr<Motor>> motors;
     std::vector<std::string> deviceNames;
 
     try
@@ -35,9 +35,8 @@ std::vector<Motor> MotorConfigLoader::loadDeviceConfigs()
                 float min_position = parser.string2double(min_position_str);
                 float max_position = parser.string2double(max_position_str);
                 int direction = config[deviceName]["direction"].as<int>();
-
-                Motor motor(name, max_velocity, max_torque, min_position, max_position, direction);
-                motors.emplace_back(motor);
+                
+                motors.emplace_back(std::make_unique<Motor>(name, max_velocity, max_torque, min_position, max_position, direction));
             }
         }
     }

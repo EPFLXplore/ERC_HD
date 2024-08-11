@@ -4,41 +4,52 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <memory>
+#include <functional>
 #include "Motor.h"
+#include "MotorConfigLoader.h"
+#include "hd_interfaces/msg/motor_commands.hpp"
+
+
+// using namespace std;
 
 class MotorController
 {
 private:
-    std::vector<Motor> motors;
+    std::vector<std::unique_ptr<Motor>> motors;
 
-    std::string getMotorNames() const;
 
 public:
-    MotorController(const std::vector<Motor> &motors);
+    MotorController(std::vector<std::unique_ptr<Motor>> motors);
+    MotorController(const std::string &config_path);
 
-    std::vector<Motor> getMotors() const;
-    std::vector<Motor> getJoints() const;
-    Motor getGripper() const;
+    std::vector<std::reference_wrapper<Motor>> getMotors() const;
+    std::vector<std::reference_wrapper<Motor>> getJoints() const;
+    Motor& getGripper();
 
-    void setMotorTargetPosition(int index, float position);
-    std::optional<float> getMotorTargetPosition(int index) const;
-    void setMotorReadPosition(int index, float position);
-    std::optional<float> getMotorReadPosition(int index) const;
+    bool containsMotor(const std::string &name) const;  // New method declaration
+    std::string getMotorNames() const;
 
-    void setMotorTargetVelocity(int index, float velocity);
-    std::optional<float> getMotorTargetVelocity(int index) const;
-    void setMotorReadVelocity(int index, float velocity);
-    std::optional<float> getMotorReadVelocity(int index) const;
 
-    void setMotorTargetTorque(int index, float torque);
-    std::optional<float> getMotorTargetTorque(int index) const;
-    void setMotorReadTorque(int index, float torque);
-    std::optional<float> getMotorReadTorque(int index) const;
+    void setMotorTargetPosition(size_t index, float position);
+    float getMotorTargetPosition(size_t index) const;
+    void setMotorReadPosition(size_t index, float position);
+    float getMotorReadPosition(size_t index) const;
+
+    void setMotorTargetVelocity(size_t index, float velocity);
+    float getMotorTargetVelocity(size_t index) const;
+    void setMotorReadVelocity(size_t index, float velocity);
+    float getMotorReadVelocity(size_t index) const;
+
+    void setMotorTargetTorque(size_t index, float torque);
+    float getMotorTargetTorque(size_t index) const;
+    void setMotorReadTorque(size_t index, float torque);
+    float getMotorReadTorque(size_t index) const;
 
     void setGripperPosition(float position);
-    std::optional<float> getGripperPosition() const;
+    float getGripperPosition();
 
-    Motor getMotor(const std::string &name) const;
+    Motor& getMotor(const std::string &name);
 
     friend std::ostream &operator<<(std::ostream &os, const MotorController &controller);
 

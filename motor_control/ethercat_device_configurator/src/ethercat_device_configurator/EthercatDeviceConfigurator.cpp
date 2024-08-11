@@ -290,7 +290,8 @@ void EthercatDeviceConfigurator::setup(bool startup)
     {
         for(auto & master: m_masters)
         {
-            MELO_DEBUG("Starting master on: ", master->getConfiguration().networkInterface)
+            MELO_DEBUG("Starting master on: %s", master->getConfiguration().networkInterface.c_str());
+            // MELO_DEBUG("Starting master on: ", master->getConfiguration().networkInterface)
             if(!master->startup())
             {
                 throw std::runtime_error("[EthercatDeviceConfigurator] could not start master on interface: " + master->getConfiguration().networkInterface);
