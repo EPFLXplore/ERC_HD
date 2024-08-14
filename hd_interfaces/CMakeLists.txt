@@ -21,6 +21,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/PoseGoal.msg"
   "msg/TargetInstruction.msg"
   "msg/Task.msg"
+  "srv/GetCameraIntrinsics.srv"
+  "srv/GetCameraDistortionCoefficients.srv"
   DEPENDENCIES std_msgs geometry_msgs   # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 

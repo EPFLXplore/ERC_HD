@@ -1,0 +1,7 @@
+
+# Request
+
+---
+
+# Response
+float64[] distortion_coefficients  # A list of doubles to be summed
