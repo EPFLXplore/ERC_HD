@@ -1,0 +1,1555 @@
+<sdf version='1.7'>
+  <world name='default'>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <model name='robot'>
+      <link name='base_link'>
+        <inertial>
+          <pose>0.000239 -0.008995 0.005502 0 -0 0</pose>
+          <mass>10.45</mass>
+          <inertia>
+            <ixx>0.433043</ixx>
+            <ixy>-0.01281</ixy>
+            <ixz>0.0105888</ixz>
+            <iyy>0.478152</iyy>
+            <iyz>0.0136728</iyz>
+            <izz>0.488079</izz>
+          </inertia>
+        </inertial>
+        <collision name='base_link_fixed_joint_lump__chassis_link_collision'>
+          <pose>0 0 0 0 -0 3.14159</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/base_link.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.2</mu>
+                <mu2>0.2</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__camera_link_collision_1'>
+          <pose>0.725 -0.065 0.01 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.05</length>
+              <radius>0.025</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__lidar_axis_collision_2'>
+          <pose>-0.2 -0.25 0.12 0 -0 3.14159</pose>
+          <geometry>
+            <cylinder>
+              <length>0.24</length>
+              <radius>0.005</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__lidar_link_collision_3'>
+          <pose>-0.2 -0.25 0.265 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.05</length>
+              <radius>0.025</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='base_link_fixed_joint_lump__chassis_link_visual'>
+          <pose>0 0 0 0 -0 3.14159</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/base_link.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__camera_visual_visual_1'>
+          <pose>0.325 -0.065 -0.1 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/camera.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__lidar_axis_visual_2'>
+          <pose>-0.2 -0.25 0.12 0 -0 3.14159</pose>
+          <geometry>
+            <cylinder>
+              <length>0.24</length>
+              <radius>0.005</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/LightGrey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__lidar_link_visual_3'>
+          <pose>-0.2 -0.25 0.265 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/os1.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <gravity>1</gravity>
+        <sensor name='camera' type='depth'>
+          <always_on>1</always_on>
+          <visualize>1</visualize>
+          <update_rate>0.1</update_rate>
+          <camera name='camera'>
+            <horizontal_fov>1.26</horizontal_fov>
+            <image>
+              <width>1280</width>
+              <height>720</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.7</near>
+              <far>8</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.007</stddev>
+            </noise>
+            <vertical_fov>0.86</vertical_fov>
+          </camera>
+          <plugin name='depth' filename='libgazebo_ros_camera.so'>
+            <camera_name>camera</camera_name>
+            <frame_name>camera_optical_link</frame_name>
+            <hack_baseline>0.07</hack_baseline>
+            <min_depth>0.1</min_depth>
+            <max_depth>100.0</max_depth>
+          </plugin>
+          <pose>0.325 -0.065 -0.1 0 -0 0</pose>
+        </sensor>
+        <sensor name='sensor_gpu_ray' type='gpu_ray'>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>512</samples>
+                <min_angle>-3.14</min_angle>
+                <max_angle>3.14</max_angle>
+                <resolution>1</resolution>
+              </horizontal>
+              <vertical>
+                <samples>64</samples>
+                <min_angle>-0.78</min_angle>
+                <max_angle>0.78</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.5</min>
+              <max>100</max>
+              <resolution>0.008</resolution>
+            </range>
+          </ray>
+          <always_on>1</always_on>
+          <visualize>0</visualize>
+          <update_rate>10</update_rate>
+          <plugin name='pc2_gpu' filename='libgazebo_ros_ray_sensor.so'>
+            <ros>
+              <namespace>/ouster</namespace>
+              <remapping>~/out:=points</remapping>
+            </ros>
+            <output_type>sensor_msgs/PointCloud2</output_type>
+            <frame_name>lidar_link</frame_name>
+          </plugin>
+          <pose>-0.2 -0.25 0.265 0 -0 0</pose>
+        </sensor>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='chassis_to_caster_axis' type='revolute'>
+        <pose relative_to='base_link'>-0.3 -0.065 -0.225 0 -0.6 3.14159</pose>
+        <parent>base_link</parent>
+        <child>caster_axis</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='caster_axis'>
+        <pose relative_to='chassis_to_caster_axis'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 -0.125 0 -0 0</pose>
+          <mass>0.5</mass>
+          <inertia>
+            <ixx>0.0122411</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0123453</iyy>
+            <iyz>-2.9508e-20</iyz>
+            <izz>0.000211458</izz>
+          </inertia>
+        </inertial>
+        <collision name='caster_axis_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.45</length>
+              <radius>0.005</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='caster_axis_fixed_joint_lump__caster_wheel_collision_1'>
+          <pose>0 0 -0.25 1.5708 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.05</length>
+              <radius>0.05</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='caster_axis_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.45</length>
+              <radius>0.005</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='caster_axis_fixed_joint_lump__caster_wheel_visual_1'>
+          <pose>0 0 -0.25 1.5708 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.05</length>
+              <radius>0.05</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='chassis_to_leg_left' type='revolute'>
+        <pose relative_to='base_link'>0.1 0.16 -0.05 0 -0 3.14159</pose>
+        <parent>base_link</parent>
+        <child>left_leg</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-0.3</lower>
+            <upper>0.3</upper>
+            <effort>300</effort>
+            <velocity>100</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='left_leg'>
+        <pose relative_to='chassis_to_leg_left'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>-0.000967 -0.116235 0.013376 0 -0 0</pose>
+          <mass>1.66151</mass>
+          <inertia>
+            <ixx>0.007103</ixx>
+            <ixy>-5.6e-05</ixy>
+            <ixz>-0.013196</ixz>
+            <iyy>0.220618</iyy>
+            <iyz>0.000815</iyz>
+            <izz>0.220639</izz>
+          </inertia>
+        </inertial>
+        <collision name='left_leg_collision'>
+          <pose>-0.006607 0.16386 0.046026 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/link2_1.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.2</mu>
+                <mu2>0.2</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='left_leg_visual'>
+          <pose>-0.006607 0.16386 0.046026 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/link2_1.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='leg_to_holder_front_left' type='revolute'>
+        <pose relative_to='left_leg'>-0.414778 -0.143408 -0.042046 0 -0 3.14159</pose>
+        <parent>left_leg</parent>
+        <child>holder_front_left</child>
+        <axis>
+          <xyz>0.061399 0 -0.998113</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='holder_front_left'>
+        <pose relative_to='leg_to_holder_front_left'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0.011897 0.036028 -0.212961 0 -0 0</pose>
+          <mass>0.354358</mass>
+          <inertia>
+            <ixx>0.003558</ixx>
+            <ixy>2e-06</ixy>
+            <ixz>0.000178</ixz>
+            <iyy>0.003121</iyy>
+            <iyz>0.000206</iyz>
+            <izz>0.000562</izz>
+          </inertia>
+        </inertial>
+        <collision name='holder_front_left_collision'>
+          <pose>0.408171 0.307268 0.088072 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/steering_3.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.2</mu>
+                <mu2>0.2</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='holder_front_left_visual'>
+          <pose>0.408171 0.307268 0.088072 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/steering_3.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='holder_to_wheel_front_left' type='revolute'>
+        <pose relative_to='holder_front_left'>0.017134 -0.016691 -0.269456 0 -0 0</pose>
+        <parent>holder_front_left</parent>
+        <child>wheel_front_left</child>
+        <axis>
+          <xyz>0.033267 -0.999444 0.002046</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='wheel_front_left'>
+        <pose relative_to='holder_to_wheel_front_left'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0.01 0 0 -0 0</pose>
+          <mass>1.59</mass>
+          <inertia>
+            <ixx>0.010896</ixx>
+            <ixy>-0.000257</ixy>
+            <ixz>0</ixz>
+            <iyy>0.018605</iyy>
+            <iyz>-1.6e-05</iyz>
+            <izz>0.010887</izz>
+          </inertia>
+        </inertial>
+        <collision name='wheel_front_left_collision'>
+          <pose>0.391037 0.323959 0.357528 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/wheel3_1.dae</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>50</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='wheel_front_left_visual'>
+          <pose>0.391037 0.323959 0.357528 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/wheel3_1.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/LightGrey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='leg_to_holder_rear_left' type='revolute'>
+        <pose relative_to='left_leg'>0.416803 -0.143408 0.009109 0 -0 3.14159</pose>
+        <parent>left_leg</parent>
+        <child>holder_rear_left</child>
+        <axis>
+          <xyz>-0.061399 0 0.998113</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='holder_rear_left'>
+        <pose relative_to='leg_to_holder_rear_left'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0.011897 0.036028 -0.212962 0 -0 0</pose>
+          <mass>0.354358</mass>
+          <inertia>
+            <ixx>0.003558</ixx>
+            <ixy>2e-06</ixy>
+            <ixz>0.000178</ixz>
+            <iyy>0.003121</iyy>
+            <iyz>0.000206</iyz>
+            <izz>0.000562</izz>
+          </inertia>
+        </inertial>
+        <collision name='holder_rear_left_collision'>
+          <pose>-0.42341 0.307268 0.036917 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/steering_2.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.2</mu>
+                <mu2>0.2</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='holder_rear_left_visual'>
+          <pose>-0.42341 0.307268 0.036917 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/steering_2.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='holder_to_wheel_rear_left' type='revolute'>
+        <pose relative_to='holder_rear_left'>0.017133 -0.016691 -0.269457 0 -0 0</pose>
+        <parent>holder_rear_left</parent>
+        <child>wheel_rear_left</child>
+        <axis>
+          <xyz>0.033267 -0.999444 0.002046</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='wheel_rear_left'>
+        <pose relative_to='holder_to_wheel_rear_left'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0.01 0 0 -0 0</pose>
+          <mass>1.59276</mass>
+          <inertia>
+            <ixx>0.010896</ixx>
+            <ixy>-0.000257</ixy>
+            <ixz>0</ixz>
+            <iyy>0.018605</iyy>
+            <iyz>-1.6e-05</iyz>
+            <izz>0.010887</izz>
+          </inertia>
+        </inertial>
+        <collision name='wheel_rear_left_collision'>
+          <pose>-0.440543 0.323959 0.306374 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/wheels2_1.dae</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>50</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='wheel_rear_left_visual'>
+          <pose>-0.440543 0.323959 0.306374 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/wheels2_1.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/LightGrey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='chassis_to_leg_right' type='revolute'>
+        <pose relative_to='base_link'>0.1 -0.29 -0.05 0 -0 3.14159</pose>
+        <parent>base_link</parent>
+        <child>right_leg</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-0.3</lower>
+            <upper>0.3</upper>
+            <effort>300</effort>
+            <velocity>100</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='right_leg'>
+        <pose relative_to='chassis_to_leg_right'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0.000967 0.116235 0.013376 0 -0 0</pose>
+          <mass>1.66151</mass>
+          <inertia>
+            <ixx>0.007103</ixx>
+            <ixy>-5.6e-05</ixy>
+            <ixz>0.013196</ixz>
+            <iyy>0.220618</iyy>
+            <iyz>-0.000815</iyz>
+            <izz>0.220639</izz>
+          </inertia>
+        </inertial>
+        <collision name='right_leg_collision'>
+          <pose>-0.006607 -0.29714 0.046026 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/link1_1.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.2</mu>
+                <mu2>0.2</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='right_leg_visual'>
+          <pose>-0.006607 -0.29714 0.046026 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/link1_1.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='leg_to_holder_front_right' type='revolute'>
+        <pose relative_to='right_leg'>-0.416804 0.143408 0.009109 0 -0 0</pose>
+        <parent>right_leg</parent>
+        <child>holder_front_right</child>
+        <axis>
+          <xyz>0.061399 0 0.998113</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='holder_front_right'>
+        <pose relative_to='leg_to_holder_front_right'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>-0.011896 -0.036028 -0.212962 0 -0 0</pose>
+          <mass>0.354358</mass>
+          <inertia>
+            <ixx>0.003558</ixx>
+            <ixy>2e-06</ixy>
+            <ixz>-0.000178</ixz>
+            <iyy>0.003121</iyy>
+            <iyz>-0.000206</iyz>
+            <izz>0.000562</izz>
+          </inertia>
+        </inertial>
+        <collision name='holder_front_right_collision'>
+          <pose>0.410197 -0.440548 0.036917 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/steering_4.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.2</mu>
+                <mu2>0.2</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='holder_front_right_visual'>
+          <pose>0.410197 -0.440548 0.036917 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/steering_4.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='holder_to_wheel_front_right' type='revolute'>
+        <pose relative_to='holder_front_right'>-0.017133 0.01669 -0.269457 0 -0 0</pose>
+        <parent>holder_front_right</parent>
+        <child>wheel_front_right</child>
+        <axis>
+          <xyz>-0.033267 0.999444 0.002046</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='wheel_front_right'>
+        <pose relative_to='holder_to_wheel_front_right'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0.000339 -0.010197 -2e-05 0 -0 0</pose>
+          <mass>1.59276</mass>
+          <inertia>
+            <ixx>0.010896</ixx>
+            <ixy>-0.000257</ixy>
+            <ixz>0</ixz>
+            <iyy>0.018605</iyy>
+            <iyz>1.6e-05</iyz>
+            <izz>0.010887</izz>
+          </inertia>
+        </inertial>
+        <collision name='wheel_front_right_collision'>
+          <pose>0.42733 -0.457238 0.306374 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/wheel4_1.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>50</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='wheel_front_right_visual'>
+          <pose>0.42733 -0.457238 0.306374 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/wheel4_1.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/LightGrey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='leg_to_holder_rear_right' type='revolute'>
+        <pose relative_to='right_leg'>0.414777 0.143408 -0.042046 0 -0 0</pose>
+        <parent>right_leg</parent>
+        <child>holder_rear_right</child>
+        <axis>
+          <xyz>-0.061399 0 -0.998113</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='holder_rear_right'>
+        <pose relative_to='leg_to_holder_rear_right'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>-0.011896 -0.036028 -0.212961 0 -0 0</pose>
+          <mass>0.354358</mass>
+          <inertia>
+            <ixx>0.003558</ixx>
+            <ixy>2e-06</ixy>
+            <ixz>-0.000178</ixz>
+            <iyy>0.003121</iyy>
+            <iyz>-0.000206</iyz>
+            <izz>0.000562</izz>
+          </inertia>
+        </inertial>
+        <collision name='holder_rear_right_collision'>
+          <pose>-0.421384 -0.440548 0.088072 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/steering_1.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.2</mu>
+                <mu2>0.2</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='holder_rear_right_visual'>
+          <pose>-0.421384 -0.440548 0.088072 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/steering_1.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='holder_to_wheel_rear_right' type='revolute'>
+        <pose relative_to='holder_rear_right'>-0.017133 0.01669 -0.269456 0 -0 0</pose>
+        <parent>holder_rear_right</parent>
+        <child>wheel_rear_right</child>
+        <axis>
+          <xyz>-0.033267 0.999444 0.002046</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='wheel_rear_right'>
+        <pose relative_to='holder_to_wheel_rear_right'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 -0.010197 0 0 -0 0</pose>
+          <mass>1.59276</mass>
+          <inertia>
+            <ixx>0.010896</ixx>
+            <ixy>-0.000257</ixy>
+            <ixz>0</ixz>
+            <iyy>0.018605</iyy>
+            <iyz>1.6e-05</iyz>
+            <izz>0.010887</izz>
+          </inertia>
+        </inertial>
+        <collision name='wheel_rear_right_collision'>
+          <pose>-0.404251 -0.457238 0.357528 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/wheels1_1.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>50</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='wheel_rear_right_visual'>
+          <pose>-0.404251 -0.457238 0.357528 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>0.001 0.001 0.001</scale>
+              <uri>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/meshes/wheels1_1.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/LightGrey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>1</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name='gazebo_ros2_control' filename='libgazebo_ros2_control.so'>
+        <parameters>/home/marguerite/Documents/xplore/sim/gazebo_rover/install/rover_description/share/rover_description/config/control.yaml</parameters>
+      </plugin>
+      <static>0</static>
+      <plugin name='rover_joint_state' filename='libgazebo_ros_joint_state_publisher.so'>
+        <update_rate>100</update_rate>
+        <joint_name>chassis_joint</joint_name>
+        <joint_name>chassis_to_leg_left</joint_name>
+        <joint_name>chassis_to_leg_right</joint_name>
+        <joint_name>leg_to_holder_front_left</joint_name>
+        <joint_name>leg_to_holder_front_right</joint_name>
+        <joint_name>leg_to_holder_rear_right</joint_name>
+        <joint_name>leg_to_holder_rear_left</joint_name>
+        <joint_name>holder_to_wheel_front_right</joint_name>
+        <joint_name>holder_to_wheel_front_left</joint_name>
+        <joint_name>holder_to_wheel_rear_right</joint_name>
+        <joint_name>holder_to_wheel_rear_left</joint_name>
+        <joint_name>chassis_to_caster_axis</joint_name>
+        <joint_name>caster_axis_to_caster_wheel</joint_name>
+      </plugin>
+      <pose>0 5 3 0 -0 0</pose>
+    </model>
+    <model name='unit_cylinder'>
+      <pose>2.94439 5.41265 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name='unit_cylinder_0'>
+      <pose>0.258067 11.1211 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name='unit_cylinder_1'>
+      <pose>-3.71755 8.24896 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name='unit_cylinder_2'>
+      <pose>-0.966796 2.62308 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <state world_name='default'>
+      <sim_time>28 155000000</sim_time>
+      <real_time>46 254603098</real_time>
+      <wall_time>1695909852 553211212</wall_time>
+      <iterations>28155</iterations>
+      <model name='ground_plane'>
+        <pose>0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='robot'>
+        <pose>0.081264 4.94776 0.478901 -0.001787 0.009845 0.061043</pose>
+        <scale>1 1 1</scale>
+        <link name='base_link'>
+          <pose>0.081264 4.94776 0.478901 -0.001787 0.009845 0.061043</pose>
+          <velocity>0.001284 -0.000767 0.005635 -0.006282 0.006989 -0.001354</velocity>
+          <acceleration>2.26263 0.352576 11.2321 0.039308 -0.350313 -2.53403</acceleration>
+          <wrench>23.6445 3.68442 117.376 0 -0 0</wrench>
+        </link>
+        <link name='caster_axis'>
+          <pose>-0.216383 4.86404 0.256982 0.109406 0.601181 0.255433</pose>
+          <velocity>-0.000125 -0.001703 0.008544 0.049791 0.008626 0.079577</velocity>
+          <acceleration>-1.41451 -2.87665 16.9675 0.416141 1.43397 1.60437</acceleration>
+          <wrench>-0.707253 -1.43833 8.48375 0 -0 0</wrench>
+        </link>
+        <link name='holder_front_left'>
+          <pose>0.577887 5.28197 0.411242 -0.001752 -0.062304 0.061108</pose>
+          <velocity>0.001688 -0.001479 0.000272 0.008226 0.010053 -0.058573</velocity>
+          <acceleration>-1.13971 -0.835107 -0.075312 1.1714 0.747729 -1.79242</acceleration>
+          <wrench>-0.403866 -0.295927 -0.026688 0 -0 0</wrench>
+        </link>
+        <link name='holder_front_right'>
+          <pose>0.622836 4.54653 0.412195 0.00176 -0.061436 -3.08063</pose>
+          <velocity>0.000455 -0.001161 0.006723 0.002829 0.001769 -0.001474</velocity>
+          <acceleration>-0.15184 0.484196 13.7447 1.20944 -1.21245 0.798186</acceleration>
+          <wrench>-0.053806 0.171579 4.87055 0 -0 0</wrench>
+        </link>
+        <link name='holder_rear_left'>
+          <pose>-0.253714 5.23113 0.41052 -0.001765 -0.062303 0.061131</pose>
+          <velocity>0.000328 -3.7e-05 0.008112 0.002885 0.009954 -0.0357</velocity>
+          <acceleration>-3.53727 0.879709 15.6327 2.79807 0.716909 -1.17545</acceleration>
+          <wrench>-1.25346 0.311732 5.53957 0 -0 0</wrench>
+        </link>
+        <link name='holder_rear_right'>
+          <pose>-0.208765 4.4957 0.412193 0.001785 -0.061435 -3.08064</pose>
+          <velocity>0.00031 0.00092 0.008035 -0.005166 0.001642 -0.005987</velocity>
+          <acceleration>-0.184372 1.22122 15.8806 -0.647815 -0.950611 0.533643</acceleration>
+          <wrench>-0.065334 0.43275 5.62743 0 -0 0</wrench>
+        </link>
+        <link name='left_leg'>
+          <pose>0.170823 5.11344 0.427633 0.001764 0.062304 -3.08042</pose>
+          <velocity>0.001135 -0.001171 0.004056 0.000132 0.009687 -0.001393</velocity>
+          <acceleration>2.54085 -0.484847 8.18 -2.00203 -0.242122 0.771725</acceleration>
+          <wrench>4.22165 -0.805578 13.5911 0 -0 0</wrench>
+        </link>
+        <link name='right_leg'>
+          <pose>0.198283 4.66428 0.428435 0.001794 -0.061436 -3.08065</pose>
+          <velocity>0.000541 -0.001403 0.005912 -0.007152 0.001148 -0.001327</velocity>
+          <acceleration>0.634216 -0.774478 13.6386 2.52295 1.46183 2.96117</acceleration>
+          <wrench>1.05376 -1.2868 22.6607 0 -0 0</wrench>
+        </link>
+        <link name='wheel_front_left'>
+          <pose>0.612748 5.26691 0.143406 -0.022967 0.503217 0.052868</pose>
+          <velocity>-0.001961 -0.001397 -6.9e-05 0.008366 0.019725 -0.059053</velocity>
+          <acceleration>-2.34659 -0.863147 -0.201787 -0.657894 -1.10962 1.83896</acceleration>
+          <wrench>-3.73108 -1.3724 -0.320842 0 -0 0</wrench>
+        </link>
+        <link name='wheel_front_right'>
+          <pose>0.624439 4.52943 0.142225 0.00023 -0.015703 -3.08049</pose>
+          <velocity>-0.000124 -0.0005 0.00682 0.003429 -0.000271 -0.001181</velocity>
+          <acceleration>-0.619477 0.605685 13.703 1.74128 1.48742 -0.963319</acceleration>
+          <wrench>-0.986678 0.964712 21.8256 0 -0 0</wrench>
+        </link>
+        <link name='wheel_rear_left'>
+          <pose>-0.218854 5.21607 0.142683 -0.036478 0.742616 0.04354</pose>
+          <velocity>-0.002939 -0.000655 0.007912 0.006355 0.000148 -0.036075</velocity>
+          <acceleration>-4.76966 0.52313 15.774 -2.66306 -0.405625 1.04299</acceleration>
+          <wrench>-7.59692 0.83322 25.1242 0 -0 0</wrench>
+        </link>
+        <link name='wheel_rear_right'>
+          <pose>-0.207162 4.47859 0.142226 0.000232 -0.015705 -3.08051</pose>
+          <velocity>-0.000229 -0.000141 0.008615 0.000679 0.000533 -0.004231</velocity>
+          <acceleration>-0.743965 0.931408 16.8652 1.75935 1.56355 -1.15682</acceleration>
+          <wrench>-1.18496 1.48351 26.8622 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='unit_cylinder'>
+        <pose>2.94439 5.41265 0.499997 3e-06 4e-06 -0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>2.94439 5.41265 0.499997 3e-06 4e-06 -0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='unit_cylinder_0'>
+        <pose>0.258069 11.1211 0.499997 3e-06 4e-06 -0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>0.258069 11.1211 0.499997 3e-06 4e-06 -0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='unit_cylinder_1'>
+        <pose>-3.71755 8.24896 0.499993 -3e-06 -4e-06 -0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>-3.71755 8.24896 0.499993 -3e-06 -4e-06 -0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='unit_cylinder_2'>
+        <pose>-0.966794 2.62308 0.499997 3e-06 4e-06 -0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>-0.966794 2.62308 0.499997 3e-06 4e-06 -0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name='sun'>
+        <pose>0 0 10 0 -0 0</pose>
+      </light>
+    </state>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>-11.649 3.23472 10.1888 -0 0.563643 0.240195</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+  </world>
+</sdf>
