@@ -58,12 +58,17 @@ RUN apt update \
 WORKDIR /ultralytics
 
 # Copy contents and assign permissions for Ultralytics
-COPY . .
+COPY . .    
+# RUN git clone https://github.com/ultralytics/ultralytics
 RUN git remote set-url origin https://github.com/ultralytics/ultralytics.git
 ADD https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8n.pt .
 
+# RUN pwd
+# RUN ls 
+# RUN ls ultralytics/
+
 # Remove opencv-python from Ultralytics dependencies as it conflicts with opencv-python installed in base image
-RUN grep -v "opencv-python" pyproject.toml > temp.toml && mv temp.toml pyproject.toml
+# RUN grep -v "opencv-python" pyproject.toml > temp.toml && mv temp.toml pyproject.toml
 
 # Download onnxruntime-gpu 1.15.1 for Jetson Linux 35.2.1 (JetPack 5.1). Other versions can be seen in https://elinux.org/Jetson_Zoo#ONNX_Runtime
 ADD https://nvidia.box.com/shared/static/mvdcltm9ewdy2d5nurkiqorofz1s53ww.whl onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl
@@ -90,7 +95,6 @@ RUN echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="03e7", MODE="0666"' | sudo tee /et
 RUN /etc/init.d/udev restart  
 
 
-USER $USERNAME
 
 # Ensure Python and pip are installed and updated
 RUN pip install --no-cache-dir --upgrade pip
@@ -104,6 +108,9 @@ RUN python3 -m pip install --upgrade pip wheel
 RUN pip install onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl
 RUN pip install --no-cache-dir -e ".[export]"
 RUN rm *.whl
+
+USER $USERNAME
+
 
 
 # Set a diretory to store the project
