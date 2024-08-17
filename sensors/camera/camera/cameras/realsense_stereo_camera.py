@@ -1,9 +1,10 @@
 import pyrealsense2 as rs
 import numpy as np
 import cv2 as cv
+from ..interfaces.stereo_camera_interface import StereoCameraInterface
 
 
-class RealSenseCamera:
+class RealSenseStereoCamera(StereoCameraInterface):
     def __init__(self):
         self.pipe = rs.pipeline()  # Create a RealSense pipeline object.
 

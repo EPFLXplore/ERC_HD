@@ -8,12 +8,11 @@ from hd_interfaces.srv import GetCameraIntrinsics, GetCameraDistortionCoefficien
 
 import sys
 
-from camera.realsense_camera import RealSenseCamera
 import os
+from .interfaces.monocular_camera_interface import MonocularCameraInterface
+from .camera_factory import CameraFactory
 
 print(f"cwd: {os.getcwd()}")
-
-sys.path.append("./src/vision/vision")
 
 
 class CameraNode(Node):
@@ -21,12 +20,9 @@ class CameraNode(Node):
     Create an CameraNode class, publishes video frames to the video_frames topic
     """
 
-    def __init__(self):
-        """
-        Class constructor to set up the node
-        """
-        # Initiate the Node class's constructor and give it a name
-        super().__init__("image_publisher")
+    def __init__(self, camera: MonocularCameraInterface):
+        super().__init__("camera_node")
+
         self.camera_intrinsics_srv = self.create_service(
             GetCameraIntrinsics,
             "/HD/camera/get_camera_intrinsics",
@@ -39,7 +35,7 @@ class CameraNode(Node):
             self.get_distortion_coefficients_callback,
         )
 
-        self.camera = RealSenseCamera()
+        self.camera = camera
 
         # to the HD/vision/video_frames topic. The queue size is 10 messages.
         self.publisher_ = self.create_publisher(CompressedImage, "HD/camera/rgb", 1)
@@ -95,14 +91,15 @@ class CameraNode(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    minimal_publisher = CameraNode()
+    node = rclpy.create_node("camera_selector")
+    camera_type = node.declare_parameter("camera_type", "monocular").value
 
-    rclpy.spin(minimal_publisher)
+    camera = CameraFactory.create_camera(camera_type)
 
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
-    minimal_publisher.destroy_node()
+    camera_node = CameraNode(camera=camera)
+    rclpy.spin(camera_node)
+
+    camera_node.destroy_node()
     rclpy.shutdown()
 
 
