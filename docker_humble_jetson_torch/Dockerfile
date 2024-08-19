@@ -76,7 +76,8 @@ ADD https://nvidia.box.com/shared/static/mvdcltm9ewdy2d5nurkiqorofz1s53ww.whl on
 
 # Install ROS 2 HD packages with RosInstall to install from source
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y liburdfdom-dev
+RUN apt update && sudo apt upgrade -y
+RUN apt install -y urdfdom
 RUN /home/ros2_install.sh \
     moveit \
     depthai-ros \
