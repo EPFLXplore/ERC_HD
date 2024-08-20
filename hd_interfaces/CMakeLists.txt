@@ -12,6 +12,7 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
@@ -21,9 +22,11 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/PoseGoal.msg"
   "msg/TargetInstruction.msg"
   "msg/Task.msg"
+  "msg/CompressedRGBD.msg"
   "srv/GetCameraIntrinsics.srv"
   "srv/GetCameraDistortionCoefficients.srv"
-  DEPENDENCIES std_msgs geometry_msgs   # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
+  "srv/SelectPerceptionModules.srv"
+  DEPENDENCIES std_msgs geometry_msgs sensor_msgs   # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 
 if(BUILD_TESTING)
