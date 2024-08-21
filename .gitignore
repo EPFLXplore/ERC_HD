@@ -11,3 +11,6 @@ hd_ws/tttt/
 
 *.pyc
 **/__pycache__/**
+**/build/**
+**/install/**
+**/log/**
