@@ -16,3 +16,7 @@ class StereoCameraInterface(MonocularCameraInterface):
     @abstractmethod
     def get_coeffs(self):
         pass
+
+    @abstractmethod
+    def get_rgbd(self):
+        pass

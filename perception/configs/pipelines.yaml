@@ -1,0 +1,11 @@
+Buttons_A:
+  aruco_tag_size: 50 # mm
+  aruco_tag_id: 0
+
+Button_B_button:
+  aruco_tag_size: 32 # mm
+  aruco_tag_id: 1
+
+Button_B_socket:
+  aruco_tag_size: 32 # mm
+  aruco_tag_id: 2

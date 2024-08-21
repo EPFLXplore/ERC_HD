@@ -1,7 +1,11 @@
 import pyrealsense2 as rs
 import numpy as np
 import cv2 as cv
+
+import rclpy.logging
 from ..interfaces.stereo_camera_interface import StereoCameraInterface
+
+import rclpy
 
 
 class RealSenseStereoCamera(StereoCameraInterface):
@@ -66,9 +70,8 @@ class RealSenseStereoCamera(StereoCameraInterface):
 
     # A method to get the color image from the RealSense camera.
     def get_image(self):
-        frameset = (
-            self.pipe.wait_for_frames()
-        )  # Wait for the next set of frames from the pipeline.
+        frameset = self.pipe.wait_for_frames()
+
         color_frame = (
             frameset.get_color_frame()
         )  # Get the color frame from the frameset.
@@ -81,3 +84,18 @@ class RealSenseStereoCamera(StereoCameraInterface):
         )  # Convert the color space of the image.
 
         return frame
+
+    def get_rgbd(self):
+        frameset = self.pipe.wait_for_frames()
+        color_frame = np.asanyarray((frameset.get_color_frame().get_data()))
+
+        depth_frame_o = frameset.get_depth_frame()
+        depth_frame_data = depth_frame_o.get_data()
+        depth_frame = np.asanyarray(depth_frame_data)
+
+        rclpy.logging.get_logger("rclpy").info(
+            f"types: frame: {type(depth_frame_o)}, data: {type(depth_frame_data)}, depth: {type(depth_frame)}"
+        )
+
+        # depth_frame = np.asanyarray((frameset.get_depth_frame().get_data()))
+        return color_frame, depth_frame
