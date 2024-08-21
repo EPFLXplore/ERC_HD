@@ -1,18 +1,14 @@
 # Import the necessary libraries
 import rclpy  # Python Client Library for ROS 2
 from rclpy.node import Node  # Handles the creation of nodes
-from sensor_msgs.msg import CompressedImage  # Image is the message type
+from sensor_msgs.msg import CompressedImage, Image  # Image is the message type
 from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Images
 from hd_interfaces.srv import GetCameraIntrinsics, GetCameraDistortionCoefficients
+from hd_interfaces.msg import CompressedRGBD
 
 
-import sys
-
-import os
 from .interfaces.monocular_camera_interface import MonocularCameraInterface
 from .camera_factory import CameraFactory
-
-print(f"cwd: {os.getcwd()}")
 
 
 class CameraNode(Node):
@@ -38,7 +34,7 @@ class CameraNode(Node):
         self.camera = camera
 
         # to the HD/vision/video_frames topic. The queue size is 10 messages.
-        self.publisher_ = self.create_publisher(CompressedImage, "HD/camera/rgb", 1)
+        self.publisher_ = self.create_publisher(CompressedRGBD, "HD/camera/rgbd", 1)
         self.get_logger().info("Image Publisher Created")
 
         # We will publish a message every 0.1 seconds
@@ -63,7 +59,26 @@ class CameraNode(Node):
         """
         # The 'cv2_to_imgmsg' method converts an OpenCV
         # image to a ROS 2 image message
-        self.publisher_.publish(self.bridge.cv2_to_compressed_imgmsg(frame))
+        msg = CompressedRGBD()
+
+        # Convert the numpy array to bytes
+        depth_image_bytes = depth.tobytes()
+
+        # Create an Image message
+        depth_msg = Image()
+        depth_msg.header.stamp = self.get_clock().now().to_msg()
+        depth_msg.header.frame_id = "camera_depth_frame"
+        depth_msg.height = depth.shape[0]
+        depth_msg.width = depth.shape[1]
+        depth_msg.encoding = "mono16"  # Encoding for uint16 depth images
+        depth_msg.is_bigendian = False
+        depth_msg.step = depth_msg.width * 2  # 2 bytes per pixel
+        depth_msg.data = depth_image_bytes
+
+        msg.depth = depth_msg
+        msg.color = self.bridge.cv2_to_compressed_imgmsg(frame)
+
+        self.publisher_.publish(msg)
 
         # Display the message on the console
         self.get_logger().info("Publishing video frame")
