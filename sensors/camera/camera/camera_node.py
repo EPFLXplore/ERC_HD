@@ -9,6 +9,7 @@ from hd_interfaces.msg import CompressedRGBD
 
 from .interfaces.monocular_camera_interface import MonocularCameraInterface
 from .camera_factory import CameraFactory
+import time
 
 
 class CameraNode(Node):
@@ -41,47 +42,57 @@ class CameraNode(Node):
         timer_period = 0.035  # seconds
 
         # Create the timer
-        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.timer = self.create_timer(timer_period, self.rgbd_callback)
 
         # Used to convert between ROS and OpenCV images
         self.bridge = CvBridge()
 
     # def timer_callback(self):
 
-    def timer_callback(self):
+    def rgbd_callback(self):
         """
         Callback function.
-        """
-        depth = self.camera.get_depth()
-        frame = self.camera.get_image()
-        """
         Publishes a frame to the video_frames topic
         """
         # The 'cv2_to_imgmsg' method converts an OpenCV
         # image to a ROS 2 image message
+        start_time = time.time()
+        color, depth = self.camera.get_rgbd()
+
         msg = CompressedRGBD()
 
-        # Convert the numpy array to bytes
-        depth_image_bytes = depth.tobytes()
-
         # Create an Image message
-        depth_msg = Image()
-        depth_msg.header.stamp = self.get_clock().now().to_msg()
-        depth_msg.header.frame_id = "camera_depth_frame"
-        depth_msg.height = depth.shape[0]
-        depth_msg.width = depth.shape[1]
-        depth_msg.encoding = "mono16"  # Encoding for uint16 depth images
-        depth_msg.is_bigendian = False
-        depth_msg.step = depth_msg.width * 2  # 2 bytes per pixel
-        depth_msg.data = depth_image_bytes
+        # depth_msg = Image()
+        # depth_msg.header.stamp = self.get_clock().now().to_msg()
+        # depth_msg.header.frame_id = "camera_depth_frame"
+        # depth_msg.height = depth.shape[0]
+        # depth_msg.width = depth.shape[1]
+        # depth_msg.encoding = "mono16"  # Encoding for uint16 depth images
+        # depth_msg.is_bigendian = False
+        # depth_msg.step = depth_msg.width * 2  # 2 bytes per pixel
+        # Convert the numpy array to bytes
+        start_depth = time.time()
+
+        # depth_msg.data = depth.tobytes()
+        # depth_msg.data = self.bridge.cv2_to_compressed_imgmsg(depth, "tiff").data
+        depth_msg = self.bridge.cv2_to_compressed_imgmsg(depth, "tiff")
+
+        end_depth = time.time()
 
         msg.depth = depth_msg
-        msg.color = self.bridge.cv2_to_compressed_imgmsg(frame)
+
+        msg.color = self.bridge.cv2_to_compressed_imgmsg(color)
 
         self.publisher_.publish(msg)
+        end_time = time.time()
 
         # Display the message on the console
-        self.get_logger().info("Publishing video frame")
+        total_time = round(end_time - start_time, 3)
+        depth_time = round(end_depth - start_depth, 3)
+        depth_fraction = round(depth_time / total_time, 3)
+        self.get_logger().info(
+            f"Publishing video frame, total: {total_time}, depth: {depth_time}, fraction: {depth_fraction}"
+        )
 
     def get_intrinsics_callback(self, request, response):
         intrinsics = self.camera.get_intrinsics()
@@ -107,7 +118,7 @@ def main(args=None):
     rclpy.init(args=args)
 
     node = rclpy.create_node("camera_selector")
-    camera_type = node.declare_parameter("camera_type", "monocular").value
+    camera_type = node.declare_parameter("camera_type").value
 
     camera = CameraFactory.create_camera(camera_type)
 
@@ -120,3 +131,13 @@ def main(args=None):
 
 if __name__ == "__main__":
     main()
+
+
+"""
+README
+
+Test:
+- convert rbdf message to 2 compressed images and try tiff
+- 
+
+"""

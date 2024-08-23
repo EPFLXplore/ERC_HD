@@ -10,21 +10,16 @@ import numpy as np
 from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Images
 from geometry_msgs.msg import Pose
 
+from .pipeline_manager import PipelineManager
+from .handlers.pose_msg import PoseMsg
+
 
 class PerceptionNode(Node):
     def __init__(self):
         super().__init__("perception_node")
 
         # Initialize Module Manager
-        self.module_manager = ModuleManager()
-
-        # # Add modules
-        # rock_detection = RockDetectionModule(self)
-        # rock_size_estimation = RockSizeEstimationModule(self)
-
-        # self.module_manager.add_module(rock_detection)
-        # self.module_manager.add_module(rock_size_estimation)
-        # Add more modules as needed
+        # self.pipeline_manager = PipelineManager()
 
         # Subscribers
         self.rgb_sub = self.create_subscription(
@@ -35,15 +30,15 @@ class PerceptionNode(Node):
         )
 
         self.rgbd_sub = self.create_subscription(
-            CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 10
+            CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 1
         )
 
         self.get_logger().info(
             "Perception Node started with rock detection and size estimation."
         )
 
-        self.perception_pub = self.create_publisher(
-            CompressedImage, "/hd/perception/image", 10
+        self.processed_rgb_pub = self.create_publisher(
+            CompressedImage, "/hd/perception/image", 1
         )
 
         self.aruco_pub = self.create_publisher(Pose, "/hd/perception/aruco", 10)
@@ -61,21 +56,18 @@ class PerceptionNode(Node):
         print(f"depth_image: {depth_image.shape}")
         print(f"rgbd type: {depth_image.dtype}")
 
-        aruco_pose = self.module_manager.process_rgb(rgb)
-        if aruco_pose:
-            pose_msg = Pose()
-            pose_msg.x = aruco_pose[0]
-            pose_msg.position.y = aruco_pose[1]
-            pose_msg.position.z = aruco_pose[2]
-            self.aruco_pub.publish(pose_msg)
+        # aruco_pose = self.pipeline_manager.process_rgb(rgb)
+        # self.aruco_pub.publish(PoseMsg.create_message(*aruco_pose))
+        rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
+        self.processed_rgb_pub.publish(rgb_msg)
 
     def rgb_callback(self, msg):
         rgb_frame = self.bridge.compressed_imgmsg_to_cv2(msg)
-        self.module_manager.process_rgb(rgb_frame)
+        self.pipeline_manager.process_rgb(rgb_frame)
 
     def depth_callback(self, msg):
         depth_frame = self.bridge.imgmsg_to_cv2(msg)
-        self.module_manager.process_depth(depth_frame)
+        self.pipeline_manager.process_depth(depth_frame)
 
         # Perform post-processing
         # self.module_manager.post_process(rgb_frame, depth_frame)
