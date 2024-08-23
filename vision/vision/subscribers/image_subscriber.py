@@ -97,7 +97,7 @@ class ImageSubscriber(Node):
 
         # Convert the byte data to a numpy array of uint16
         # depth_image = np.frombuffer(rgbd_msg.depth.data, dtype=np.uint16)
-        depth_image = self.br.compressed_imgmsg_to_cv2(rgbd_msg.depth, "tiff")
+        depth_image = self.br.imgmsg_to_cv2(rgbd_msg.depth, "mono16")
 
         # Reshape the numpy array to match the image dimensions
         depth_image = depth_image.reshape((rgbd_msg.depth.height, rgbd_msg.depth.width))
