@@ -1,8 +1,9 @@
 from ..geometry import translation_rotation
 from ..handlers.pose_msg import PoseMsg
+from .pipeline_interface import PipelineInterface
 
 
-class ButtonsPipeline:
+class ButtonsPipeline(PipelineInterface):
     def __init__(self, config, aruco_detector):
         self.config = config
         self.aruco_detector = aruco_detector

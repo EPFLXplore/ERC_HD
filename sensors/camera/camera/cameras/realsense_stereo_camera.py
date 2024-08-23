@@ -22,7 +22,7 @@ class RealSenseStereoCamera(StereoCameraInterface):
         FPS = 30
 
         config.enable_stream(rs.stream.depth, res["x"], res["y"], rs.format.z16, FPS)
-        config.enable_stream(rs.stream.color, res["x"], res["y"], rs.format.rgb8, FPS)
+        config.enable_stream(rs.stream.color, res["x"], res["y"], rs.format.bgr8, FPS)
 
         # Start streaming from file
         self.profile = self.pipe.start(config)
@@ -88,14 +88,5 @@ class RealSenseStereoCamera(StereoCameraInterface):
     def get_rgbd(self):
         frameset = self.pipe.wait_for_frames()
         color_frame = np.asanyarray((frameset.get_color_frame().get_data()))
-
-        depth_frame_o = frameset.get_depth_frame()
-        depth_frame_data = depth_frame_o.get_data()
-        depth_frame = np.asanyarray(depth_frame_data)
-
-        rclpy.logging.get_logger("rclpy").info(
-            f"types: frame: {type(depth_frame_o)}, data: {type(depth_frame_data)}, depth: {type(depth_frame)}"
-        )
-
-        # depth_frame = np.asanyarray((frameset.get_depth_frame().get_data()))
+        depth_frame = np.asanyarray(frameset.get_depth_frame().get_data())
         return color_frame, depth_frame

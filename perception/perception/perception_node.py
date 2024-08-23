@@ -47,14 +47,7 @@ class PerceptionNode(Node):
 
     def rgbd_callback(self, rgbd_msg: CompressedRGBD):
         rgb = self.bridge.compressed_imgmsg_to_cv2(rgbd_msg.color)
-
-        # Convert the byte data to a numpy array of uint16
-        depth_image = np.frombuffer(rgbd_msg.depth.data, dtype=np.uint16)
-
-        # Reshape the numpy array to match the image dimensions
-        depth_image = depth_image.reshape((rgbd_msg.depth.height, rgbd_msg.depth.width))
-        print(f"depth_image: {depth_image.shape}")
-        print(f"rgbd type: {depth_image.dtype}")
+        depth_image = self.bridge.imgmsg_to_cv2(rgbd_msg.depth, "mono16")
 
         # aruco_pose = self.pipeline_manager.process_rgb(rgb)
         # self.aruco_pub.publish(PoseMsg.create_message(*aruco_pose))
