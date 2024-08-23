@@ -104,6 +104,7 @@ RUN pip install --no-cache-dir -v evdev
 # pyrealsense2 wrapper has to be build from source 
 
 # Install Ultralytics pip packages manually for TensorRT compatibility https://github.com/NVIDIA/TensorRT/issues/2567
+RUN cd ultralytics
 RUN python3 -m pip install --upgrade pip wheel
 RUN pip install onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl
 RUN pip install --no-cache-dir -e ".[export]"
