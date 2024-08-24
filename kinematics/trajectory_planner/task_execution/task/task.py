@@ -45,6 +45,77 @@ class BTNode:
         if self.exec_result is None:
             raise RuntimeError("Attempted to retrieve execution result, but no execution result has been stashed")
         return self.exec_result
+    
+    def __repr__(self) -> str:
+        return type(self).__name__
+
+
+class BTDecorator(BTNode):
+    def __init__(self, node: BTNode):
+        super().__init__(node.description)
+        self.underlying_node = node
+    
+    def execute(self) -> bool:
+        return self.underlying_node.execute
+    
+    def stopExecution(self):
+        self.underlying_node.stopExecution()
+        
+    def isBackground(self) -> bool:
+        self.underlying_node.isBackground()
+    
+    def stashExecute(self):
+        self.exec_result = self.execute()
+    
+    def __repr__(self) -> str:
+        return self.underlying_node.__repr__()
+
+
+class Inverter(BTDecorator):
+    def execute(self) -> bool:
+        return not super().execute()
+
+
+class Repeater(BTDecorator):
+    def __init__(self, node: BTNode, count: int = 1):
+        super().__init__(node)
+        self.repeat_count = count
+    
+    def execute(self) -> bool:
+        # arbitrary choice: return result of last execution
+        for _ in range(self.repeat_count):
+            res = super().execute()
+        return res
+
+
+def repeater(count: int = 1) -> Callable[[BTNode], Repeater]:
+    return lambda node: Repeater(node, count)
+
+
+class Succeeder(BTDecorator):
+    def execute(self) -> bool:
+        super().execute()
+        return True
+
+
+class Failer(BTDecorator):
+    def execute(self) -> bool:
+        super().execute()
+        return False
+
+
+class Cooldown(BTDecorator):
+    def __init__(self, node: BTNode, seconds: float = 0.0):
+        super().__init__(node)
+        self.cooldown_seconds = seconds
+    
+    def execute(self) -> bool:
+        time.sleep(self.cooldown_seconds)
+        return super().execute()
+
+
+def cooldown(seconds: float = 0.0) -> Callable[[BTNode], Cooldown]:
+    return lambda node: Cooldown(node, seconds)
 
 
 class ActionNode(BTNode):
@@ -98,7 +169,10 @@ class ActionNode(BTNode):
                 return False        # command failed
         
         self.post_operation(self.command)
-        return True   
+        return True
+    
+    def __repr__(self) -> str:
+        return type(self.command).__name__
 
 
 class CompositeNode(BTNode):
@@ -115,18 +189,24 @@ class CompositeNode(BTNode):
         return all(node.isBackground() for node in self.nodes)
 
 
-class AllNode(CompositeNode):
+class Sequence(CompositeNode):
     def execute(self) -> bool:
         for node in self.nodes:
             if not node.execute():
                 return False
+    
+    def __repr__(self) -> str:
+        return "->"
 
 
-class AnyNode(CompositeNode):
+class Fallback(CompositeNode):
     def execute(self) -> bool:
         for node in self.nodes:
             if node.execute():
                 return True
+    
+    def __repr__(self):
+        return "?"
 
 
 class ConcurrentNode(CompositeNode):
@@ -136,7 +216,7 @@ class ConcurrentNode(CompositeNode):
         
     def execute(self) -> bool:
         threads = [threading.Thread(target=node.stashExecute) for node in self.nodes]
-        
+         
         # start all threads
         for thread in threads:
             thread.start()
@@ -156,10 +236,13 @@ class ConcurrentNode(CompositeNode):
         return True     # by default, can be overriden
 
 
-class AllConcurrentNode(ConcurrentNode):
+class SequenceConcurrent(ConcurrentNode):
     def execute(self) -> bool:
         super().execute()
         return all(self.child_exec_results)
+    
+    def __repr__(self):
+        return "|||"
         
 
 

@@ -16,6 +16,25 @@ if TYPE_CHECKING:   # fake import, only for annotations
     from task_execution.task_executor import Executor
 
 
+class Observations:
+    INSTANCE: Observations = None
+    
+    def __new__(cls):
+        if cls.INSTANCE is not None:
+            raise RuntimeError("Observations class can only have one instance")
+        instance = super().__new__(cls)
+        cls.INSTANCE = instance
+        return instance
+    
+    @classmethod
+    def get_instance(cls) -> Observations:
+        return cls.INSTANCE
+    
+    def __init__(self):
+        self.object_pose = Pose()
+        self.artag_pos = Pose()
+    
+
 def get_executor() -> Executor:
     from task_execution.task_executor import Executor
     return Executor.get_instance()
