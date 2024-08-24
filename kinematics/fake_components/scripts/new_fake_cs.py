@@ -185,9 +185,7 @@ class ControlStation(Node):
             self.input_config.bind(input, self.set_gripper_speed, "event_value", value=val)
 
         # ==== semi auto ====
-        for i, input in enumerate([GamePadConfig.L2, GamePadConfig.R2, GamePadConfig.CIRCLE, GamePadConfig.SQUARE, GamePadConfig.TRIANGLE, GamePadConfig.CROSS]):
-            #self.input_config.bind(input, self.set_man_inv_axis, "value", coordinate=i//2, multiplier=(-1)**i)
-            self.input_config.bind(input, self.set_semi_auto_cmd, "event_value", index=i)
+        self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd2, "event_value")
     
         # ==== manual inverse ====
         self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
@@ -299,6 +297,11 @@ class ControlStation(Node):
     def set_semi_auto_cmd(self, index: int, event_value: float):
         if event_value != 1: return
         self.semi_auto_cmd = SemiAutoTask[index]
+    
+    @restrict_mode(Mode.SEMI_AUTONOMOUS)
+    def set_semi_auto_cmd2(self, event_value: float):
+        if event_value != 1: return
+        self.semi_auto_cmd = SemiAutoTask.BTN_TASK
     
     @restrict_mode(Mode.MANUAL_INVERSE)
     def set_man_inv_velocity_scaling(self, value: float):
