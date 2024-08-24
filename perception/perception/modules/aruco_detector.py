@@ -1,25 +1,33 @@
 from cv2 import aruco
 import cv2 as cv
 import numpy as np
-from .perception_module_interface import PerceptionModuleInterface
+from .module_interface import ModuleInterface
 
 
-class ArucoDetector(PerceptionModuleInterface):
+class ArucoDetector(ModuleInterface):
     def __init__(
         self,
-        marker_dict,
-        marker_size: float,
-        marker_ids: list,
+        aruco_tag_size: float,
+        aruco_tag_ids: list[int],
+        marker_type: str,
         camera_matrix: np.ndarray,
         dist_coeffs: np.ndarray,
     ):
 
         # Dictionary is either aruco.DICT_4X4_50x or aruco.DICT_ARUCO_ORIGINAL
+        if marker_type == "4x4":
+            marker_dict = aruco.DICT_4X4_50
+        elif marker_type == "original":
+            marker_dict = aruco.DICT_ARUCO_ORIGINAL
+
         self.marker_dict = aruco.Dictionary_get(marker_dict)
-        self.marker_size = marker_size
+        self.marker_size = aruco_tag_size
         self.camera_matrix = camera_matrix
         self.dist_coeffs = dist_coeffs
-        self.marker_ids = marker_ids
+        self.marker_ids = aruco_tag_ids
+
+        self.rvec = None
+        self.tvec = None
 
     def process_rgb(self, frame):
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -32,7 +40,9 @@ class ArucoDetector(PerceptionModuleInterface):
             self.rvec = rvecs[tag_idx]
             self.tvec = tvecs[tag_idx]
             self.corners = corners[tag_idx]
-        return self.rvec, self.tvec
+        if self.rvec is not None and self.tvec is not None:
+            return self.rvec, self.tvec
+        return np.full((3,), np.nan), np.full((3,), np.nan)
 
     def process_rgbd(self, rgb_frame, depth_frame):
         return self.process_rgb(rgb_frame)

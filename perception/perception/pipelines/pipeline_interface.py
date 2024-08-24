@@ -1,17 +1,22 @@
 import yaml
 import rclpy
 from rclpy.node import Node
+from numpy import ndarray
+from abc import ABC, abstractmethod
 
 
-class PipelineInterface:
-    def __init__(self, config_file: str, node: Node):
+class PipelineInterface(ABC):
+    def __init__(self, config_file: str, node: Node, draw_results: bool = True):
         """
         Constructor that initializes the pipeline with a configuration file and a ROS 2 node.
 
         :param config_file: Path to the configuration file.
         :param node: The ROS 2 node object, used to create publishers.
+        :param draw_results: Whether to draw the results on the frame Default is True.
         """
         # Load configuration from the config file
+        self._logger = node.get_logger()
+        self.draw_results = draw_results
         with open(config_file, "r") as file:
             self.config = yaml.safe_load(file)
 
@@ -21,6 +26,7 @@ class PipelineInterface:
         # Initialize any other necessary components based on the config
         self._initialize_pipeline()
 
+    @abstractmethod
     def _initialize_publishers(self, node: Node):
         """
         Initializes ROS 2 publishers using the node. This method should be overridden by subclasses
@@ -32,6 +38,7 @@ class PipelineInterface:
             "The _initialize_publishers method should be overridden by subclasses"
         )
 
+    @abstractmethod
     def _initialize_pipeline(self):
         """
         Initializes the pipeline components based on the configuration.
@@ -39,7 +46,8 @@ class PipelineInterface:
         """
         raise NotImplementedError("This method should be overridden by subclasses")
 
-    def run_rgbd(self, rgb_image, depth_image):
+    @abstractmethod
+    def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray) -> None:
         """
         Process the RGB and depth images.
 
@@ -51,7 +59,8 @@ class PipelineInterface:
             "The run_rgbd method must be implemented by the subclass."
         )
 
-    def draw(self, frame):
+    @abstractmethod
+    def draw(self, frame: ndarray):
         """
         Draws the results of the pipeline on the given frame.
 
