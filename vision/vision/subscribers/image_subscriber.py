@@ -39,12 +39,19 @@ class ImageSubscriber(Node):
             10,
         )
 
-        self.camera_sub = self.create_subscription(
-            CompressedRGBD,
-            "/HD/camera/rgbd",
-            self.camera_callback,
-            1,
+        self.old_vision = self.create_subscription(
+            CompressedImage,
+            "/HD/vision/video_frames",
+            self.old_vision_callback,
+            10,
         )
+
+        # self.camera_sub = self.create_subscription(
+        #     CompressedRGBD,
+        #     "/HD/camera/rgbd",
+        #     self.camera_callback,
+        #     1,
+        # )
 
         # Used to convert between ROS and OpenCV images
         self.br = CvBridge()
@@ -88,7 +95,7 @@ class ImageSubscriber(Node):
         self.draw_fps(current_frame)
 
         # Display image
-        cv2.imshow("camera", current_frame)
+        cv2.imshow("Perception", current_frame)
         cv2.waitKey(1)
 
     def camera_callback(self, rgbd_msg: CompressedRGBD):
@@ -110,6 +117,14 @@ class ImageSubscriber(Node):
 
         # aruco_pose = self.pipeline_manager.process_rgb(rgb)
         # self.aruco_pub.publish(PoseMsg.create_message(*aruco_pose))
+
+    def old_vision_callback(self, data):
+        self.get_logger().info("Receiving old vision frame")
+        current_frame = self.br.compressed_imgmsg_to_cv2(data)
+        self.update_fps()
+        self.draw_fps(current_frame)
+        cv2.imshow("Old Vision", current_frame)
+        cv2.waitKey(1)
 
 
 def main(args=None):

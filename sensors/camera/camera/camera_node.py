@@ -3,7 +3,7 @@ import rclpy  # Python Client Library for ROS 2
 from rclpy.node import Node  # Handles the creation of nodes
 from sensor_msgs.msg import CompressedImage, Image  # Image is the message type
 from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Images
-from hd_interfaces.srv import GetCameraIntrinsics, GetCameraDistortionCoefficients
+from hd_interfaces.srv import CameraParams
 from hd_interfaces.msg import CompressedRGBD
 
 
@@ -21,15 +21,9 @@ class CameraNode(Node):
         super().__init__("camera_node")
 
         self.camera_intrinsics_srv = self.create_service(
-            GetCameraIntrinsics,
-            "/HD/camera/get_camera_intrinsics",
-            self.get_intrinsics_callback,
-        )
-
-        self.camera_distortion_coefficients_srv = self.create_service(
-            GetCameraDistortionCoefficients,
-            "/HD/camera/distortion_coefficients",
-            self.get_distortion_coefficients_callback,
+            CameraParams,
+            "/HD/camera/params",
+            self.camera_params_callback,
         )
 
         self.camera = camera
@@ -66,20 +60,17 @@ class CameraNode(Node):
 
         self.publisher_.publish(msg)
 
-    def get_intrinsics_callback(self, request, response):
+    def camera_params_callback(self, request, response):
         intrinsics = self.camera.get_intrinsics()
+        distortion_coefficients = self.camera.get_coeffs()
         response.fx = intrinsics["fx"]
         response.fy = intrinsics["fy"]
         response.cx = intrinsics["cx"]
         response.cy = intrinsics["cy"]
+        response.distortion_coefficients = distortion_coefficients
         self.get_logger().info(
             f"Provided intrinsics: fx={response.fx}, fy={response.fy}, cx={response.cx}, cy={response.cy}"
         )
-        return response
-
-    def get_distortion_coefficients_callback(self, request, response):
-        distortion_coefficients = self.camera.get_coeffs()
-        response.distortion_coefficients = distortion_coefficients
         self.get_logger().info(
             f"Provided distortion coefficients: {response.distortion_coefficients}"
         )
