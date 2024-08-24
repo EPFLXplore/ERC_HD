@@ -41,6 +41,10 @@ RUN sleep 2
 RUN sudo make -j$(($(nproc)-1)) && sudo make install
 
 
+# clone librealsense SKD
+RUN git clone https://github.com/ultralytics/ultralytics.git
+WORKDIR /home/$USERNAME/ultralytics
+
 # Downloads to user config dir for Ultralytics
 ADD https://github.com/ultralytics/assets/releases/download/v0.0.0/Arial.ttf \
     https://github.com/ultralytics/assets/releases/download/v0.0.0/Arial.Unicode.ttf \
@@ -53,28 +57,39 @@ ADD https://github.com/ultralytics/assets/releases/download/v0.0.0/Arial.ttf \
 RUN apt update \
     && apt install --no-install-recommends -y gcc git zip unzip  wget curl htop libgl1 libglib2.0-0 libpython3-dev gnupg g++ libusb-1.0-0
 
-# Create working directory
-WORKDIR /ultralytics
+RUN pwd
+RUN ls 
 
 # Copy contents and assign permissions for Ultralytics
-COPY . .    
-# RUN git clone https://github.com/ultralytics/ultralytics
 RUN git remote set-url origin https://github.com/ultralytics/ultralytics.git
 ADD https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8n.pt .
 
-# RUN pwd
-# RUN ls 
-# RUN ls ultralytics/
-
 # Remove opencv-python from Ultralytics dependencies as it conflicts with opencv-python installed in base image
-# RUN grep -v "opencv-python" pyproject.toml > temp.toml && mv temp.toml pyproject.toml
+RUN grep -v "opencv-python" pyproject.toml > temp.toml && mv temp.toml pyproject.toml
 
 # Download onnxruntime-gpu 1.15.1 for Jetson Linux 35.2.1 (JetPack 5.1). Other versions can be seen in https://elinux.org/Jetson_Zoo#ONNX_Runtime
 ADD https://nvidia.box.com/shared/static/mvdcltm9ewdy2d5nurkiqorofz1s53ww.whl onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl
 
+# Ensure Python and pip are installed and updated
+RUN pip install --no-cache-dir --upgrade pip
+
+# Install the necessary Python packageslibrealsense
+RUN pip install --no-cache-dir -v evdev 
+# pyrealsense2 wrapper has to be build from source 
+
+RUN pwd
+RUN ls 
+
+# Install Ultralytics pip packages manually for TensorRT compatibility https://github.com/NVIDIA/TensorRT/issues/2567
+RUN python3 -m pip install --upgrade pip wheel
+RUN pip install onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl
+RUN pip install --no-cache-dir -e ".[export]"
+RUN rm *.whl
+
 
 
 # Install ROS 2 HD packages with RosInstall to install from source
+WORKDIR /home/$USERNAME
 RUN apt-get update && apt-get upgrade -y
 RUN apt update && sudo apt upgrade -y
 # RUN /home/ros2_install.sh \
@@ -93,22 +108,6 @@ RUN apt-get install -y --no-install-recommends \
   # Add USB rules
 RUN echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="03e7", MODE="0666"' | sudo tee /etc/udev/rules.d/80-movidius.rules
 RUN /etc/init.d/udev restart  
-
-
-
-# Ensure Python and pip are installed and updated
-RUN pip install --no-cache-dir --upgrade pip
-
-# Install the necessary Python packageslibrealsense
-RUN pip install --no-cache-dir -v evdev 
-# pyrealsense2 wrapper has to be build from source 
-
-# Install Ultralytics pip packages manually for TensorRT compatibility https://github.com/NVIDIA/TensorRT/issues/2567
-RUN cd ultralytics
-RUN python3 -m pip install --upgrade pip wheel
-RUN pip install onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl
-RUN pip install --no-cache-dir -e ".[export]"
-RUN rm *.whl
 
 USER $USERNAME
 
