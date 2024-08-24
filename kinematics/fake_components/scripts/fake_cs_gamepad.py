@@ -9,7 +9,7 @@ import evdev.events
 import threading
 from time import sleep
 from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
-from hd_interfaces.msg import Task
+from custom_msg.msg import Task
 import math
 import itertools
 from collections.abc import Callable
@@ -304,8 +304,8 @@ def Enum(**kwargs):
 HDMode = EnumOld(
     IDLE = -1,
     MANUAL_DIRECT = 1,
-    MANUAL_INVERSE = 0,
     SEMI_AUTONOMOUS = 2,
+    MANUAL_INVERSE = 0,
     #AUTONOMOUS = 3
 )
 

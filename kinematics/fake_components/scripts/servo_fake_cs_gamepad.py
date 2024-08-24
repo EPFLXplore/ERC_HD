@@ -9,7 +9,7 @@ import evdev.events
 import threading
 from time import sleep
 from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
-from hd_interfaces.msg import Task, MotorCommand
+from custom_msg.msg import Task, MotorCommand
 import math
 import itertools
 from collections.abc import Callable

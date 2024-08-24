@@ -65,7 +65,7 @@ class Point(gmsg.Point):
         if isinstance(value, (gmsg.Point, gmsg.Quaternion)):
             return cls(x=value.x, y=value.y, z=value.z)
         if isinstance(value, array_types_checkable):
-            return cls(x=value[0], y=value[1], z=value[2])
+            return cls(x=float(value[0]), y=float(value[1]), z=float(value[2]))
         raise TypeError(f"Unsuported type '{type(value).__name__}' for conversion to Point")
     
     @classmethod

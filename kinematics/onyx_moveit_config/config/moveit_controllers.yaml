@@ -1,0 +1,20 @@
+# MoveIt uses this configuration for controller management
+
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+
+
+moveit_simple_controller_manager:
+  controller_names:
+    - kerby_arm_moveit_controller
+
+  kerby_arm_moveit_controller:
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - hd_joint1
+      - hd_joint2
+      - hd_joint3
+      - hd_joint4
+      - hd_joint5
+      - hd_joint6

@@ -133,7 +133,7 @@ hardware_interface::return_type KerbyArmInterface::read(const rclcpp::Time & tim
 hardware_interface::return_type KerbyArmInterface::write(const rclcpp::Time & time, const rclcpp::Duration & period) {
     // command the hardware based onthe values stored in internal varialbes defined in export_command_interfaces
 
-    //sending_commands_ = true;    // TODO: remove this
+    // sending_commands_ = true;    // TODO: remove this
     if (scanning_ || !sending_commands_) return hardware_interface::return_type::OK;
 
     std_msgs::msg::Float64MultiArray msg;
@@ -183,7 +183,30 @@ void KerbyArmInterface::init_communication() {
 
 }
 
+// void topic_callback(const sensor_msgs::msg::JointState::SharedPtr msg) const {
+//     RCLCPP_INFO(this->get_logger(), "Logging JointState message:");
+//     RCLCPP_INFO(this->get_logger(), "  Name: %s", format_vector(msg->name).c_str());
+//     RCLCPP_INFO(this->get_logger(), "  Position: %s", format_vector(msg->position).c_str());
+//     RCLCPP_INFO(this->get_logger(), "  Velocity: %s", format_vector(msg->velocity).c_str());
+//     RCLCPP_INFO(this->get_logger(), "  Effort: %s", format_vector(msg->effort).c_str());
+// }
+
+template<typename T>
+std::string format_vector(const std::vector<T> &vec) {
+    std::ostringstream oss;
+    for (size_t i = 0; i < vec.size(); ++i)
+    {
+        oss << vec[i];
+        if (i != vec.size() - 1)
+        {
+            oss << ", ";
+        }
+    }
+    return oss.str();
+}
+
 void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
+    // RCLCPP_INFO(rclcpp::get_logger("KerbyArmInterface"), "  Position: %s", format_vector(msg->position).c_str());
     uint size = (hw_position_states_.size() < msg->position.size()) ? hw_position_states_.size() : msg->position.size();
     for (uint i = 0; i < size; i++) {
         hw_position_states_[i] = msg->position[i];
@@ -212,7 +235,8 @@ void KerbyArmInterface::mode_change_callback(const std_msgs::msg::Int8::SharedPt
     static int SEMI_AUTONOMOUS = 2;
     static int AUTONOMOUS = 3;
     int mode = msg->data;
-    if (mode != MANUAL_DIRECT && mode != IDLE) sending_commands_ = false;   // TODO: maybe always put it to false (if manual direct mode, we don't want to move through here anyway)
+    sending_commands_ = false;
+    //if (mode != MANUAL_DIRECT && mode != IDLE) sending_commands_ = false;   // TODO: maybe always put it to false (if manual direct mode, we don't want to move through here anyway)
 }
 
 void KerbyArmInterface::position_mode_switch_callback(const std_msgs::msg::Int8::SharedPtr msg) {

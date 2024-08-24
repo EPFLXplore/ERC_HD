@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rclpy
-from hd_interfaces.msg import Task
+from custom_msg.msg import Task
 from std_msgs.msg import Int8
 
 

@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: onyx_description
+    relative_path: description/onyx.urdf.xacro
+  srdf:
+    relative_path: config/kerby.srdf
+  package_settings:
+    author_name: matthias
+    author_email: matthias@gmail.com
+    generated_timestamp: 1713606284
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity

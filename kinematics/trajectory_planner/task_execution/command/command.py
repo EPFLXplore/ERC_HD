@@ -1,3 +1,4 @@
+from __future__ import annotations
 import time
 import math
 import copy
@@ -10,10 +11,33 @@ from typing import Any, Type
 import threading
 from rclpy.node import Node
 from rclpy.timer import Rate
+from typing import TYPE_CHECKING, List, Dict, Callable
+if TYPE_CHECKING:   # fake import, only for annotations
+    from task_execution.task_executor import Executor
 
 
-# "forward" declaration of the Executor class, used for typing purposes
-Executor: Type[Node] = "Executor"
+class Observations:
+    INSTANCE: Observations = None
+    
+    def __new__(cls):
+        if cls.INSTANCE is not None:
+            raise RuntimeError("Observations class can only have one instance")
+        instance = super().__new__(cls)
+        cls.INSTANCE = instance
+        return instance
+    
+    @classmethod
+    def get_instance(cls) -> Observations:
+        return cls.INSTANCE
+    
+    def __init__(self):
+        self.object_pose = Pose()
+        self.artag_pos = Pose()
+    
+
+def get_executor() -> Executor:
+    from task_execution.task_executor import Executor
+    return Executor.get_instance()
 
 
 class Command:
@@ -23,13 +47,14 @@ class Command:
         self.executor = executor
         self.execute_count = 0
         self.has_failed = False
+        self.is_background = False
 
     def createSetter(self, attribute: str):
         """create a setter for the given attribute"""
         def setter(val: Any):
             setattr(self, attribute, val)
         
-        def camelCasify(s: str):
+        def camelCasify(s: str) -> str:
             if len(s) == 0:
                 return ""
             camel_s = ""
@@ -50,6 +75,9 @@ class Command:
         for attr in attributes:
             self.createSetter(attr)
 
+    def isBackground(self) -> bool:
+        return self.is_background
+    
     def execute(self):
         """attempts to execute command"""
         self.execute_count += 1

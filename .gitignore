@@ -7,7 +7,9 @@ hd_ws/build/
 hd_ws/install/
 hd_ws/log/
 hd_ws/tttt/
-
+**/build/
+**/install/
+**/log/
 
 *.pyc
 **/__pycache__/**
