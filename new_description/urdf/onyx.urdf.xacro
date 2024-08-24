@@ -37,13 +37,43 @@
   <xacro:aaa_joint_limits lower="${-2*pi}" upper="${2*pi}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
 </xacro:property>
 
+<xacro:property name="finger_limits">
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${10 * rpm_to_Radps}" />
+</xacro:property>
+
+
+<xacro:macro name="inertial_box" params="mass x y z">
+      <inertial>
+          <mass value="${mass}" />
+          <inertia ixx="${(1/12) * mass * (y*y+z*z)}" ixy="0.0" ixz="0.0"
+                  iyy="${(1/12) * mass * (x*x+z*z)}" iyz="0.0"
+                  izz="${(1/12) * mass * (x*x+y*y)}" />
+      </inertial>
+  </xacro:macro>
+
+
+
+<!-- def compile(mass: float = 1.0, x: float = 0.0, y: float = 0.0, z: float = 0.0):
+    def build_intertia_block(ixx: float, iyy: float, izz: float, ixy: float, iyz: float, ixz: float):
+        template = '<inertia ixx="%g" iyy="%g" izz="%g" ixy="%g" iyz="%g" ixz="%g"/>'
+        return template % (ixx, iyy, izz, ixy, iyz, ixz)
+    
+    return build_intertia_block(
+        ixx = 1/12 * mass * (y**2 + z**2),
+        ixy = 0.0,
+        ixz = 0.0,
+        iyy = 1/12 * mass * (x**2 + z**2),
+        iyz = 0.0,
+        izz = 11/12 * mass * (x**2 + y**2),
+    ) -->
 
 
 <link name="base_link">
   <inertial>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <mass value="10"/>
-    <inertia ixx="0.00171" iyy="0.00171" izz="0.003332" ixy="-0.0" iyz="0.0" ixz="0.0"/>
+    <!-- <inertia ixx="0.00171" iyy="0.00171" izz="0.003332" ixy="-0.0" iyz="0.0" ixz="0.0"/> -->
+    <inertia ixx="0.866667" iyy="0.241667" izz="11.4583" ixy="0" iyz="0" ixz="0"/>
   </inertial>
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -250,6 +280,48 @@
   </collision>
 </link>
 
+<!-- <link name="Arm_A_v6_2_opo">
+  <inertial>
+    <origin xyz="0.018951336567798988 -0.0037499223695921513 0.03443137459651863" rpy="0 0 0"/>
+    <mass value="0.11091056155247334"/>
+    <inertia ixx="0.000106" iyy="0.000118" izz="1.4e-05" ixy="-0.0" iyz="-0.0" ixz="1.1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.2232 0.78502 0.20602" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Arm_A_v6_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.2232 0.78502 0.20602" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Arm_A_v6_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Arm_A_v6_1_opo">
+  <inertial>
+    <origin xyz="0.018951336567799487 -0.003749922521991911 -0.03443121948811595" rpy="0 0 0"/>
+    <mass value="0.11091056155247334"/>
+    <inertia ixx="0.000106" iyy="0.000118" izz="1.4e-05" ixy="0.0" iyz="-0.0" ixz="-1.1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.2232 0.78502 0.23602" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Arm_A_v6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.2232 0.78502 0.23602" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Arm_A_v6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link> -->
+
 <link name="Hand_v3_2">
   <inertial>
     <origin xyz="0.009334274146256122 0.022500077554207798 9.812474983245112e-06" rpy="0 0 0"/>
@@ -351,32 +423,52 @@
   <xacro:insert_block name="joint6_limits"/>
 </joint>
 
-<joint name="finger_joint1" type="fixed">
-  <origin xyz="-0.1047 -0.02252 0.01498" rpy="0 0 0"/>
+<joint name="finger_joint1" type="continuous">
+  <origin xyz="-0.1047 -0.02252 0.01498" rpy="0 ${-pi/2} 0"/>
   <parent link="link6"/>
   <child link="Arm_A_v6_2"/>
   <axis xyz="0.0 1.0 -0.0"/>
+  <!-- <xacro:insert_block name="finger_limits"/> -->
 </joint>
 
-<joint name="finger_joint2" type="fixed">
-  <origin xyz="-0.1047 -0.02252 -0.01502" rpy="0 0 0"/>
+<joint name="finger_joint2" type="continuous">
+  <origin xyz="-0.1047 -0.02252 -0.01502" rpy="0 ${pi/2} 0"/>
   <parent link="link6"/>
   <child link="Arm_A_v6_1"/>
   <axis xyz="0.0 1.0 -0.0"/>
+  <mimic joint="finger_joint1" multiplier="-1"/>
 </joint>
 
-<joint name="finger_joint3" type="fixed">
+<!-- <joint name="finger_joint1_opo" type="continuous">
+  <origin xyz="-0.1047 0.02252 0.01498" rpy="0 ${-pi/2} 0"/>
+  <parent link="link6"/>
+  <child link="Arm_A_v6_2_opo"/>
+  <axis xyz="0.0 1.0 -0.0"/>
+  <mimic joint="finger_joint1" multiplier="1"/>
+</joint>
+
+<joint name="finger_joint2_opo" type="continuous">
+  <origin xyz="-0.1047 0.02252 -0.01502" rpy="0 ${pi/2} 0"/>
+  <parent link="link6"/>
+  <child link="Arm_A_v6_1_opo"/>
+  <axis xyz="0.0 1.0 -0.0"/>
+  <mimic joint="finger_joint1" multiplier="-1"/>
+</joint> -->
+
+<joint name="finger_joint3" type="continuous">
   <origin xyz="0.002918 0.0 0.08658" rpy="0 0 0"/>
   <parent link="Arm_A_v6_2"/>
   <child link="Hand_v3_2"/>
   <axis xyz="-0.0 -1.0 0.0"/>
+  <mimic joint="finger_joint1" multiplier="1"/>
 </joint>
 
-<joint name="finger_joint4" type="fixed">
+<joint name="finger_joint4" type="continuous">
   <origin xyz="0.002918 0.0 -0.08658" rpy="0 0 0"/>
   <parent link="Arm_A_v6_1"/>
   <child link="Hand_v3_1"/>
   <axis xyz="0.0 -1.0 0.0"/>
+  <mimic joint="finger_joint1" multiplier="-1"/>
 </joint>
 
 </robot>
