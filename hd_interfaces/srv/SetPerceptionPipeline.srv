@@ -1,4 +1,0 @@
-string pipeline  # List of module names to activate
----
-bool success  # True if the modules were successfully activated
-string message  # Informational message about the result
