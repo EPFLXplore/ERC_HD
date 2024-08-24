@@ -7,6 +7,10 @@
   <maintainer email="matthieu.andre@epfl.ch">matthieu</maintainer>
   <license>TODO: License declaration</license>
 
+  <!-- hd_interfaces depend for the ButtonPressControlPanel client .srv file -->
+  <depend>hd_interfaces</depend> 
+
+
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
