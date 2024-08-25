@@ -1,40 +1,63 @@
-FROM ghcr.io/epflxplore/docker_commons:humble-jetson-torch
+FROM ultralytics/ultralytics:latest-jetson-jetpack5
 
 # Avoid interactive dialogue from apt-get
 ENV DEBIAN_FRONTEND=noninteractive
-ENV REALSENSE_BASE=/root
-ENV REALSENSE_DIR=$REALSENSE_BASE/librealsense
-
-# Combine related commands into single RUN statement
-RUN sudo apt-get update && sudo apt-get upgrade -y \
-    && sudo apt-get autoremove -y && sudo apt-get clean -y \
-    && sudo apt-get install -y \
-       python3 python3-dev libssl-dev libxinerama-dev libxcursor-dev libcanberra-gtk-module libcanberra-gtk3-module \
-       libusb-1.0-0-dev pkg-config libgtk-3-dev python3-numpy \
-       gcc git zip unzip wget curl htop libgl1 libglib2.0-0 libpython3-dev gnupg g++ libusb-1.0-0 \
-       python3-zmq libyaml-cpp-dev lcov \
-    && rm -rf /var/lib/apt/lists/* \
-    && git clone https://github.com/IntelRealSense/librealsense.git $REALSENSE_DIR \
-    && cd $REALSENSE_DIR && mkdir build \
-    && sed -i '3iset(CMAKE_CUDA_COMPILER /usr/local/cuda/bin/nvcc)' $REALSENSE_DIR/CMakeLists.txt \
-    && cmake $REALSENSE_DIR/ -DBUILD_PYTHON_BINDINGS:bool=true -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-       -DCMAKE_BUILD_TYPE=release -DBUILD_EXAMPLES=true -DBUILD_GRAPHICAL_EXAMPLES=true -DFORCE_RSUSB_BACKEND=ON \
-    && sudo make -j$(($(nproc)-1)) && sudo make install \
-    && git clone https://github.com/ultralytics/ultralytics.git /home/$USERNAME/ultralytics \
-    && cd /home/$USERNAME/ultralytics \
-    && grep -v "opencv-python" pyproject.toml > temp.toml && mv temp.toml pyproject.toml \
-    && wget https://nvidia.box.com/shared/static/mvdcltm9ewdy2d5nurkiqorofz1s53ww.whl -O onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl \
-    && pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -v evdev \
-    && pip install onnxruntime_gpu-1.15.1-cp38-cp38-linux_aarch64.whl \
-    && pip install --no-cache-dir -e ".[export]" \
-    && rm *.whl
 
 # Add USB rules and restart udev
 RUN echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="03e7", MODE="0666"' | sudo tee /etc/udev/rules.d/80-movidius.rules \
     && sudo /etc/init.d/udev restart
 
+# Install ROS from 
+RUN apt update && sudo apt install locales
+RUN locale-gen en_US en_US.UTF-8
+RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+RUN export LANG=en_US.UTF-8
+
+RUN apt install -y software-properties-common
+RUN add-apt-repository universe
+
+RUN apt update && sudo apt install curl -y
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
+RUN apt update && sudo apt install -y \
+  python3-flake8-docstrings \
+  python3-pip \
+  python3-pytest-cov \
+  ros-dev-tools
+
 USER $USERNAME
+
+RUN python3 -m pip install -U \
+   flake8-blind-except \
+   flake8-builtins \
+   flake8-class-newline \
+   flake8-comprehensions \
+   flake8-deprecated \
+   flake8-import-order \
+   flake8-quotes \
+   "pytest>=5.3" \
+   pytest-repeat \
+   pytest-rerunfailures
+
+RUN mkdir -p ~/ros2_humble/src && cd ~/ros2_humble \
+    && vcs import --input https://raw.githubusercontent.com/ros2/ros2/humble/ros2.repos src
+
+RUN sudo apt-get remove -y --purge libopencv opencv-licenses opencv-libs libopencv-dev \
+    && sudo apt-get -y autoremove \
+    && sudo apt-get -y clean
+
+RUN sudo apt-get remove -y --purge opencv-dev
+
+RUN cd ~/ros2_humble && sudo rosdep init \
+    && rosdep update \
+    && rosdep install --from-paths src --ignore-src -y --os=ubuntu:jammy --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers"
+
+RUN cd ~/ros2_humble/ \
+    && colcon build --symlink-install
+
+RUN . ~/ros2_humble/install/local_setup.bash
 
 # Set directories
 WORKDIR /home/$USERNAME/dev_ws/src
