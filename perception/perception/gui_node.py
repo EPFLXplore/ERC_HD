@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 import tkinter as tk
-from hd_interfaces.srv import ButtonPressControlPanel
+from custom_msg.srv import ButtonPressControlPanel
 
 BUTTON_WIDTH = 38
 BUTTON_HEIGHT = 30

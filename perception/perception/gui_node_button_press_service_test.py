@@ -2,7 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
-from hd_interfaces.srv import ButtonPressControlPanel
+from custom_msg.srv import ButtonPressControlPanel
 
 class ButtonPressServer(Node):
 
