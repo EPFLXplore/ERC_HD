@@ -33,7 +33,7 @@ def finger1_transform():
 
 def new_finger_transform():
     transform = Pose()
-    transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
+    # transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
     vect = [0.0, 0.0, 0.2018]
     transform.position = qa.point_image(vect, transform.orientation)
     return transform
@@ -55,7 +55,7 @@ def construct_vision_tranform():
 # STATIC TRANSFORMS
 
 EEF_TRANSFORM_CORRECTION = construct_eef_transform("new_finger")
-EEF_TRANSFORM_CORRECTION.position = qa.point_add(EEF_TRANSFORM_CORRECTION.position, Point(x=-0.028))
+# EEF_TRANSFORM_CORRECTION.position = qa.point_add(EEF_TRANSFORM_CORRECTION.position, Point(x=-0.028))
 
 CAMERA_TRANSFORM = Pose(                    # transform between end effector and camera
     position = Point(x=0.051, y=0.0, z=-0.115)    # X = 0.0447, y = -0.009
@@ -79,7 +79,7 @@ def revert_to_eef(pose):
 
 
 def abs_to_eef(pose):
-    # input: pose in absolute from
+    # input: pose in absolute frame
     # output: pose in eef frame
     eef_pose = correct_eef_pose()
     return qa.compose_poses(qa.reverse_pose(eef_pose), pose)
