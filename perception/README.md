@@ -27,7 +27,7 @@
     - arucotags
     - segmentation model
     - segmentation model + arucotags
-    - depth ( to get distance to surface sample )
+    - depth (  get distance to surface sample )
     - pose estimation model + segmentation model + arucotags
 
 ## Sequences

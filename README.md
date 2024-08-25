@@ -18,3 +18,7 @@ Repository containing software for the EPFL Xplore robotic arm.
 - [ ] transition from hd_interfaces to custom_msgs submodules
 - [ ] Move docker desktop and jetson to single docker folder
 - [ ] convert vision node to perception node
+
+# Sources
+
+- formatting

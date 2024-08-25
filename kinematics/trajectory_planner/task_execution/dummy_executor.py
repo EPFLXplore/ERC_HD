@@ -6,8 +6,8 @@ from rclpy.node import Node
 from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, BarMagnetApproach, EthernetApproach, AlignPanel, RockSamplingApproach, RockSamplingDrop, RockSamplingComplete
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
-from hd_interfaces.msg import Task, Object, PoseGoal, JointSpaceCmd, TargetInstruction, MotorCommand
-from avionics_interfaces.msg import ServoRequest, ServoResponse
+from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, TargetInstruction, MotorCommand
+from custom_msg.msg import ServoRequest, ServoResponse
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
 import threading
@@ -149,7 +149,7 @@ class DummyExecutor:
 
     def addObjectToWorld(self, shape: List[float], pose: Pose, name: str, type: int=Object.BOX, operation: int=Object.ADD):
         """sends an object to the planner, to be added to the world"""
-        # TODO: modify this function and its interface to send a moveit_msgs.msg.CollisionObject instead of hd_interfaces.msg.Object + change its name to manipulate or something
+        # TODO: modify this function and its interface to send a moveit_msgs.msg.CollisionObject instead of custom_msg.msg.Object + change its name to manipulate or something
         print("Adding an object to the world")
     
     def detectionUpdated(self):

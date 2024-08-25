@@ -17,7 +17,7 @@
   <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>moveit_visual_tools</depend>
-  <depend>hd_interfaces</depend>
+  <depend>custom_msg</depend>
 
 
   <test_depend>ament_lint_auto</test_depend>

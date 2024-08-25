@@ -4,7 +4,7 @@ from geometry_msgs.msg import Quaternion
 from rclpy.node import Node
 
 from std_msgs.msg import Int8
-from hd_interfaces.msg import TargetInstruction
+from custom_msg.msg import TargetInstruction
 
 
 class TargetPosePublisher(Node):

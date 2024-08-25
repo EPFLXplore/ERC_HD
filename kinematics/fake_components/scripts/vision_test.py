@@ -7,7 +7,7 @@ from task_execution.task import *
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.pose_corrector as pc
 import kinematics_utils.pose_tracker as pt
-from hd_interfaces.msg import Task, Object, TargetInstruction
+from custom_msg.msg import Task, Object, TargetInstruction
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Bool, Float64MultiArray
 import time
@@ -21,6 +21,23 @@ btn_pose = Pose()
 
 vision_transform = Pose()
 vision_transform.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
+
+
+class Listener:
+    def __init__(self):
+        self.vect = [0.0] * 3
+        self.thread = threading.Thread(target=self.listen_loop, daemon=True)
+    
+    def listen_loop(self):
+        while True:
+            self.vect = list(map(float, input().split()))
+    
+    def listen(self):
+        self.thread.start()
+        
+
+listener = Listener()
+listener.listen()
 
 
 def artag_callback(msg):
@@ -48,6 +65,8 @@ def end_effector_callback(msg):
     transform = Pose()
     transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
     vect = [-0.097, -0.7545, -0.3081]
+    vect = [0.0, 0.0, 0.2018]
+    vect = listener.vect
     transform.position = qa.point_image(vect, transform.orientation)
     combined = qa.compose_poses(msg, transform)
     #combined = pc.correct_eef_pose(msg)
@@ -108,8 +127,8 @@ def get_btn_pose():
     obj4.pose = pc.revert_from_vision(obj4.pose)
 
     return obj, obj2, obj3, obj4
-
-
+    
+    
 def main():
     rclpy.init()
     node = rclpy.create_node("kinematics_vision_test")
@@ -123,7 +142,7 @@ def main():
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
     thread.start()
-
+    
     rate = node.create_rate(30)
     btn_refresh_time = 0.1
     t = time.time()
