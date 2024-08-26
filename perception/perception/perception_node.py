@@ -1,7 +1,7 @@
 import rclpy  # Python Client Library for ROS 2
 from rclpy.node import Node  # Handles the creation of nodes
 from sensor_msgs.msg import CompressedImage  # Image is the message type
-from hd_interfaces.msg import CompressedRGBD  # Custom message type
+from custom_msg.msg import CompressedRGBD  # Custom message type
 
 import numpy as np
 from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Images
@@ -9,7 +9,8 @@ from geometry_msgs.msg import Pose
 
 from .handlers.pose_msg import PoseMsg
 from .pipelines.pipeline_factory import PipelineFactory
-from hd_interfaces.srv import CameraParams
+from custom_msg.srv import CameraParams
+from custom_msg.srv import ButtonPressControlPanel
 
 
 class PerceptionNode(Node):
@@ -54,9 +55,13 @@ class PerceptionNode(Node):
         # Initialize CvBridge
         self.bridge = CvBridge()
 
-        self.get_logger().info(
-            "Perception Node started with rock detection and size estimation."
+        self.srv = self.create_service(
+            ButtonPressControlPanel,
+            "/gui_node/button_press_service",
+            self.handle_button_press,
         )
+
+        self.get_logger().info("Perception Node started with buttons gang pipeline")
 
     def _get_camera_params(self):
         """Request the camera matrix and distortion coefficients from the camera node."""
@@ -107,6 +112,13 @@ class PerceptionNode(Node):
         # Convert the processed image back to ROS message and publish
         rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
         self.processed_rgb_pub.publish(rgb_msg)
+
+    def handle_button_press(self, request, response):
+        selected_button = request.button_name
+        self.get_logger().info(f"Button pressed: {request.button_name}")
+        response.response = f"Button {request.button_name} was pressed"
+        self.pipeline.set_button(selected_button)
+        return response
 
 
 def main(args=None):

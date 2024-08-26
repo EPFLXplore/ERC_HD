@@ -6,7 +6,7 @@ from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Imag
 import time
 import os
 
-from hd_interfaces.msg import CompressedRGBD  # Custom message type
+from custom_msg.msg import CompressedRGBD  # Custom message type
 import numpy as np
 
 

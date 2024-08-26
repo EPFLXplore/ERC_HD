@@ -30,9 +30,16 @@ class ArucoDetector(ModuleInterface):
         self.tvec = None
 
     def process_rgb(self, frame):
-        gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+        gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)  # fmt: off
         corners, ids, _rejectedImgPoints = aruco.detectMarkers(gray, self.marker_dict)
-        if ids in self.marker_ids:
+        if ids is None:
+            return None, None
+        if any(
+            np.array_equal(id[0], marker_id)
+            for id in ids
+            for marker_id in self.marker_ids
+        ):
+            # fmt: on
             tag_idx = np.where(ids == self.marker_ids)[0][0]
             rvecs, tvecs, _objPoints = aruco.estimatePoseSingleMarkers(
                 corners, self.marker_size, self.camera_matrix, self.dist_coeffs
@@ -42,7 +49,7 @@ class ArucoDetector(ModuleInterface):
             self.corners = corners[tag_idx]
         if self.rvec is not None and self.tvec is not None:
             return self.rvec, self.tvec
-        return np.full((3,), np.nan), np.full((3,), np.nan)
+        return None, None
 
     def process_rgbd(self, rgb_frame, depth_frame):
         return self.process_rgb(rgb_frame)
@@ -55,6 +62,8 @@ class ArucoDetector(ModuleInterface):
 
     # Draw the pose of the marker object
     def draw(self, frame, length=50, thickness=4):
+        if self.rvec is None or self.tvec is None:
+            return
         cv.drawFrameAxes(
             frame,
             self.camera_matrix,

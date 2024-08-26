@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 import tkinter as tk
-from hd_interfaces.srv import ButtonPressControlPanel
+from custom_msg.srv import ButtonPressControlPanel
 
 BUTTON_WIDTH = 38
 BUTTON_HEIGHT = 30
@@ -14,14 +14,15 @@ GRID_V_SPACING = 2 * BUTTON_HEIGHT + 30  # Vertical spacing between buttons
 class GuiNode(Node):
     def __init__(self):
         super().__init__("gui_node")
-        
-        #publishers
+
+        # publishers
         self.publisher_ = self.create_publisher(String, "command_topic", 10)
-        #service client
-        self.client = self.create_client(ButtonPressControlPanel, '/gui_node/button_press_service')
+        # service client
+        self.client = self.create_client(
+            ButtonPressControlPanel, "/gui_node/button_press_service"
+        )
         while not self.client.wait_for_service(timeout_sec=2.0):
             self.get_logger().info("Service not available, waiting...")
-        
 
         self.window = tk.Tk()
         self.window.title("ROS 2 Command Sender")

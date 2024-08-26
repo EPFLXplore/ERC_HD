@@ -1,7 +1,8 @@
 import numpy as np
-import cv2 as cv
+import cv2
 from scipy.spatial.transform import Rotation as R
 from numpy import linalg
+from numpy import ndarray
 
 
 def rvec2quat(rVec):
@@ -44,7 +45,7 @@ def camera_projection(point, rVec, tVec):
     point = np.append(point, [1])
 
     # compute the rotation matrix
-    R, _jacobian = cv.Rodrigues(rVec)
+    R, _jacobian = cv2.Rodrigues(rVec)
 
     # change of perspective
     tVec = -linalg.inv(R) @ tVec.T
@@ -67,3 +68,85 @@ def translation_rotation(point, rVec, tVec):
     translation = camera_projection(point, rVec, tVec)
     quaternion = rvec2quat(rVec)
     return translation, quaternion
+
+
+# ===================================================================================
+
+
+def point_2_homogeneous(point):
+    return np.append(point, [1])
+
+
+def homogeneous_2_point(homogeneous_point):
+    return homogeneous_point[:-1]
+
+
+def get_rotation_matrix(rvec):
+    return cv2.Rodrigues(rvec)
+
+
+def get_tranformation_matrix(rvec, tvec):
+    R, what = cv2.Rodrigues(rvec)
+    M = np.eye(4)
+    M[:3, :3] = R
+    if tvec.shape != (3,):
+        # print(f"wrong shape for< tvec, {tvec.shape}")
+        tvec = tvec.reshape(3)
+
+    M[:3, 3] = tvec
+    return M
+
+
+def transform_and_project(point3d, M, intrinsics):
+    return project_point(tf(M, point3d), intrinsics)
+
+
+def project_point(point3d, intrinsics):
+    homogeneous_projected_point = intrinsics @ point3d
+    homogeneous_projected_point /= homogeneous_projected_point[2]
+    # print(f"homogeneous_projected_point: {homogeneous_projected_point}")
+    return homogeneous_2_point(homogeneous_projected_point)
+
+
+def invert_homogeneous_matrix(M):
+    """
+    source: https://answers.opencv.org/question/73149/world-co-ordinates-and-object-co-ordinates/#73173
+
+    Args:
+        M (_type_): _description_
+    """
+    R = M[0:3, 0:3]
+    t = M[0:3, 3]
+    R_transpose = R.T
+    inv_R = R_transpose
+    inv_t = -R_transpose @ t
+    inverted_M = np.eye(4)
+    inverted_M[0:3, 0:3] = inv_R
+    inverted_M[0:3, 3] = inv_t
+    return inverted_M
+
+
+def homo_2_vecs(M):
+    assert M.shape == (4, 4)
+    tvec = M[:3, 3]
+    rvec, _ = cv2.Rodrigues(M[:3, :3])
+    # rvec = rvec.reshape(3)
+    print(M[:3, :3].shape)
+    print(rvec)
+    assert tvec.shape == (3,), f"tvec predicted: (3,), actual: {tvec.shape}"
+    assert rvec.shape == (3, 1), f"rvec predicted: (3,1), actual: {rvec.shape}"
+    return tvec, rvec
+
+
+def tf(W: ndarray, point: ndarray):
+    """_summary_
+
+    Args:
+        W (ndarray): Homogeneous transformation matrix
+        point (ndarray): 3d point
+    """
+    return homogeneous_2_point(W @ point_2_homogeneous(point))
+
+
+def tf_project(W, point, intrinsics):
+    return project_point(tf(W, point), intrinsics)
