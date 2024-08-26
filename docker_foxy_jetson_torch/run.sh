@@ -32,7 +32,7 @@ current_dir=$(pwd)
 parent_dir=$(dirname "$current_dir")
 
 docker run -it \
-    --name hd_humble_jetson_torch \
+    --name hd_foxy_jetson_torch \
     --rm \
     --runtime=nvidia \
     --gpus all \
@@ -46,6 +46,6 @@ docker run -it \
     -v /run/user/1000/at-spi:/run/user/1000/at-spi \
     -v /dev:/dev \
     -v $parent_dir:/home/xplore/dev_ws/src \
-    -v hd_humble_jetson_torch_home_volume:/home/xplore \
-    ghcr.io/epflxplore/hd:humble-jetson-torch \
+    -v hd_foxy_jetson_torch_home_volume:/home/xplore \
+    ghcr.io/epflxplore/hd:foxy-jetson-torch \
     /bin/bash -c "sudo chown -R $USERNAME:$USERNAME /home/$USERNAME; /bin/bash"
