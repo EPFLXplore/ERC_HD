@@ -78,7 +78,7 @@ def get_btn_pose():
         body.operation = body.ADD
         body.name = name
         body.shape = Float64MultiArray()
-        body.shape.data = [0.2, 0.1, 0.0001]
+        body.shape.data = [0.1, 0.2, 0.0001]
 
         axis_obj = Object()
         axis_obj.shape = Float64MultiArray()

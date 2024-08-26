@@ -6,9 +6,11 @@ import threading
 from geometry_msgs.msg import Pose, Quaternion
 from custom_msg.msg import TargetInstruction
 import kinematics_utils.quaternion_arithmetic as qa
+import kinematics_utils.quaternion_arithmetic_new as qan
 import kinematics_utils.pose_corrector as pc
 import kinematics_utils.pose_tracker as pt
 import math
+from math import pi
 
 
 class Listener:
@@ -44,24 +46,20 @@ def main():
 
     try:
         while rclpy.ok():
-            pose = Pose()
-            pose.orientation = qa.mul(qa.quat((0.0, 0.0, 1.0), math.pi/2), qa.quat((0.0, 1.0, 0.0), -math.pi/2))
+            pose = qan.Pose()
+            # pose.orientation = qa.mul(qa.quat((0.0, 0.0, 1.0), math.pi/2), qa.quat((0.0, 1.0, 0.0), -math.pi/2))
+            pose.orientation = qan.Quaternion.from_axis_angle((0, 0, 1), pi/2) * qan.Quaternion.from_axis_angle((0, 1, 0), -pi/2)
             scale = 1000
             pose.position.x = listener.vect[0]
             pose.position.y = listener.vect[1]
             pose.position.z = listener.vect[2]
-            pose = pc.abs_to_eef(pose)
-            #pose.position.x = pose.position.y = pose.position.z = 0.0
-
-            #pose = Pose(orientation=qa.quat([1.0, 0.0, 0.0], math.pi))
-            # pose = Pose()
-            rev = qa.reverse_pose(pc.CAMERA_TRANSFORM)
-            #pose = qa.compose_multiple_poses(pose, rev)
-            pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
-            pose.position.x *= scale
-            pose.position.y *= scale
-            pose.position.z *= scale
+            # pose = pc.abs_to_eef(pose)
+            pose = pc.abs_to_vision(pose)
+            # pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
+            pose.position *= scale
             # node.get_logger().info(str(pose))
+
+            pose = pose.publishable()
             msg = TargetInstruction(ar_tag_pose=pose, object_pose=pose)
             detected_element_pub.publish(msg)
 

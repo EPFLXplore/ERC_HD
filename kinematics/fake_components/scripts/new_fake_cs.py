@@ -166,6 +166,8 @@ class ControlStation(Node):
         self.input_config.bind(KeyboardConfig._6, self.set_man_inv_angular, "value", coordinate=1, multiplier=-1)
         self.input_config.bind(KeyboardConfig._1, self.set_man_inv_angular, "value", coordinate=2, multiplier=1)
         self.input_config.bind(KeyboardConfig._3, self.set_man_inv_angular, "value", coordinate=2, multiplier=-1)
+        
+        self.input_config.bind(KeyboardConfig.x, self.set_semi_auto_cmd2, "event_value")
     
     def create_gamepad_bindings(self):
         from input_handling.gamepad import GamePadConfig
