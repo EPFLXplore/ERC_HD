@@ -1,1 +1,0 @@
-docker exec -it hd_humble_jetson_torch bash

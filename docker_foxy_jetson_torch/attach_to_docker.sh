@@ -1,0 +1,1 @@
+docker exec -it hd_foxy_jetson_torch bash
