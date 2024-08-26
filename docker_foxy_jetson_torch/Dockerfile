@@ -32,7 +32,7 @@ RUN apt update && apt upgrade -y \
 
 USER $USERNAME
 
-RUN . /opt/ros/foxy/setup.bash
+# RUN . /opt/ros/foxy/setup.bash
 
 # Set directories
 WORKDIR /home/$USERNAME/dev_ws/src
