@@ -12,7 +12,6 @@
  ** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /*
 ** Simple Example executable for the use of the RSL EtherCAT software tools
 ** ════════════════════════════════════════════════════════════════════════
@@ -33,7 +32,7 @@
 **
 **   Are you using gcc and g++ both with a version >= 8.4? See the
 **   README.md for more details.
- */
+*/
 #include "ethercat_device_configurator/EthercatDeviceConfigurator.hpp"
 #include <maxon_epos_ethercat_sdk/Maxon.hpp>
 
@@ -50,13 +49,15 @@ using namespace std::chrono_literals;
 
 using std::placeholders::_1;
 
-enum Motor_mode{
+enum Motor_mode
+{
     POSITION,
     VELOCITY,
     TORQUE
 };
 
-struct Motor_command{
+struct Motor_command
+{
     std::string name;
     Motor_mode mode;
     double command;
@@ -73,51 +74,59 @@ unsigned int counter = 0;
 
 class Motor_controller : public rclcpp::Node
 {
-    public:
-        Motor_controller(int argc, char**argv)
+public:
+    Motor_controller(int argc, char **argv)
         : Node("Motor_controller")
+    {
+        subscription_motor_command_ = this->create_subscription<motor_control_interfaces::msg::MotorCommand>(
+            "motor_command", 10, std::bind(&Motor_controller::motor_command_callback, this, _1));
+    }
+
+private:
+    /**                         variablres                             **/
+    // commande au moteur
+    std::vector<Motor_command> motor_command_list;
+
+    // Ros related
+    rclcpp::Subscription<motor_control_interfaces::msg::MotorCommand>::SharedPtr subscription_motor_command_;
+    // rclcpp::Publisher<motor_param>::SharedPtr publisher_motor_param_;
+
+    /**                         fonction                              **/
+    void motor_command_callback(const motor_control_interfaces::msg::MotorCommand::SharedPtr msg)
+    {
+        for (auto &command : motor_command_list)
         {
-            subscription_motor_command_ = this->create_subscription<motor_control_interfaces::msg::MotorCommand>(
-                "motor_command", 10, std::bind(&Motor_controller::motor_command_callback, this, _1)
-                );
-        }
-
-    private:
-
-        /**                         variablres                             **/ 
-        // commande au moteur
-        std::vector<Motor_command> motor_command_list;
-
-        // Ros related
-        rclcpp::Subscription<motor_control_interfaces::msg::MotorCommand>::SharedPtr subscription_motor_command_;
-        // rclcpp::Publisher<motor_param>::SharedPtr publisher_motor_param_;
-
-        /**                         fonction                              **/
-        void motor_command_callback(const motor_control_interfaces::msg::MotorCommand::SharedPtr msg){
-            for(auto & command : motor_command_list){
-                if(command.name == msg->name){
-                    switch (msg->mode)
-                    {
-                    case 0: command.mode = Motor_mode::POSITION; break;
-                    case 1: command.mode = Motor_mode::VELOCITY; break;
-                    case 2: command.mode = Motor_mode::TORQUE; break;
-                    default: break;
-                    }
-                    command.command = msg->commande;
+            if (command.name == msg->name)
+            {
+                switch (msg->mode)
+                {
+                case 0:
+                    command.mode = Motor_mode::POSITION;
+                    break;
+                case 1:
+                    command.mode = Motor_mode::VELOCITY;
+                    break;
+                case 2:
+                    command.mode = Motor_mode::TORQUE;
+                    break;
+                default:
                     break;
                 }
+                command.command = msg->commande;
+                break;
             }
         }
+    }
 };
 
 void worker()
 {
     bool rtSuccess = true;
-    for(const auto & master: configurator->getMasters())
+    for (const auto &master : configurator->getMasters())
     {
         rtSuccess &= master->setRealtimePriority(99);
     }
-    std::cout << "Setting RT Priority: " << (rtSuccess? "successful." : "not successful. Check user privileges.") << std::endl;
+    std::cout << "Setting RT Priority: " << (rtSuccess ? "successful." : "not successful. Check user privileges.") << std::endl;
 
     // Flag to set the drive state for the elmos on first startup
     bool maxonEnabledAfterStartup = false;
@@ -127,28 +136,27 @@ void worker()
     ** This loop is supposed to be executed at a constant rate.
     ** The EthercatMaster::update function incorporates a mechanism
     ** to create a constant rate.
-     */
-    while(!abrt)
+    */
+    while (!abrt)
     {
         /*
         ** Update each master.
         ** This sends tha last staged commands and reads the latest readings over EtherCAT.
         ** The StandaloneEnforceRate update mode is used.
         ** This means that average update rate will be close to the target rate (if possible).
-         */
-        for(const auto & master: configurator->getMasters() )
+        */
+        for (const auto &master : configurator->getMasters())
         {
             master->update(ecat_master::UpdateMode::StandaloneEnforceRate); // TODO fix the rate compensation (Elmo reliability problem)!!
         }
-
-
 
         /*
         ** Do things with the attached devices.
         ** Your lowlevel control input / measurement logic goes here.
         ** Different logic can be implemented for each device.
-         */
-        for(const auto & motor_command: motor_command_list) {
+        */
+        for (const auto &motor_command : motor_command_list)
+        {
             // Maxon
             if (configurator->getInfoForSlave(slave).type == EthercatDeviceConfigurator::EthercatSlaveType::Maxon)
             {
@@ -166,11 +174,12 @@ void worker()
 
                 // set commands if we can
                 if (maxon_slave_ptr->lastPdoStateChangeSuccessful() &&
-                        maxon_slave_ptr->getReading().getDriveState() == maxon::DriveState::OperationEnabled)
+                    maxon_slave_ptr->getReading().getDriveState() == maxon::DriveState::OperationEnabled)
                 {
                     maxon::Command command;
-                        
-                    switch (motor_command.mode){
+
+                    switch (motor_command.mode)
+                    {
                     case Motor_mode::POSITION:
                         command.setModeOfOperation(maxon::ModeOfOperationEnum::CyclicSynchronousPositionMode);
                         command.setTargetPosition(motor_command.command);
@@ -188,12 +197,11 @@ void worker()
                         break;
                     }
                     maxon_slave_ptr->stageCommand(command);
-                
                 }
                 else
                 {
                     MELO_WARN_STREAM("Maxon '" << maxon_slave_ptr->getName()
-                                                                         << "': " << maxon_slave_ptr->getReading().getDriveState());
+                                               << "': " << maxon_slave_ptr->getReading().getDriveState());
                 }
 
                 // Constant update rate
@@ -205,12 +213,11 @@ void worker()
     }
 }
 
-
 /*
 ** Handle the interrupt signal.
 ** This is the shutdown routine.
 ** Note: This logic is executed in a thread separated from the communication update!
- */
+*/
 void signal_handler(int sig)
 {
     /*
@@ -221,8 +228,8 @@ void signal_handler(int sig)
     ** You might thus want to implement some logic that stages zero torque / velocity commands
     ** or simliar safety measures at this point using e.g. atomic variables and checking them
     ** in the communication update loop.
-     */
-    for(const auto & master: configurator->getMasters())
+    */
+    for (const auto &master : configurator->getMasters())
     {
         master->preShutdown();
     }
@@ -234,8 +241,8 @@ void signal_handler(int sig)
     /*
     ** Completely halt the EtherCAT communication.
     ** No online communication is possible afterwards, including SDOs.
-     */
-    for(const auto & master: configurator->getMasters())
+    */
+    for (const auto &master : configurator->getMasters())
     {
         master->shutdown();
     }
@@ -246,19 +253,16 @@ void signal_handler(int sig)
     exit(0);
 }
 
-
-
-
 /*
 ** Program entry.
 ** Pass the path to the setup.yaml file as first command line argument.
- */
-int main(int argc, char**argv)
+*/
+int main(int argc, char **argv)
 {
     // Set the abrt_ flag upon receiving an interrupt signal (e.g. Ctrl-c)
     std::signal(SIGINT, signal_handler);
 
-    if(argc < 2)
+    if (argc < 2)
     {
         std::cerr << "pass path to 'setup.yaml' as command line argument" << std::endl;
         return EXIT_FAILURE;
@@ -272,10 +276,10 @@ int main(int argc, char**argv)
     ** All online (i.e. SDO) configuration is done during this call.
     ** The EtherCAT interface is active afterwards, all drives are in Operational
     ** EtherCAT state and PDO communication may begin.
-     */
-    for(auto & master: configurator->getMasters())
+    */
+    for (auto &master : configurator->getMasters())
     {
-        if(!master->startup())
+        if (!master->startup())
         {
             std::cerr << "Master Startup not successful." << std::endl;
             return EXIT_FAILURE;
@@ -290,16 +294,15 @@ int main(int argc, char**argv)
     /*
     ** Wait for a few PDO cycles to pass.
     ** Set anydrives into to ControlOp state (internal state machine, not EtherCAT states)
-     */
+    */
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    for(auto & slave: configurator->getSlaves())
+    for (auto &slave : configurator->getSlaves())
     {
         std::cout << " " << slave->getName() << ": " << slave->getAddress() << std::endl;
     }
 
     std::cout << "Startup finished" << std::endl;
     // nothing further to do in this thread.
-
 
     rclcpp::init(argc, argv);
     rclcpp::spin(std::make_shared<Motor_controller>());
