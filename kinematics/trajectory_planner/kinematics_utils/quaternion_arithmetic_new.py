@@ -1,7 +1,7 @@
+from __future__ import annotations
 from math import sqrt, sin, cos, asin, acos, pi
 import geometry_msgs.msg as gmsg
 from typing import Any, Union, Tuple, List
-from typing_extensions import Self
 import random
 
 
@@ -56,7 +56,7 @@ def random_in_range(lower: float, upper: float):
 
 class Point(gmsg.Point):    
     @classmethod
-    def make(cls, value: PointLike) -> Self:
+    def make(cls, value: PointLike) -> Point:
         """
         Convert a PointLike to Point
         """
@@ -69,7 +69,7 @@ class Point(gmsg.Point):
         raise TypeError(f"Unsuported type '{type(value).__name__}' for conversion to Point")
     
     @classmethod
-    def random(cls, x_range: Tuple[float, float]=(-10.0, 10.0), y_range: Tuple[float, float]=(-10.0, 10.0), z_range: Tuple[float, float]=(-10.0, 10.0)) -> Self:
+    def random(cls, x_range: Tuple[float, float]=(-10.0, 10.0), y_range: Tuple[float, float]=(-10.0, 10.0), z_range: Tuple[float, float]=(-10.0, 10.0)) -> Point:
         """
         Generate a random Point in the specified ranges
         """
@@ -90,36 +90,36 @@ class Point(gmsg.Point):
     def xyz(self) -> Tuple[float, float, float]:
         return self.x, self.y, self.z
     
-    def __add__(self, other: PointLike) -> Self:
+    def __add__(self, other: PointLike) -> Point:
         # TODO: maybe add more direct typechecking via is_point_like (for now type checking is done indirectly in the make method), and same for __sub__ and __rsub__ methods
         other = Point.make(other)
         return Point(x=self.x+other.x, y=self.y+other.y, z=self.z+other.z)
     
-    def __radd__(self, other: PointLike) -> Self:
+    def __radd__(self, other: PointLike) -> Point:
         return self + other
 
-    def __sub__(self, other: PointLike) -> Self:
+    def __sub__(self, other: PointLike) -> Point:
         other = Point.make(other)
         return Point(x=self.x-other.x, y=self.y-other.y, z=self.z-other.z)
     
-    def __rsub__(self, other: PointLike) -> Self:
+    def __rsub__(self, other: PointLike) -> Point:
         other = Point.make(other)
         return Point(x=other.x-self.x, y=other.y-self.y, z=other.z-self.z)
     
-    def __mul__(self, other: Union[Scalar, PointLike]) -> Self:
+    def __mul__(self, other: Union[Scalar, PointLike]) -> Point:
         if isinstance(other, Scalar):
             return Point(x=other*self.x, y=other*self.y, z=other*self.z)
         if is_point_like(other):
             return self.dot(other)
         raise TypeError(f"Unsuported operand types for *: '{Point.__name__}' and '{type(other).__name__}'")
     
-    def __rmul__(self, other: Union[Scalar, PointLike]) -> Self:
+    def __rmul__(self, other: Union[Scalar, PointLike]) -> Point:
         try:
             return self * other
         except TypeError:
             raise TypeError(f"Unsuported operand types for *: '{type(other).__name__}' and '{Point.__name__}'")
     
-    def __neg__(self) -> Self:
+    def __neg__(self) -> Point:
         return Point(x=-self.x, y=-self.y, z=-self.z)
     
     def dot(self, other: PointLike) -> float:
@@ -135,7 +135,7 @@ class Point(gmsg.Point):
     def __abs__(self) -> float:
         return self.norm()
     
-    def normalized(self) -> Self:
+    def normalized(self) -> Point:
         n = self.norm()
         if n == 0:
             return Point(x=0.0, y=0.0, z=0.0)
@@ -147,11 +147,14 @@ class Point(gmsg.Point):
             self.x /= n
             self.y /= n
             self.z /= n
+    
+    def publishable(self) -> gmsg.Point:
+        return gmsg.Point(x=self.x, y=self.y, z=self.z)
 
 
 class Quaternion(gmsg.Quaternion):    
     @classmethod
-    def make(cls, value: QuaternionLike) -> Self:
+    def make(cls, value: QuaternionLike) -> Quaternion:
         """
         Convert a QuaternionLike to Quaternion
         """
@@ -168,7 +171,7 @@ class Quaternion(gmsg.Quaternion):
         raise TypeError(f"Unsuported type '{type(value).__name__}' for conversion to Quaternion")
 
     @classmethod
-    def from_axis_angle(cls, axis: PointLike, angle: float) -> Self:
+    def from_axis_angle(cls, axis: PointLike, angle: float) -> Quaternion:
         """
         Return the quaternion associated to a rotation of a certain angle around a certain axis
         """
@@ -182,7 +185,7 @@ class Quaternion(gmsg.Quaternion):
         return q
     
     @classmethod
-    def random(cls) -> Self:
+    def random(cls) -> Quaternion:
         """
         Generate a random normalized quaternion
         """
@@ -228,24 +231,24 @@ class Quaternion(gmsg.Quaternion):
     def xyz(self) -> Tuple[float, float, float]:
         return self.x, self.y, self.z
     
-    def __add__(self, other: QuaternionLike) -> Self:
+    def __add__(self, other: QuaternionLike) -> Quaternion:
         # TODO: maybe add more direct typechecking via is_point_like (for now type checking is done semi directly in the make method), and same for __sub__ and __rsub__ methods
         other = Quaternion.make(other)
         return Quaternion(w=self.w+other.w, x=self.x+other.x, y=self.y+other.y, z=self.z+other.z)
 
-    def __radd__(self, other: QuaternionLike) -> Self:
+    def __radd__(self, other: QuaternionLike) -> Quaternion:
         return self + other
     
-    def __sub__(self, other: QuaternionLike) -> Self:
+    def __sub__(self, other: QuaternionLike) -> Quaternion:
         other = Quaternion.make(other)
         return Quaternion(w=self.w-other.w, x=self.x-other.x, y=self.y-other.y, z=self.z-other.z)
     
-    def __rsub__(self, other: QuaternionLike) -> Self:
+    def __rsub__(self, other: QuaternionLike) -> Quaternion:
         other = Quaternion.make(other)
         return Quaternion(w=other.w-self.w, x=other.x-self.x, y=other.y-self.y, z=other.z-self.z)
     
     @staticmethod
-    def _quat_mul(q1: gmsg.Quaternion, q2: gmsg.Quaternion) -> Self:
+    def _quat_mul(q1: gmsg.Quaternion, q2: gmsg.Quaternion) -> Quaternion:
         return Quaternion(
             w = q1.w*q2.w - q1.x*q2.x - q1.y*q2.y - q1.z*q2.z,
             x = q1.w*q2.x + q1.x*q2.w + q1.y*q2.z - q1.z*q2.y,
@@ -253,12 +256,12 @@ class Quaternion(gmsg.Quaternion):
             z = q1.w*q2.z + q1.x*q2.y - q1.y*q2.x + q1.z*q2.w
         )
     
-    def _scalar_mul(self, scalar: Scalar) -> Self:
+    def _scalar_mul(self, scalar: Scalar) -> Quaternion:
         if not isinstance(scalar, Scalar):
             raise TypeError     # TODO: write error message
         return Quaternion(w=scalar*self.w, x=scalar*self.x, y=scalar*self.y, z=scalar*self.z)
     
-    def __mul__(self, other: QuaternionLike) -> Self:
+    def __mul__(self, other: QuaternionLike) -> Quaternion:
         if isinstance(other, Scalar):
             self._scalar_mul(other)
         if is_quaternion_like(other):
@@ -266,7 +269,7 @@ class Quaternion(gmsg.Quaternion):
             return self._quat_mul(self, other)
         raise TypeError(f"Unsuported operand types for *: '{type(other).__name__}' and '{Quaternion.__name__}'")
     
-    def __rmul__(self, other: QuaternionLike) -> Self:
+    def __rmul__(self, other: QuaternionLike) -> Quaternion:
         if isinstance(other, Scalar):
             self._scalar_mul(other)
         if is_quaternion_like(other):
@@ -274,7 +277,7 @@ class Quaternion(gmsg.Quaternion):
             return self._quat_mul(other, self)
         raise TypeError(f"Unsuported operand types for *: '{Quaternion.__name__}' and '{type(other).__name__}'")
     
-    def __neg__(self) -> Self:
+    def __neg__(self) -> Quaternion:
         return Quaternion(w=-self.w, x=-self.x, y=-self.y, z=-self.z)
 
     def sq_norm(self) -> float:
@@ -286,7 +289,7 @@ class Quaternion(gmsg.Quaternion):
     def __abs__(self) -> float:
         return self.norm()
 
-    def inv(self, suppose_unit_norm=True) -> Self:
+    def inv(self, suppose_unit_norm=True) -> Quaternion:
         """
         Quaternion multiplicative inverse
         """
@@ -299,7 +302,7 @@ class Quaternion(gmsg.Quaternion):
         )
         return q_
     
-    def normalized(self) -> Self:
+    def normalized(self) -> Quaternion:
         n = self.norm()
         if n == 0:
             return Quaternion(w=0.0, x=0.0, y=0.0, z=0.0)
@@ -335,13 +338,16 @@ class Quaternion(gmsg.Quaternion):
         p = self * p * self_inv
         return Point.make(p)
     
-    def turn_around(self, axis: PointLike=(1.0, 0.0, 0.0), angle: float=pi) -> Self:
+    def turn_around(self, axis: PointLike=(1.0, 0.0, 0.0), angle: float=pi) -> Quaternion:
         """
         Calculate the quaternion corresponding to the rotation described by self composed with the rotation described by the given axis and angle
         """
         axis = self.point_image(axis)
         r = Quaternion.from_axis_angle(axis, angle)
         return r * self
+    
+    def publishable(self) -> gmsg.Quaternion:
+        return gmsg.Quaternion(x=self.x, y=self.y, z=self.z, w=self.w)
 
 
 class Pose(gmsg.Pose):
@@ -351,7 +357,7 @@ class Pose(gmsg.Pose):
         self.orientation: Quaternion = Quaternion.make(self.orientation)
     
     @classmethod
-    def make(cls, value: PoseLike, normalize=False) -> Self:
+    def make(cls, value: PoseLike, normalize=False) -> Pose:
         """
         Convert a PoseLike to Pose
         :param normalize: whether to normalize the given quaternion 
@@ -370,7 +376,7 @@ class Pose(gmsg.Pose):
         raise TypeError(f"Unsuported type '{type(value).__name__}' for conversion to Pose")
     
     @classmethod
-    def random(cls, x_range: Tuple[float, float]=(-10.0, 10.0), y_range: Tuple[float, float]=(-10.0, 10.0), z_range: Tuple[float, float]=(-10.0, 10.0)) -> Self:
+    def random(cls, x_range: Tuple[float, float]=(-10.0, 10.0), y_range: Tuple[float, float]=(-10.0, 10.0), z_range: Tuple[float, float]=(-10.0, 10.0)) -> Pose:
         """
         Generate a random Pose with position in the specified ranges
         """
@@ -392,7 +398,7 @@ class Pose(gmsg.Pose):
     def point_image(self, point: PointLike) -> Point:
         return self.position + self.orientation.point_image(point)
 
-    def inv(self) -> Self:
+    def inv(self) -> Pose:
         """
         Return inv_pose such that the composition of self and inv_pose is the trivial pose
         """
@@ -400,7 +406,7 @@ class Pose(gmsg.Pose):
         position = -orientation.point_image(self.position)
         return Pose(position=position, orientation=orientation)
     
-    def compose(self, other: PoseLike) -> Self:
+    def compose(self, other: PoseLike) -> Pose:
         """
         Compose the transformations corresponding to self and the other pose in the following way:
         self with respect to origin, other with respect to self
@@ -427,10 +433,14 @@ class Pose(gmsg.Pose):
         self.position = self.point_image(other.position)
         self.orientation *= other.orientation
     
-    def __matmul__(self, other: PoseLike) -> Self:
+    def __matmul__(self, other: PoseLike) -> Pose:
         return self.compose(other)
     
-    def compose_multiple(self, *poses: PoseLike) -> Self:
+    def __rmatmul__(self, other: PoseLike) -> Pose:
+        other = Pose.make(other)
+        return other.compose(self)
+    
+    def compose_multiple(self, *poses: PoseLike) -> Pose:
         """
         Compose mutliple poses, can also be called without an instance 
         in the (kinda unclean but who cares, it's python) form Pose.compose_multiple(pose1, ..., pose_k)
@@ -440,3 +450,16 @@ class Pose(gmsg.Pose):
         for pose in poses:
             res.compose_inplace(pose)
         return res
+
+    def publishable(self) -> gmsg.Pose:
+        return gmsg.Pose(position=self.position.publishable(), orientation=self.orientation.publishable())
+
+
+def publishable(obj: Union[gmsg.Point, gmsg.Quaternion, gmsg.Pose]):
+    if isinstance(obj, gmsg.Point):
+        return Point.make(obj).publishable()
+    if isinstance(obj, gmsg.Quaternion):
+        return Quaternion.make(obj).publishable()
+    if isinstance(obj, gmsg.Pose):
+        return Pose.make(obj).publishable()
+    raise TypeError

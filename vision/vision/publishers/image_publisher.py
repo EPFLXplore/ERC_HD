@@ -14,7 +14,6 @@ import cv2  # OpenCV library
 import sys
 
 sys.path.append("./src/vision/vision")
-from stereo_camera import StereoCamera
 import os
 
 

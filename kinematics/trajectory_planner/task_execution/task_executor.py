@@ -15,6 +15,7 @@ import threading
 import kinematics_utils.pose_tracker as pt
 import kinematics_utils.pose_corrector as pc
 import kinematics_utils.quaternion_arithmetic as qa
+import kinematics_utils.quaternion_arithmetic_new as qan
 from typing import List, Type
 from dataclasses import dataclass
 
@@ -129,7 +130,7 @@ class Executor(Node):
     def sendPoseGoal(self, goal: Pose, cartesian: bool=False, velocity_scaling_factor: float=1.0):
         """sends a pose goal to the trajectory planner"""
         msg = PoseGoal(
-            goal = goal,
+            goal = qan.publishable(goal),
             cartesian = cartesian,
             velocity_scaling_factor = velocity_scaling_factor
         )
@@ -179,7 +180,7 @@ class Executor(Node):
             type = type,
             operation = operation,
             name = name,
-            pose = pc.revert_from_vision(pose),
+            pose = pc.revert_from_vision(pose).publishable(),
             shape = Float64MultiArray(data=shape)
         )
         self.add_object_pub.publish(msg)
@@ -250,7 +251,7 @@ class Executor(Node):
     
     def testVision(self):
         if len(pt.DETECTED_OBJECTS_POSE) == 0: return
-        shape = [0.2, 0.1, 0.0001]
+        shape = [0.1, 0.2, 0.0001]
         pose = pt.DETECTED_OBJECTS_POSE[0].artag_pose
         name = "test_btn"
         self.addObjectToWorld(shape, pose, name)

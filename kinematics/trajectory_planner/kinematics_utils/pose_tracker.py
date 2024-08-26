@@ -48,16 +48,14 @@ def detected_object_pose_callback(msg: TargetInstruction):
     for _ in range(len(DETECTED_OBJECTS_POSE)):
         DETECTED_OBJECTS_POSE.pop()
 
-    def correct_pose(pose):
+    def correct_pose(pose: Pose) -> Pose:
         mm_to_m = 1/1000
         corrected_pose = Pose()
         corrected_pose.position.x = pose.position.x * mm_to_m
         corrected_pose.position.y = pose.position.y * mm_to_m
         corrected_pose.position.z = pose.position.z * mm_to_m
         corrected_pose.orientation = pose.orientation
-        corrected_pose = pc.correct_vision_pose(corrected_pose)
-        #corrected_pose = qa.compose_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), corrected_pose)
-        corrected_pose = qa.compose_multiple_poses(pc.correct_eef_pose(END_EFFECTOR_POSE), pc.CAMERA_TRANSFORM, corrected_pose)
+        corrected_pose = pc.vision_to_abs(corrected_pose)
         return corrected_pose
     
     corrected_artag_pose = correct_pose(msg.ar_tag_pose)

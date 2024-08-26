@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from typing import Tuple
 import rclpy
 from rclpy.node import Node
 import threading
@@ -30,69 +31,70 @@ class Listener:
     
     def listen_loop(self):
         while True:
-            self.vect = list(map(float, input().split()))
+            self.vect = list(map(float, input("new end effector transform: ").split()))
     
     def listen(self):
         self.thread.start()
-        
+
 
 listener = Listener()
 listener.listen()
 
 
 def artag_callback(msg):
-    pose1 = Pose()
-    pose2 = Pose()
+    def extract_pose(source: Pose, dest: Pose):
+        pose = Pose()
+        pose.position.x = source.position.x/1000
+        pose.position.y = source.position.y/1000
+        pose.position.z = source.position.z/1000
+        pose.orientation = source.orientation
+        # pose = pc.correct_vision_pose(pose)
+        dest.position = pose.position
+        dest.orientation = pose.orientation
 
-    pose1.position.x = msg.ar_tag_pose.position.x/1000
-    pose1.position.y = msg.ar_tag_pose.position.y/1000
-    pose1.position.z = msg.ar_tag_pose.position.z/1000
-    pose1.orientation = msg.ar_tag_pose.orientation
-    temp = pc.correct_vision_pose(pose1)
-    artag_pose.position = temp.position
-    artag_pose.orientation = temp.orientation
-
-    pose2.position.x = msg.object_pose.position.x/1000
-    pose2.position.y = msg.object_pose.position.y/1000
-    pose2.position.z = msg.object_pose.position.z/1000
-    pose2.orientation = msg.object_pose.orientation
-    temp = pc.correct_vision_pose(pose2)
-    btn_pose.position = temp.position
-    btn_pose.orientation = temp.orientation
+    extract_pose(msg.ar_tag_pose, artag_pose)
+    extract_pose(msg.object_pose, btn_pose)
 
 
 def end_effector_callback(msg):
     transform = Pose()
+    # transform.orientation = qa.mul(qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2), qa.quat(axis=(0.0, 0.0, 1.0), angle=pi/2))
     transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
     vect = [-0.097, -0.7545, -0.3081]
     vect = [0.0, 0.0, 0.2018]
-    vect = listener.vect
+    # vect = listener.vect
     transform.position = qa.point_image(vect, transform.orientation)
     combined = qa.compose_poses(msg, transform)
-    #combined = pc.correct_eef_pose(msg)
+    # combined = pc.correct_eef_pose(msg)
     end_effector_pose.position = combined.position
     end_effector_pose.orientation = combined.orientation
 
 
 def get_btn_pose():
-    obj = Object()
-    obj.pose = qa.compose_poses(end_effector_pose, artag_pose)
-    obj.type = obj.BOX
-    obj.operation = obj.ADD
-    obj.name = "artag"
-    obj.shape = Float64MultiArray()
-    obj.shape.data = [0.2, 0.1, 0.0001]
+    def create_object_representation(pose: Pose, name: str) -> Tuple[Object, Object]:
+        body = Object()
+        body.pose = qa.compose_poses(end_effector_pose, pose)
+        body.type = body.BOX
+        body.operation = body.ADD
+        body.name = name
+        body.shape = Float64MultiArray()
+        body.shape.data = [0.1, 0.2, 0.0001]
 
-    obj3 = Object()
-    obj3.shape = Float64MultiArray()
-    obj3.shape.data = [0.01, 0.01, 0.1]
-    obj3.pose = copy.deepcopy(obj.pose)
-    obj.type = obj.BOX
-    obj.operation = obj.ADD
-    obj3.name = "artag_axis"
-    axis = qa.point_image([0.0, 0.0, 1.0], obj.pose.orientation)
-    obj3.pose.position = qa.make_point(qa.add(obj3.pose.position, qa.mul(0.05, axis)))
+        axis_obj = Object()
+        axis_obj.shape = Float64MultiArray()
+        axis_obj.shape.data = [0.01, 0.01, 0.1]
+        axis_obj.pose = copy.deepcopy(body.pose)
+        body.type = body.BOX
+        body.operation = body.ADD
+        axis_obj.name = name + "axis"
+        axis = qa.point_image([0.0, 0.0, 1.0], body.pose.orientation)
+        axis_obj.pose.position = qa.make_point(qa.add(axis_obj.pose.position, qa.mul(0.05, axis)))
+        
+        return body, axis_obj
 
+    artag_body, artag_axis = create_object_representation(artag_pose, "artag")
+    btn_body, btn_axis = create_object_representation(btn_pose, "btn")
+    return artag_body, artag_axis, btn_body, btn_axis
     # obj2 = copy.deepcopy(obj)
     # obj2.name = "btn"
     # obj2.pose = qa.compose_poses(end_effector_pose, btn_pose)
@@ -127,14 +129,14 @@ def get_btn_pose():
     obj4.pose = pc.revert_from_vision(obj4.pose)
 
     return obj, obj2, obj3, obj4
-    
-    
+
+
 def main():
     rclpy.init()
     node = rclpy.create_node("kinematics_vision_test")
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", end_effector_callback, 10)
-    node.create_subscription(TargetInstruction, "target_pose", artag_callback, 10)
+    node.create_subscription(TargetInstruction, "HD/vision/target_pose", artag_callback, 10)
     #node.create_subscription(PanelObject, "/HD/vision/distance_topic", pt.detected_object_pose_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)
@@ -154,7 +156,7 @@ def main():
                 add_object_pub.publish(o1)
                 time.sleep(0.01)
                 add_object_pub.publish(o2)
-                # time.sleep(0.01)
+                time.sleep(0.01)
                 # add_object_pub.publish(o3)
                 # time.sleep(0.01)
                 # add_object_pub.publish(o4)

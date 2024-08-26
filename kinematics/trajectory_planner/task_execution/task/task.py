@@ -438,7 +438,7 @@ class Task:
     def getScanOrientation(self) -> Quaternion:
         return qa.turn_around(self.artag_pose.orientation)
     
-    def constructStandardDetectionCommands(self, object_name: str = "object", object_box: Union[tuple, list] = (0.2, 0.1, 0.0001), extended: bool = True):
+    def constructStandardDetectionCommands(self, object_name: str = "object", object_box: Union[tuple, list] = (0.1, 0.2, 0.0001), extended: bool = True):
         """an example of a series of commands for accurate detection of ARtag and associated object"""
         if extended:
             self.addCommand(
@@ -449,7 +449,7 @@ class Task:
             self.addCommand(        # TODO: maybe disable collisions for this object
                 AddObjectCommand(),
                 pre_operation = lambda cmd: (cmd.setPose(self.artag_pose),
-                                            cmd.setShape([0.2, 0.1, 0.0001]),
+                                            cmd.setShape([0.1, 0.2, 0.0001]),
                                             cmd.setName("artag")),
                 description="add ARtag to world"
             )

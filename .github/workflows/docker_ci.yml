@@ -41,9 +41,9 @@ jobs:
             context: .
             tag: humble-jetson
             platform: linux/arm64
-          - dockerfile: ./docker_humble_jetson_torch/Dockerfile
+          - dockerfile: ./docker_foxy_jetson_torch/Dockerfile
             context: .
-            tag: humble-jetson-torch
+            tag: foxy-jetson-torch
             platform: linux/arm64
 
     permissions:
