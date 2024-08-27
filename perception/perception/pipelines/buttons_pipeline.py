@@ -5,11 +5,16 @@ from .pipeline_interface import PipelineInterface
 from numpy import ndarray
 from rclpy.node import Node
 
-from geometry_msgs.msg import TargetInstruction
+from custom_msg.msg import TargetInstruction
 
 from ..modules.aruco_detector import ArucoDetector
 
 from ..controlpanel import control_panel
+
+from ..handlers.target_instruction_msg import TargetInstructionMsg
+from ..panel.panel import Panel
+
+from ..geometry import get_tranformation_matrix
 
 
 class ButtonsPipeline(PipelineInterface):
@@ -17,20 +22,44 @@ class ButtonsPipeline(PipelineInterface):
         self,
         config_file: str,
         node: Node,
-        draw_results: bool = True,
         camera_matrix: ndarray = None,
         dist_coeffs: ndarray = None,
+        draw_results: bool = True,
     ):
         self.camera_info = {"camera_matrix": camera_matrix, "dist_coeffs": dist_coeffs}
         super().__init__(config_file, node, draw_results)
         self.control_panel = control_panel.ControlPanel(
             **self.camera_info, button_values=[x for x in range(10)]
         )
+        self.panel = Panel(config_file, camera_matrix)
 
     def run_rgb(self, image):
         rvec, tvec = self.aruco_detector.process_rgb(image)
-        if rvec is not None and tvec is not None:
-            return translation_rotation([0, 0, 0], rvec, tvec)
+
+        if rvec is not None and tvec is not None:  # fmt off
+            if self.draw_results:
+                self.aruco_detector.draw(image)
+                self.panel.draw(image, get_tranformation_matrix(rvec, tvec))
+
+            aruco_translation, aruco_quaternion = translation_rotation(
+                [0, 0, 0], rvec, tvec
+            )
+
+            target_point = self.panel.get_target()
+            print(f"target_point: {target_point}")
+            target_translation, target_quaternion = translation_rotation(
+                target_point, rvec, tvec
+            )
+            target_instruction = TargetInstructionMsg.create_message(
+                aruco_translation,
+                aruco_quaternion,
+                target_translation,
+                target_quaternion,
+                0,
+            )
+            self.pose_publisher.publish(target_instruction)
+        else:
+            self.pose_publisher.publish(TargetInstructionMsg.empty_message())
 
     def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray) -> None:
         self.run_rgb(rgb_image)
@@ -41,7 +70,13 @@ class ButtonsPipeline(PipelineInterface):
         )
 
     def _initialize_pipeline(self):
-        self.aruco_detector = ArucoDetector(**self.config, **self.camera_info)
+
+        self.aruco_detector = ArucoDetector(**self.config["aruco"], **self.camera_info)
 
     def draw(self, frame: ndarray):
         pass
+
+    def set_button(self, button: str):
+        self.panel.set_target(button)
+        print(f"button pipeline: {button}")
+        # self.control_panel.set_button(button)

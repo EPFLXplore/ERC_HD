@@ -1,0 +1,3 @@
+aruco_tag_size: 32 # mm
+aruco_tag_ids: [1]
+marker_type: "4x4"

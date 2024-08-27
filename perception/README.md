@@ -86,3 +86,12 @@ Example: The perception pipeline for the metal bar task is composed of the follo
 - Metal bar segmentation
 - Aruco tag detection
 - ICP pose estimation
+
+## Buttons
+
+A button is defined by 6 points :
+
+- 4 points defining the corners of the button
+- 2 points defining where the button should be pressed to be turned on and off
+
+These 6 points are defined in a plane. The buttons position information can be found in the ERC rulebook

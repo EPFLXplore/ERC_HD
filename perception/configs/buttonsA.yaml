@@ -1,3 +1,54 @@
-aruco_tag_size: 62 #50 # mm
-aruco_tag_ids: [0]
-marker_type: "4x4"
+aruco:
+  aruco_tag_size: 62 # mm
+  aruco_tag_ids: [1]
+  marker_type: "4x4"
+
+buttons_width: 21 # mm
+buttons_height: 42 # mm
+
+buttons_horizontal_distance: 84 # mm
+buttons_vertical_distance: 71 # mm
+
+center_offset_fraction: 0.0
+
+buttons:
+  0: # Button 0
+    x: 2
+    y: 0
+    relative_position: "left"
+  1: # Button 1
+    x: 3
+    y: 0
+    relative_position: "right"
+  2: # Button 2
+    x: 0
+    y: 1
+    relative_position: "left"
+  3: # Button 3
+    x: 1
+    y: 1
+    relative_position: "right"
+  4: # Button 4
+    x: 2
+    y: 1
+    relative_position: "left"
+  5: # Button 5
+    x: 3
+    y: 1
+    relative_position: "right"
+  6: # Button 6
+    x: 0
+    y: 2
+    relative_position: "left"
+  7: # Button 7
+    x: 1
+    y: 2
+    relative_position: "right"
+  8: # Button 8
+    x: 2
+    y: 2
+    relative_position: "left"
+  9: # Button 9
+    x: 3
+    y: 2
+    relative_position: "right"
