@@ -35,7 +35,7 @@ def finger1_transform():
 def new_finger_transform():
     transform = Pose()
     transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
-    vect = [0.0, 0.0, 0.2018]
+    vect = [0.0, 0.0, 0.2018 + 0.06 + 0.0037]
     transform.position = qa.point_image(vect, transform.orientation)
     return transform
 
@@ -59,10 +59,10 @@ EEF_TRANSFORM_CORRECTION = construct_eef_transform("new_finger")
 # EEF_TRANSFORM_CORRECTION.position = qa.point_add(EEF_TRANSFORM_CORRECTION.position, Point(x=-0.028))
 
 CAMERA_TRANSFORM = qan.Pose(                    # transform between end effector and camera
-    position = qan.Point(x=0.051, y=0.0, z=-0.115)    # X = 0.0447, y = -0.009
+    position = qan.Point(x=0.009, y=-0.063, z=-0.197 - 0.0037)    # X = 0.0447, y = -0.009
 )
 # CAMERA_TRANSFORM.position = qa.point_add(CAMERA_TRANSFORM.position, Point(z=-0.028))
-CAMERA_TRANSFORM.position += qan.Point(z=-0.028)
+# CAMERA_TRANSFORM.position += qan.Point(z=-0.028)
 # CAMERA_TRANSFORM = qan.Pose()
 
 VISION_TRANSFORM_CORRECTION = qan.Pose()

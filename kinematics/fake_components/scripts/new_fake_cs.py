@@ -100,7 +100,10 @@ class ControlStation(Node):
     def __init__(self):
         super().__init__("fake_cs_gamepad")
         
-        keyboard_control = map_param(self, "input_device", {"gamepad": False, "keyboard": True})
+        try:
+            keyboard_control = map_param(self, "input_device", {"gamepad": False, "keyboard": True})
+        except:
+            keyboard_control = False
 
         self.vel_cmd = [0.0]*8
         self.axis_cmd = [0.0]*3
@@ -114,11 +117,11 @@ class ControlStation(Node):
 
         self.hd_mode = Mode.IDLE
 
-        self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, self.get_param("rover_hd_man_dir_topic"), 10)
-        self.man_inv_twist_pub = self.create_publisher(Float32MultiArray, self.get_param("rover_hd_man_inv_topic"), 10)
+        self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, self.get_param("rover_hd_man_dir_topic", default="aa"), 10)
+        self.man_inv_twist_pub = self.create_publisher(Float32MultiArray, self.get_param("rover_hd_man_inv_topic", default="aaa"), 10)
         self.task_pub = self.create_publisher(Task, "/ROVER/semi_auto_task", 10)
         # self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
-        self.mode_cli = self.create_client(HDMode, self.get_param("hd_fsm_mode_srv"))
+        self.mode_cli = self.create_client(HDMode, self.get_param("hd_fsm_mode_srv", "aaaa"))
 
         if keyboard_control:
             from input_handling.keyboard import KeyboardConfig

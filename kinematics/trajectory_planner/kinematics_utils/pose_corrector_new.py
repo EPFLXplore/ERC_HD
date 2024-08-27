@@ -1,0 +1,150 @@
+from typing import Optional
+import kinematics_utils.quaternion_arithmetic as qa
+import kinematics_utils.quaternion_arithmetic_new as qan
+from geometry_msgs.msg import Pose, Point
+from std_msgs.msg import Float64MultiArray
+from math import pi
+
+
+# TRANSFORM CONSTRUCTORS
+
+def link6_transform():
+    # !!!=== deprecated ===!!!
+    transform = Pose()
+    transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=2.975)
+    d = 0.1598
+    transform.position = qa.point_image([0.0, 0.0, d], transform.orientation)
+    return transform
+
+
+def finger1_transform_old():    # actually joint name is finger1 but the link is hd_finger2_1, will be corrected
+    # !!!=== deprecated ===!!!
+    transform = Pose()
+    transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=2.975)
+    vect = [-0.8, 0.1005, -0.0785]
+    transform.position = qa.point_image(vect, transform.orientation)
+    return transform
+
+
+def finger1_transform():
+    # !!!=== deprecated ===!!!
+    transform = Pose()
+    transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
+    vect = [-0.02, -0.743, -0.419]       # [-0.097, -0.7545, -0.3081]
+    transform.position = qa.point_image(vect, transform.orientation)
+    return transform
+
+
+def new_finger_transform():
+    transform = Pose()
+    transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
+    vect = [0.0, 0.0, 0.2018 + 0.06 + 0.0037]
+    transform.position = qa.point_image(vect, transform.orientation)
+    return transform
+
+
+def construct_eef_transform(eef: str) -> qan.Pose:
+    transforms = {"link6": link6_transform, "finger1": finger1_transform, "new_finger": new_finger_transform}
+    if eef not in transforms:
+        raise ValueError(f"No end effector transform for {eef}")
+    return qan.Pose.make(transforms[eef]())
+
+
+class Tools:
+    """
+    Poses of eef when equiped with different tools, transforms with respect to gripper without tools
+    """
+    NONE = 0
+    BUTTONS = 1
+    PROBES = 2
+    SHOVEL = 3
+    VOLTMETER = 4
+    SCREWED_FINGERS = {PROBES}
+    SWAPABLE = {BUTTONS, SHOVEL, VOLTMETER}
+    LIST = {NONE} | SCREWED_FINGERS | SWAPABLE
+    PICKUP_POSE = {
+        BUTTONS: qan.Pose(),
+        PROBES: qan.Pose()
+    }
+    POSE = {
+        NONE: qan.Pose(),
+        BUTTONS: qan.Pose(position=qan.Point(z=0.045)),
+        PROBES: qan.Pose(position=qan.Point(z=0.039))
+    }
+    
+
+class PoseCorrector:
+    GRIPPER_TRANSFORM_CORRECTION: qan.Pose = construct_eef_transform("new_finger")
+    CAMERA_TRANSFORM = qan.Pose(                    # transform between end effector and camera
+        position = qan.Point(x=0.009, y=-0.063, z=-0.197 - 0.0037)    # X = 0.0447, y = -0.009
+    )
+    
+    def __init__(self, tool: int = Tools.NONE):
+        self.tool = tool
+    
+    def set_tool(self, tool: int):
+        if tool not in Tools.LIST:
+            raise ValueError("Unknown tool")
+        self.tool = tool
+    
+    def set_camera_transform(self, pose: Pose):
+        self.CAMERA_TRANSFORM = qan.Pose.make(pose)
+    
+    def set_camera_transform_position(self, position: Float64MultiArray):
+        data = position.data
+        self.CAMERA_TRANSFORM.position = qan.Point(x=data[0], y=data[1], z=data[2])
+    
+    def correct_eef_pose(self, pose: Optional[Pose] = None) -> qan.Pose:
+        """
+        pose: urdf end of chain pose in abs frame
+        """
+        if pose is None:
+            import kinematics_utils.pose_tracker as pt
+            pose = pt.END_EFFECTOR_POSE
+        return pose @ self.GRIPPER_TRANSFORM_CORRECTION @ Tools.POSE[self.tool]
+
+    def revert_to_urdf_eef(self, pose: Pose) -> qan.Pose:
+        """
+        pose: in eef frame
+        """
+        return pose @ self.correct_eef_pose().inv()
+
+    def abs_to_eef(self, pose: Pose) -> qan.Pose:
+        # input: pose in absolute frame
+        # output: pose in eef frame
+        eef_pose = self.correct_eef_pose()
+        return eef_pose.inv() @ pose
+
+    def vision_to_abs(self, pose: Pose) -> qan.Pose:
+        # input: pose in the frame of the camera (vision frame)
+        # output: pose in the absolute frame
+        # correct_camera_frame_pose = correct_vision_pose(pose)
+        abs_frame_pose = self.correct_eef_pose() @ self.CAMERA_TRANSFORM @ pose
+        return abs_frame_pose
+
+    def abs_to_vision(self, pose: Pose) -> qan.Pose:
+        # input: pose in absolute frame
+        # output: pose in camera frame (vision frame)
+        return self.CAMERA_TRANSFORM.inv() @ self.correct_eef_pose().inv() @ pose
+
+    def correct_vision_pose(self, pose: Pose) -> qan.Pose:
+        # !!!=== deprecated ===!!!
+        return qan.Pose.make(pose)
+
+    def revert_from_vision(self, pose: Pose) -> qan.Pose:
+        # !!!=== deprecated ===!!!
+        return qan.Pose.make(pose)
+
+    def revert_to_vision(pose: Pose) -> qan.Pose:     # TODO: think about these functions (pre or post composing with the tranform) + give better names
+        # only for simulating vision and its reference
+        # TODO: wtf is this function
+        # !!!=== deprecated ===!!!
+        return qan.Pose.make(pose)
+
+    def global_revert(self, pose: Pose) -> qan.Pose:
+        # same as revert_to_urdf_eef !!
+        # !!!=== deprecated ===!!!
+        return pose @ self.correct_eef_pose().inv()
+
+
+POSE_CORRECTOR = PoseCorrector()
