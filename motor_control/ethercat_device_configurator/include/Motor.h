@@ -8,7 +8,7 @@
 #include <mutex>
 #include <spdlog/spdlog.h>
 #include <maxon_epos_ethercat_sdk/Maxon.hpp>
-#include "hd_interfaces/msg/motor_commands.hpp"
+#include "custom_msg/msg/hd/MotorCommands.msg"
 
 
 class Motor
