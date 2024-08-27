@@ -51,8 +51,8 @@ static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J
 static const std::vector<double> MAX_VELOCITIES = {0.2, 0.13, 0.13, 0.2, 0.2, 0.2, 2}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 
 static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2, 1, 1};
-static const std::vector<double> POS_LOWER_LIMITS = {-2 * PI, -PI, -PI, -2 * PI, -PI / 2, -PI, -INF, 0, 0};
-static const std::vector<double> POS_UPPER_LIMITS = {2 * PI, 2 * PI, PI, PI / 2, PI, INF, 0, 0};
+static const std::vector<double> POS_LOWER_LIMITS = {-3.0/2 * PI, -PI, -PI, -3.0/2 * PI, -PI, -2 * PI, -INF, 0, 0};
+static const std::vector<double> POS_UPPER_LIMITS = {3.0/2 * PI, PI, PI, 3.0/2 * PI, PI, 2 * PI, INF, 0, 0};
 
 // static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
 static const std::vector<double> DIRECTIONS = {1, 1, 1, 1, 1, 1, 1, 1}; // to match directions of MoveIt
