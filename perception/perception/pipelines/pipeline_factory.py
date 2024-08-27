@@ -30,6 +30,8 @@ class PipelineFactory:
         # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html turn off black formatting
         # fmt: off
         configs_dir = f"{os.getcwd()}/src/perception/configs/"
+        if not os.path.exists(configs_dir): # parce que matthias n'utilise pas DOCKER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! PAIN !!!!!!!!!!!!!!!!!!!!!!!!!!
+            configs_dir = configs_dir.replace('src/', '')
         pipelines = {
             "buttonsA":       {"cls": ButtonsPipeline,       "config": f"{configs_dir}buttonsA.yaml"},
             "big_buttons":    {"cls": ButtonsPipeline,       "config": f"{configs_dir}big_buttons.yaml"},
