@@ -59,6 +59,7 @@ def end_effector_callback(msg):
     # transform.orientation = qa.mul(qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2), qa.quat(axis=(0.0, 0.0, 1.0), angle=pi/2))
     transform.orientation = qan.Quaternion.from_axis_angle(axis=(1.0, 0.0, 0.0), angle=pi/2) * qan.Quaternion.from_axis_angle(axis=(0.0, 0.0, 1.0), angle=pi)
     vect = [0.0, 0.0, 0.2018]
+    vect = [0.0, 0.0, 0.0916]
     vect = listener.vect
     transform.position = qa.point_image(vect, transform.orientation)
     combined = qa.compose_poses(msg, transform)

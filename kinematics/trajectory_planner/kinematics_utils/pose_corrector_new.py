@@ -43,6 +43,15 @@ def new_finger_transform():
     return transform
 
 
+def gripper_transform():
+    transform = Pose()
+    transform.orientation = qan.Quaternion.from_axis_angle(axis=(1.0, 0.0, 0.0), angle=pi/2) * qan.Quaternion.from_axis_angle(axis=(0.0, 0.0, 1.0), angle=pi)
+    vect = [0.0, 0.0, 0.0916]
+    vect = [0.0, 0.0, 0.2018]
+    transform.position = qa.point_image(vect, transform.orientation)
+    return transform
+
+
 def construct_eef_transform(eef: str) -> qan.Pose:
     transforms = {"link6": link6_transform, "finger1": finger1_transform, "new_finger": new_finger_transform}
     if eef not in transforms:

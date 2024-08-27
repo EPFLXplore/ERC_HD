@@ -6,6 +6,9 @@ import kinematics_utils.pose_tracker as pt
 from math import pi
 
 
+raise DeprecationWarning("This module is deprecated: use pose_corrector_new")
+
+
 # TRANSFORM CONSTRUCTORS
 
 def link6_transform():
