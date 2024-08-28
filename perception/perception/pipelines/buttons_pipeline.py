@@ -37,7 +37,7 @@ class ButtonsPipeline(PipelineInterface):
         rvec, tvec = self.aruco_detector.process_rgb(image)
 
         if rvec is not None and tvec is not None:  # fmt off
-            if self.draw_results:
+            if self.draw_results: # TODO should be done in the draw function
                 self.aruco_detector.draw(image)
                 self.panel.draw(image, get_tranformation_matrix(rvec, tvec))
 
