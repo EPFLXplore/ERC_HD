@@ -152,7 +152,7 @@ class Point(gmsg.Point):
         return gmsg.Point(x=self.x, y=self.y, z=self.z)
 
 
-class Quaternion(gmsg.Quaternion):    
+class Quaternion(gmsg.Quaternion):
     @classmethod
     def make(cls, value: QuaternionLike) -> Quaternion:
         """

@@ -4,7 +4,7 @@ from __future__ import annotations
 import rclpy
 import time
 from rclpy.node import Node
-from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, BarMagnetApproach, EthernetApproach, AlignPanel, RockSamplingApproach, RockSamplingDrop, RockSamplingComplete
+from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, BarMagnetApproach, EthernetApproach, AlignPanel, RockSamplingApproach, RockSamplingDrop, RockSamplingComplete, Dummy
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
 from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, TargetInstruction, MotorCommand
@@ -13,7 +13,8 @@ from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
 import threading
 import kinematics_utils.pose_tracker as pt
-import kinematics_utils.pose_corrector as pc
+# import kinematics_utils.pose_corrector as pc
+from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as qan
 from typing import List, Type
@@ -34,7 +35,7 @@ class TaskSelect:
 class Executor(Node):
     INSTANCE: Executor = None
     KNOWN_TASKS = {
-        Task.BUTTON:                    TaskSelect("Button task",               PressButton),
+        Task.BUTTON:                    TaskSelect("Button task",               Dummy),#PressButton),
         Task.PLUG_VOLTMETER_ALIGN:      TaskSelect("Plug voltmeter task",       PlugVoltmeterAlign),
         Task.METAL_BAR_APPROACH:        TaskSelect("Metal bar approach task",   BarMagnetApproach),
         Task.NAMED_TARGET:              TaskSelect("Named target task",         task_execution.task.Task),
@@ -74,7 +75,7 @@ class Executor(Node):
     def createRosInterfaces(self):
         self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignementCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-        self.create_subscription(TargetInstruction, "HD/vision/target_pose", pt.detected_object_pose_callback, 10)
+        self.create_subscription(TargetInstruction, "/HD/perception/button_pose", pt.detected_object_pose_callback, 10)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
         self.create_subscription(Int8, "/ROVER/Maintenance", self.CSMaintenanceCallback, 10)
         self.create_subscription(UInt32, "/HD/vision/depth", pt.depth_callback, 10)

@@ -62,6 +62,8 @@ class GamePadConfig(EventHandlerConfig):
         print("connecting to gamepad...")
         while True:
             for device in map(evdev.InputDevice, evdev.list_devices()):
+                if device.name.strip() != "Generic X-Box pad":
+                    continue
                 print(device)
                 return device
             sleep(1)
