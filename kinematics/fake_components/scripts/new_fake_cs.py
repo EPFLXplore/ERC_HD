@@ -186,7 +186,7 @@ class ControlStation(Node):
         self.input_config.bind(GamePadConfig.R1, self.flip_manual_velocity_dir, joint_index=2)
         self.input_config.bind(GamePadConfig.L1, self.flip_manual_velocity_dir, joint_index=3)
         # gripper
-        for val, input in zip([1.0, -1.0, 0.1, -0.1], [GamePadConfig.CIRCLE, GamePadConfig.SQUARE, GamePadConfig.TRIANGLE, GamePadConfig.CROSS]):
+        for val, input in zip([-1.0, 1.0, -0.1, 0.1], [GamePadConfig.CIRCLE, GamePadConfig.SQUARE, GamePadConfig.TRIANGLE, GamePadConfig.CROSS]):
             self.input_config.bind(input, self.set_gripper_speed, "event_value", value=val)
 
         # ==== semi auto ====
