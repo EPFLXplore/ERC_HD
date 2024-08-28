@@ -113,4 +113,42 @@ class GamePadConfig(EventHandlerConfig):
                 "R2_amplitude": 2**8,
                 "L2_amplitude": 2**8
             }
-        return {}
+        elif self.device.name == "Xbox Wireless Controller":
+            return {
+                "circle_id": 305, #B
+                "triangle_id": 308, #Y
+                "square_id": 307, #X
+                "cross_id": 304, #A
+
+                "RH_id":2,
+                "RV_id":5,
+                "LH_id":0,
+                "LV_id":1,
+                "RH_offset": 2**15,
+                "RV_offset": 2**15,
+                "LH_offset": 2**15,
+                "LV_offset": 2**15,
+                "RH_amplitude": 2**15,
+                "RV_amplitude": -2**15,
+                "LH_amplitude": 2**15,
+                "LV_amplitude": -2**15,
+
+                "R2_id":9,
+                "L2_id":310,
+                "R2_amplitude": 2**10, #RT
+                "L2_amplitude": 2**10, #LT
+                "R2_offset": 0,
+                "L2_offset":0,
+
+                "PS_id":316,
+
+                "R1_id": 311, #RB
+                "L1_id": 10,#LB
+
+                "R3_id":318,
+                "L3_id":317,
+
+                "dirH_amplitude":-1,
+                "dirV_amplitude":-1
+
+            }
