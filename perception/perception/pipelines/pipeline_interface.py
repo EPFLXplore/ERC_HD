@@ -62,10 +62,20 @@ class PipelineInterface(ABC):
     @abstractmethod
     def draw(self, frame: ndarray):
         """
-        Draws the results of the pipeline on the given frame.
+        Draws the results of the pipeline on the given frame. but does not display the results another node displays the modified image
+        does not draw itself but calls the draw method of its modules
 
         :param frame: The frame on which the results will be drawn.
         :return: The frame with the drawn results.
+        """
+        raise NotImplementedError(
+            "The draw method must be implemented by the subclass."
+        )
+
+    @abstractmethod
+    def _publish(self):
+        """"
+        called from the run_rgbd method publishes the results.
         """
         raise NotImplementedError(
             "The draw method must be implemented by the subclass."
