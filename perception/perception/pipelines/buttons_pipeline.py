@@ -9,7 +9,6 @@ from custom_msg.msg import TargetInstruction
 
 from ..modules.aruco_detector import ArucoDetector
 
-from ..controlpanel import control_panel
 
 from ..handlers.target_instruction_msg import TargetInstructionMsg
 from ..panel.panel import Panel
