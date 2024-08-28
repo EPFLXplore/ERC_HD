@@ -69,6 +69,7 @@ install(PROGRAMS
   scripts/servo_fake_cs_gamepad.py
   scripts/new_servo_fake_cs.py
   scripts/new_fake_cs.py
+  scripts/stats_tracker.py
 
   input_handling/test_input_handling.py
   DESTINATION lib/${PROJECT_NAME}
