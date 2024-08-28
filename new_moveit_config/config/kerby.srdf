@@ -31,7 +31,7 @@
     <group_state name="zero" group="kerby_arm_group">
         <joint name="hd_joint1" value="0"/>
         <joint name="hd_joint2" value="0"/>
-        <joint name="hd_joint3" value="1.5707963267948966"/>
+        <joint name="hd_joint3" value="0"/>
         <joint name="hd_joint4" value="0"/>
         <joint name="hd_joint5" value="0"/>
         <joint name="hd_joint6" value="0"/>
