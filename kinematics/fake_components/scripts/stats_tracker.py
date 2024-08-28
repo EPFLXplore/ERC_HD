@@ -21,6 +21,8 @@ from datetime import datetime
 class Stats(Node):
     def __init__(self):
         super().__init__("stats_tracker")
+        self.declare_parameter("operator", "jean")
+        self.operator = self.get_parameter("operator").get_parameter_value().string_value
         self.distance_traveled = 0.0
         self.dof_count = 6
         self.angular_rotation_performed = [0.0]*self.dof_count
@@ -51,7 +53,7 @@ class Stats(Node):
             rate.sleep()
     
     def save(self):
-        save_dir = "running_logs"
+        save_dir = f"running_logs/{self.operator}"
         os.makedirs(save_dir, exist_ok=True)
         file_name = str(self.start_datetime)
         total_time = time.time() - self.start_time
