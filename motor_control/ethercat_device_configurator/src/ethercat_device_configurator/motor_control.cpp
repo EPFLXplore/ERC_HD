@@ -479,11 +479,12 @@ private:
         {
             double pos = get_target_position(i);
             if (pos < POS_LOWER_LIMITS[i]) {
-                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "LOWER LIMIT on motor index %ld", motor_index);
+                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "BELOW LOWER LIMIT on motor index %ld, upper limit: %g;     actual: %g", motor_index, POS_LOWER_LIMITS[i], pos);
+
                 command.command.setTargetPosition(POS_LOWER_LIMITS[i]);
             }
             if (pos > POS_UPPER_LIMITS[i]) {
-                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "UPPER LIMIT on motor index %ld", motor_index);
+                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "ABOVE UPPER LIMIT on motor index %ld, upper limit: %g;     actual: %g", motor_index, POS_UPPER_LIMITS[i], pos);
                 command.command.setTargetPosition(POS_UPPER_LIMITS[i]);
             }
             break;
