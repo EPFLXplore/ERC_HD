@@ -64,31 +64,33 @@ class Tools:
     Poses of eef when equiped with different tools, transforms with respect to gripper without tools
     """
     NONE = 0
-    BUTTONS = 1
-    PROBES = 2
-    SHOVEL = 3
-    VOLTMETER = 4
-    SCREWED_FINGERS = {PROBES}
+    FINGERS = 1
+    BUTTONS = 2
+    PROBES = 3
+    SHOVEL = 4
+    VOLTMETER = 5
+    NON_SWAPABLE = {FINGERS, PROBES}
     SWAPABLE = {BUTTONS, SHOVEL, VOLTMETER}
-    LIST = {NONE} | SCREWED_FINGERS | SWAPABLE
+    LIST = {NONE} | NON_SWAPABLE | SWAPABLE
     PICKUP_POSE = {
         BUTTONS: qan.Pose(),
         PROBES: qan.Pose()
     }
     POSE = {
         NONE: qan.Pose(),
-        BUTTONS: qan.Pose(position=qan.Point(z=0.045)),
+        FINGERS: qan.Pose(position=qan.Point(z=0.086)),
+        BUTTONS: qan.Pose(position=qan.Point(z=0.136)),
         PROBES: qan.Pose(position=qan.Point(z=0.039))
     }
-    
+
 
 class PoseCorrector:
     GRIPPER_TRANSFORM_CORRECTION: qan.Pose = construct_eef_transform("new_finger")
     CAMERA_TRANSFORM = qan.Pose(                    # transform between end effector and camera
-        position = qan.Point(x=0.009, y=-0.063, z=-0.197 - 0.0037)    # X = 0.0447, y = -0.009
+        position = qan.Point(x=0.009, y=-0.063, z=-0.197 - 0.0037)    # 0.197 to camera glass and 0.0037 to focal point
     )
     
-    def __init__(self, tool: int = Tools.NONE):
+    def __init__(self, tool: int = Tools.FINGERS):
         self.tool = tool
     
     def set_tool(self, tool: int):
