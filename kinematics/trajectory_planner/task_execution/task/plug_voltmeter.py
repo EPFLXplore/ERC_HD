@@ -72,8 +72,8 @@ class PlugVoltmeterAlign(Task):
 
 
 class PlugVoltmeterApproach(Task):
-    def __init__(self, executor):
-        super().__init__(executor)
+    def __init__(self):
+        super().__init__()
         self.artag_pose = None
         self.scan_distance = 0.13
         self.press_distance = 0.13
@@ -110,22 +110,22 @@ class PlugVoltmeterApproach(Task):
 
     def constructVoltmeterRetractionCommands(self):
         self.addCommand(
-            GripperCommand(self, GripperCommand.OPEN, duration=1.0, torque_scaling_factor=1.0),
+            GripperCommand(GripperCommand.OPEN, duration=1.0, torque_scaling_factor=1.0),
             description = "open gripper"
         )
         self.addCommand(
-            GripperCommand(self, GripperCommand.OPEN, duration=2.0, torque_scaling_factor=0.1),
+            GripperCommand(GripperCommand.OPEN, duration=2.0, torque_scaling_factor=0.1),
             description = "open gripper"
         )
         self.addCommand(
-            VoltmeterCommand(self, VoltmeterCommand.RETRACT),
+            VoltmeterCommand(VoltmeterCommand.RETRACT),
             description = "extend voltmeter"
         )
         self.addCommand(
-            GripperCommand(self, GripperCommand.CLOSE, duration=1.0, torque_scaling_factor=1.0),
+            GripperCommand(GripperCommand.CLOSE, duration=1.0, torque_scaling_factor=1.0),
             description = "clamp gripper around voltmeter"
         )
         self.addCommand(
-            GripperCommand(self, GripperCommand.CLOSE, duration=4.0, torque_scaling_factor=0.1),
+            GripperCommand(GripperCommand.CLOSE, duration=4.0, torque_scaling_factor=0.1),
             description = "clamp gripper around voltmeter"
         )
