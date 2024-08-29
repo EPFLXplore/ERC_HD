@@ -136,7 +136,7 @@ class GamePadConfig(EventHandlerConfig):
                 "LV_amplitude": -2**15,
 
                 "R2_id":9,
-                "L2_id":310,
+                "L2_id":10,
                 "R2_amplitude": 2**10, #RT
                 "L2_amplitude": 2**10, #LT
                 "R2_offset": 0,
@@ -145,10 +145,10 @@ class GamePadConfig(EventHandlerConfig):
                 "PS_id":316,
 
                 "R1_id": 311, #RB
-                "L1_id": 10,#LB
+                "L1_id": 310,#LB
 
                 "R3_id":318,
-                "L3_id":317,
+                "L3_id":317, 
 
                 "dirH_amplitude":-1,
                 "dirV_amplitude":-1
