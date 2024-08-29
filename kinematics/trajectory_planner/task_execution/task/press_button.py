@@ -19,16 +19,6 @@ class PressButton(Task):
 
     def getPressOrientation(self):
         return qa.turn_around(self.btn_pose.orientation)
-    
-    def getScanPosition(self):
-        # give a position where the camera would be aligned with the ARtag
-        # for now supposing camera has the same orientation as the end effector
-        camera_pos = pc.CAMERA_TRANSFORM.position
-        p = [camera_pos.y, -camera_pos.x, self.scan_distance]   # not sure why I need to exchange x and y here (x needs to be negated but I thing y doesn't although this hasn't been tested due to our y being 0)
-        return qa.point_object_image(p, self.artag_pose)
-    
-    def getScanOrientation(self):
-        return qa.turn_around(self.artag_pose.orientation)
 
     def constructCommandChain(self):
         super().constructCommandChain()
@@ -58,8 +48,3 @@ class PressButton(Task):
         
         # TODO: maybe remove the objects added to the world
         #self.constructRemoveObjectsCommands("button", extended=extended)
-
-
-    def set_pos(self, cmd):
-        cmd.position = 5
-        cmd.setPose(...)

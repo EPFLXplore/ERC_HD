@@ -4,8 +4,10 @@ import math
 import copy
 from geometry_msgs.msg import Pose, Quaternion, Point
 import kinematics_utils.quaternion_arithmetic as qa
+import kinematics_utils.quaternion_arithmetic_new as qan
 import kinematics_utils.pose_tracker as pt
-import kinematics_utils.pose_corrector as pc
+# import kinematics_utils.pose_corrector as pc
+from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
 from collections.abc import Callable
 from typing import Dict, List, Optional, Union
 from task_execution.command import *
@@ -274,8 +276,8 @@ class Task:
         self.constructCommandChain()
         self.aborted = False
         self.pause_time = 0.0
-        self.artag_pose = Pose()
-        self.object_pose = Pose()
+        self.artag_pose = qan.Pose()
+        self.object_pose = qan.Pose()
         self.scan_distance = 0.13   # from end effector in the local z coordinate (forward if gripper is standardly oriented)
 
     def constructCommandChain(self):
@@ -425,17 +427,20 @@ class Task:
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:
             if 1:   # TODO: check if obj.id corresponds to task id here
-                self.object_pose = obj.object_pose
-                self.artag_pose = obj.artag_pose
+                self.object_pose = qan.Pose.make(obj.object_pose)
+                self.artag_pose = qan.Pose.make(obj.artag_pose)
 
     def getScanPosition(self) -> Point:
         # give a position where the camera would be aligned with the ARtag
         # for now supposing camera has the same orientation as the end effector
         camera_pos = pc.CAMERA_TRANSFORM.position
-        p = [camera_pos.y, -camera_pos.x, self.scan_distance]   # not sure why I need to exchange x and y here (x needs to be negated but I thing y doesn't although this hasn't been tested due to our y being 0)
+        p = [camera_pos.x, camera_pos.y, self.scan_distance]
+        return self.artag_pose.point_image(p)
+        p = [camera_pos.y, -camera_pos.x, self.scan_distance]   # not sure why I need to exchange x and y here (x needs to be negated but I think y doesn't although this hasn't been tested due to our y being 0)
         return qa.point_object_image(p, self.artag_pose)
     
     def getScanOrientation(self) -> Quaternion:
+        return self.artag_pose.orientation.turn_around()
         return qa.turn_around(self.artag_pose.orientation)
     
     def constructStandardDetectionCommands(self, object_name: str = "object", object_box: Union[tuple, list] = (0.1, 0.2, 0.0001), extended: bool = True):

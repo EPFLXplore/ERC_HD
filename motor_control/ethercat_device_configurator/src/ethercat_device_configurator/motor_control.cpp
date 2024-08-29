@@ -51,11 +51,11 @@ static const std::vector<std::string> DEVICE_NAMES = {"J1", "J2", "J3", "J4", "J
 static const std::vector<double> MAX_VELOCITIES = {0.2, 0.13, 0.13, 0.2, 0.2, 0.2, 2}; // {0.2, 0.5, 0.3, 0.3, 0.15, 0.3, 4, 1};    // [rad/s]
 
 static const std::vector<double> MAX_TORQUES = {1, 1, 1, 1, 1, 1, 2, 2, 1, 1};
-static const std::vector<double> POS_LOWER_LIMITS = {-2 * PI, -PI, -PI, -2 * PI, -PI / 2, -PI, -INF, 0, 0};
-static const std::vector<double> POS_UPPER_LIMITS = {2 * PI, 2 * PI, PI, PI / 2, PI, INF, 0, 0};
+static const std::vector<double> POS_LOWER_LIMITS = {-3.0/2 * PI, -PI, -PI, -3.0/2 * PI, -PI, -2 * PI, -INF, 0, 0};
+static const std::vector<double> POS_UPPER_LIMITS = {3.0/2 * PI, PI, PI, 3.0/2 * PI, PI, 2 * PI, INF, 0, 0};
 
 // static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
-static const std::vector<double> DIRECTIONS = {1, 1, 1, 1, 1, 1, 1, 1}; // to match directions of MoveIt
+static const std::vector<double> DIRECTIONS = {-1, 1, 1, 1, 1, -1, 1, 1}; // to match directions of MoveIt
 //static const std::vector<double> POSITION_OFFSETS = {0, -0.959505, -2.424073, 0, 0, 0, 0};
 // static const std::vector<double> POSITION_OFFSETS = {0, -0.959505, -2.424073, 0, -1.27857, -1.88833, 0};
 static const std::vector<double> POSITION_OFFSETS = {0, 0, 0, 0, 0, 0, 0};
@@ -479,11 +479,12 @@ private:
         {
             double pos = get_target_position(i);
             if (pos < POS_LOWER_LIMITS[i]) {
-                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "LOWER LIMIT on motor index %ld", motor_index);
+                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "BELOW LOWER LIMIT on motor index %ld, upper limit: %g;     actual: %g", motor_index, POS_LOWER_LIMITS[i], pos);
+
                 command.command.setTargetPosition(POS_LOWER_LIMITS[i]);
             }
             if (pos > POS_UPPER_LIMITS[i]) {
-                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "UPPER LIMIT on motor index %ld", motor_index);
+                RCLCPP_ERROR(rclcpp::get_logger("MotorController"), "ABOVE UPPER LIMIT on motor index %ld, upper limit: %g;     actual: %g", motor_index, POS_UPPER_LIMITS[i], pos);
                 command.command.setTargetPosition(POS_UPPER_LIMITS[i]);
             }
             break;

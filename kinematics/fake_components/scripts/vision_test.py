@@ -6,7 +6,8 @@ from rclpy.node import Node
 import threading
 from task_execution.task import *
 import kinematics_utils.quaternion_arithmetic as qa
-import kinematics_utils.pose_corrector as pc
+# import kinematics_utils.pose_corrector as pc
+from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
 import kinematics_utils.pose_tracker as pt
 from custom_msg.msg import Task, Object, TargetInstruction
 from geometry_msgs.msg import Pose, Point, Quaternion
@@ -19,9 +20,6 @@ import copy
 end_effector_pose = Pose()
 artag_pose = Pose()
 btn_pose = Pose()
-
-vision_transform = Pose()
-vision_transform.orientation = qa.quat([0.0, 0.0, 1.0], pi/2)
 
 
 class Listener:
@@ -59,10 +57,10 @@ def artag_callback(msg):
 def end_effector_callback(msg):
     transform = Pose()
     # transform.orientation = qa.mul(qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2), qa.quat(axis=(0.0, 0.0, 1.0), angle=pi/2))
-    transform.orientation = qa.quat(axis=(0.0, 1.0, 0.0), angle=-pi/2)
-    vect = [-0.097, -0.7545, -0.3081]
+    transform.orientation = qan.Quaternion.from_axis_angle(axis=(1.0, 0.0, 0.0), angle=pi/2) * qan.Quaternion.from_axis_angle(axis=(0.0, 0.0, 1.0), angle=pi)
     vect = [0.0, 0.0, 0.2018]
-    # vect = listener.vect
+    vect = [0.0, 0.0, 0.0916]
+    vect = listener.vect
     transform.position = qa.point_image(vect, transform.orientation)
     combined = qa.compose_poses(msg, transform)
     # combined = pc.correct_eef_pose(msg)
@@ -95,40 +93,6 @@ def get_btn_pose():
     artag_body, artag_axis = create_object_representation(artag_pose, "artag")
     btn_body, btn_axis = create_object_representation(btn_pose, "btn")
     return artag_body, artag_axis, btn_body, btn_axis
-    # obj2 = copy.deepcopy(obj)
-    # obj2.name = "btn"
-    # obj2.pose = qa.compose_poses(end_effector_pose, btn_pose)
-
-    # obj4 = copy.deepcopy(obj3)
-    # obj4.name = "btn_axis"
-    # obj4.pose = copy.deepcopy(obj2.pose)
-    # axis = qa.point_image([0.0, 0.0, 1.0], obj2.pose.orientation)
-    # obj4.pose.position = qa.make_point(qa.add(obj4.pose.position, qa.mul(0.05, axis)))
-
-    obj2 = Object()
-    obj2.pose = qa.compose_poses(end_effector_pose, btn_pose)
-    obj.type = obj.BOX
-    obj.operation = obj.ADD
-    obj2.name = "btn"
-    obj2.shape = Float64MultiArray()
-    obj2.shape.data = [0.2, 0.1, 0.0001]
-
-    obj4 = Object()
-    obj4.shape = Float64MultiArray()
-    obj4.shape.data = [0.01, 0.01, 0.1]
-    obj4.pose = copy.deepcopy(obj2.pose)
-    obj.type = obj.BOX
-    obj.operation = obj.ADD
-    obj4.name = "btn_axis"
-    axis = qa.point_image([0.0, 0.0, 1.0], obj2.pose.orientation)
-    obj4.pose.position = qa.make_point(qa.add(obj4.pose.position, qa.mul(0.05, axis)))
-
-    obj.pose = pc.revert_from_vision(obj.pose)
-    obj2.pose = pc.revert_from_vision(obj2.pose)
-    obj3.pose = pc.revert_from_vision(obj3.pose)
-    obj4.pose = pc.revert_from_vision(obj4.pose)
-
-    return obj, obj2, obj3, obj4
 
 
 def main():

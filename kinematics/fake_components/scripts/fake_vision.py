@@ -7,7 +7,8 @@ from geometry_msgs.msg import Pose, Quaternion
 from custom_msg.msg import TargetInstruction
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as qan
-import kinematics_utils.pose_corrector as pc
+# import kinematics_utils.pose_corrector as pc
+from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
 import kinematics_utils.pose_tracker as pt
 import math
 from math import pi
