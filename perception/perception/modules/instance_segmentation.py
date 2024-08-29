@@ -3,37 +3,36 @@ import numpy as np
 from numpy import ndarray
 import os
 import pyrealsense2 as rs
-from ultralytics import YOLO
+
+# from ultralytics import YOLO
 
 from .module_interface import ModuleInterface
 
 
 class InstanceSegmentation(ModuleInterface):
-    # confg_file conatins path to model 
+    # confg_file conatins path to model
     def __init__(self, confg_file):
         # Service client
 
         # Load the YOLOv8 segmentation model
-        self.model = YOLO(confg_file)
-        
+        # self.model = YOLO(confg_file)
+
         # Create a pipeline for RealSense
-        self.pipeline = rs.pipeline()
+        # self.pipeline = rs.pipeline()
 
-        # Create a config and configure the pipeline to stream color frames
-        self.config = rs.config()
-        self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
-
+        # # Create a config and configure the pipeline to stream color frames
+        # self.config = rs.config()
+        # self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+        pass
 
     def get_model(self):
-        return self.model 
-    
+        return self.model
 
     def get_pipeline(self):
         return self.pipeline
-    
+
     def get_config(self):
         return self.config
-
 
     def __call__(self, rgb_frame: ndarray, depth_frame: ndarray):
         # Call service for model inference
@@ -46,7 +45,7 @@ class InstanceSegmentation(ModuleInterface):
         #     cv2.namedWindow("YOLOv8 Segmentation on RealSense", cv2.WINDOW_AUTOSIZE)
 
         #     # img_count = 0  # Image counter for naming the files
-            
+
         #     while True:
         #         # Wait for a coherent pair of frames: color frame
         #         frames = self.pipeline.wait_for_frames()
@@ -59,13 +58,13 @@ class InstanceSegmentation(ModuleInterface):
         #         results = self.model(self.color_frame)
         #         if results:
         #             for result in results:
-        #                 self.draw(result) 
+        #                 self.draw(result)
 
         #         # Exit loop if 'q' is pressed
         #         key = cv2.waitKey(1) & 0xFF
         #         if key == ord('q'):
         #             break
-                
+
         # finally:
         #     # Stop the pipeline and close OpenCV windows
         #     self.pipeline.stop()
@@ -73,8 +72,7 @@ class InstanceSegmentation(ModuleInterface):
 
         return self.model(rgb_frame)
 
-
-    # frame: result of inference on color img 
+    # frame: result of inference on color img
     def draw(self, frame: ndarray):
         # Check if there are any results
         masks = frame.masks  # Extract the masks
@@ -93,7 +91,9 @@ class InstanceSegmentation(ModuleInterface):
                 mask_img[:, :, 1] = mask * 255  # Apply green color to the mask
 
                 # Blend the mask with the original frame
-                self.color_frame = cv2.addWeighted(self.color_frame, 1, mask_img, 0.5, 0)
+                self.color_frame = cv2.addWeighted(
+                    self.color_frame, 1, mask_img, 0.5, 0
+                )
 
         # Check if boxes are not None
         if boxes is not None:
@@ -103,7 +103,16 @@ class InstanceSegmentation(ModuleInterface):
                 conf = box.conf[0]
                 cls = box.cls[0]
                 # Draw the bounding box on the frame
-                cv2.rectangle(self.color_frame, (x1, y1), (x2, y2), (0, 0, 255), 2)  # Red color box
+                cv2.rectangle(
+                    self.color_frame, (x1, y1), (x2, y2), (0, 0, 255), 2
+                )  # Red color box
                 # Annotate the frame with the class and confidence score
-                cv2.putText(self.color_frame, f"{self.model.names[int(cls)]}: {conf:.2f}", (x1, y1 - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                cv2.putText(
+                    self.color_frame,
+                    f"{self.model.names[int(cls)]}: {conf:.2f}",
+                    (x1, y1 - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 0, 255),
+                    2,
+                )
