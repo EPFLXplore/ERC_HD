@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 from ultralytics import YOLO
 import torch
+from scipy.spatial.transform import Rotation as R  # Use scipy for quaternion operations
 
 '''
 PURPOSE OF THE MODULE
@@ -20,7 +21,7 @@ class ModuleRocks(ModuleInterface):
     def __init__(self):
         # Load the YOLO model with a predefined path
         
-        self.model = YOLO('/home/jean/aaprog/ERC_HD/perception/models/medium_200_epochs.pt')
+        self.model = YOLO('medium_200_epochs.pt')
         self.model.to(device)
 
         # Placeholder for the current processed frame
@@ -36,6 +37,8 @@ class ModuleRocks(ModuleInterface):
         self.intrinsics = intrinsics
 
     def __call__(self, rgb_frame: np.ndarray, depth_frame: np.ndarray):
+        results = []
+
         # Process the frame with the model
         self.current_frame, self.detected_objects = self.process_frame(rgb_frame)
         
@@ -60,24 +63,50 @@ class ModuleRocks(ModuleInterface):
                 # Calculate the quasi-center of the rock
                 rock_center_coordinates, rock_center_depth = self.calculate_rock_center(center, bounding_box, depth_frame, self.intrinsics, depth_surface)
 
-                # Display the calculated dimensions and quasi-center info
-                cv2.putText(self.current_frame,
-                            f"Max: {max_dim_cm:.2f}cm, Min: {min_dim_cm:.2f}cm",
-                            (center[0] + 10, center[1] - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5,
-                            (255, 255, 255),
-                            2)
+                # Calculate the minimal axis vector in 3D
+                min_axis_vector = self.calculate_minimal_axis_vector(min_pts, rock_center_coordinates, depth_frame)
 
-                # Print information to the terminal"
-                print(f"Rock at ({center[0]}, {center[1]}): Max Diameter = {max_dim_cm:.2f}cm, Min Diameter = {min_dim_cm:.2f}cm")
-                print(f"Depth at Rock Surface: {depth_surface:.2f} meters")
-                print(f"Depth at Rock Center: {rock_center_depth:.2f} meters")
-                print(f"Rock Center 3D Coordinates: {rock_center_coordinates}")
+                # Compute the quaternion for aligning the Z-axis with the minimal axis vector
+                quaternion = self.calculate_quaternion_to_align_z(min_axis_vector)
 
-        return self.current_frame
+                # Append the details to results
+                results.append({
+                    "center": center,
+                    "max_dimension_cm": max_dim_cm,
+                    "min_dimension_cm": min_dim_cm,
+                    "depth_surface": depth_surface,
+                    "rock_center_depth": rock_center_depth,
+                    "rock_center_coordinates": rock_center_coordinates,
+                    "quaternion": quaternion
+                })
 
+        # Return the current frame and results
+        return self.current_frame, results
 
+    def calculate_minimal_axis_vector(self, min_pts, rock_center_coordinates, depth_frame):
+        # Deproject the minimal axis points to 3D
+        p1_3d = np.array(rs.rs2_deproject_pixel_to_point(self.intrinsics, min_pts[0], depth_frame[min_pts[0][1], min_pts[0][0]] * self.depth_scale))
+        p2_3d = np.array(rs.rs2_deproject_pixel_to_point(self.intrinsics, min_pts[1], depth_frame[min_pts[1][1], min_pts[1][0]] * self.depth_scale))
+
+        # Calculate the minimal axis vector from the rock center
+        min_axis_vector = p1_3d - p2_3d
+        min_axis_vector /= np.linalg.norm(min_axis_vector)  # Normalize the vector
+
+        return min_axis_vector
+
+    def calculate_quaternion_to_align_z(self, min_axis_vector):
+        # Calculate the rotation vector that aligns the Z-axis with the minimal axis vector
+        z_axis = np.array([0, 0, 1])
+        rotation_vector = np.cross(z_axis, min_axis_vector)
+        sin_angle = np.linalg.norm(rotation_vector)
+        cos_angle = np.dot(z_axis, min_axis_vector)
+        rotation_vector = rotation_vector / sin_angle
+
+        # Create the quaternion from the rotation vector and angle
+        angle = np.arctan2(sin_angle, cos_angle)
+        quaternion = R.from_rotvec(rotation_vector * angle).as_quat()
+
+        return quaternion
 
     def draw(self, frame: np.ndarray) -> None:
         cv2.imshow("Rock Segmentation", frame)
@@ -213,4 +242,3 @@ class ModuleRocks(ModuleInterface):
         rock_center_coordinates = np.array(rock_center_coordinates)
 
         return rock_center_coordinates, rock_center_depth
-
