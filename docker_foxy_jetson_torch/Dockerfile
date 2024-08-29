@@ -57,9 +57,12 @@ RUN apt update && apt upgrade -y \
 
 RUN apt-get purge -y '*opencv*'
 
-USER $USERNAME
+RUN apt install software-properties-common \
+    && add-apt-repository universe \
+    && apt update \
+    && apt install python3-colcon-common-extensions
 
-# RUN . /opt/ros/foxy/setup.bash
+USER $USERNAME
 
 # Set directories
 WORKDIR /home/$USERNAME/dev_ws/src
@@ -68,6 +71,8 @@ COPY . .
 WORKDIR /home/$USERNAME/dev_ws
 
 RUN pip install opencv-python
+
+RUN . /opt/ros/foxy/setup.bash
 
 # Clean up
 RUN sudo rm -rf /var/lib/apt/lists/* /home/$USERNAME/dev_ws/src/*
