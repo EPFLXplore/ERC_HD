@@ -13,6 +13,8 @@ import threading
 from rclpy.node import Node
 from rclpy.timer import Rate
 from typing import TYPE_CHECKING, List, Dict, Callable
+import task_execution
+# import task_execution.task_executor
 if TYPE_CHECKING:   # fake import, only for annotations
     from task_execution.task_executor import Executor
 
@@ -37,15 +39,14 @@ class Observations:
     
 
 def get_executor() -> Executor:
-    from task_execution.task_executor import Executor
-    return Executor.get_instance()
+    return task_execution.task_executor.Executor()
 
 
 class Command:
     """abstract class representing a command"""
 
     def __init__(self):
-        self.executor = get_executor()
+        self.executor: Executor = None
         self.execute_count = 0
         self.has_failed = False
         self.is_background = False
@@ -99,7 +100,7 @@ class BackgroundCommand:
     STOP = 1
 
     def __init__(self):
-        self.executor = get_executor()
+        self.executor: Executor = None
         self._has_started = False
         self._has_finished = False
         self._stop_flag = False

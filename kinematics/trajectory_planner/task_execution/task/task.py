@@ -268,8 +268,8 @@ class Task:
     """abstract class representing a task"""
     NONE_OPERATION: OPFunction = lambda cmd: None
 
-    def __init__(self):
-        self.executor: Executor = get_executor()
+    def __init__(self, executor: Executor):
+        self.executor = executor
         self.cmd_counter = 0
         self.command_chain: List[CommandData] = []
         self.background_commands: Dict[str, BackgroundCommandData] = {}
@@ -290,6 +290,7 @@ class Task:
         if post_operation is None:
             post_operation = Task.NONE_OPERATION
 
+        command.executor = self.executor
         self.command_chain.append(CommandData(command, pre_operation, post_operation, description))
     
     def declareBackgroundCommand(self, id: str, command: BackgroundCommand, description: str = ""):
@@ -391,15 +392,22 @@ class Task:
         self.cmd_counter += 1
         return True                 # command succeeded
         
-    def execute(self) -> bool:
+    def execute(self, terminate: bool = True) -> bool:
         """executes all commands"""
         for _ in range(len(self.command_chain)):
             if not self._executeNextCommand():
                 self._terminate(wait=True)
                 return False    # task failed
             time.sleep(self.pause_time)
-        self._terminate(wait=True)
+        if terminate: self._terminate(wait=True)
         return True             # task succeeded
+    
+    def _getActiveBackgroundCommands(self) -> Dict[str, BackgroundCommandData]:
+        alive_cmds = {}
+        for cmd_id, cmd_data in self.background_commands.items():
+            if cmd_data.command.isAlive():
+                alive_cmds[cmd_id] = cmd_data
+        return alive_cmds
     
     def _terminate(self, wait=False):
         """make sure execution finishes gracefully"""
@@ -536,6 +544,21 @@ class Task:
         )
 
 
-# def combine_tasks(*tasks: Type[Task]) -> Type[Task]:
-#     class CombinedTask(Task):
-#         def __init__()
+
+def combine_tasks(*tasks: Type[Task]) -> Type[Task]:
+    class CombinedTask(Task):
+        def __init__(self, executor: Executor):
+            super().__init__(executor)
+            self.tasks = [task_type(executor) for task_type in tasks]
+        
+        def execute(self) -> bool:
+            active_background_commands: Dict[str, BackgroundCommandData] = {}
+            for task in self.tasks:
+                task.background_commands |= active_background_commands
+                success = task.execute(terminate=False)
+                if not success:
+                    task._terminate()
+                    return False
+                active_background_commands = task._getActiveBackgroundCommands()
+            task._terminate()
+            return True

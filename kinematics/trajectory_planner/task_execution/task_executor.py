@@ -4,9 +4,10 @@ from __future__ import annotations
 import rclpy
 import time
 from rclpy.node import Node
-from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, BarMagnetApproach, EthernetApproach, AlignPanel, RockSamplingApproach, RockSamplingDrop, RockSamplingComplete, Dummy
-import task_execution.task
-from task_execution.command import NamedJointTargetCommand
+# from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, BarMagnetApproach, EthernetApproach, AlignPanel, RockSamplingApproach, RockSamplingDrop, RockSamplingComplete, Dummy
+import task_execution.task as task
+# from task_execution.command import NamedJointTargetCommand
+import task_execution.command as command
 from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, TargetInstruction, MotorCommand
 from custom_msg.msg import ServoRequest, ServoResponse
 from geometry_msgs.msg import Pose
@@ -25,9 +26,9 @@ from dataclasses import dataclass
 class TaskSelect:
     """simple wrapper for selecting a task"""
     info_msg: str
-    task_type: Type[task_execution.task.Task]
+    task_type: Type[task.Task]
     
-    def select(self, executor):
+    def select(self, executor: Executor):
         executor.loginfo(self.info_msg)
         return self.task_type(executor)
 
@@ -35,20 +36,21 @@ class TaskSelect:
 class Executor(Node):
     INSTANCE: Executor = None
     KNOWN_TASKS = {
-        Task.BUTTON:                    TaskSelect("Button task",               Dummy),#PressButton),
-        Task.PLUG_VOLTMETER_ALIGN:      TaskSelect("Plug voltmeter task",       PlugVoltmeterAlign),
-        Task.METAL_BAR_APPROACH:        TaskSelect("Metal bar approach task",   BarMagnetApproach),
-        Task.NAMED_TARGET:              TaskSelect("Named target task",         task_execution.task.Task),
-        Task.RASSOR_SAMPLE:             TaskSelect("Rassor sample task",        RassorSampling),
-        Task.ETHERNET_CABLE:            TaskSelect("Plug ethernet task",        EthernetApproach),
-        Task.ALIGN_PANEL:               TaskSelect("Align panel",               AlignPanel),
-        Task.ROCK_SAMPLING_APPROACH:    TaskSelect("Rock sampling approach",    RockSamplingApproach),
-        Task.ROCK_SAMPLING_DROP:        TaskSelect("Rock sampling drop",        RockSamplingDrop),
-        Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",    RockSamplingComplete),
+        Task.BUTTON:                    TaskSelect("Button task",               task.PressButton),#Dummy),
+        Task.PLUG_VOLTMETER_ALIGN:      TaskSelect("Plug voltmeter task",       task.PlugVoltmeterAlign),
+        Task.METAL_BAR_APPROACH:        TaskSelect("Metal bar approach task",   task.BarMagnetApproach),
+        Task.NAMED_TARGET:              TaskSelect("Named target task",         task.Task),
+        Task.RASSOR_SAMPLE:             TaskSelect("Rassor sample task",        task.RassorSampling),
+        Task.ETHERNET_CABLE:            TaskSelect("Plug ethernet task",        task.EthernetApproach),
+        Task.ALIGN_PANEL:               TaskSelect("Align panel",               task.AlignPanel),
+        Task.ROCK_SAMPLING_APPROACH:    TaskSelect("Rock sampling approach",    task.RockSamplingApproach),
+        Task.ROCK_SAMPLING_DROP:        TaskSelect("Rock sampling drop",        task.RockSamplingDrop),
+        Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",    task.RockSamplingComplete),
     }
 
     def __new__(cls):
         if cls.INSTANCE is not None:
+            return cls.INSTANCE
             raise RuntimeError("Executor class can only have one instance")
         instance = super().__new__(cls)
         cls.INSTANCE = instance
@@ -62,7 +64,7 @@ class Executor(Node):
         super().__init__("kinematics_task_executor")
         self.createRosInterfaces()
 
-        self.task: task_execution.task.Task = None
+        self.task: task.task_execution.task.Task = None
         self.new_task = False
 
         # indicates whether trajectory feedback has been updated
@@ -215,7 +217,7 @@ class Executor(Node):
             return
         self.task = self.KNOWN_TASKS[msg.type].select(self)
         if msg.type == Task.NAMED_TARGET:
-            self.task.addCommand(NamedJointTargetCommand(self, msg.str_slot))
+            self.task.addCommand(command.NamedJointTargetCommand(self, msg.str_slot))
         self.new_task = True
     
     def CSMaintenanceCallback(self, msg: Int8):
@@ -272,6 +274,7 @@ class Executor(Node):
 def main():
     rclpy.init()
     executor = Executor()
+    Executor.get_instance().loginfo("B"*1000)
 
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(executor, ), daemon=True)
