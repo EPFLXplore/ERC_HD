@@ -34,6 +34,8 @@ class GamePadConfig(EventHandlerConfig):
     INPUTS = BUTTONS | ANALOG_TRIGGERS
     DEFAULT_IDS = {L1: 310, R1: 311, L2: 2, R2: 5, PS: 316, LH: 0, LV: 1, RH: 3, RV: 4, DIRH: 16, DIRV: 17, TRIANGLE: 307, SQUARE: 308, CIRCLE: 305, CROSS: 304}
 
+    KNOWN_DEVICES = {"Generic X-Box pad", "Wireless Controller", "Xbox Wireless Controller"}
+
     def __init__(self, **kwargs):
         self.device = self.connect()
         kwargs |= self._get_additional_init_kwords()
@@ -62,7 +64,7 @@ class GamePadConfig(EventHandlerConfig):
         print("connecting to gamepad...")
         while True:
             for device in map(evdev.InputDevice, evdev.list_devices()):
-                if device.name.strip() != "Generic X-Box pad":
+                if device.name.strip() not in self.KNOWN_DEVICES:
                     continue
                 print(device)
                 return device
