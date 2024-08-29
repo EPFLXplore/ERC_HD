@@ -5,22 +5,35 @@ import cv2
 from ultralytics import YOLO
 import torch
 
+'''
+PURPOSE OF THE MODULE
+take rgb_frame, color_frame
+return: a list of rocks with their positions (quaternions), max dimensions
+
+
+'''
 # Check if CUDA is available
 cuda_available = torch.cuda.is_available()
 device = torch.device("cuda" if cuda_available else "cpu")
 
 class ModuleRocks(ModuleInterface):
-    def __init__(self, config_file):
-        # Initialize the camera
-        self.pipeline, self.align, self.depth_scale, self.intrinsics = self.initialize_camera()
-
-        # Load the YOLO model
-        self.model = YOLO(config_file)
-        self.model.to(device)
+    def __init__(self):
+        # Load the YOLO model with a predefined path
         
+        self.model = YOLO('/home/jean/aaprog/ERC_HD/perception/models/medium_200_epochs.pt')
+        self.model.to(device)
+
         # Placeholder for the current processed frame
         self.current_frame = None
         self.detected_objects = None
+
+        # Depth scale and intrinsics must be initialized before processing frames
+        self.depth_scale = None
+        self.intrinsics = None
+
+    def set_camera_parameters(self, depth_scale, intrinsics):
+        self.depth_scale = depth_scale
+        self.intrinsics = intrinsics
 
     def __call__(self, rgb_frame: np.ndarray, depth_frame: np.ndarray):
         # Process the frame with the model
@@ -30,19 +43,24 @@ class ModuleRocks(ModuleInterface):
         self.current_frame, self.detected_objects = self.draw_bounding_boxes(self.current_frame, self.detected_objects)
         self.current_frame, self.detected_objects = self.draw_masks_and_contours(self.current_frame, self.detected_objects)
         
-        # Calculate axes and dimensions for each detected object
+        # Calculate axes, dimensions, and quasi-center for each detected object
         for obj in self.detected_objects:
             contour = obj['contour']
             if contour is not None:
                 center = obj['center']
-                depth_value = depth_frame[center[1], center[0]] * self.depth_scale
+                bounding_box = obj['bounding_box']
+                depth_surface = depth_frame[center[1], center[0]] * self.depth_scale  # Depth at the rock surface
 
                 max_dist, min_dist, max_pts, min_pts = self.calculate_axes(contour, center)
                 self.current_frame = self.draw_axes(self.current_frame, max_pts, min_pts)
 
                 self.current_frame, max_dim_cm, min_dim_cm = self.calculate_real_dimensions(
-                    self.current_frame, obj, max_dist, min_dist, depth_value, self.intrinsics)
+                    self.current_frame, obj, max_dist, min_dist, depth_surface, self.intrinsics)
 
+                # Calculate the quasi-center of the rock
+                rock_center_coordinates, rock_center_depth = self.calculate_rock_center(center, bounding_box, depth_frame, self.intrinsics, depth_surface)
+
+                # Display the calculated dimensions and quasi-center info
                 cv2.putText(self.current_frame,
                             f"Max: {max_dim_cm:.2f}cm, Min: {min_dim_cm:.2f}cm",
                             (center[0] + 10, center[1] - 10),
@@ -51,29 +69,21 @@ class ModuleRocks(ModuleInterface):
                             (255, 255, 255),
                             2)
 
+                # Print information to the terminal"
                 print(f"Rock at ({center[0]}, {center[1]}): Max Diameter = {max_dim_cm:.2f}cm, Min Diameter = {min_dim_cm:.2f}cm")
+                print(f"Depth at Rock Surface: {depth_surface:.2f} meters")
+                print(f"Depth at Rock Center: {rock_center_depth:.2f} meters")
+                print(f"Rock Center 3D Coordinates: {rock_center_coordinates}")
 
         return self.current_frame
+
+
 
     def draw(self, frame: np.ndarray) -> None:
         cv2.imshow("Rock Segmentation", frame)
         key = cv2.waitKey(1)
         if key == ord('q'):
-            self.pipeline.stop()
             cv2.destroyAllWindows()
-
-    def initialize_camera(self):
-        pipeline = rs.pipeline()
-        config = rs.config()
-        config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
-        config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
-        profile = pipeline.start(config)
-
-        align = rs.align(rs.stream.color)
-        depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
-        intrinsics = profile.get_stream(rs.stream.color).as_video_stream_profile().get_intrinsics()
-
-        return pipeline, align, depth_scale, intrinsics
 
     def process_frame(self, image):
         results = self.model(image, imgsz=640)
@@ -102,6 +112,7 @@ class ModuleRocks(ModuleInterface):
                         'bounding_box': (x1, y1, x2, y2)
                     })
         return image, detected_objects
+
 
     def draw_masks_and_contours(self, image, detected_objects):
         for obj in detected_objects:
@@ -166,3 +177,40 @@ class ModuleRocks(ModuleInterface):
             image = cv2.addWeighted(image, 1, masked_image, 0.5, 0)
 
         return image, max_dimension_cm, min_dimension_cm
+    
+    def calculate_rock_center(self, center_pixel, bounding_box, depth_frame, intrinsics, depth_surface):
+        """
+        Calculate the quasi-center of a detected rock.
+        
+        Parameters:
+        center_pixel (tuple): (x, y) coordinates of the center pixel in the bounding box.
+        bounding_box (tuple): (x1, y1, x2, y2) coordinates of the bounding box corners.
+        depth_frame (np.ndarray): Depth frame corresponding to the RGB image.
+        intrinsics (rs.intrinsics): Camera intrinsics used for deprojection.
+
+        Returns:
+        np.ndarray: The 3D point in space representing the quasi-center of the rock.
+        float: The distance from the camera to the quasi-center.
+        """
+        x1, y1, x2, y2 = bounding_box
+
+        # Calculate depth values at the four corners of the bounding box (distance to ground)
+        depth_corners = [
+            depth_frame[y1, x1] * self.depth_scale,  # top-left corner
+            depth_frame[y1, x2] * self.depth_scale,  # top-right corner
+            depth_frame[y2, x1] * self.depth_scale,  # bottom-left corner
+            depth_frame[y2, x2] * self.depth_scale   # bottom-right corner
+        ]
+        depth_ground = np.mean(depth_corners)
+
+        # Calculate the distance to the quasi-center as the average of the depth to the rock and the depth to the ground
+        rock_center_depth = (depth_surface + depth_ground) / 2
+
+        # Deproject the center pixel to 3D space based on the quasi depth
+        rock_center_coordinates = rs.rs2_deproject_pixel_to_point(intrinsics, center_pixel, rock_center_depth)
+
+        # Convert the 3D point to a numpy array for easy manipulation
+        rock_center_coordinates = np.array(rock_center_coordinates)
+
+        return rock_center_coordinates, rock_center_depth
+
