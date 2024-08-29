@@ -2,8 +2,8 @@ from .task import *
 
 
 class PressButton(Task):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, executor):
+        super().__init__(executor)
         self.press_distance = 0.15
         self.scan_distance = 0.13        # from end effector in the local z coordinate (forward if gripper is standardly oriented)
         self.pause_time = 0.2
@@ -26,7 +26,7 @@ class PressButton(Task):
         extended = True
         
         self.constructStandardDetectionCommands("button", extended=extended)
-        return
+        
         self.addCommand(
             PoseCommand(),
             pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(),

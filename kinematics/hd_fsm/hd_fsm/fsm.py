@@ -112,10 +112,10 @@ class FSM(Node):
 
     def manual_direct_cmd_callback(self, msg: Float32MultiArray):
         # TODO: add mode check in all callbacks
-        directions = [-1]*6
+        scalings = [-1, -1, -1, -1, -0.13/0.2, -1]
         self.manual_direct_command = msg.data
-        for i in range(min(len(self.manual_direct_command), len(directions))):
-            self.manual_direct_command[i] *= directions[i]
+        for i in range(min(len(self.manual_direct_command), len(scalings))):
+            self.manual_direct_command[i] *= scalings[i]
         self.received_manual_direct_cmd_at = time.time()
     
     def manual_inverse_cmd_callback(self, msg: Float32MultiArray):

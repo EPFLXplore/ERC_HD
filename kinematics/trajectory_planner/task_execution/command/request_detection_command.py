@@ -14,7 +14,10 @@ class RequestDetectionCommand(Command):
         start = time.time()
         rate = self.executor.create_rate(25)    # 25 hz rate in order to release ressources
         while not self.executor.detectionUpdated():
+            self.executor.logwarn("AAAAAAAAAAAAAAAA")
             if time.time()-start > self.timeout:
+                self.executor.logwarn("BBBBBBBBBBBBB")
                 self.has_failed = True
                 return
             rate.sleep()
+            self.executor.logwarn("CCCCCCCCCCCCCCCCCCCC")

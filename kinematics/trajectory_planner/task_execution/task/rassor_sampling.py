@@ -2,7 +2,8 @@ from .task import *
 
 
 class RassorSampling(Task):
-    def __init__(self):
+    def __init__(self, executor):
+        super().__init__(executor)
         self.ground_approach_steps = [0.2]  # [0.3, 0.2]
 
         self.j5_gripper_distance = 0.2      # distance between the axis of j5 and the tip of the gripper in the vertical coordinate when gripper is facing down
