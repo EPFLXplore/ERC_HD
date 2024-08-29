@@ -4,7 +4,8 @@ from std_msgs.msg import UInt32
 import kinematics_utils.quaternion_arithmetic as qa
 import math
 import copy
-import kinematics_utils.pose_corrector as pc
+# import kinematics_utils.pose_corrector as pc
+from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
 
 
 END_EFFECTOR_POSE = Pose()

@@ -12,7 +12,8 @@ from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
 import threading
 import kinematics_utils.pose_tracker as pt
-import kinematics_utils.pose_corrector as pc
+# import kinematics_utils.pose_corrector as pc
+from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as new_qa
 from typing import List, Type

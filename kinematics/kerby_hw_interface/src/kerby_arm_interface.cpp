@@ -208,7 +208,8 @@ std::string format_vector(const std::vector<T> &vec) {
 void KerbyArmInterface::arm_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) {
     // RCLCPP_INFO(rclcpp::get_logger("KerbyArmInterface"), "  Position: %s", format_vector(msg->position).c_str());
     uint size = (hw_position_states_.size() < msg->position.size()) ? hw_position_states_.size() : msg->position.size();
-    for (uint i = 0; i < size; i++) {
+    uint limit = size >= 6 ? 6 : size;
+    for (uint i = 0; i < limit; i++) {
         hw_position_states_[i] = msg->position[i];
         hw_velocity_states_[i] = msg->velocity[i];
         if (scanning_ || !sending_commands_) {

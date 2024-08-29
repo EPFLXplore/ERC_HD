@@ -1,8 +1,9 @@
+from __future__ import annotations
 from task_execution.command.command import *
 
 
 class NamedJointTargetCommand(Command):
-    def __init__(self, executor=None, name="zero"):
+    def __init__(self, executor: Executor = None, name: str = "zero"):
         super().__init__(executor)
         self.name = name
     
