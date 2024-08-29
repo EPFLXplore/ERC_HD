@@ -15,5 +15,6 @@ def generate_launch_description():
             ),
             Node(package="perception", executable="perception_node", name="perception"),
             Node(package="vision", executable="img_subscriber", name="vision"),
+            Node(package="perception", executable="gui_node", name="perception"),
         ]
     )
