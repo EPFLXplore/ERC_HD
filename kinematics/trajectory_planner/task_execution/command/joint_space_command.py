@@ -3,8 +3,8 @@ from custom_msg.msg import JointSpaceCmd
 
 
 class JointSpaceCommand(Command):
-    def __init__(self, executor=None, mode=JointSpaceCmd.RELATIVE, states: list = None):
-        super().__init__(executor)
+    def __init__(self, mode=JointSpaceCmd.RELATIVE, states: list = None):
+        super().__init__()
         if states is None:
             states = [0.0]*7
         self.mode = mode

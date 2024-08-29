@@ -33,11 +33,13 @@ listener.listen()
 
 
 def main():
+    absolute = True
+    
     rclpy.init()
     node = rclpy.create_node("fake_vision")
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-    detected_element_pub = node.create_publisher(TargetInstruction, "HD/vision/target_pose", 10)
+    detected_element_pub = node.create_publisher(TargetInstruction, "/HD/perception/button_pose", 10)
 
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
@@ -54,11 +56,9 @@ def main():
             pose.position.x = listener.vect[0]
             pose.position.y = listener.vect[1]
             pose.position.z = listener.vect[2]
-            # pose = pc.abs_to_eef(pose)
-            pose = pc.abs_to_vision(pose)
-            # pose = pc.revert_to_vision(pose)   # get it from the perspective of the cameras with their reference
+            # pose = qan.Pose()
+            if absolute: pose = pc.abs_to_vision(pose)
             pose.position *= scale
-            # node.get_logger().info(str(pose))
 
             pose = pose.publishable()
             msg = TargetInstruction(ar_tag_pose=pose, object_pose=pose)

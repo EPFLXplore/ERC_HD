@@ -117,12 +117,12 @@ RB:
     type:1
 
 LT:
-    code:310
+    code:310 /10
     val:0/1
     type:3
 
 LB:
-    code:10
+    code:10 / 310
     range:0-1023
     type:1
 

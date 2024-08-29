@@ -4,8 +4,8 @@ from task_execution.command.command import *
 class PoseCommand(Command):
     """moves the arm to a requested pose (position + orientation of the end effector)"""
 
-    def __init__(self, executor=None, pose=None, cartesian=False, velocity_scaling_factor=1.0):
-        super().__init__(executor)
+    def __init__(self, pose: Pose = None, cartesian: bool = False, velocity_scaling_factor: float = 1.0):
+        super().__init__()
         self.pose = pose    # Pose
         self.cartesian = cartesian
         self.velocity_scaling_factor = velocity_scaling_factor
@@ -13,7 +13,7 @@ class PoseCommand(Command):
         self.retry_count = 0
         self.finished = False
 
-    def setPose(self, position=None, orientation=None):
+    def setPose(self, position: Point = None, orientation: Quaternion = None):
         if self.pose is None:
             self.pose = Pose()
         if position is not None: 
@@ -21,9 +21,9 @@ class PoseCommand(Command):
         if orientation is not None: 
             self.pose.orientation = orientation
  
-        self.pose = pc.global_revert(self.pose)
+        self.pose = pc.revert_to_urdf_eef(self.pose)
 
-    def sesVelocityScalingFactor(self, factor):
+    def sesVelocityScalingFactor(self, factor: float):
         self.velocity_scaling_factor = factor
 
     def done(self):

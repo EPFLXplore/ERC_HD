@@ -2,8 +2,8 @@ from .task import *
 
 
 class AlignPanel(Task):
-    def __init__(self, executor):
-        super().__init__(executor)
+    def __init__(self):
+        super().__init__()
     
     def constructCommandChain(self):
         super().constructCommandChain()
@@ -21,7 +21,7 @@ class AlignPanel(Task):
             description="add ARtag to world"
         )
         self.addCommand(
-            PoseCommand(self.executor),
+            PoseCommand(),
             pre_operation = lambda cmd: cmd.setPose(position=self.getScanPosition(),
                                                     orientation=self.getScanOrientation()),
             description = "go in front of ARtag"
@@ -32,7 +32,7 @@ class AlignPanel(Task):
             description = "request new detection"
         )
         self.addCommand(
-            PoseCommand(self.executor),
+            PoseCommand(),
             pre_operation = lambda cmd: cmd.setPose(position=self.getScanPosition(),
                                                     orientation=self.getScanOrientation()),
             description = "go in front of ARtag again"

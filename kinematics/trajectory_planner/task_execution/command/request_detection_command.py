@@ -2,8 +2,8 @@ from task_execution.command.command import *
 
 
 class RequestDetectionCommand(Command):
-    def __init__(self, executor=None):
-        super().__init__(executor)
+    def __init__(self):
+        super().__init__()
         self.preliminary_wait_duration = 2
         self.timeout = 10
     

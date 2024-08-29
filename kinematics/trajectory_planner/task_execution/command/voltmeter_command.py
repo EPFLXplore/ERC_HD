@@ -7,8 +7,8 @@ class VoltmeterCommand(Command):
     EXTEND_ANGLE = 30.0
     RETRACT_ANGLE = 180.0
 
-    def __init__(self, executor, action=None):
-        super().__init__(executor)
+    def __init__(self, action: int = None):
+        super().__init__()
         if action is None:
             action = self.EXTEND
         self.action = action

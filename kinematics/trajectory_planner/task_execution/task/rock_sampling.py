@@ -62,8 +62,8 @@ class RockSamplingApproach(Task):
 
 
 class RockSamplingDrop(Task):
-    def __init__(self, executor):
-        super().__init__(executor)
+    def __init__(self):
+        super().__init__()
         self.rise_distance = 0.3    # after picking the rock, before going to a default position
 
     def constructCommandChain(self):
@@ -113,9 +113,9 @@ class RockSamplingDrop(Task):
 
 
 class RockSamplingComplete(RockSamplingApproach, RockSamplingDrop):
-    def __init__(self, executor):
-        RockSamplingApproach.__init__(self, executor)
-        RockSamplingDrop.__init__(self, executor)
+    def __init__(self):
+        RockSamplingApproach.__init__(self)
+        RockSamplingDrop.__init__(self)
     
     def constructCommandChain(self):
         RockSamplingApproach.constructCommandChain(self)
