@@ -55,7 +55,7 @@ static const std::vector<double> POS_LOWER_LIMITS = {-3.0/2 * PI, -PI, -PI, -3.0
 static const std::vector<double> POS_UPPER_LIMITS = {3.0/2 * PI, PI, PI, 3.0/2 * PI, PI, 2 * PI, INF, 0, 0};
 
 // static const std::vector<double> REDUCTIONS = {-1.0/128, 1.0/2, 1.0, -4.0, 1.0, 1.0/64, 1.0, 1.0};
-static const std::vector<double> DIRECTIONS = {-1, 1, 1, 1, 1, -1, 1, 1}; // to match directions of MoveIt
+static const std::vector<double> DIRECTIONS = {1, 1, 1, 1, 1, 1, 1, 1}; // to match directions of MoveIt
 //static const std::vector<double> POSITION_OFFSETS = {0, -0.959505, -2.424073, 0, 0, 0, 0};
 // static const std::vector<double> POSITION_OFFSETS = {0, -0.959505, -2.424073, 0, -1.27857, -1.88833, 0};
 static const std::vector<double> POSITION_OFFSETS = {0, 0, 0, 0, 0, 0, 0};
