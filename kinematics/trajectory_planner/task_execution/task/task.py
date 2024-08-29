@@ -268,8 +268,8 @@ class Task:
     """abstract class representing a task"""
     NONE_OPERATION: OPFunction = lambda cmd: None
 
-    def __init__(self, executor: Executor):
-        self.executor: Executor = executor
+    def __init__(self):
+        self.executor: Executor = get_executor()
         self.cmd_counter = 0
         self.command_chain: List[CommandData] = []
         self.background_commands: Dict[str, BackgroundCommandData] = {}
@@ -290,7 +290,6 @@ class Task:
         if post_operation is None:
             post_operation = Task.NONE_OPERATION
 
-        command.executor = self.executor
         self.command_chain.append(CommandData(command, pre_operation, post_operation, description))
     
     def declareBackgroundCommand(self, id: str, command: BackgroundCommand, description: str = ""):
@@ -439,7 +438,7 @@ class Task:
         p = [camera_pos.y, -camera_pos.x, self.scan_distance]   # not sure why I need to exchange x and y here (x needs to be negated but I think y doesn't although this hasn't been tested due to our y being 0)
         return qa.point_object_image(p, self.artag_pose)
     
-    def getScanOrientation(self) -> Quaternion:
+    def getScanOrientation(self) -> qan.Quaternion:
         return self.artag_pose.orientation.turn_around()
         return qa.turn_around(self.artag_pose.orientation)
     
@@ -459,7 +458,7 @@ class Task:
                 description="add ARtag to world"
             )
             self.addCommand(
-                PoseCommand(self.executor),
+                PoseCommand(),
                 pre_operation = lambda cmd: cmd.setPose(position=self.getScanPosition(),
                                                         orientation=self.getScanOrientation()),
                 description = "go in front of ARtag"
@@ -516,22 +515,27 @@ class Task:
     
     def constructOpenGripperCommands(self, high_torque: float = 1.0, low_torque: float = 0.1, post_completion_wait: float = 0.0):
         self.addCommand(
-            GripperCommand(self, GripperCommand.OPEN, duration=1.0, torque_scaling_factor=high_torque),
+            GripperCommand(GripperCommand.OPEN, duration=1.0, torque_scaling_factor=high_torque),
             description = "open gripper high torque"
         )
         self.addCommand(
-            GripperCommand(self, GripperCommand.OPEN, duration=3.0, torque_scaling_factor=low_torque),
+            GripperCommand(GripperCommand.OPEN, duration=3.0, torque_scaling_factor=low_torque),
             post_operation = lambda cmd: time.sleep(post_completion_wait),
             description = "open gripper low torque"
         )
     
     def constructCloseGripperCommands(self, high_torque: float = 1.0, low_torque: float = 0.1, post_completion_wait: float = 0.0):
         self.addCommand(
-            GripperCommand(self, GripperCommand.CLOSE, duration=1.0, torque_scaling_factor=high_torque),
+            GripperCommand(GripperCommand.CLOSE, duration=1.0, torque_scaling_factor=high_torque),
             description = "close gripper high torque"
         )
         self.addCommand(
-            GripperCommand(self, GripperCommand.CLOSE, duration=3.0, torque_scaling_factor=low_torque),
+            GripperCommand(GripperCommand.CLOSE, duration=3.0, torque_scaling_factor=low_torque),
             post_operation = lambda cmd: time.sleep(post_completion_wait),
             description = "close gripper low torque"
         )
+
+
+# def combine_tasks(*tasks: Type[Task]) -> Type[Task]:
+#     class CombinedTask(Task):
+#         def __init__()

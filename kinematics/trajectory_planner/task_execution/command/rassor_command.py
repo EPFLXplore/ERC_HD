@@ -5,8 +5,8 @@ class RassorCommand(Command):
     SAMPLE = 0
     RELEASE = 1
 
-    def __init__(self, executor=None, action=None, duration=1.0, torque_scaling_factor=1.0):
-        super().__init__(executor)
+    def __init__(self, action: int = None, duration:float = 1.0, torque_scaling_factor: float = 1.0):
+        super().__init__()
         if action is None:
             action = self.SAMPLE
         self.action = action

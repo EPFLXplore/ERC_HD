@@ -7,10 +7,10 @@ TOOL_MAINTAINING_TORQUE_ID = "tool_maintaining_torque"
 
 
 class ToolPickup(Task):
-    def __init__(self, executor: Executor, tool: int):
+    def __init__(self, tool: int):
         if tool not in Tools.SWAPABLE:
             raise ValueError("Tool is unknown or isn't swapable")
-        super().__init__(executor)
+        super().__init__()
         self.tool = tool
         self.above_distance = 0.2
         self.tool_maintaining_torque_scaling = 0.8
@@ -50,7 +50,7 @@ class ToolPickup(Task):
         )
         
         self.addCommand(
-            PoseCommand(self.executor),
+            PoseCommand(),
             pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(),
                                                     orientation=self.getPressOrientation()),
             description = "go in front of button"

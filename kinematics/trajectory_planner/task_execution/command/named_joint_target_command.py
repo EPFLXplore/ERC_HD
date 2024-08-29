@@ -3,8 +3,8 @@ from task_execution.command.command import *
 
 
 class NamedJointTargetCommand(Command):
-    def __init__(self, executor: Executor = None, name: str = "zero"):
-        super().__init__(executor)
+    def __init__(self, name: str = "zero"):
+        super().__init__()
         self.name = name
     
     def execute(self):

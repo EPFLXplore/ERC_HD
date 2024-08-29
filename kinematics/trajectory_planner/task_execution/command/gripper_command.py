@@ -8,8 +8,8 @@ class GripperCommand(Command):
     OPEN = 0
     CLOSE = 1
 
-    def __init__(self, executor=None, action: int = None, duration: float = float("inf"), torque_scaling_factor: float = 1.0):
-        super().__init__(executor)
+    def __init__(self, action: int = None, duration: float = float("inf"), torque_scaling_factor: float = 1.0):
+        super().__init__()
         if action is None:
             action = self.OPEN
         self.action = action
@@ -38,8 +38,8 @@ class GripperBackgroundCommand(BackgroundCommand):
     OPEN = 0
     CLOSE = 1
 
-    def __init__(self, executor: Executor = None, action: int = None, torque_scaling_factor: float = 1.0):
-        super().__init__(executor)
+    def __init__(self, action: int = None, torque_scaling_factor: float = 1.0):
+        super().__init__()
         if action is None:
             action = self.OPEN
         self.action = action

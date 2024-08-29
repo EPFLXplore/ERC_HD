@@ -44,8 +44,8 @@ def get_executor() -> Executor:
 class Command:
     """abstract class representing a command"""
 
-    def __init__(self, executor: Executor = None):
-        self.executor = executor
+    def __init__(self):
+        self.executor = get_executor()
         self.execute_count = 0
         self.has_failed = False
         self.is_background = False
@@ -98,8 +98,8 @@ class BackgroundCommand:
     START = 0
     STOP = 1
 
-    def __init__(self, executor: Executor = None):
-        self.executor = executor
+    def __init__(self):
+        self.executor = get_executor()
         self._has_started = False
         self._has_finished = False
         self._stop_flag = False
@@ -145,8 +145,8 @@ class BackgroundCommand:
 
 
 class BackgroundCommandStart(Command):
-    def __init__(self, executor: Executor, background_command: BackgroundCommand):
-        super().__init__(executor)
+    def __init__(self, background_command: BackgroundCommand):
+        super().__init__()
         self.background_command = background_command
     
     def execute(self):
@@ -155,8 +155,8 @@ class BackgroundCommandStart(Command):
 
 
 class BackgroundCommandStop(Command):
-    def __init__(self, executor: Executor, background_command: BackgroundCommand, wait: bool = True):
-        super().__init__(executor)
+    def __init__(self, background_command: BackgroundCommand, wait: bool = True):
+        super().__init__()
         self.background_command = background_command
         self.wait = wait
     
