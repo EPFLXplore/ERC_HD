@@ -1,9 +1,11 @@
 from numpy import ndarray
 from abc import ABC, abstractmethod
 
+from rclpy import Node 
+
 
 class ModuleInterface(ABC):
-    def __init__(self, confg_file) -> None:
+    def __init__(self, confg_file, node: Node) -> None:
         raise NotImplementedError(
             "__init__ method should be implemented in the child class"
         )

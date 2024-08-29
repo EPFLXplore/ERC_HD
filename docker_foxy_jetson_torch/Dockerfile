@@ -60,7 +60,23 @@ RUN apt-get purge -y '*opencv*'
 RUN apt install software-properties-common \
     && add-apt-repository universe \
     && apt update \
-    && apt install python3-colcon-common-extensions
+    && apt install -y python3-colcon-common-extensions
+
+RUN cd /home/$USERNAME \
+    && git clone https://github.com/ros-perception/vision_opencv.git -b foxy \
+    && cd vision_opencv \
+    && apt update \
+    && apt install libopencv-dev \
+    && export OpenCV_DIR=/usr/lib/aarch64-linux-gnu/cmake/opencv4/OpenCVConfig.cmake \
+    && colcon build --symlink-install 
+    # && apt install mlocate \
+    # && locate OpenCVConfig.cmake \  
+
+RUN source ~/vision_opencv/install/setup.bash \
+    && ~/dev_ws/install/setup.bash \
+    && cd ~/dev_ws \
+    && colcon build --symlink-install
+
 
 USER $USERNAME
 
