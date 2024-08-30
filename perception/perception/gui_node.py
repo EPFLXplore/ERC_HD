@@ -12,6 +12,8 @@ GRID_V_SPACING = 2 * BUTTON_HEIGHT + 30  # Vertical spacing between buttons
 
 PIPELINES_H_OFFSET = 150
 PIPELINES_V_OFFSET = 30
+PIPELINE_WIDTH = 150
+PIPELINE_HEIGHT = BUTTON_HEIGHT
 
 
 class GuiNode(Node):
@@ -98,7 +100,23 @@ class GuiNode(Node):
         self.window.mainloop()
 
     def _create_pipelines_buttons(self):
-        pass
+        pipelines = [{'name':'rocks', 'x':PIPELINES_H_OFFSET, 'y':PIPELINES_V_OFFSET}]
+        for pipe in pipelines:
+            x, y, name = pipe["x"], pipe["y"], pipe["name"]
+
+
+            button = tk.Button(
+                self.window,
+                text=f"{name}",
+                command=lambda b=f"{name}": self.send_command(
+                    b
+                ),
+                bg="white",
+            )
+            button.place(
+                x=(x  + PIPELINE_WIDTH),
+                y=(y + PIPELINE_HEIGHT),
+            )
 
 
 def get_grid():

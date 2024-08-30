@@ -3,6 +3,8 @@ aruco:
   aruco_tag_ids: [2] #[2]
   marker_type: "4x4"
 
+name: "buttonsA"
+
 buttons_width: 21 # mm
 buttons_height: 42 # mm
 

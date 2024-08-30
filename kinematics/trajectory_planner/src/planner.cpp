@@ -50,7 +50,30 @@ Planner::TrajectoryStatus Planner::reachTargetPose(const geometry_msgs::msg::Pos
 
     setScalingFactors(velocity_scaling_factor, velocity_scaling_factor);
     updateCurrentPosition();
+    
+    // moveit_msgs::msg::PositionConstraint box_constraint;
+    // box_constraint.header.frame_id = m_move_group->getPoseReferenceFrame();
+    // box_constraint.link_name = m_move_group->getEndEffectorLink();
+    // shape_msgs::msg::SolidPrimitive box;
+    // box.type = shape_msgs::msg::SolidPrimitive::BOX;
+    // box.dimensions = { 1.0, 1.0, 1.0 };
+    // box_constraint.constraint_region.primitives.emplace_back(box);
+
+    // geometry_msgs::msg::Pose box_pose;
+    // geometry_msgs::msg::Pose current_pose = m_move_group->getCurrentPose().pose;
+    // box_pose.position.x = current_pose.position.x;
+    // box_pose.position.y = current_pose.position.y;
+    // box_pose.position.z = current_pose.position.z;
+    // box_pose.orientation.w = 1.0;
+    // box_constraint.constraint_region.primitive_poses.emplace_back(box_pose);
+    // box_constraint.weight = 1.0;
+
+    // moveit_msgs::msg::Constraints box_constraints;
+    // box_constraints.position_constraints.emplace_back(box_constraint);
+    // m_move_group->setPathConstraints(box_constraints);
+    
     m_move_group->setPoseTarget(target);
+    // m_move_group->setPlanningTime(10.0);
     Planner::TrajectoryStatus status = planAndExecute();
     setScalingFactors(1, 1);
     return status;
@@ -497,6 +520,7 @@ void Planner::sendTrajFeedback(Planner::TrajectoryStatus status) {
 }
 
 bool Planner::canMove() {
+    m_move_group->clearPathConstraints();
     bool res = !m_is_executing_path;
     m_is_executing_path = true;
     return res;
