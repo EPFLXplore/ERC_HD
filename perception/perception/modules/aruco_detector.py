@@ -1,6 +1,9 @@
 from cv2 import aruco
 import cv2 as cv
 import numpy as np
+
+from  rclpy import logging
+import rclpy.node
 from .module_interface import ModuleInterface
 
 
@@ -47,6 +50,9 @@ class ArucoDetector(ModuleInterface):
             self.rvec = rvecs[tag_idx]
             self.tvec = tvecs[tag_idx]
             self.corners = corners[tag_idx]
+        else:
+            self.rvec = None
+            self.tvec = None
         if self.rvec is not None and self.tvec is not None:
             return self.rvec, self.tvec
         return None, None

@@ -32,3 +32,6 @@ class MockStereoCamera(StereoCameraInterface):
     def get_coeffs(self):
         # Return mock distortion coefficients
         return self.coeffs
+
+    def get_rgbd(self):
+        return self.get_image(), self.get_depth()
