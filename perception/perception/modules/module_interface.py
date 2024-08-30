@@ -1,7 +1,7 @@
 from numpy import ndarray
 from abc import ABC, abstractmethod
 
-from rclpy import Node 
+from rclpy.node import Node 
 
 
 class ModuleInterface(ABC):

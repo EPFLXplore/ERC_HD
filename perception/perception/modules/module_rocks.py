@@ -1,8 +1,8 @@
-from module_interface import ModuleInterface
+from .module_interface import ModuleInterface
 import pyrealsense2 as rs
 import numpy as np
 import cv2
-from ultralytics import YOLO
+#from ultralytics import YOLO
 import torch
 from scipy.spatial.transform import Rotation as R  # Use scipy for quaternion operations
 

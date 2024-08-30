@@ -2,7 +2,7 @@ from rclpy.node import Node
 from .pipeline_interface import PipelineInterface
 
 from ..modules.instance_segmentation import InstanceSegmentation
-from ..modules.instance_segmentation import ModuleRocks
+from ..modules.module_rocks import ModuleRocks
 from numpy import ndarray
 import cv2
 
