@@ -40,13 +40,15 @@ listener.listen()
 
 
 def artag_callback(msg):
+    from_camera = True
+    
     def extract_pose(source: Pose, dest: Pose):
         pose = Pose()
         pose.position.x = source.position.x/1000
         pose.position.y = source.position.y/1000
         pose.position.z = source.position.z/1000
         pose.orientation = source.orientation
-        # pose = pc.correct_vision_pose(pose)
+        pose = pc.vision_to_abs(pose) if from_camera else pc.eef_to_abs(pose)
         dest.position = pose.position
         dest.orientation = pose.orientation
 
@@ -71,7 +73,8 @@ def end_effector_callback(msg):
 def get_btn_pose():
     def create_object_representation(pose: Pose, name: str) -> Tuple[Object, Object]:
         body = Object()
-        body.pose = qa.compose_poses(end_effector_pose, pose)
+        body.pose = qan.publishable(pose)
+        # body.pose = qa.compose_poses(end_effector_pose, pose)
         body.type = body.BOX
         body.operation = body.ADD
         body.name = name
@@ -99,8 +102,8 @@ def main():
     rclpy.init()
     node = rclpy.create_node("kinematics_vision_test")
 
-    node.create_subscription(Pose, "/HD/kinematics/eef_pose", end_effector_callback, 10)
-    node.create_subscription(TargetInstruction, "HD/vision/target_pose", artag_callback, 10)
+    node.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
+    node.create_subscription(TargetInstruction, "/HD/perception/button_pose", artag_callback, 10)
     #node.create_subscription(PanelObject, "/HD/vision/distance_topic", pt.detected_object_pose_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)

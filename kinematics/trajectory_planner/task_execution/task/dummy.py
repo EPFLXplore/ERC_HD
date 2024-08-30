@@ -2,15 +2,15 @@ from .task import *
 
 
 class Dummy(Task):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, executor):
+        super().__init__(executor)
     
     def getAlignedPosition(self) -> Point:
         # align end effector with artag
         camera_pos = pc.CAMERA_TRANSFORM.position
         align_distance = 0.07
-        p = [camera_pos.x, camera_pos.y, align_distance]
-        # p = [0.0, 0.0, align_distance]
+        # p = [camera_pos.x, camera_pos.y, align_distance]
+        p = [0.0, 0.0, align_distance]
         return self.artag_pose.point_image(p)
     
     def constructCommandChain(self):

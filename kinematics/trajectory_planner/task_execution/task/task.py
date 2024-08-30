@@ -268,8 +268,8 @@ class Task:
     """abstract class representing a task"""
     NONE_OPERATION: OPFunction = lambda cmd: None
 
-    def __init__(self):
-        self.executor: Executor = get_executor()
+    def __init__(self, executor: Executor):
+        self.executor = executor
         self.cmd_counter = 0
         self.command_chain: List[CommandData] = []
         self.background_commands: Dict[str, BackgroundCommandData] = {}
@@ -290,6 +290,7 @@ class Task:
         if post_operation is None:
             post_operation = Task.NONE_OPERATION
 
+        command.executor = self.executor
         self.command_chain.append(CommandData(command, pre_operation, post_operation, description))
     
     def declareBackgroundCommand(self, id: str, command: BackgroundCommand, description: str = ""):
@@ -391,15 +392,22 @@ class Task:
         self.cmd_counter += 1
         return True                 # command succeeded
         
-    def execute(self) -> bool:
+    def execute(self, terminate: bool = True) -> bool:
         """executes all commands"""
         for _ in range(len(self.command_chain)):
             if not self._executeNextCommand():
                 self._terminate(wait=True)
                 return False    # task failed
             time.sleep(self.pause_time)
-        self._terminate(wait=True)
+        if terminate: self._terminate(wait=True)
         return True             # task succeeded
+    
+    def _getActiveBackgroundCommands(self) -> Dict[str, BackgroundCommandData]:
+        alive_cmds = {}
+        for cmd_id, cmd_data in self.background_commands.items():
+            if cmd_data.command.isAlive():
+                alive_cmds[cmd_id] = cmd_data
+        return alive_cmds
     
     def _terminate(self, wait=False):
         """make sure execution finishes gracefully"""
@@ -433,7 +441,7 @@ class Task:
         # give a position where the camera would be aligned with the ARtag
         # for now supposing camera has the same orientation as the end effector
         camera_pos = pc.CAMERA_TRANSFORM.position
-        p = [camera_pos.x, camera_pos.y, self.scan_distance]
+        p = [-camera_pos.x, camera_pos.y, self.scan_distance]
         return self.artag_pose.point_image(p)
         p = [camera_pos.y, -camera_pos.x, self.scan_distance]   # not sure why I need to exchange x and y here (x needs to be negated but I think y doesn't although this hasn't been tested due to our y being 0)
         return qa.point_object_image(p, self.artag_pose)
@@ -442,7 +450,7 @@ class Task:
         return self.artag_pose.orientation.turn_around()
         return qa.turn_around(self.artag_pose.orientation)
     
-    def constructStandardDetectionCommands(self, object_name: str = "object", object_box: Union[tuple, list] = (0.1, 0.2, 0.0001), extended: bool = True):
+    def constructStandardDetectionCommands(self, object_name: str = "object", object_box: Union[tuple, list] = (0.1, 0.2, 0.0001), extended: bool = True, add_objects: bool = True):
         """an example of a series of commands for accurate detection of ARtag and associated object"""
         if extended:
             self.addCommand(
@@ -450,12 +458,13 @@ class Task:
                 post_operation = lambda cmd: self.scanForObjects(),
                 description = "request detection"
             )
-            self.addCommand(        # TODO: maybe disable collisions for this object
-                AddObjectCommand(),
-                pre_operation = lambda cmd: (cmd.setPose(self.artag_pose),
-                                            cmd.setShape([0.1, 0.2, 0.0001]),
-                                            cmd.setName("artag")),
-                description="add ARtag to world"
+            if add_objects:
+                self.addCommand(        # TODO: maybe disable collisions for this object
+                    AddObjectCommand(),
+                    pre_operation = lambda cmd: (cmd.setPose(self.artag_pose),
+                                                cmd.setShape([0.1, 0.2, 0.0001]),
+                                                cmd.setName("artag")),
+                    description="add ARtag to world"
             )
             self.addCommand(
                 PoseCommand(),
@@ -468,13 +477,14 @@ class Task:
             post_operation = lambda cmd: self.scanForObjects(),
             description = "request new detection"
         )
-        self.addCommand(        # TODO: maybe disable collisions for this object
-            AddObjectCommand(),
-            pre_operation = lambda cmd: (cmd.setPose(self.object_pose),
-                                         cmd.setShape(list(object_box)),
-                                         cmd.setName(object_name)),
-            description=f"add {object_name} to world"
-        )
+        if add_objects:
+            self.addCommand(        # TODO: maybe disable collisions for this object
+                AddObjectCommand(),
+                pre_operation = lambda cmd: (cmd.setPose(self.object_pose),
+                                            cmd.setShape(list(object_box)),
+                                            cmd.setName(object_name)),
+                description=f"add {object_name} to world"
+            )
 
     def constructRemoveObjectsCommands(self, object_name: str = "object", extended: bool = True):
         if extended:
@@ -536,6 +546,21 @@ class Task:
         )
 
 
-# def combine_tasks(*tasks: Type[Task]) -> Type[Task]:
-#     class CombinedTask(Task):
-#         def __init__()
+
+def combine_tasks(*tasks: Type[Task]) -> Type[Task]:
+    class CombinedTask(Task):
+        def __init__(self, executor: Executor):
+            super().__init__(executor)
+            self.tasks = [task_type(executor) for task_type in tasks]
+        
+        def execute(self) -> bool:
+            active_background_commands: Dict[str, BackgroundCommandData] = {}
+            for task in self.tasks:
+                task.background_commands |= active_background_commands
+                success = task.execute(terminate=False)
+                if not success:
+                    task._terminate()
+                    return False
+                active_background_commands = task._getActiveBackgroundCommands()
+            task._terminate()
+            return True

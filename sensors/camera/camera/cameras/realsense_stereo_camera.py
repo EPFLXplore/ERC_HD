@@ -18,11 +18,14 @@ class RealSenseStereoCamera(StereoCameraInterface):
         # res = {"x": 640, "y": 480}
         # res = {"x": 1280, "y": 720}
         res = {"x": 848, "y": 480}
-
+        res_depth = res
+        res_col = res
+        # res_col = {'x': 1920, 'y':1080}
+        # res_depth = {'x':1280,'y':720}
         FPS = 30
 
-        config.enable_stream(rs.stream.depth, res["x"], res["y"], rs.format.z16, FPS)
-        config.enable_stream(rs.stream.color, res["x"], res["y"], rs.format.bgr8, FPS)
+        config.enable_stream(rs.stream.depth, res_depth["x"], res_depth["y"], rs.format.z16, FPS)
+        config.enable_stream(rs.stream.color, res_col["x"], res_col["y"], rs.format.bgr8, FPS)
 
         # Start streaming from file
         self.profile = self.pipe.start(config)

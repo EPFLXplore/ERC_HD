@@ -3,7 +3,8 @@ import numpy as np
 from numpy import ndarray
 import os
 import pyrealsense2 as rs
-from ultralytics import YOLO
+
+# from ultralytics import YOLO
 
 import rclpy
 from sensor_msgs.msg import CompressedImage
@@ -27,9 +28,8 @@ class InstanceSegmentation(ModuleInterface):
         # Create a pipeline for RealSense
         self.pipeline = rs.pipeline()
 
-        # Create a config and configure the pipeline to stream color frames
-        self.config = rs.config()
-        self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+        # Create a pipeline for RealSense
+        # self.pipeline = rs.pipeline()
 
         # Service Client 
         self.camera_service = node.create_client(Detect, "/HD/model_server/detect", 
@@ -44,10 +44,9 @@ class InstanceSegmentation(ModuleInterface):
 
     def get_pipeline(self):
         return self.pipeline
-    
+
     def get_config(self):
         return self.config
-
 
     def __call__(self, rgb_frame: ndarray, depth_frame: ndarray):
         # Convert rgb_frame (OpenCV image) to ROS CompressedImage message

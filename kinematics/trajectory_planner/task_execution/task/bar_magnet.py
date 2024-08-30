@@ -7,8 +7,8 @@ class BarMagnetApproach(Task):
         orientation = qa.quat([1.0, 0.0, 0.0], -math.pi/2)
     )
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, executor):
+        super().__init__(executor)
         self.above_distance = 0.3
     
     @property

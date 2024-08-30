@@ -27,7 +27,7 @@ def test_yolov8_segmentation_with_tracking_on_realsense(model_path):
     :param model_path: Path to the YOLOv8 segmentation model (.pt file).
     """
     # Load the YOLOv8 segmentation model
-    model = YOLO(model_path)
+    model = YOLO(model_path,  'cuda')
     
     # Create a pipeline for RealSense
     cap = cv2.VideoCapture(0)    # Create a config and configure the pipeline to stream color frames
@@ -61,8 +61,8 @@ def test_yolov8_segmentation_with_tracking_on_realsense(model_path):
             # Convert the color image to a numpy array
 
             # Perform instance segmentation and tracking on the color image
-            # results = model.track(color_image, persist=True)
-            results = False
+            results = model.track(color_image, persist=True)
+            #results = False
             # Check if there are any results
             if results:
                 annotator = Annotator(color_image, line_width=2)
@@ -100,7 +100,9 @@ def test_yolov8_segmentation_with_tracking_on_realsense(model_path):
                                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
             # Display the frame with masks, bounding boxes, and track IDs
+            #color_image = cv2.resize(color_image, (0, 0), fx = 2.0, fy = 2.0)
             draw_fps(color_image, fps)
+            
             cv2.imshow("YOLOv8 Segmentation with Tracking on RealSense", color_image)
 
             # Exit loop if 'q' is pressed
@@ -117,7 +119,7 @@ def test_yolov8_segmentation_with_tracking_on_realsense(model_path):
 if __name__ == "__main__":
     # Replace 'yolov8s-seg.pt' with your model path
     obj_type = 'rock'
-    model_name = 'rock_m_200.pt'
+    model_name = 'rocks_m_200.pt'
     print(os.getcwd())
     model_path = f'{os.getcwd()}/models/{model_name}'  # Example segmentation model path
     test_yolov8_segmentation_with_tracking_on_realsense(model_path)
