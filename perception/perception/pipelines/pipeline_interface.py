@@ -4,6 +4,7 @@ from rclpy.node import Node
 from numpy import ndarray
 from abc import ABC, abstractmethod
 
+from custom_msg.msg import SegmentationData
 
 class PipelineInterface(ABC):
     def __init__(self, config_file: str, node: Node, draw_results: bool = True):
@@ -60,7 +61,7 @@ class PipelineInterface(ABC):
         )
 
     @abstractmethod
-    def draw(self, frame: ndarray):
+    def draw(self, segmentation_data: SegmentationData): #frame: ndarray):   #TODO
         """
         Draws the results of the pipeline on the given frame. but does not display the results another node displays the modified image
         does not draw itself but calls the draw method of its modules

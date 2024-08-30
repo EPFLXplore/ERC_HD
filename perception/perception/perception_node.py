@@ -31,9 +31,17 @@ class PerceptionNode(Node):
         self.dist_coeffs = None
         self._get_camera_params()
 
+        # # Initialize Pipeline with calibration data if available
+        # self.pipeline = PipelineFactory.create_pipeline(
+        #     "buttonsA",
+        #     self,
+        #     camera_matrix=self.camera_matrix,
+        #     dist_coeffs=self.dist_coeffs,
+        # )
+
         # Initialize Pipeline with calibration data if available
         self.pipeline = PipelineFactory.create_pipeline(
-            "buttonsA",
+            "rocks",
             self,
             camera_matrix=self.camera_matrix,
             dist_coeffs=self.dist_coeffs,
