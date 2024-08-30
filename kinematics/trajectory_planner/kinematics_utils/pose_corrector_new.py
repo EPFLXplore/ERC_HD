@@ -86,7 +86,7 @@ class Tools:
 class PoseCorrector:
     GRIPPER_TRANSFORM_CORRECTION = construct_eef_transform("gripper")
     CAMERA_TRANSFORM = qan.Pose(                    # transform between end effector and camera
-        position = qan.Point(x=-0.009, y=-0.063, z=-0.051 - 0.0037)    # 0.051 to camera glass and 0.0037 to focal point
+        position = qan.Point(x=-0.019, y=-0.07, z=-0.051 - 0.0037)    # 0.051 to camera glass and 0.0037 to focal point    # old x=-0.009 y=-0.063
     )
     
     def __init__(self, tool: int = Tools.BUTTONS):
