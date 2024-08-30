@@ -43,8 +43,6 @@ class PerceptionNode(Node):
         self.pipeline = PipelineFactory.create_pipeline(
             "rocks",
             self,
-            camera_matrix=self.camera_matrix,
-            dist_coeffs=self.dist_coeffs,
         )
 
         # Subscribers

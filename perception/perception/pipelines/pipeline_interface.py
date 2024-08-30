@@ -25,7 +25,7 @@ class PipelineInterface(ABC):
         self._initialize_publishers(node)
 
         # Initialize any other necessary components based on the config
-        self._initialize_pipeline()
+        self._initialize_pipeline(node)
 
     @abstractmethod
     def _initialize_publishers(self, node: Node):
@@ -40,7 +40,7 @@ class PipelineInterface(ABC):
         )
 
     @abstractmethod
-    def _initialize_pipeline(self):
+    def _initialize_pipeline(self, node: Node):
         """
         Initializes the pipeline components based on the configuration.
         This method can be overridden in subclasses to initialize specific components.

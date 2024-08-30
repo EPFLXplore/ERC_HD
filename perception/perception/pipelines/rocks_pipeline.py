@@ -14,17 +14,20 @@ class RocksPipeline(PipelineInterface):
     def __init__(self, config_file: str, node: Node, draw_results: bool = True):
         # self.camera_info = {"camera_matrix": camera_matrix, "dist_coeffs": dist_coeffs}   #TODO necessary ?
         super().__init__(config_file, node, draw_results)
-        self.config_file = config_file
-        self.node = node 
+        # self.config_file = config_file
+        # self.node = node 
 
     def _initialize_publishers(self, node: Node):
         self.pose_publisher = node.create_publisher(
             RockArray, "/HD/perception/rock_pose", 10    
         )
     
-    def _initialize_pipeline(self):
-        self.instance_segmentation = InstanceSegmentation(self, self.confg_file, self.node)
-        self.obj_module = ModuleRocks(self)
+    def _initialize_pipeline(self, node: Node):
+        self.instance_segmentation = InstanceSegmentation(self.config, node)
+        self.obj_module = ModuleRocks()
+
+    def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray) -> None:
+        pass
     
     def draw(self, frame):
         self.instance_segmentation.draw(frame)
