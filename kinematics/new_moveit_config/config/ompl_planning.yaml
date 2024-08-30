@@ -1,5 +1,5 @@
 planning_plugin: ompl_interface/OMPLPlanner
-request_adapters: >-
+request_adapters:
   default_planner_request_adapters/AddTimeOptimalParameterization
   default_planner_request_adapters/ResolveConstraintFrames
   default_planner_request_adapters/FixWorkspaceBounds
@@ -131,28 +131,7 @@ planner_configs:
     max_failures: 5000  # maximum consecutive failure limit. default: 5000
 kerby_arm_group:
   planner_configs:
-    - SBL
-    - EST
-    - LBKPIECE
-    - BKPIECE
-    - KPIECE
-    - RRT
-    - RRTConnect
-    - RRTstar
-    - TRRT
+    # - RRTstar
     - PRM
-    - PRMstar
-    - FMT
-    - BFMT
-    - PDST
-    - STRIDE
-    - BiTRRT
-    - LBTRRT
-    - BiEST
-    - ProjEST
-    - LazyPRM
-    - LazyPRMstar
-    - SPARS
-    - SPARStwo
   # projection_evaluator: joints(joint6, gripper_left_finger_joint)
   # longest_valid_segment_fraction: 0.005
