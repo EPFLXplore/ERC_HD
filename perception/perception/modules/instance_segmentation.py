@@ -22,14 +22,7 @@ class InstanceSegmentation(ModuleInterface):
     def __init__(self, confg_file, node):
         reentrant_callback_group = ReentrantCallbackGroup()
 
-        # # Load the YOLOv8 segmentation model
-        # self.model = YOLO(confg_file)
-        
-        # Create a pipeline for RealSense
-        self.pipeline = rs.pipeline()
-
-        # Create a pipeline for RealSense
-        # self.pipeline = rs.pipeline()
+        self.node   = node
 
         # Service Client 
         self.camera_service = node.create_client(Detect, "/HD/model_server/detect", 
@@ -37,16 +30,6 @@ class InstanceSegmentation(ModuleInterface):
         
         self.bridge = CvBridge()  # Initialize CvBridge for conversions between ROS and OpenCV
 
-
-    # def get_model(self):
-    #     return self.model 
-    
-
-    def get_pipeline(self):
-        return self.pipeline
-
-    def get_config(self):
-        return self.config
 
     def __call__(self, rgb_frame: ndarray, depth_frame: ndarray):
         # Convert rgb_frame (OpenCV image) to ROS CompressedImage message

@@ -6,6 +6,8 @@ from ..modules.module_rocks import ModuleRocks
 from numpy import ndarray
 import cv2
 
+import pyrealsense2 as rs
+
 from custom_msg.msg import RockArray 
 from custom_msg.msg import Rock
 from custom_msg.msg import SegmentationData
@@ -27,59 +29,32 @@ class RocksPipeline(PipelineInterface):
         self.obj_module = ModuleRocks()
 
     def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray) -> None:
-        pass
-    
+        # Perform inference on the color image
+        frame, detected_objs = self.instance_segmentation(rgb_image, depth_image)
+
+        # # Draw bounding boxes 
+        # self.draw(frame)   # unnecessary bc already done in module_rocks.py 
+
+        # New ROS msg
+        msg = RockArray()
+
+        img, results = self.compute_obj(frame, detected_objs)
+        for result in results:
+            # New Rock
+            rock = Rock()
+            rock.pose         = result["quaternion"]
+            rock.max_diameter = result["max_dimension_cm"]
+            rock.grab_axis    = result["min_dimension_cm"]
+            msg.append(rock)
+
+        self._publish(msg)
+
+        #self.draw(frame)
+        
+
     def draw(self, frame):
-        self.instance_segmentation.draw(frame)
-
-    def run_segmentation(self):
-        # Start the pipeline
-        pipeline = self.instance_segmentation.get_pipeline
-        pipeline.start(self.instance_segmentation.get_config)
-
-        try:
-            # # Create a window to display the livestream
-            # cv2.namedWindow("YOLOv8 Segmentation on RealSense", cv2.WINDOW_AUTOSIZE)
-
-            # img_count = 0  # Image counter for naming the files
-            
-            while True:
-                # Wait for a coherent pair of frames: color frame
-                frames = pipeline.wait_for_frames()
-                color_frame = frames.get_color_frame()
-
-                if not color_frame:
-                    continue
-
-                # Perform inference on the color image
-                frame, detected_objs = self.instance_segmentation.__call__(rgb_frame=color_frame)
-
-                # # Draw bounding boxes 
-                # self.draw(frame)   # unnecessary bc already done in module_rocks.py 
-
-                # New ROS msg
-                msg = RockArray()
-
-                img, results = self.compute_obj(frame, detected_objs)
-                for result in results:
-                    # New Rock
-                    rock = Rock()
-                    rock.pose         = result["quaternion"]
-                    rock.max_diameter = result["max_dimension_cm"]
-                    rock.grab_axis    = result["min_dimension_cm"]
-                    msg.append(rock)
-
-                self._publish(msg)
-
-                # Exit loop if 'q' is pressed
-                key = cv2.waitKey(1) & 0xFF
-                if key == ord('q'):
-                    break
-                
-        finally:
-            # Stop the pipeline and close OpenCV windows
-            pipeline.stop()
-            cv2.destroyAllWindows()
+        self.obj_module.draw(frame)
+        #self.instance_segmentation.draw(frame)
 
     def compute_obj(self, frame, detected_objs):
         return self.obj_module.__call__(rgb_frame=frame, detected_objs=detected_objs)  #TODO rgb_frame, depth_frame
