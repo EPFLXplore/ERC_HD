@@ -2,8 +2,8 @@ from .task import *
 
 
 class AlignPanel(Task):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, executor):
+        super().__init__(executor)
     
     def constructCommandChain(self):
         super().constructCommandChain()

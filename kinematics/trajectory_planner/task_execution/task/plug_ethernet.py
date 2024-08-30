@@ -2,8 +2,8 @@ from .task import *
 
 
 class EthernetApproach(Task):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, executor):
+        super().__init__(executor)
         self.press_distance = 0.2
     
     @property

@@ -7,10 +7,10 @@ TOOL_MAINTAINING_TORQUE_ID = "tool_maintaining_torque"
 
 
 class ToolPickup(Task):
-    def __init__(self, tool: int):
+    def __init__(self, executor, tool: int):
         if tool not in Tools.SWAPABLE:
             raise ValueError("Tool is unknown or isn't swapable")
-        super().__init__()
+        super().__init__(executor)
         self.tool = tool
         self.above_distance = 0.2
         self.tool_maintaining_torque_scaling = 0.8
@@ -48,24 +48,10 @@ class ToolPickup(Task):
         self.setBackgroundCommandStartPoint(
             id = TOOL_MAINTAINING_TORQUE_ID,
         )
-        
-        self.addCommand(
-            PoseCommand(),
-            pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(),
-                                                    orientation=self.getPressOrientation()),
-            description = "go in front of button"
-        )
-        self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.7),
-            pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
-                                         cmd.setAxisFromOrientation(self.btn_pose.orientation, reverse=True)),
-            description = "click on button"
-        )
-        self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.7),
-            pre_operation = lambda cmd: (cmd.setDistance(self.press_distance),
-                                         cmd.setAxisFromOrientation(self.btn_pose.orientation)),
-            description = "move back from button"
-        )
 
+        self.addCommand(
+            StraightMoveCommand(velocity_scaling_factor=0.5, distance=self.above_distance),
+            pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation, reverse=True),
+            description = "Reach tool"
+        )
 

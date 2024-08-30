@@ -1,6 +1,6 @@
 aruco:
-  aruco_tag_size: 62 # mm
-  aruco_tag_ids: [1]
+  aruco_tag_size: 62 #50 # mm
+  aruco_tag_ids: [1] #[2]
   marker_type: "4x4"
 
 buttons_width: 21 # mm

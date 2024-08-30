@@ -72,8 +72,8 @@ class PlugVoltmeterAlign(Task):
 
 
 class PlugVoltmeterApproach(Task):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, executor):
+        super().__init__(executor)
         self.artag_pose = None
         self.scan_distance = 0.13
         self.press_distance = 0.13
