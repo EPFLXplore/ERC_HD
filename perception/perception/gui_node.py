@@ -10,6 +10,9 @@ BUTTON_HEIGHT = 30
 GRID_H_SPACING = 2 * BUTTON_WIDTH + 20  # Horizontal spacing between buttons
 GRID_V_SPACING = 2 * BUTTON_HEIGHT + 30  # Vertical spacing between buttons
 
+PIPELINES_H_OFFSET = 150
+PIPELINES_V_OFFSET = 30
+
 
 class GuiNode(Node):
     def __init__(self):
@@ -42,7 +45,8 @@ class GuiNode(Node):
         )
 
         # Dynamically create buttons based on a grid
-        self.create_buttons()
+        self.create_buttons() # control panel buttons
+        self._create_pipelines_buttons()
 
         # Close the node when the window is closed
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -92,6 +96,9 @@ class GuiNode(Node):
 
     def run(self):
         self.window.mainloop()
+
+    def _create_pipelines_buttons(self):
+        pass
 
 
 def get_grid():

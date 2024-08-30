@@ -27,9 +27,6 @@ class ButtonsPipeline(PipelineInterface):
     ):
         self.camera_info = {"camera_matrix": camera_matrix, "dist_coeffs": dist_coeffs}
         super().__init__(config_file, node, draw_results)
-        self.control_panel = control_panel.ControlPanel(
-            **self.camera_info, button_values=[x for x in range(10)]
-        )
         self.panel = Panel(config_file, camera_matrix)
 
     def run_rgb(self, image):
@@ -79,3 +76,6 @@ class ButtonsPipeline(PipelineInterface):
         self.panel.set_target(button)
         print(f"button pipeline: {button}")
         # self.control_panel.set_button(button)
+
+    def _publish(self):
+        pass
