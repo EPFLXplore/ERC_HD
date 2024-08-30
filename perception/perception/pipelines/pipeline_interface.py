@@ -80,3 +80,9 @@ class PipelineInterface(ABC):
         raise NotImplementedError(
             "The draw method must be implemented by the subclass."
         )
+    
+    @property
+    @abstractmethod
+    def name(self):
+        """Each pipeline step must have a 'name' attribute"""
+        pass

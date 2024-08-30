@@ -13,13 +13,17 @@ from geometry_msgs.msg import Pose
 
 from .handlers.pose_msg import PoseMsg
 from .pipelines.pipeline_factory import PipelineFactory
+from .pipelines.pipeline_interface import PipelineInterface
 from custom_msg.srv import CameraParams
 from custom_msg.srv import ButtonPressControlPanel
+import re
 
 
 class PerceptionNode(Node):
     def __init__(self):
         super().__init__("perception_node")
+
+        self.button_pattern = r"^\d[ud]$"  # used to match button service requests to distinguish them from switching pipeline request
 
         # Initialize Camera Info
         self.camera_matrix = None
@@ -32,7 +36,7 @@ class PerceptionNode(Node):
         self._get_camera_params()
 
         # Initialize Pipeline with calibration data if available
-        self.pipeline = PipelineFactory.create_pipeline(
+        self.pipeline: PipelineInterface = PipelineFactory.create_pipeline(
             "buttonsA",
             self,
             camera_matrix=self.camera_matrix,
@@ -119,9 +123,27 @@ class PerceptionNode(Node):
 
     def handle_button_press(self, request, response):
         selected_button = request.button_name
-        self.get_logger().info(f"Button pressed: {request.button_name}")
+        self.get_logger().info(f"button / pipeline : {request.button_name} requested")
+        is_button_request = bool(re.fullmatch(self.button_pattern, selected_button))
+        if is_button_request:
+            if not self.pipeline.name() == "buttonsA":
+                self.pipeline = PipelineFactory.create_pipeline(
+                    "buttonsA",
+                    self,
+                    camera_matrix=self.camera_matrix,
+                    dist_coeffs=self.dist_coeffs,
+                )
+            self.pipeline.set_button(selected_button)
+        else:
+            self.pipeline = PipelineFactory.create_pipeline(
+                    selected_button,
+                    self,
+                    camera_matrix=self.camera_matrix,
+                    dist_coeffs=self.dist_coeffs,
+                )
+
         response.response = f"Button {request.button_name} was pressed"
-        self.pipeline.set_button(selected_button)
+
         return response
 
 

@@ -68,6 +68,7 @@ class ButtonsPipeline(PipelineInterface):
     def _initialize_pipeline(self):
 
         self.aruco_detector = ArucoDetector(**self.config["aruco"], **self.camera_info)
+        self.name = self.config['name']
 
     def draw(self, frame: ndarray):
         pass
@@ -79,3 +80,6 @@ class ButtonsPipeline(PipelineInterface):
 
     def _publish(self):
         pass  # TODO move the publishing from run_rgb to here
+
+    def name(self):
+        return self.name

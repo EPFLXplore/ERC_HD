@@ -1,1 +1,2 @@
 model_path: "../models/rocks/medium_100_epochs"
+name: "rocks"
