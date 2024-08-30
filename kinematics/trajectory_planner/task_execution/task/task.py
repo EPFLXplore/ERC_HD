@@ -441,7 +441,7 @@ class Task:
         # give a position where the camera would be aligned with the ARtag
         # for now supposing camera has the same orientation as the end effector
         camera_pos = pc.CAMERA_TRANSFORM.position
-        p = [camera_pos.x, camera_pos.y, self.scan_distance]
+        p = [-camera_pos.x, camera_pos.y, self.scan_distance]
         return self.artag_pose.point_image(p)
         p = [camera_pos.y, -camera_pos.x, self.scan_distance]   # not sure why I need to exchange x and y here (x needs to be negated but I think y doesn't although this hasn't been tested due to our y being 0)
         return qa.point_object_image(p, self.artag_pose)
@@ -450,7 +450,7 @@ class Task:
         return self.artag_pose.orientation.turn_around()
         return qa.turn_around(self.artag_pose.orientation)
     
-    def constructStandardDetectionCommands(self, object_name: str = "object", object_box: Union[tuple, list] = (0.1, 0.2, 0.0001), extended: bool = True):
+    def constructStandardDetectionCommands(self, object_name: str = "object", object_box: Union[tuple, list] = (0.1, 0.2, 0.0001), extended: bool = True, add_objects: bool = True):
         """an example of a series of commands for accurate detection of ARtag and associated object"""
         if extended:
             self.addCommand(
@@ -458,12 +458,13 @@ class Task:
                 post_operation = lambda cmd: self.scanForObjects(),
                 description = "request detection"
             )
-            self.addCommand(        # TODO: maybe disable collisions for this object
-                AddObjectCommand(),
-                pre_operation = lambda cmd: (cmd.setPose(self.artag_pose),
-                                            cmd.setShape([0.1, 0.2, 0.0001]),
-                                            cmd.setName("artag")),
-                description="add ARtag to world"
+            if add_objects:
+                self.addCommand(        # TODO: maybe disable collisions for this object
+                    AddObjectCommand(),
+                    pre_operation = lambda cmd: (cmd.setPose(self.artag_pose),
+                                                cmd.setShape([0.1, 0.2, 0.0001]),
+                                                cmd.setName("artag")),
+                    description="add ARtag to world"
             )
             self.addCommand(
                 PoseCommand(),
@@ -476,13 +477,14 @@ class Task:
             post_operation = lambda cmd: self.scanForObjects(),
             description = "request new detection"
         )
-        self.addCommand(        # TODO: maybe disable collisions for this object
-            AddObjectCommand(),
-            pre_operation = lambda cmd: (cmd.setPose(self.object_pose),
-                                         cmd.setShape(list(object_box)),
-                                         cmd.setName(object_name)),
-            description=f"add {object_name} to world"
-        )
+        if add_objects:
+            self.addCommand(        # TODO: maybe disable collisions for this object
+                AddObjectCommand(),
+                pre_operation = lambda cmd: (cmd.setPose(self.object_pose),
+                                            cmd.setShape(list(object_box)),
+                                            cmd.setName(object_name)),
+                description=f"add {object_name} to world"
+            )
 
     def constructRemoveObjectsCommands(self, object_name: str = "object", extended: bool = True):
         if extended:

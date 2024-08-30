@@ -1,9 +1,0 @@
-# Default initial positions for kerby's ros2_control fake system
-
-initial_positions:
-  hd_joint1: 0
-  hd_joint2: 0
-  hd_joint3: 0
-  hd_joint4: 0
-  hd_joint5: 0
-  hd_joint6: 0

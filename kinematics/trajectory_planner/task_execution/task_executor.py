@@ -274,7 +274,6 @@ class Executor(Node):
 def main():
     rclpy.init()
     executor = Executor()
-    Executor.get_instance().loginfo("B"*1000)
 
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(executor, ), daemon=True)
