@@ -105,7 +105,7 @@ class BackgroundCommand:
         self._has_finished = False
         self._stop_flag = False
         self.execution_thread = threading.Thread(target=self.execute)
-        self.rate: Rate = self.executor.create_rate(25)
+        self.rate: Rate = None
     
     def isAlive(self) -> bool:
         return self.execution_thread.is_alive()
@@ -139,6 +139,7 @@ class BackgroundCommand:
         pass
 
     def execute(self):
+        self.setRate(25)
         while not self._stop_flag:
             self._executeCycle()
             self.rate.sleep()

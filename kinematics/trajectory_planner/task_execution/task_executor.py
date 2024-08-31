@@ -36,7 +36,7 @@ class TaskSelect:
 class Executor(Node):
     INSTANCE: Executor = None
     KNOWN_TASKS = {
-        Task.BUTTON:                    TaskSelect("Button task",               task.PressButton),#Dummy),
+        Task.BUTTON:                    TaskSelect("Button task",               task.DummyWithTools),#PressButton),
         Task.PLUG_VOLTMETER_ALIGN:      TaskSelect("Plug voltmeter task",       task.PlugVoltmeterAlign),
         Task.METAL_BAR_APPROACH:        TaskSelect("Metal bar approach task",   task.BarMagnetApproach),
         Task.NAMED_TARGET:              TaskSelect("Named target task",         task.Task),
@@ -150,7 +150,7 @@ class Executor(Node):
         msg = MotorCommand(
             name = "Gripper",
             mode = MotorCommand.TORQUE,
-            command = torque_scaling_factor
+            command = float(torque_scaling_factor)
         )
         self.motor_command_pub.publish(msg)
     
@@ -159,7 +159,7 @@ class Executor(Node):
         msg = MotorCommand(
             name = "Rassor",
             mode = MotorCommand.TORQUE,
-            command = torque_scaling_factor
+            command = float(torque_scaling_factor)
         )
         self.motor_command_pub.publish(msg)
 

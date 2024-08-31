@@ -5,4 +5,5 @@ from .rassor_sampling import *
 from .rock_sampling import *
 from .plug_ethernet import *
 from .panel_align import *
+from .tool_pickup import *
 from .dummy import *

@@ -1,4 +1,5 @@
 from .task import *
+from .tool_pickup import *
 
 
 class Dummy(Task):
@@ -42,3 +43,6 @@ class Dummy(Task):
                                                     orientation=self.getScanOrientation()),
             description = "go in front of ARtag"
         )
+
+
+DummyWithTools = combine_tasks(ToolPickup, Dummy, ToolRelease)
