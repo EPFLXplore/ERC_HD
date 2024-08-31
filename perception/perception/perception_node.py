@@ -36,18 +36,18 @@ class PerceptionNode(Node):
         self._get_camera_params()
 
         # # Initialize Pipeline with calibration data if available
-        # self.pipeline = PipelineFactory.create_pipeline(
-        #     "buttonsA",
-        #     self,
-        #     camera_matrix=self.camera_matrix,
-        #     dist_coeffs=self.dist_coeffs,
-        # )
-
-        # Initialize Pipeline with calibration data if available
-        self.pipeline: PipelineInterface = PipelineFactory.create_pipeline(
+        self.pipeline = PipelineFactory.create_pipeline(
             "buttonsA",
             self,
+            camera_matrix=self.camera_matrix,
+            dist_coeffs=self.dist_coeffs,
         )
+
+        # Initialize Pipeline with calibration data if available
+        # self.pipeline: PipelineInterface = PipelineFactory.create_pipeline(
+        #     "rocks",
+        #     self,
+        # )
 
         # Subscribers
         self.rgb_sub = self.create_subscription(
@@ -74,6 +74,7 @@ class PerceptionNode(Node):
             "/gui_node/button_press_service",
             self.handle_button_press,
         )
+        
 
         self.get_logger().info("Perception Node started with buttons gang pipeline")
 

@@ -27,6 +27,7 @@ class RocksPipeline(PipelineInterface):
     def _initialize_pipeline(self, node: Node):
         self.instance_segmentation = InstanceSegmentation(self.config, node)
         self.obj_module = ModuleRocks()
+        self._name = self.config["name"]
 
     def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray) -> None:
         # Perform inference on the color image
@@ -61,3 +62,6 @@ class RocksPipeline(PipelineInterface):
 
     def _publish(self, msg):
         self.pose_publisher.publish(msg)
+
+    def name(self):
+        return self._name

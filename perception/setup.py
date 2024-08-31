@@ -22,7 +22,8 @@ setup(
             "gui_node = perception.gui_node:main",
             "perception_node = perception.perception_node:main",
             "button_press_server = perception.gui_node_button_press_service_test:main",
-            "model_server = perception.model_server:main"
+            "model_server = perception.model_server:main",
+            "test_server = perception.test.test_server:main",
         ],
     },
 )

@@ -2,10 +2,7 @@ import pyrealsense2 as rs
 import numpy as np
 import cv2 as cv
 
-import rclpy.logging
 from ..interfaces.stereo_camera_interface import StereoCameraInterface
-
-import rclpy
 
 
 class RealSenseStereoCamera(StereoCameraInterface):

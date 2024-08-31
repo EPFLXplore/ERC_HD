@@ -17,8 +17,10 @@ class CameraNode(Node):
     Create an CameraNode class, publishes video frames to the video_frames topic
     """
 
-    def __init__(self, camera: MonocularCameraInterface):
+    def __init__(self):
         super().__init__("camera_node")
+
+        camera_type = self.declare_parameter("camera_type", 'realsense_stereo').value
 
         self.camera_intrinsics_srv = self.create_service(
             CameraParams,
@@ -26,7 +28,8 @@ class CameraNode(Node):
             self.camera_params_callback,
         )
 
-        self.camera = camera
+        self.camera =  CameraFactory.create_camera(camera_type)
+
 
         # to the HD/vision/video_frames topic. The queue size is 10 messages.
         self.publisher_ = self.create_publisher(CompressedRGBD, "HD/camera/rgbd", 1)
@@ -80,12 +83,7 @@ class CameraNode(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    node = rclpy.create_node("camera_selector")
-    camera_type = node.declare_parameter("camera_type").value
-
-    camera = CameraFactory.create_camera(camera_type)
-
-    camera_node = CameraNode(camera=camera)
+    camera_node = CameraNode()
     rclpy.spin(camera_node)
 
     camera_node.destroy_node()
