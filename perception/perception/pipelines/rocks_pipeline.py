@@ -2,59 +2,62 @@ from rclpy.node import Node
 from .pipeline_interface import PipelineInterface
 
 from ..modules.instance_segmentation import InstanceSegmentation
+from ..modules.module_rocks import ModuleRocks
 from numpy import ndarray
 import cv2
 
-#TODO custom msg
+import pyrealsense2 as rs
+
+from custom_msg.msg import RockArray 
+from custom_msg.msg import Rock
+from custom_msg.msg import SegmentationData
 
 class RocksPipeline(PipelineInterface):
     def __init__(self, config_file: str, node: Node, draw_results: bool = True):
         # self.camera_info = {"camera_matrix": camera_matrix, "dist_coeffs": dist_coeffs}   #TODO necessary ?
         super().__init__(config_file, node, draw_results)
-        self.config_file = config_file
+        # self.config_file = config_file
+        # self.node = node 
 
     def _initialize_publishers(self, node: Node):
-        return super()._initialize_publishers(node)
+        self.pose_publisher = node.create_publisher(
+            RockArray, "/HD/perception/rock_pose", 10    
+        )
     
-    def _initialize_pipeline(self):
-        self.instance_segmentation = InstanceSegmentation(self, self.confg_file)
-    
-    def draw(self, frame: ndarray):
-        self.instance_segmentation.draw(frame)
-        return frame  #TODO
+    def _initialize_pipeline(self, node: Node):
+        self.instance_segmentation = InstanceSegmentation(self.config, node)
+        self.obj_module = ModuleRocks()
 
-    def run_segmentation(self):
-        # Start the pipeline
-        pipeline = self.instance_segmentation.get_pipeline
-        pipeline.start(self.instance_segmentation.get_config)
+    def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray) -> None:
+        # Perform inference on the color image
+        frame, detected_objs = self.instance_segmentation(rgb_image, depth_image)
 
-        try:
-            # # Create a window to display the livestream
-            # cv2.namedWindow("YOLOv8 Segmentation on RealSense", cv2.WINDOW_AUTOSIZE)
+        # # Draw bounding boxes 
+        # self.draw(frame)   # unnecessary bc already done in module_rocks.py 
 
-            # img_count = 0  # Image counter for naming the files
-            
-            while True:
-                # Wait for a coherent pair of frames: color frame
-                frames = pipeline.wait_for_frames()
-                color_frame = frames.get_color_frame()
+        # New ROS msg
+        msg = RockArray()
 
-                if not color_frame:
-                    continue
+        img, results = self.compute_obj(frame, detected_objs)
+        for result in results:
+            # New Rock
+            rock = Rock()
+            rock.pose         = result["quaternion"]
+            rock.max_diameter = result["max_dimension_cm"]
+            rock.grab_axis    = result["min_dimension_cm"]
+            msg.append(rock)
 
-                # Perform inference on the color image
-                results = self.instance_segmentation.__call__(rgb_frame=color_frame)
+        self._publish(msg)
 
-                if results:
-                    for result in results:
-                        self.draw(result)
+        #self.draw(frame)
+        
 
-                # Exit loop if 'q' is pressed
-                key = cv2.waitKey(1) & 0xFF
-                if key == ord('q'):
-                    break
-                
-        finally:
-            # Stop the pipeline and close OpenCV windows
-            pipeline.stop()
-            cv2.destroyAllWindows()
+    def draw(self, frame):
+        self.obj_module.draw(frame)
+        #self.instance_segmentation.draw(frame)
+
+    def compute_obj(self, frame, detected_objs):
+        return self.obj_module.__call__(rgb_frame=frame, detected_objs=detected_objs)  #TODO rgb_frame, depth_frame
+
+    def _publish(self, msg):
+        self.pose_publisher.publish(msg)

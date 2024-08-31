@@ -56,6 +56,9 @@ class ImageSubscriber(Node):
         # Used to convert between ROS and OpenCV images
         self.br = CvBridge()
 
+        self.save_path = './captured_images'
+        os.makedirs(self.save_path, exist_ok=True)
+
     def update_fps(self):
         """
         Calculate the FPS of the video stream.
@@ -85,12 +88,16 @@ class ImageSubscriber(Node):
         Callback function.
         """
         # Display the message on the console
-        self.get_logger().info("Receiving video frame")
+        # self.get_logger().info("Receiving video frame")
 
         self.update_fps()
 
         # Convert ROS Image message to OpenCV image
         current_frame = self.br.compressed_imgmsg_to_cv2(data)
+
+        name = str(time.time()) + '.png'
+        image_path = os.path.join(self.save_path, name)
+        cv2.imwrite(    image_path, current_frame)
 
         self.draw_fps(current_frame)
 

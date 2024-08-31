@@ -57,9 +57,28 @@ RUN apt update && apt upgrade -y \
 
 RUN apt-get purge -y '*opencv*'
 
-USER $USERNAME
+RUN apt install software-properties-common \
+    && add-apt-repository universe \
+    && apt update \
+    && apt install -y python3-colcon-common-extensions
 
-# RUN . /opt/ros/foxy/setup.bash
+# RUN cd /home/$USERNAME \
+#     && git clone https://github.com/ros-perception/vision_opencv.git -b foxy \
+#     && cd vision_opencv \
+#     && apt update \
+#     #&& apt install -y libopencv-dev \
+#     #&& export OpenCV_DIR=/usr/lib/aarch64-linux-gnu/cmake/opencv4/OpenCVConfig.cmake \
+#     && colcon build --symlink-install 
+#     # && apt install mlocate \
+#     # && locate OpenCVConfig.cmake \  
+
+# RUN source ~/vision_opencv/install/setup.bash \
+#     && ~/dev_ws/install/setup.bash \
+#     && cd ~/dev_ws \
+#     && colcon build --symlink-install
+
+
+USER $USERNAME
 
 # Set directories
 WORKDIR /home/$USERNAME/dev_ws/src
@@ -69,5 +88,9 @@ WORKDIR /home/$USERNAME/dev_ws
 
 RUN pip install opencv-python
 
+# RUN . /opt/ros/foxy/setup.bash
+
 # Clean up
 RUN sudo rm -rf /var/lib/apt/lists/* /home/$USERNAME/dev_ws/src/*
+
+

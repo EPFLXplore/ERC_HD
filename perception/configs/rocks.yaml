@@ -1,1 +1,2 @@
-model_path: "../models/rocks/medium_100_epochs"
+model_path: "src/models/rocks/medium_200_epochs.pt"
+name: "rocks"
