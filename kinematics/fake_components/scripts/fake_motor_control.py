@@ -4,6 +4,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray, Float32MultiArray
 from sensor_msgs.msg import JointState
+from custom_msg.msg import MotorCommand
 import threading
 import copy
 import time
@@ -53,6 +54,8 @@ class FakeMotorControl(Node):
         self.state_pub = self.create_publisher(JointState, "/HD/motor_control/joint_telemetry", 10)
         self.create_subscription(Float64MultiArray, "/HD/kinematics/joint_pos_cmd", self.moveit_cmd_callback, 10)
         self.create_subscription(Float64MultiArray, "/HD/fsm/joint_vel_cmd", self.vel_cmd_callback, 10)
+        self.motor_command_pub = self.create_publisher(MotorCommand, "HD/kinematics/single_joint_cmd", 10)
+        self.create_subscription(MotorCommand, "HD/kinematics/single_joint_cmd", self.invidual_motor_command_callback, 10)
 
         self.control_mode = self.VELOCITY
         self.last_vel_cmd = time.time()
@@ -81,6 +84,14 @@ class FakeMotorControl(Node):
         data = list(msg.data) + [0.0]*max(0, self.MOTOR_COUNT-len(msg.data))
         self.cmd_velocities = [max_ * vel for max_, vel in zip(self.MAX_VEL, data)]
 
+    def invidual_motor_command_callback(self, msg: MotorCommand):
+        cmd_mode = {
+            MotorCommand.POSITION: "position",
+            MotorCommand.VELOCITY: "velocity",
+            MotorCommand.TORQUE: "torque",
+        }[msg.mode]
+        self.get_logger().info(f"Fake motor control received {cmd_mode} command for {msg.name} of value {msg.command}")
+        
     def publish_state(self):
         msg = copy.deepcopy(self.state)
         
