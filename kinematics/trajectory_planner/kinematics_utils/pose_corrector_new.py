@@ -51,8 +51,17 @@ def gripper_transform() -> qan.Pose:
     return transform
 
 
+def new_gripper_transform() -> qan.Pose:
+    # tentative: untested
+    transform = qan.Pose()
+    transform.orientation = qan.Quaternion.from_axis_angle(axis=(0.0, 0.0, 1.0), angle=pi)
+    offset = qan.Point(z=0.0916)
+    transform.position = transform.orientation.point_image(offset)
+    return transform
+
+
 def construct_eef_transform(eef: str) -> qan.Pose:
-    transforms = {"link6": link6_transform, "finger1": finger1_transform, "new_finger": new_finger_transform, "gripper": gripper_transform}
+    transforms = {"link6": link6_transform, "finger1": finger1_transform, "new_finger": new_finger_transform, "gripper": gripper_transform, "new_gripper": new_gripper_transform}
     if eef not in transforms:
         raise ValueError(f"No end effector transform for {eef}")
     return qan.Pose.make(transforms[eef]())
@@ -72,7 +81,7 @@ class Tools:
     SWAPABLE = {BUTTONS, SHOVEL, VOLTMETER}
     LIST = {NONE} | NON_SWAPABLE | SWAPABLE
     PICKUP_POSE = {
-        BUTTONS: qan.Pose(),
+        BUTTONS: qan.Pose(position=qan.Point(x=0.1, y=-0.2, z=0.15), orientation=qan.Quaternion(x=1.0)),
         PROBES: qan.Pose()
     }
     POSE = {
@@ -84,7 +93,7 @@ class Tools:
 
 
 class PoseCorrector:
-    GRIPPER_TRANSFORM_CORRECTION = construct_eef_transform("gripper")
+    GRIPPER_TRANSFORM_CORRECTION = new_gripper_transform()
     CAMERA_TRANSFORM = qan.Pose(                    # transform between end effector and camera
         position = qan.Point(x=-0.019, y=-0.07, z=-0.051 - 0.0037)    # 0.051 to camera glass and 0.0037 to focal point    # old x=-0.009 y=-0.063
     )
