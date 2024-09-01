@@ -256,6 +256,7 @@ class FSM(Node):
         return time.time()-self.received_manual_inverse_cmd_at > self.command_expiration
 
     def send_trigger_request(self, client: Client):
+        return
         while not client.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('Service not available, waiting again...')
 
