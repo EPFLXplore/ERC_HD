@@ -36,52 +36,50 @@ class ModuleRocks(ModuleInterface):
         self.intrinsics = intrinsics
 
     def __call__(self, rgb_frame: np.ndarray, depth_frame: np.ndarray, detected_objs):
+        print("Called Rocks Module method")
 
         # Process the frame with the model
-        # self.current_frame, self.detected_objects = self.process_frame(rgb_frame)  
         self.current_frame    = rgb_frame
         self.detected_objects =  detected_objs
-
-        #TODO results as arg in interface ?
         
         # Draw bounding boxes and masks
-        self.current_frame, self.detected_objects = self.draw_bounding_boxes(self.current_frame, self.detected_objects)
-        self.current_frame, self.detected_objects = self.draw_masks_and_contours(self.current_frame, self.detected_objects)
+        # self.current_frame, self.detected_objects = self.draw_bounding_boxes(self.current_frame, self.detected_objects)
+        # self.current_frame, self.detected_objects = self.draw_masks_and_contours(self.current_frame, self.detected_objects)
         
         results = []
         # Calculate axes, dimensions, and quasi-center for each detected object
-        for obj in self.detected_objects:
-            contour = obj['contour']
-            if contour is not None:
-                center = obj['center']
-                bounding_box = obj['bounding_box']
-                depth_surface = depth_frame[center[1], center[0]] * self.depth_scale  # Depth at the rock surface
+        # for obj in self.detected_objects:
+        #     contour = obj['contour']
+        #     if contour is not None:
+        #         center = obj['center']
+        #         bounding_box = obj['bounding_box']
+        #         depth_surface = depth_frame[center[1], center[0]] * self.depth_scale  # Depth at the rock surface
 
-                max_dist, min_dist, max_pts, min_pts = self.calculate_axes(contour, center)
-                self.current_frame = self.draw_axes(self.current_frame, max_pts, min_pts)
+        #         max_dist, min_dist, max_pts, min_pts = self.calculate_axes(contour, center)
+        #         self.current_frame = self.draw_axes(self.current_frame, max_pts, min_pts)
 
-                self.current_frame, max_dim_cm, min_dim_cm = self.calculate_real_dimensions(
-                    self.current_frame, obj, max_dist, min_dist, depth_surface, self.intrinsics)
+        #         self.current_frame, max_dim_cm, min_dim_cm = self.calculate_real_dimensions(
+        #             self.current_frame, obj, max_dist, min_dist, depth_surface, self.intrinsics)
 
-                # Calculate the quasi-center of the rock
-                rock_center_coordinates, rock_center_depth = self.calculate_rock_center(center, bounding_box, depth_frame, self.intrinsics, depth_surface)
+        #         # Calculate the quasi-center of the rock
+        #         rock_center_coordinates, rock_center_depth = self.calculate_rock_center(center, bounding_box, depth_frame, self.intrinsics, depth_surface)
 
-                # Calculate the minimal axis vector in 3D
-                min_axis_vector = self.calculate_minimal_axis_vector(min_pts, rock_center_coordinates, depth_frame)
+        #         # Calculate the minimal axis vector in 3D
+        #         min_axis_vector = self.calculate_minimal_axis_vector(min_pts, rock_center_coordinates, depth_frame)
 
-                # Compute the quaternion for aligning the Z-axis with the minimal axis vector
-                quaternion = self.calculate_quaternion_to_align_z(min_axis_vector)
+        #         # Compute the quaternion for aligning the Z-axis with the minimal axis vector
+        #         quaternion = self.calculate_quaternion_to_align_z(min_axis_vector)
 
-                # Append the details to results
-                results.append({
-                    "center": center,
-                    "max_dimension_cm": max_dim_cm,
-                    "min_dimension_cm": min_dim_cm,
-                    "depth_surface": depth_surface,
-                    "rock_center_depth": rock_center_depth,
-                    "rock_center_coordinates": rock_center_coordinates,
-                    "quaternion": quaternion
-                })
+        #         # Append the details to results
+        #         results.append({
+        #             "center": center,
+        #             "max_dimension_cm": max_dim_cm,
+        #             "min_dimension_cm": min_dim_cm,
+        #             "depth_surface": depth_surface,
+        #             "rock_center_depth": rock_center_depth,
+        #             "rock_center_coordinates": rock_center_coordinates,
+        #             "quaternion": quaternion
+        #         })
 
         # Return the current frame and results
         return self.current_frame, results
@@ -121,18 +119,53 @@ class ModuleRocks(ModuleInterface):
     #     results = self.model(image, imgsz=640)
     #     return image, results
 
+    # def draw_bounding_boxes(self, image, results):
+    #     detected_objects = []
+    #     for result in results:
+    #         if result.masks is not None:
+    #             masks = result.masks.data.cpu().numpy()
+    #             boxes = result.boxes.xyxy.cpu().numpy()
+    #             for mask, box in zip(masks, boxes):
+    #                 mask = cv2.resize(mask, (image.shape[1], image.shape[0]))
+    #                 binary_mask = (mask > 0.5).astype(np.uint8)
+
+    #                 x1, y1, x2, y2 = box.astype(int)
+    #                 cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)  # Blue color for bounding box
+    #                 center_x = int((x1 + x2) / 2)
+    #                 center_y = int((y1 + y2) / 2)
+    #                 cv2.circle(image, (center_x, center_y), 5, (255, 255, 0), -1)  # Cyan color for center
+
+    #                 detected_objects.append({
+    #                     'mask': binary_mask,
+    #                     'contour': None,
+    #                     'center': (center_x, center_y),
+    #                     'bounding_box': (x1, y1, x2, y2)
+    #                 })
+    #     return image, detected_objects
+
+
     def draw_bounding_boxes(self, image, results):
         detected_objects = []
-        for result in results:
+        for result in results:  # segment in segments 
             if result.masks is not None:
-                masks = result.masks.data.cpu().numpy()
-                boxes = result.boxes.xyxy.cpu().numpy()
-                for mask, box in zip(masks, boxes):
+                for mask, box in zip(result.masks, result.boxes):
                     mask = cv2.resize(mask, (image.shape[1], image.shape[0]))
                     binary_mask = (mask > 0.5).astype(np.uint8)
 
-                    x1, y1, x2, y2 = box.astype(int)
+                    # Extract bounding box data
+                    box = results.boxes[i]
+                    x1 = int(box.x1)  # Top-left x coordinate
+                    y1 = int(box.y1)  # Top-left y coordinate
+                    x2 = int(box.x2)  # Bottom-right x coordinate
+                    y2 = int(box.y2)  # Bottom-right y coordinate
+                    confidence = box.confidence  # Confidence score of the detection
+                    class_id = box.class_id  # Class ID of the detected object
+                    track_id = box.track_id  # Tracking ID
+
+                    # Draw bounding box on the image
                     cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)  # Blue color for bounding box
+
+                    # Draw the center of the bounding box
                     center_x = int((x1 + x2) / 2)
                     center_y = int((y1 + y2) / 2)
                     cv2.circle(image, (center_x, center_y), 5, (255, 255, 0), -1)  # Cyan color for center

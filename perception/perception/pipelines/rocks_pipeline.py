@@ -6,7 +6,8 @@ from ..modules.module_rocks import ModuleRocks
 from numpy import ndarray
 import cv2
 
-import pyrealsense2 as rs
+from custom_msg.msg import Brick #TODO
+from geometry_msgs.msg import Pose, Point, Quaternion
 
 from custom_msg.msg import RockArray 
 from custom_msg.msg import Rock
@@ -23,15 +24,19 @@ class RocksPipeline(PipelineInterface):
         self.pose_publisher = node.create_publisher(
             RockArray, "/HD/perception/rock_pose", 10    
         )
+        # #TODO
+        # self.test_publisher = node.create_publisher(Brick, "/HD/perception/test_rock_pipeline", 10)
     
     def _initialize_pipeline(self, node: Node):
-        self.instance_segmentation = InstanceSegmentation(self.config, node)
+        self.instance_segmentation_module = InstanceSegmentation(self.config, node)
         self.obj_module = ModuleRocks()
         self._name = self.config["name"]
 
     def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray) -> None:
+        # rgb_image is cv2 right now 
+
         # Perform inference on the color image
-        frame, detected_objs = self.instance_segmentation(rgb_image, depth_image)
+        detected_objs = self.instance_segmentation_module(rgb_image, depth_image)
 
         # # Draw bounding boxes 
         # self.draw(frame)   # unnecessary bc already done in module_rocks.py 
@@ -39,14 +44,16 @@ class RocksPipeline(PipelineInterface):
         # New ROS msg
         msg = RockArray()
 
-        img, results = self.compute_obj(frame, detected_objs)
-        for result in results:
-            # New Rock
-            rock = Rock()
-            rock.pose         = result["quaternion"]
-            rock.max_diameter = result["max_dimension_cm"]
-            rock.grab_axis    = result["min_dimension_cm"]
-            msg.append(rock)
+        # img, results = self.compute_obj(rgb_image, depth_image, detected_objs)
+
+        # for result in results:
+        #     # New Rock
+        #     rock = Rock()
+        #     rock.pose         = result["quaternion"]
+        #     self._logger.info("Quaternion: " + result["quaternion"])
+        #     rock.max_diameter = result["max_dimension_cm"]
+        #     rock.grab_axis    = result["min_dimension_cm"]
+        #     msg.append(rock)
 
         self._publish(msg)
 
@@ -57,8 +64,8 @@ class RocksPipeline(PipelineInterface):
         self.obj_module.draw(frame)
         #self.instance_segmentation.draw(frame)
 
-    def compute_obj(self, frame, detected_objs):
-        return self.obj_module.__call__(rgb_frame=frame, detected_objs=detected_objs)  #TODO rgb_frame, depth_frame
+    def compute_obj(self, frame, depth_image, detected_objs):
+        return self.obj_module(rgb_frame=frame, depth_frame=depth_image, detected_objs=detected_objs)  
 
     def _publish(self, msg):
         self.pose_publisher.publish(msg)

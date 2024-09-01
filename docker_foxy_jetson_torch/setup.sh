@@ -46,6 +46,8 @@ export OpenCV_DIR=/usr/lib/aarch64-linux-gnu/cmake/opencv4/OpenCVConfig.cmake
 # # Update mlocate database
 # sudo updatedb
 
+sudo apt install ros-foxy-cv-bridge
+
 # # Locate the OpenCVConfig.cmake file and save the result
 # opencv_config_path=$(locate OpenCVConfig.cmake | grep '/usr/lib/aarch64-linux-gnu/cmake/opencv4/OpenCVConfig.cmake' | head -n 1)
 
