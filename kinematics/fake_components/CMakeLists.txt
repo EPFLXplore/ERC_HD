@@ -57,17 +57,12 @@ ament_python_install_package(${PROJECT_NAME})
 # Install Python executables
 
 install(PROGRAMS
-  scripts/fake_cs_gamepad.py
-  scripts/fake_cs_keyboard.py
   scripts/fake_motor_control.py
-  scripts/fake_cs_task.py
   scripts/fake_vision.py
   scripts/vision_test.py
   scripts/test_gamepad.py
   scripts/fake_rover_control.py
   scripts/limbs_control.py
-  scripts/servo_fake_cs_gamepad.py
-  scripts/new_servo_fake_cs.py
   scripts/new_fake_cs.py
   scripts/stats_tracker.py
 
