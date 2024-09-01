@@ -1,19 +1,12 @@
 import threading
 import queue
-import time
 from time import sleep
 import cv2
 import rclpy  # Python Client Library for ROS 2
 from rclpy.node import Node  # Handles the creation of nodes
 from rclpy.executors import MultiThreadedExecutor
-
 from sensor_msgs.msg import CompressedImage  # Image is the message type
 from custom_msg.msg import CompressedRGBD  # Custom message type
-from custom_msg.msg import Model  
-
-from rclpy.callback_groups import ReentrantCallbackGroup
-from custom_msg.srv import InitializeModel
-
 import numpy as np
 from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Images
 from custom_msg.srv import CameraParams, ButtonPressControlPanel
@@ -28,25 +21,30 @@ class PerceptionNode(Node):
         # used to match button service requests to distinguish them from switching pipeline request
         self.button_pattern = r"^\d[ud]$"  
 
+        # Initialize Camera Info
+        self.camera_matrix = None
+        self.dist_coeffs = None
+        self._get_camera_params()
+
         # Initialize CvBridge
         self.bridge = CvBridge()
+
+        # Initialize Pipeline 
+        self.pipeline: PipelineInterface = PipelineFactory.create_pipeline(
+            "rocks", self
+        )
 
         # Initialize Queue for Producer-Consumer model
         self.queue = queue.Queue(maxsize=10)
 
         # ROS 2 Subscriptions
-
-        # self.rgbd_sub = self.create_subscription(
-        #     CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 10
-        # )  # TODO ?? no more need 
-
-        self.processed_rgb_sub = self.create_subscription(
-            Model, "/HD/model/image", self.rgbd_callback, 10
+        self.rgbd_sub = self.create_subscription(
+            CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 10
         )
 
         # ROS 2 Publishers
         self.processed_rgb_pub = self.create_publisher(
-            CompressedImage, "/HD/perception/image", 1
+            CompressedImage, "/hd/perception/image", 1
         )
 
         # ROS 2 Services
@@ -56,46 +54,29 @@ class PerceptionNode(Node):
             self.handle_button_press,
         )
 
-        # ROS 2 Clients 
-        reentrant_callback_group = ReentrantCallbackGroup()
+        
 
-        # Client (to initialize model path)
-        self.change_model_client = self.create_client(
-            InitializeModel, "/HD/model_server/init_model", callback_group=reentrant_callback_group    # TODO ?? how/when to call this ? 
-        )
-
-        self.camera_params_client = self.create_client(
-            CameraParams, "/HD/camera/params", callback_group=reentrant_callback_group    
-        )
-
-        # Initialize Camera Info
-        self.camera_matrix = None
-        self.depth_scale = None
-        self._get_camera_params()
-
-        # Initialize Pipeline 
-        self.pipeline: PipelineInterface = PipelineFactory.create_pipeline(
-            "rocks", self, camera_matrix=self.camera_matrix, camera_depth_scale=self.depth_scale
-        )
+        # Start consumer thread for pipeline processing
+        self.pipeline_thread = threading.Thread(target=self.call_pipeline)
+        self.pipeline_thread.start()
 
         self.get_logger().info(f"Perception Node started with {self.pipeline.name()} pipeline")
 
-
     def _get_camera_params(self):
         """Request the camera matrix and distortion coefficients from the camera node."""
+        client = self.create_client(CameraParams, "/HD/camera/params")
 
-        while not self.camera_params_client.wait_for_service(timeout_sec=1.0):
+        while not client.wait_for_service(timeout_sec=1.0):
             self.get_logger().info("Waiting for camera_params service...")
 
         req = CameraParams.Request()
-        future = self.camera_params_client.call_async(req)
+        future = client.call_async(req)
         rclpy.spin_until_future_complete(self, future)
 
         if future.result() is not None:
             self._process_camera_params(future.result())
         else:
             self.get_logger().error("Failed to get camera parameters")
-
 
     def _process_camera_params(self, camera_params):
         """Process camera parameters to extract camera matrix and distortion coefficients."""
@@ -107,25 +88,43 @@ class PerceptionNode(Node):
             ]
         )
         self.dist_coeffs = np.array(camera_params.distortion_coefficients)
-        self.depth_scale = camera_params.depth_scale
 
-
-    def rgbd_callback(self, model_msg: Model):
+    def rgbd_callback(self, rgbd_msg: CompressedRGBD):
         """Producer: Receives images and adds them to the queue."""
-        # Convert compressed image to OpenCV format
-        self.get_logger().info('rgbd_callback')
-        rgb = self.bridge.compressed_imgmsg_to_cv2(model_msg.image.color)
-        depth_image = self.bridge.imgmsg_to_cv2(model_msg.image.depth, "mono16")
+        try:
+            # Convert compressed image to OpenCV format
+            self.get_logger().info('rgbd_callback')
+            rgb = self.bridge.compressed_imgmsg_to_cv2(rgbd_msg.color)
+            depth_image = self.bridge.imgmsg_to_cv2(rgbd_msg.depth, "mono16")
 
-        self.get_logger().info('Run through pipeline: START')
-        self.pipeline.run_rgbd(rgb, depth_image, model_msg.segmentation_data)
-        self.get_logger().info('Run through pipeline: END')
+            # Add the image to the queue
+            self.image_queue.put((rgb, depth_image), timeout=1)  # Timeout to prevent blocking indefinitely
+            self.get_logger().info('Received and queued RGBD image')
+        except queue.Full:
+            self.get_logger().warning('Image queue is full, dropping frame')
 
-        # Convert the processed image back to ROS message and publish
-        rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
-        self.processed_rgb_pub.publish(rgb_msg)
-        self.get_logger().info('Published annotated image')
+    def call_pipeline(self):
+        """Consumer method to process data from the queue."""
+        while rclpy.ok():
+            try:
+                # Retrieve data from the queue
+                rgb, depth_image = self.queue.get(timeout=1)  # Wait for up to 1 second for new data
+                self.get_logger().info('Run through pipeline: START')
+                self.pipeline.run_rgbd(rgb, depth_image)
+                self.get_logger().info('Run through pipeline: END')
 
+                # Convert the processed image back to ROS message and publish
+                rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
+                self.processed_rgb_pub.publish(rgb_msg)
+                self.get_logger().info('Published annotated image')
+                
+                # Indicate that the queue task is complete
+                self.queue.task_done()
+
+                
+
+            except queue.Empty:
+                self.get_logger().info('Waiting for new images...')
 
     def handle_button_press(self, request, response):
         """Handle button press service request."""
@@ -143,39 +142,8 @@ class PerceptionNode(Node):
                 selected_button, self, camera_matrix=self.camera_matrix, dist_coeffs=self.dist_coeffs
             )
 
-            # Service request for new model path
-            self.change_model(name=request.button_name)
-
         response.response = f"Button {request.button_name} was pressed"
         return response
-    
-
-    def change_model(self, name):
-        request = InitializeModel.Request()
-        request.model_path = "src/perception/" + name + ".pt"
-
-        self.get_logger().info(f"Service request to change model to {name}")
-        start_time = time.time()
-
-        self.response = None
-
-        future = self.change_model_client.call_async(request)
-        future.add_done_callback(lambda future: self._handle_response(future, start_time))
-
-        try:
-            self.response = future.result()
-        except Exception as e:
-            self.get_logger().error(f"Service call failed: {e}")
-            return
-
-        if self.response.success:
-            self.get_logger().info("Model changed!")
-        else:
-            self.get_logger().error(f"Failed to change model: {self.response.message}")
-
-        end_time = time.time()
-        self.get_logger().info(f"time from request to response: {round(end_time - start_time, 3)} seconds")
-
 
     def destroy_node(self):
         self.get_logger().info('Shutting down...')
@@ -183,7 +151,6 @@ class PerceptionNode(Node):
         self.processing_thread.join(timeout=1)
         self.get_logger().info('Thread stopped.')
         super().destroy_node()
-
 
 def main(args=None):
     rclpy.init(args=args)
@@ -198,9 +165,3 @@ def main(args=None):
 
 if __name__ == "__main__":
     main()
-
-
-# TODO: subscribe to model node, Need new message that is composed of RGBD + results of segmentation   DONE 
-# TODO: handle the new the results field without breaking the abstraction   DONE 
-# TODO: need to add client service to select model in model_node   DONE 
-    

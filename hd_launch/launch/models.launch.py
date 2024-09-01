@@ -10,7 +10,7 @@ def generate_launch_description():
     # Declare the model path as a launch argument
     model_path_arg = DeclareLaunchArgument(
         'model_path',
-        default_value='models/',  # Set a default path or make it mandatory by removing `default_value`
+        default_value='',  # Set a default path or make it mandatory by removing `default_value`
         description='Path to the YOLO model file'
     )
 

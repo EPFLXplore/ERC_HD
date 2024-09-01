@@ -14,7 +14,7 @@ import os
 class PipelineFactory:
     @staticmethod
     def create_pipeline(
-        pipeline_type: str, node: Node, camera_matrix=None, dist_coeffs=None
+        pipeline_type: str, node: Node, camera_matrix=None, dist_coeffs=None, camera_depth_scale=None
     ):
         """
         Factory method to create a pipeline instance based on the type.
@@ -57,5 +57,7 @@ class PipelineFactory:
         # Check if the pipeline requires calibration data and provide them if available
         if camera_matrix is not None and dist_coeffs is not None:
             return pipeline_class(config_file, node, camera_matrix, dist_coeffs)
+        elif camera_matrix is not None and camera_depth_scale is not None:
+            return pipeline_class(config_file, node, camera_matrix, camera_depth_scale)
         else:
             return pipeline_class(config_file, node)

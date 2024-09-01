@@ -27,6 +27,10 @@ class RealSenseStereoCamera(StereoCameraInterface):
         # Start streaming from file
         self.profile = self.pipe.start(config)
 
+    def get_depth_scale(self):
+        depth_scale = self.profile.get_device().first_depth_sensor().get_depth_scale()
+        return depth_scale
+
     # A method to get the intrinsic camera matrix.
     def get_intrinsics(self):
         intrinsics = (

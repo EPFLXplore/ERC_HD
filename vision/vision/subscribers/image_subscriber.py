@@ -34,7 +34,7 @@ class ImageSubscriber(Node):
         # from the video_frames topic. The queue size is 10 messages.
         self.subscription = self.create_subscription(
             CompressedImage,
-            "/hd/perception/image",
+            "/HD/perception/image",
             self.listener_callback,
             10,
         )
@@ -88,7 +88,7 @@ class ImageSubscriber(Node):
         Callback function.
         """
         # Display the message on the console
-        # self.get_logger().info("Receiving video frame")
+        self.get_logger().info("Receiving video frame")
 
         self.update_fps()
 
@@ -101,6 +101,7 @@ class ImageSubscriber(Node):
 
         self.draw_fps(current_frame)
 
+        self.get_logger().info("Displaying Perception Image")
         # Display image
         cv2.imshow("Perception", current_frame)
         cv2.waitKey(1)
