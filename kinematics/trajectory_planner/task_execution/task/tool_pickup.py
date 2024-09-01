@@ -5,18 +5,19 @@ from kinematics_utils.pose_corrector_new import Tools
 
 class ToolManip(Task):
     TOOL_MAINTAINING_TORQUE_ID = "tool_maintaining_torque"
-    def __init__(self, executor: Executor, tool: int = Tools.BUTTONS):
+    def __init__(self, executor: Executor, tool: int = Tools.BUTTONS, declare_tool_maintaining_torque_cmd: bool = True):
         if tool not in Tools.SWAPABLE:
             raise ValueError("Tool is unknown or isn't swapable")
         super().__init__(executor, construct_command_chain=False)
         self.tool = tool
-        self.above_distance = 0.2
+        self.above_distance = 0.1
         self.tool_maintaining_torque_scaling = 0.8
-        self.declareBackgroundCommand(
-            id = self.TOOL_MAINTAINING_TORQUE_ID,
-            command = GripperBackgroundCommand(action=GripperBackgroundCommand.CLOSE, torque_scaling_factor=self.tool_maintaining_torque_scaling),
-            description = "Starting tool maintaining torque"
-        )
+        if declare_tool_maintaining_torque_cmd:
+            self.declareBackgroundCommand(
+                id = self.TOOL_MAINTAINING_TORQUE_ID,
+                command = GripperBackgroundCommand(action=GripperBackgroundCommand.CLOSE, torque_scaling_factor=self.tool_maintaining_torque_scaling),
+                description = "Starting tool maintaining torque"
+            )
         self.constructCommandChain()
     
     def aboveToolPose(self) -> qan.Pose:
@@ -58,6 +59,8 @@ class ToolPickup(ToolManip):
 
 
 class ToolRelease(ToolManip):
+    def __init__(self, executor: Executor, tool: int = Tools.BUTTONS):
+        super().__init__(executor, tool, declare_tool_maintaining_torque_cmd=False)
     def constructCommandChain(self):
         super().constructCommandChain()
         
@@ -74,6 +77,8 @@ class ToolRelease(ToolManip):
 
         self.setBackgroundCommandStopPoint(
             id = self.TOOL_MAINTAINING_TORQUE_ID,
+            description = "stopping background gripper torque",
+            allow_lazy_cmd_retrieval = True
         )
         
         self.constructOpenGripperCommands()

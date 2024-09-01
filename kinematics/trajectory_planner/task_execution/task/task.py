@@ -77,32 +77,32 @@ class Task:
         command.executor = self.executor
         self.background_commands[id] = BackgroundCommandData(command, description)
     
-    def setBackgrounCommandActionPoint(self, id: str, action: int, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = ""):
+    def setBackgrounCommandActionPoint(self, id: str, action: int, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = "", allow_lazy_cmd_retrieval: bool = False):
         """
         Set the starting or stopping point of the BackgroundCommand identified by id at the current point in the workflow.
         """
-        if id not in self.background_commands:
+        if not allow_lazy_cmd_retrieval and id not in self.background_commands:
             raise KeyError(f"'{id}' is not a valid background command for this task")
         if description == "":
             description = f"{'Starting' if action == BackgroundCommand.START else 'Stopping'} background command '{self.background_commands[id].description}'"
         
         WrapperClass = BackgroundCommandStart if action == BackgroundCommand.START else BackgroundCommandStop
-        command = WrapperClass(self.background_commands[id].command)
+        command = WrapperClass(lambda: self.background_commands[id].command)
         self.addCommand(command, pre_operation, post_operation, description)
 
-    def setBackgroundCommandStartPoint(self, id: str, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = ""):
+    def setBackgroundCommandStartPoint(self, id: str, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = "", allow_lazy_cmd_retrieval: bool = False):
         """
         Set the starting point of the BackgroundCommand identified by id at the current point in the workflow.
         If the given description is empty, it will be replace by "Starting background command '{description of the background command}".
         """
-        self.setBackgrounCommandActionPoint(id, BackgroundCommand.START, pre_operation, post_operation, description)
+        self.setBackgrounCommandActionPoint(id, BackgroundCommand.START, pre_operation, post_operation, description, allow_lazy_cmd_retrieval)
     
-    def setBackgroundCommandStopPoint(self, id: str, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = ""):
+    def setBackgroundCommandStopPoint(self, id: str, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = "", allow_lazy_cmd_retrieval: bool = False):
         """
         Set the stoping point of the BackgroundCommand identified by id at the current point in the workflow.
         If the given description is empty, it will be replace by "Stoping background command '{description of the background command}'".
         """
-        self.setBackgrounCommandActionPoint(id, BackgroundCommand.STOP, pre_operation, post_operation, description)
+        self.setBackgrounCommandActionPoint(id, BackgroundCommand.STOP, pre_operation, post_operation, description, allow_lazy_cmd_retrieval)
 
     def finished(self) -> bool:
         """indicates if task has finished"""

@@ -146,20 +146,30 @@ class BackgroundCommand:
         self._cleanup()
 
 
-class BackgroundCommandStart(Command):
-    def __init__(self, background_command: BackgroundCommand):
+
+LazyEvalBackgroundCommand = Callable[[], BackgroundCommand]
+
+
+class BackgroundCommandActionPoint(Command):
+    def __init__(self, background_command: LazyEvalBackgroundCommand):
+        """lazy evaluation on the background_command argument for technical purposes"""
         super().__init__()
-        self.background_command = background_command
+        self._background_command = background_command
     
+    @property
+    def background_command(self) -> BackgroundCommand:
+        return self._background_command()
+
+
+class BackgroundCommandStart(BackgroundCommandActionPoint):
     def execute(self):
         super().execute()
         self.background_command.start()
 
 
-class BackgroundCommandStop(Command):
-    def __init__(self, background_command: BackgroundCommand, wait: bool = True):
-        super().__init__()
-        self.background_command = background_command
+class BackgroundCommandStop(BackgroundCommandActionPoint):
+    def __init__(self, background_command: LazyEvalBackgroundCommand, wait: bool = True):
+        super().__init__(background_command)
         self.wait = wait
     
     def execute(self):
