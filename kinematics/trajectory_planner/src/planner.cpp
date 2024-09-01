@@ -19,6 +19,8 @@ void Planner::config()
     m_planning_scene_interface = std::make_shared<moveit::planning_interface::PlanningSceneInterface>();
     m_joint_model_group = m_move_group->getCurrentState()->getJointModelGroup(m_planning_group);
 
+    m_move_group->setPlannerId("PRMstar");
+
     setScalingFactors(1, 1);
 
     // addDronePlatform();
