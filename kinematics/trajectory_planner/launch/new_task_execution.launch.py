@@ -29,7 +29,17 @@ def load_yaml(package_name, file_path):
         return None
 
 
-def generate_launch_description():    
+def get_package_file(package, file_path):
+    """Get the location of a file installed in an ament package"""
+    package_path = get_package_share_directory(package)
+    absolute_file_path = os.path.join(package_path, file_path)
+    return absolute_file_path
+
+
+def generate_launch_description():
+    hd_topic_names_file = get_package_file('custom_msg', 'config/hd_interface_names.yaml')
+    rover_topic_names_file = get_package_file('custom_msg', 'config/rover_interface_names.yaml')
+    
     # planning_context
     
     robot_description_config = xacro.process_file(
@@ -83,13 +93,19 @@ def generate_launch_description():
             kinematics_yaml,
             trajectory_execution,
             planning_scene_monitor_parameters,
-            robot_description_kinematics
+            robot_description_kinematics,
+            hd_topic_names_file,
+            rover_topic_names_file,
         ]
     )
 
     kerby_task_executor_node = Node(
         package="trajectory_planner",
-        executable="task_executor.py"
+        executable="task_executor.py",
+        parameters=[
+            hd_topic_names_file,
+            rover_topic_names_file,
+        ]
     )
 
     gripper_frame_broadcaster = Node(
