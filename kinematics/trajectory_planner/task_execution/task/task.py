@@ -39,12 +39,13 @@ class Task:
     # TODO: add behaviour tree structure
     """abstract class representing a task"""
     NONE_OPERATION: OPFunction = lambda cmd: None
+    BACKGROUND_COMMANDS: Dict[str, BackgroundCommandData] = {}
 
     def __init__(self, executor: Executor, construct_command_chain: bool = True):
         self.executor = executor
         self.cmd_counter = 0
         self.command_chain: List[CommandData] = []
-        self.background_commands: Dict[str, BackgroundCommandData] = {}
+        # self.background_commands: Dict[str, BackgroundCommandData] = {}
         self.executor.logwarn(f"init {type(self).__name__}")
         if construct_command_chain: self.constructCommandChain()
         self.aborted = False
@@ -71,23 +72,23 @@ class Task:
         Declare a background command. This doesn't set any start or stop point for the command, 
         the setCommandStartPoint and setCommandStopPoint methods need to be called for that (after this method has been called).
         """
-        if id in self.background_commands:
+        if id in self.BACKGROUND_COMMANDS:
             # TODO: deal with the case when id already exists : raise an error or maybe just do nothing
             return  # do nothing for now
         command.executor = self.executor
-        self.background_commands[id] = BackgroundCommandData(command, description)
+        self.BACKGROUND_COMMANDS[id] = BackgroundCommandData(command, description)
     
     def setBackgrounCommandActionPoint(self, id: str, action: int, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = "", allow_lazy_cmd_retrieval: bool = False):
         """
         Set the starting or stopping point of the BackgroundCommand identified by id at the current point in the workflow.
         """
-        if not allow_lazy_cmd_retrieval and id not in self.background_commands:
+        if not allow_lazy_cmd_retrieval and id not in self.BACKGROUND_COMMANDS:
             raise KeyError(f"'{id}' is not a valid background command for this task")
         if description == "":
-            description = f"{'Starting' if action == BackgroundCommand.START else 'Stopping'} background command '{self.background_commands[id].description}'"
+            description = f"{'Starting' if action == BackgroundCommand.START else 'Stopping'} background command '{self.BACKGROUND_COMMANDS[id].description}'"
         
         WrapperClass = BackgroundCommandStart if action == BackgroundCommand.START else BackgroundCommandStop
-        command = WrapperClass(lambda: self.background_commands[id].command)
+        command = WrapperClass(lambda: self.BACKGROUND_COMMANDS[id].command)
         self.addCommand(command, pre_operation, post_operation, description)
 
     def setBackgroundCommandStartPoint(self, id: str, pre_operation: Optional[OPFunction] = None, post_operation: Optional[OPFunction] = None, description: str = "", allow_lazy_cmd_retrieval: bool = False):
@@ -180,18 +181,28 @@ class Task:
     
     def _getActiveBackgroundCommands(self) -> Dict[str, BackgroundCommandData]:
         alive_cmds = {}
-        for cmd_id, cmd_data in self.background_commands.items():
+        for cmd_id, cmd_data in self.BACKGROUND_COMMANDS.items():
             if cmd_data.command.isAlive():
                 alive_cmds[cmd_id] = cmd_data
         return alive_cmds
     
     def _terminate(self, wait=False):
+        """
+        make sure execution finishes gracefully
+        cleanup background commands that have been killed
+        """
+        for id, cmd_data in self.BACKGROUND_COMMANDS.items():
+            if not cmd_data.command.isAlive():
+                self.BACKGROUND_COMMANDS.pop(id)
+    
+    def _old_terminate(self, wait=False):
         """make sure execution finishes gracefully"""
-        for cmd_data in self.background_commands.values():
+        # deprecated: background commands are now class attributes and shouldn't be killed at the end of individual task execution
+        for cmd_data in self.BACKGROUND_COMMANDS.values():
             if cmd_data.command.isAlive(): cmd_data.command.softStop(wait=False)
         if not wait: return
         rate: Rate = self.executor.create_rate(25)
-        while any(cmd_data.command.isAlive() for cmd_data in self.background_commands.values()):
+        while any(cmd_data.command.isAlive() for cmd_data in self.BACKGROUND_COMMANDS.values()):
             rate.sleep()
 
     def abort(self):
@@ -330,14 +341,11 @@ def combine_tasks(*tasks: Type[Task]) -> Type[Task]:
             self.tasks = [task_type(executor) for task_type in tasks]
         
         def execute(self) -> bool:
-            active_background_commands: Dict[str, BackgroundCommandData] = {}
             for task in self.tasks:
-                task.background_commands |= active_background_commands
                 success = task.execute(terminate=False)
                 if not success:
                     task._terminate()
                     return False
-                active_background_commands = task._getActiveBackgroundCommands()
             task._terminate()
             return True
 

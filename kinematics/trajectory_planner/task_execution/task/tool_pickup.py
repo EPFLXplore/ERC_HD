@@ -1,11 +1,18 @@
 from __future__ import annotations
 from .task import *
 from kinematics_utils.pose_corrector_new import Tools
+from custom_msg.msg import HDGoal
 
 
 class ToolManip(Task):
     TOOL_MAINTAINING_TORQUE_ID = "tool_maintaining_torque"
     def __init__(self, executor: Executor, tool: int = Tools.BUTTONS, declare_tool_maintaining_torque_cmd: bool = True):
+        tool_map = {
+            HDGoal.SHOVEL_TOOL: Tools.SHOVEL,
+            HDGoal.VOLTMETER_TOOL: Tools.VOLTMETER,
+            HDGoal.BUTTON_TOOL: Tools.BUTTONS,
+        }
+        tool = tool_map[tool]
         if tool not in Tools.SWAPABLE:
             raise ValueError("Tool is unknown or isn't swapable")
         super().__init__(executor, construct_command_chain=False)
@@ -33,7 +40,7 @@ class ToolPickup(ToolManip):
         super().constructCommandChain()
         
         self.addCommand(
-            PoseCommand(pose=self.aboveToolPose()),
+            PoseCommand(pose=self.aboveToolPose(), in_urdf_eef_frame=True),
             description = "go above tool"
         )
         
@@ -59,13 +66,14 @@ class ToolPickup(ToolManip):
 
 
 class ToolRelease(ToolManip):
-    def __init__(self, executor: Executor, tool: int = Tools.BUTTONS):
-        super().__init__(executor, tool, declare_tool_maintaining_torque_cmd=False)
+    # def __init__(self, executor: Executor, tool: int = Tools.BUTTONS):
+    #     super().__init__(executor, tool, declare_tool_maintaining_torque_cmd=False)
+        
     def constructCommandChain(self):
         super().constructCommandChain()
         
         self.addCommand(
-            PoseCommand(pose=self.aboveToolPose()),
+            PoseCommand(pose=self.aboveToolPose(), in_urdf_eef_frame=True),
             description = "go above tool station"
         )
         
@@ -77,8 +85,8 @@ class ToolRelease(ToolManip):
 
         self.setBackgroundCommandStopPoint(
             id = self.TOOL_MAINTAINING_TORQUE_ID,
-            description = "stopping background gripper torque",
-            allow_lazy_cmd_retrieval = True
+            # description = "stopping background gripper torque",
+            # allow_lazy_cmd_retrieval = True
         )
         
         self.constructOpenGripperCommands()
