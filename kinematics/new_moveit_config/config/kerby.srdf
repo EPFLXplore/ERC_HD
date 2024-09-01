@@ -37,6 +37,15 @@
         <joint name="hd_joint6" value="0"/>
     </group_state>
 
+    <group_state name="cobra" group="kerby_arm_group">
+        <joint name="hd_joint1" value="0"/>
+        <joint name="hd_joint2" value="0.33161255787892263"/>
+        <joint name="hd_joint3" value="2.1816615649929116"/>
+        <joint name="hd_joint4" value="0"/>
+        <joint name="hd_joint5" value="0.2617993877991494"/>
+        <joint name="hd_joint6" value="0"/>
+    </group_state>
+
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="kerby_vritual_joint" type="fixed" parent_frame="world" child_link="base_link"/>
 
