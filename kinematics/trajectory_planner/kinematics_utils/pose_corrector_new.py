@@ -81,8 +81,11 @@ class Tools:
     SWAPABLE = {BUTTONS, SHOVEL, VOLTMETER}
     LIST = {NONE} | NON_SWAPABLE | SWAPABLE
     PICKUP_POSE = {
-        BUTTONS: qan.Pose(position=qan.Point(x=0.1, y=-0.2, z=0.15), orientation=qan.Quaternion(x=1.0)),
-        PROBES: qan.Pose()
+        BUTTONS: qan.Pose(
+            position=qan.Point(x=-0.3619, y=-0.0446, z=0.38),
+            orientation=qan.Quaternion(x=0.72355, y=-0.69, z=0.0026, w=-0.0026)
+        ),
+        PROBES: qan.Pose(),
     }
     POSE = {
         NONE: qan.Pose(),
@@ -95,7 +98,7 @@ class Tools:
 class PoseCorrector:
     GRIPPER_TRANSFORM_CORRECTION = new_gripper_transform()
     CAMERA_TRANSFORM = qan.Pose(                    # transform between end effector and camera
-        position = qan.Point(x=-0.019, y=-0.07, z=-0.051 - 0.0037)    # 0.051 to camera glass and 0.0037 to focal point    # old x=-0.009 y=-0.063
+        position = qan.Point(x=-0.009, y=-0.07, z=-0.051 - 0.0037)    # 0.051 to camera glass and 0.0037 to focal point    # old x=-0.009 y=-0.063
     )
     
     def __init__(self, tool: int = Tools.BUTTONS):
