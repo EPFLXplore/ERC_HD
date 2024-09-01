@@ -3,14 +3,16 @@ import threading
 import rclpy
 from rclpy.node import Node
 from rclpy.client import Client
+import rclpy.parameter
 from std_msgs.msg import Float32MultiArray, Float64MultiArray, Int8
 from geometry_msgs.msg import Twist, TwistStamped, Vector3
 from control_msgs.msg import JointJog
-from custom_msg.msg import Task
-from custom_msg.srv import HDMode
+from custom_msg.msg import Task, HDGoal
+from custom_msg.srv import HDMode, RequestHDGoal
 import array
 import math
 from std_srvs.srv import Trigger
+from rclpy.task import Future
 
 
 VERBOSE = True
@@ -33,6 +35,22 @@ def normalize(l):
     if n == 0:
         return [x for x in l]
     return [x/n for x in l]
+
+
+class DoneFlag:
+    def __init__(self, node: Node):
+        self.done = False
+        self.node = node
+        self.future: Future = None
+    
+    def trigger(self, future: Future):
+        self.done = True
+        self.future = future
+        self.node.get_logger().error("B"*10000 + "done flag triggered")
+    
+    def __bool__(self) -> bool:
+        return self.done
+
 
 class FSM(Node):
     IDLE = -1
@@ -59,31 +77,35 @@ class FSM(Node):
         #self.manual_inverse_velocity_scaling = 0.0
         self.manual_inverse_twist = Twist()
     
-    def get_param(self, name: str, default: str = ""):
+    def get_str_param(self, name: str, default: str = "") -> str:
         self.declare_parameter(name, default)
         return self.get_parameter(name).get_parameter_value().string_value
         
     def create_ros_interfaces(self):
         # publishers
-        self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, self.get_param("hd_fsm_joint_vel_cmd_topic"), 10)
-        self.manual_inverse_twist_pub = self.create_publisher(TwistStamped, self.get_param("hd_fsm_man_inv_twist_topic"), 10)
-        self.task_pub = self.create_publisher(Task, self.get_param("hd_fsm_task_assignment_topic"), 10)
-        self.mode_change_pub = self.create_publisher(Int8, self.get_param("hd_fsm_mode_transmission_topic"), 10)
+        self.manual_direct_cmd_pub = self.create_publisher(Float64MultiArray, self.get_str_param("hd_fsm_joint_vel_cmd_topic"), 10)
+        self.manual_inverse_twist_pub = self.create_publisher(TwistStamped, self.get_str_param("hd_fsm_man_inv_twist_topic"), 10)
+        self.task_pub = self.create_publisher(Task, self.get_str_param("hd_fsm_task_assignment_topic"), 10)
+        self.mode_change_pub = self.create_publisher(Int8, self.get_str_param("hd_fsm_mode_transmission_topic"), 10)
         # old
         self.manual_inverse_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/man_inv_axis_cmd", 10)
         
         # servers
-        self.srv = self.create_service(HDMode, self.get_param("hd_fsm_mode_srv"), self.new_mode_callback)
+        self.hd_mode_srv = self.create_service(HDMode, self.get_str_param("hd_fsm_mode_srv"), self.new_mode_callback)
+        self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_fsm_goal_srv"), self.goal_assignement_callback)
+
 
         # subscriptions
-        self.create_subscription(Float32MultiArray, self.get_param("rover_hd_man_dir_topic"), self.manual_direct_cmd_callback, 10)
-        self.create_subscription(Float32MultiArray, self.get_param("rover_hd_man_inv_topic"), self.manual_inverse_cmd_callback, 10)
-        # self.create_subscription(Int8, self.get_param("rover_hd_man_inv_topic"), self.mode_callback, 10)
+        self.create_subscription(Float32MultiArray, self.get_str_param("rover_hd_man_dir_topic"), self.manual_direct_cmd_callback, 10)
+        self.create_subscription(Float32MultiArray, self.get_str_param("rover_hd_man_inv_topic"), self.manual_inverse_cmd_callback, 10)
+        # self.create_subscription(Int8, self.get_str_param("rover_hd_man_inv_topic"), self.mode_callback, 10)
         self.create_subscription(Task, "/ROVER/semi_auto_task", self.task_cmd_callback, 10)
         self.create_subscription(Int8, "/ROVER/HD_element_id", self.task_cmd_callback2, 10)
         
         # clients
-        self.servo_start_cli = self.create_client(Trigger, '/servo_node/start_servo')
+        self.servo_start_cli = self.create_client(Trigger, "/servo_node/start_servo")
+        self.task_executor_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_task_executor_goal_srv"))
+        self.perception_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_perception_goal_srv"))
 
     def deprecate_all_commands(self):
         self.received_manual_direct_cmd_at = time.time() - 2*self.command_expiration
@@ -160,6 +182,51 @@ class FSM(Node):
             # self.manual_inverse_velocity_scaling = msg.data[0]
             self.received_manual_inverse_cmd_at = time.time()
 
+    def goal_assignement_callback(self, request: RequestHDGoal.Request, response: RequestHDGoal.Response) -> RequestHDGoal.Response:
+        goal = request.goal
+        
+        query_perception = False
+        
+        if query_perception:
+            perception_response = self.send_request(self.perception_goal_assignment_cli, goal)
+            if not perception_response.success:
+                response.success = False
+                response.message = perception_response.message
+                return response
+        
+        task_exec_response = self.send_request(self.task_executor_goal_assignment_cli, goal)
+        response.success = True
+        response.message = HDGoal.OK
+        return response
+        if not task_exec_response.success:
+            response.success = False
+            response.message = task_exec_response.message
+            return response
+        
+        self.get_logger().warn("A"*10000)
+        response.success = True
+        response.message = HDGoal.OK
+        return response
+    
+    def send_request(self, client: Client, goal: HDGoal):
+        req = RequestHDGoal.Request()
+        req.goal = goal
+        while not client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting again...')
+
+        future = client.call_async(req)
+        return
+        done_flag = DoneFlag(self)
+        future.add_done_callback(done_flag.trigger)
+        
+        rate = self.create_rate(100)
+        while not done_flag:
+            self.get_logger().warn("call not done")
+            rate.sleep()
+            # continue
+        
+        return done_flag.future.result()
+    
     def task_cmd_callback(self, msg: Task):
         self.semi_autonomous_command = msg
 
@@ -276,7 +343,8 @@ class FSM(Node):
         elif self.mode == self.AUTONOMOUS:
             pass
         elif self.mode == self.SEMI_AUTONOMOUS:
-            self.send_semi_autonomous_cmd()
+            #self.send_semi_autonomous_cmd()
+            pass
         elif self.mode == self.MANUAL_INVERSE:
             self.send_manual_inverse_cmd_old()
         elif self.mode == self.MANUAL_DIRECT:
