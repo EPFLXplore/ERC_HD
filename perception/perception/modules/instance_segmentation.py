@@ -1,3 +1,4 @@
+import time 
 import cv2
 import numpy as np
 from numpy import ndarray
@@ -20,6 +21,7 @@ from custom_msg.srv import InitializeModel
 
 from rclpy.executors import Executor, Future
 
+
 class InstanceSegmentation(ModuleInterface):
     # confg_file conatins path to model 
     def __init__(self, confg_file, node: Node):
@@ -41,7 +43,11 @@ class InstanceSegmentation(ModuleInterface):
         self.bridge = CvBridge()  # Initialize CvBridge for conversions between ROS and OpenCV
         
         # Call the initialize model service
-        self.call_initialize_model_service('src/models/brick_n_200.pt')
+        # self.call_initialize_model_service('/src/perception/models/brick_n_200.pt')
+
+        self.result_segmentation = None
+
+        # https://chatgpt.com/c/1d580ffd-8c66-4fbe-8cc1-8104f335c614
 
 
     def call_initialize_model_service(self, model_path):
@@ -67,6 +73,7 @@ class InstanceSegmentation(ModuleInterface):
 
     def __call__(self, rgb_frame: ndarray, depth_frame: ndarray):
         # Convert rgb_frame (OpenCV image) to ROS CompressedImage message
+        self.node.get_logger().debug("Start segmentation")
         rgb_image_msg = self.bridge.cv2_to_compressed_imgmsg(rgb_frame)
 
         if len(rgb_image_msg.data) == 0:
@@ -77,70 +84,58 @@ class InstanceSegmentation(ModuleInterface):
         detect_request.image = rgb_image_msg
 
         self.node._logger.info("Asking for segmentation")
+        start_time  = time.time()
 
         # Call the Detect service
+        self.detect_response = None
+
+
+
+
         future = self.detect_client.call_async(detect_request)
+        future.add_done_callback(lambda f: self.service_response(f))
 
         self.node._logger.info("Client called")
 
-        # Wait for the result
-        rclpy.spin_until_future_complete(self.node, future)
+        # Check if the call was successful TODO: create a timeout
+        while self.detect_response == None:
+            self.node._logger.debug("Waiting for client")
 
-        self.node._logger.info("Received server response")
-
-        # Check if the call was successful
-        if future.result() is not None:
-            detect_response = future.result()
-
-            if detect_response.success:
-                # Process the received segmentation data
-                detected_objs = detect_response.image
-                self.node._logger.info("Success!")
-                return rgb_frame, detected_objs
-            else:
-                self.get_logger().error(f"Detection failed: {detect_response.message}")
-                return None
+        if self.detect_response.success:
+            # Process the received segmentation data
+            detected_objs = self.detect_response.segmentation_data
+            self.node._logger.info("Success!")
+            self.result_segmentation = detected_objs
         else:
-            self.get_logger().error("Service call failed")
-            return None
+            self.get_logger().error(f"Detection failed: {self.detect_response.message}")
+
+        end_time = time.time()
+        self.node._logger.info(f"time from request to response: {round(end_time - start_time, 3)} seconds")
+    
+
+     
+    def service_response(self, f):
+            self.node._logger.info("Result")
+            self.detect_response = f.result()
+            self.draw()
 
 
-    def draw(frame: ndarray) -> None:
-        return super().draw()
+    def draw(self, image, segmentation_data):
+        
+        
+        for segmentation in segmentation_data:
+            for vertices in segmentation.masks:
+                vertices = np.array(vertices.mask_pixel).reshape(-1,2)
+                # cv2.polylines(image,[vertices.astype(np.int32)],True,(0,255,255))
+                cv2.fillPoly(image, pts=[vertices.astype(np.int32)], color=(255, 0, 0))
+            for box in segmentation.boxes:
+                x1, y1, x2, y2 = int(box.x1), int(box.y1), int(box.x2), int(box.y2)
+                conf = box.confidence
+                cls = box.class_id
 
-    # # frame: result of inference on color img 
-    # def draw(self, segmentation_data: SegmentationData): 
-    #     # Convert the mask and box from SegmentationData to OpenCV images
-    #     mask_img = self.bridge.imgmsg_to_cv2(segmentation_data.mask, desired_encoding="mono8")
-    #     # box_img = self.bridge.imgmsg_to_cv2(segmentation_data.box, desired_encoding="bgr8")
+                cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)  # Red color box
 
-    #     # Apply the mask to the color frame
-    #     mask = (mask_img > 0).astype(np.uint8)  # Convert mask to binary format
-    #     # Create a 3-channel mask for color blending
-    #     mask_colored = np.zeros_like(self.color_frame, dtype=np.uint8)
-    #     mask_colored[:, :, 1] = mask * 255  # Apply green color to the mask
-
-    #     # Blend the mask with the original frame
-    #     self.color_frame = cv2.addWeighted(self.color_frame, 1, mask_colored, 0.5, 0)
-
-    #     # Draw bounding boxes
-    #     x1, y1, x2, y2 = int(segmentation_data.box.x1), int(segmentation_data.box.y1), int(segmentation_data.box.x2), int(segmentation_data.box.y2)
-    #     conf = segmentation_data.box.confidence
-    #     cls = segmentation_data.box.class_id
-
-    #     # Draw the bounding box on the frame
-    #     cv2.rectangle(self.color_frame, (x1, y1), (x2, y2), (0, 0, 255), 2)  # Red color box
-
-    #     # Annotate the frame with the class and confidence score
-    #     cv2.putText(self.color_frame, f"{self.model.names[cls]}: {conf:.2f}", (x1, y1 - 10),
-    #                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            # Annotate the frame with the class and confidence score
+                cv2.putText(image, f"{self.model.names[cls]}: {conf:.2f}", (x1, y1 - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
         
 
-        # x1, y1, x2, y2 = map(int, box.xyxy[0])
-        # conf = box.conf[0]
-        # cls = box.cls[0]
-        # # Draw the bounding box on the frame
-        # cv2.rectangle(self.color_frame, (x1, y1), (x2, y2), (0, 0, 255), 2)  # Red color box
-        # # Annotate the frame with the class and confidence score
-        # cv2.putText(self.color_frame, f"{self.model.names[int(cls)]}: {conf:.2f}", (x1, y1 - 10),
-        #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)

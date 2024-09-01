@@ -69,6 +69,7 @@ RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -v evdev 
 # pyrealsense2 wrapper has to be build from source 
 
+# MISSING pyrealsense2 
 
 # Set a diretory to store the project
 WORKDIR /home/$USERNAME/dev_ws/src

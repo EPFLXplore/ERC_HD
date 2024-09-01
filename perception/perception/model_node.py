@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from numpy import ndarray
 import os
 from ultralytics import YOLO
 
@@ -10,69 +11,40 @@ from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Imag
 from custom_msg.msg import BoundingBox
 from custom_msg.msg import Mask
 from custom_msg.msg import SegmentationData
+from custom_msg.msg import CompressedRGBD  # Custom message type
 
-from custom_msg.srv import InitializeModel
-from custom_msg.srv import Detect
+from sensor_msgs.msg import CompressedImage
+
 
 import time
 
-class ModelServer(Node):
+class ModelNode(Node):
     def __init__(self):
-        super().__init__("HD_model_server")
+        super().__init__("HD_model_node")
         self._logger.info("Booting .....")
 
 
         # Initialize YOLO to None
         self._logger.info("Loading model")
-        self.model = YOLO('./src/perception/models/brick_n_200.pt')
+        self.model = YOLO('./src/perception/models/probe_m_v3.pt')
         self._logger.info("Segmentation model loaded")
 
-        # Declare 'model_path' parameter
-        self.declare_parameter('model_path', '')
-
-        # Servers to initialize the model and perform detection
-        self.init_model_srv = self.create_service(InitializeModel, "/HD/model_server/init_model", self.init_model)
-        self.detect_srv = self.create_service(Detect, "/HD/model_server/detect", self.detect)
-        
 
         # Initialize CvBridge
         self.bridge = CvBridge()
 
+        # ROS 2 Subscriptions
+        self.rgbd_sub = self.create_subscription(
+            CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 1
+        )
+
+        # ROS 2 Publishers
+        self.processed_rgb_pub = self.create_publisher(
+            CompressedImage, "/hd/perception/image", 1
+        )
+
         self._logger.info('Up and Running, come and get segmented :p')
 
-        # Initialize the YOLO model when the node starts
-        #self.initialize_model_on_start()
-
-    # def initialize_model_on_start(self):
-    #     # Get the 'model_path' parameter
-    #     model_path = self.get_parameter('model_path').get_parameter_value().string_value
-
-    #     if model_path:  # Check if the model path is provided
-    #         # Create a mock request for initializing the model
-    #         request = InitializeModel.Request()
-    #         request.model_path = model_path
-
-    #         # Create a mock response
-    #         response = InitializeModel.Response()
-
-    #         # Call the init_model method
-    #         self.init_model(request, response)
-
-    #         # Check if the model initialized successfully
-    #         if response.success:
-    #             self.get_logger().info("Model initialized successfully on startup with model path: " + model_path)
-    #         else:
-    #             self.get_logger().error("Failed to initialize model on startup.")
-    #     else:
-    #         self.get_logger().error("Model path parameter not set. Cannot initialize model.")
-
-    # def init_model(self, request, response):
-    #     # Load YOLO model
-    #     self.yolo = YOLO(request.model_path)
-
-    #     response.success = True
-    #     self._logger.info("Server initialized")
-    #     return response
     
     def init_model(self, request, response):
         model_path = self.get_parameter('model_path').get_parameter_value().string_value
@@ -92,30 +64,31 @@ class ModelServer(Node):
         return response
 
 
-    def detect(self, request, response):
+    def rgbd_callback(self, rgbd_msg: CompressedRGBD):
+        """Producer method to add new data to the queue."""
+        self.get_logger().info('rgbd_callback')
+        rgb = self.bridge.compressed_imgmsg_to_cv2(rgbd_msg.color)
+        detected = self.detect(rgb)
+        self.draw(rgb, detected)
+        rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
+        self.processed_rgb_pub.publish(rgb_msg)
+
+
+
+    def detect(self, rgb: ndarray):
         start_time = time.time()
-        self._logger.info("Received segmentation request")
 
-        # Check if the model is initialized
-        if self.model is None:
-            response.success = False
-            response.message = "Model not initialized"
-            return response
-        
-        if len(request.image.data) == 0:
-            raise ValueError("CompressedImage data is empty.")
-
-        # Convert ROS message to OpenCV image
-        cv_image = self.bridge.compressed_imgmsg_to_cv2(request.image)
 
         # Perform inference on the color image
-        results = self.model(cv_image)
+        results = self.model(rgb)
 
         segmentation_data = []
 
         for result in results:
             # Create an instance of SegmentationData
             segment_data = SegmentationData()   
+            segment_data.boxes = []
+            segment_data.masks = []
 
             # Extract and populate names using the class ID mapping
             # segment_data.names = [results.names[int(class_id)] for class_id in result.boxes.cls]
@@ -136,39 +109,60 @@ class ModelServer(Node):
                 else:
                     bounding_box.track_id = -1  # Default value if tracking ID is not available
 
-                # segment_data.boxes.append(bounding_box)
+                segment_data.boxes.append(bounding_box)
 
             # Extract and populate masks
             if result.masks is not None:
-                for mask_data, xy in zip(result.masks.data, result.masks.xy):
+                print(result.masks.xy)
+                for xy in result.masks.xy:
                     mask_msg = Mask()
                     mask_msg.mask_pixel = xy.flatten().tolist()  # Convert ndarray to flat list
-                    # mask_msg.data = mask_data.cpu().numpy()  # Assuming mask_data is a numpy array
-                    # mask_msg.width = results.masks.orig_shape[1]  # Width of the mask
-                    # mask_msg.height = results.masks.orig_shape[0]  # Height of the mask
-                    
+
                     # Flatten the xy coordinates and add them to the mask message
                     # mask_msg.xy = xy  # Assuming xy is a numpy array or list of numpy arrays
                     # self.get_logger().info(xy)
 
-                    # segment_data.masks.append(mask_msg)
+                    segment_data.masks.append(mask_msg)
             
             segmentation_data.append(segment_data)
 
         # Assign the segmentation data to the response
-        response.segmentation_data = segmentation_data
-        response.success = True
 
         
         end_time = time.time()
-        self._logger.info(f'Detection took {round(end_time - start_time, 3)} seconds, result: {response.success}')
+        self._logger.info(f'Detection took {round(end_time - start_time, 3)} seconds')
+        return segmentation_data
+    
 
-        return response
+    def draw(self, image, segmentation_data):
+        # print(segmentation_data)
+        
+        
+        for segmentation in segmentation_data:
+            for vertices in segmentation.masks:
+                vertices = np.array(vertices.mask_pixel).reshape(-1,2)
+                # cv2.polylines(image,[vertices.astype(np.int32)],True,(0,255,255))
+                cv2.fillPoly(image, pts=[vertices.astype(np.int32)], color=(255, 0, 0))
+            for box in segmentation.boxes:
+                x1, y1, x2, y2 = int(box.x1), int(box.y1), int(box.x2), int(box.y2)
+                conf = box.confidence
+                cls = box.class_id
+
+                cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)  # Red color box
+
+            # Annotate the frame with the class and confidence score
+                cv2.putText(image, f"{self.model.names[cls]}: {conf:.2f}", (x1, y1 - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        
+
+
+    # def extract_segmentation_data(self, segmentation_msg:SegmentationData):
+        
+
 
 
 def main(args=None):
     rclpy.init(args=args)
-    node = ModelServer() 
+    node = ModelNode() 
     rclpy.spin(node)
     #rclpy.shutdown()
 
