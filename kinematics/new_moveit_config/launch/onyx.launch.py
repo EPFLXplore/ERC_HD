@@ -205,6 +205,6 @@ def generate_launch_description():
         robot_state_publisher,
         ros2_control_node,
         rviz,
-        servo_node,
+        # servo_node,
         ] + spawn_controllers
     )
