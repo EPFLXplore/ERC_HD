@@ -3,6 +3,7 @@ import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as qan
 from geometry_msgs.msg import Pose, Point
 from std_msgs.msg import Float64MultiArray
+from custom_msg.msg import HDGoal
 from math import pi
 
 
@@ -67,32 +68,104 @@ def construct_eef_transform(eef: str) -> qan.Pose:
     return qan.Pose.make(transforms[eef]())
 
 
-class Tools:
-    """
-    Poses of eef when equiped with different tools, transforms with respect to gripper without tools
-    """
-    NONE = 0
-    FINGERS = 1
-    BUTTONS = 2
-    PROBES = 3
-    SHOVEL = 4
-    VOLTMETER = 5
-    NON_SWAPABLE = {FINGERS, PROBES}
-    SWAPABLE = {BUTTONS, SHOVEL, VOLTMETER}
-    LIST = {NONE} | NON_SWAPABLE | SWAPABLE
-    PICKUP_POSE = {
-        BUTTONS: qan.Pose(
+class EEF:
+    def __init__(self, transform_to_eef: qan.Pose):
+        self._transform_to_eef = transform_to_eef
+    
+    @property
+    def transform_to_eef(self) -> qan.Pose:
+        return self._transform_to_eef.copy()
+
+
+class Fingers(EEF):
+    pass
+
+
+class Tool(EEF):
+    def __init__(self, transform_to_eef: qan.Pose, pickup_pose: qan.Pose):
+        super().__init__(transform_to_eef)
+        self._pickup_pose = pickup_pose
+    
+    @property
+    def pickup_pose(self) -> qan.Pose:
+        return self._pickup_pose.copy()
+
+
+class FingersList:
+    DEFAULT = Fingers(qan.Pose(position=qan.Point(z=0.0867)))
+    BRICKS = Fingers(qan.Pose())
+
+
+class ToolsList:
+    NONE = Tool(
+        transform_to_eef = qan.Pose(),
+        pickup_pose = qan.Pose()
+    )
+    
+    BUTTONS = Tool(
+        transform_to_eef = qan.Pose(position=qan.Point(z=0.136)),
+        pickup_pose = qan.Pose(
             position=qan.Point(x=-0.3619, y=-0.0446, z=0.38),
             orientation=qan.Quaternion(x=0.72355, y=-0.69, z=0.0026, w=-0.0026)
-        ),
-        PROBES: qan.Pose(),
+        )
+    )
+    
+    SHOVEL = Tool(
+        transform_to_eef = qan.Pose(),
+        pickup_pose = qan.Pose()
+    )
+    
+    VOLTMETER = Tool(
+        transform_to_eef = qan.Pose(),
+        pickup_pose = qan.Pose()
+    )
+    
+    FROM_ROS_MSG_MAP = {
+        HDGoal.SHOVEL_TOOL: SHOVEL,
+        HDGoal.VOLTMETER_TOOL: VOLTMETER,
+        HDGoal.BUTTON_TOOL: BUTTONS,
     }
-    POSE = {
-        NONE: qan.Pose(),
-        FINGERS: qan.Pose(position=qan.Point(z=0.0867)),
-        BUTTONS: qan.Pose(position=qan.Point(z=0.136)),
-        PROBES: qan.Pose(position=qan.Point(z=0.039))
-    }
+
+
+# class Tools:
+#     """
+#     Poses of eef when equiped with different tools, transforms with respect to gripper without tools
+#     """
+#     NONE = 0
+#     FINGERS = 1
+#     BUTTONS = 2
+#     PROBES = 3
+#     SHOVEL = 4
+#     VOLTMETER = 5
+#     NON_SWAPABLE = {FINGERS, PROBES}
+#     SWAPABLE = {BUTTONS, SHOVEL, VOLTMETER}
+#     LIST = {NONE} | NON_SWAPABLE | SWAPABLE
+#     PICKUP_POSE = {
+#         BUTTONS: qan.Pose(
+#             position=qan.Point(x=-0.3619, y=-0.0446, z=0.38),
+#             orientation=qan.Quaternion(x=0.72355, y=-0.69, z=0.0026, w=-0.0026)
+#         ),
+#         PROBES: qan.Pose(),
+#     }
+#     TRANSFORM = {
+#         NONE: qan.Pose(),
+#         FINGERS: qan.Pose(position=qan.Point(z=0.0867)),
+#         BUTTONS: qan.Pose(position=qan.Point(z=0.136)),
+#         PROBES: qan.Pose(position=qan.Point(z=0.039))
+#     }
+    
+#     @classmethod
+#     def transformFromEEF(cls, tool: int) -> qan.Pose:
+#         if tool not in cls.LIST:
+#             raise ValueError("Invalid tool")
+#         return cls.TRANSFORM[tool].copy()
+    
+#     @classmethod
+#     def pickupPose(cls, tool: int) -> qan.Pose:
+#         if tool not in cls.SWAPABLE:
+#             raise ValueError("Invalid tool")
+#         return cls.PICKUP_POSE[tool].copy()
+
 
 
 class PoseCorrector:
@@ -101,13 +174,23 @@ class PoseCorrector:
         position = qan.Point(x=-0.009, y=-0.07, z=-0.051 - 0.0037)    # 0.051 to camera glass and 0.0037 to focal point    # old x=-0.009 y=-0.063
     )
     
-    def __init__(self, tool: int = Tools.BUTTONS):
+    def __init__(self, fingers: Fingers = None, tool: Tool = ToolsList.BUTTONS):
+        if fingers is None:
+            fingers = FingersList.DEFAULT
+        if tool is None:
+            tool = ToolsList.NONE
+        
+        self.fingers = fingers
         self.tool = tool
     
-    def set_tool(self, tool: int):
-        if tool not in Tools.LIST:
-            raise ValueError("Unknown tool")
+    def has_tool(self) -> bool:
+        return self.tool != ToolsList.NONE
+    
+    def set_tool(self, tool: Tool):
         self.tool = tool
+    
+    def set_fingers(self, fingers: Fingers):
+        self.fingers = fingers
     
     def set_camera_transform(self, pose: Pose):
         self.CAMERA_TRANSFORM = qan.Pose.make(pose)
@@ -117,8 +200,16 @@ class PoseCorrector:
         self.CAMERA_TRANSFORM.position = qan.Point(x=data[0], y=data[1], z=data[2])
     
     def tool_transform(self) -> qan.Pose:
-        return Tools.POSE[self.tool]
+        return self.tool.transform_to_eef
     
+    def fingers_transform(self) -> qan.Pose:
+        return self.fingers.transform_to_eef
+    
+    def tool_or_fingers_transform(self) -> qan.Pose:
+        if self.has_tool():
+            return self.tool_transform()
+        return self.fingers_transform()
+        
     def correct_gripper_pose(self, pose: Optional[Pose] = None) -> qan.Pose:
         """
         pose: urdf end of chain pose in abs frame
@@ -132,13 +223,13 @@ class PoseCorrector:
         """
         pose: urdf end of chain pose in abs frame
         """
-        return self.correct_gripper_pose(pose) @ self.tool_transform()
+        return self.correct_gripper_pose(pose) @ self.tool_or_fingers_transform()
 
     def revert_to_urdf_eef(self, pose: Pose) -> qan.Pose:
         """
         pose: in eef frame
         """
-        return pose @ self.tool_transform().inv() @ self.GRIPPER_TRANSFORM_CORRECTION.inv()
+        return pose @ self.tool_or_fingers_transform().inv() @ self.GRIPPER_TRANSFORM_CORRECTION.inv()
         return pose @ self.correct_eef_pose().inv()
 
     def abs_to_eef(self, pose: Pose) -> qan.Pose:
