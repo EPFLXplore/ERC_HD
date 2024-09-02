@@ -1,0 +1,339 @@
+<?xml version="1.0" ?>
+<robot name="onyx" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- <xacro:include filename="$(find new_description)/urdf/materials.xacro" /> -->
+<!-- <xacro:include filename="$(find new_description)/urdf/onyx.trans" /> -->
+<!-- <xacro:include filename="$(find new_description)/urdf/onyx.gazebo" /> -->
+<xacro:include filename="$(find new_description)/urdf/body.urdf.xacro" />
+
+
+<xacro:property name="rpm_to_Radps" value="${2*pi/60.0}" />     <!-- rotations per minute to Rad per second conversion -->
+<xacro:property name="velocity_scaling" value="0.8" />     <!-- allows to scale all max velocities down at once -->
+
+<xacro:macro name="aaa_joint_limits" params="lower:=0.0 upper:=0.0 velocity:=${rpm_to_Radps} effort:=100.0">
+  <limit lower="${lower}" upper="${upper}" velocity="${velocity}" effort="${effort}"/>
+</xacro:macro>
+
+<xacro:property name="joint1_limits">
+  <xacro:aaa_joint_limits lower="${-pi/2}" upper="${pi/2}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint2_limits">
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${1.377 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint3_limits">
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${1.377 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint4_limits">
+  <xacro:aaa_joint_limits lower="${-3/2*pi}" upper="${3/2*pi}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint5_limits">
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="joint6_limits">
+  <xacro:aaa_joint_limits lower="${-3/2*pi}" upper="${3/2*pi}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
+</xacro:property>
+
+<xacro:property name="finger_limits">
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${10 * rpm_to_Radps}" />
+</xacro:property>
+
+
+<link name="link1">
+  <inertial>
+    <origin xyz="0.00019343861423741504 0.02168276319253362 0.10154404613782692" rpy="0 0 0"/>
+    <mass value="4.6341269008415775"/>
+    <inertia ixx="0.028645" iyy="0.020818" izz="0.018526" ixy="9.3e-05" iyz="-0.002659" ixz="8e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.07 0.2225 -0.195" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1._J1J2_v2_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.07 0.2225 -0.195" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1._J1J2_v2_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="link2">
+  <inertial>
+    <origin xyz="-1.3322676295501878e-15 -0.011073644011486264 0.18649999999999678" rpy="0 0 0"/>
+    <mass value="3.117767835019512"/>
+    <inertia ixx="0.067945" iyy="0.069755" izz="0.005983" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.07 0.104 -0.3135" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1.1_bras_1_single_c_v3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.07 0.104 -0.3135" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1.1_bras_1_single_c_v3_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="link3">
+  <inertial>
+    <origin xyz="0.00019343861423579134 -0.101544046137815 0.021682763192532706" rpy="0 0 0"/>
+    <mass value="4.6341269008415775"/>
+    <inertia ixx="0.028645" iyy="0.018526" izz="0.020818" ixy="-8e-06" iyz="0.002659" ixz="9.3e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.07 0.104 -0.6865" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1._J1J2_v2_v2_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.07 0.104 -0.6865" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1._J1J2_v2_v2_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="link4">
+  <inertial>
+    <origin xyz="4.5352610555937645e-14 -0.0030701810090929815 0.18321907839266705" rpy="0 0 0"/>
+    <mass value="2.501356467163731"/>
+    <inertia ixx="0.0397" iyy="0.040591" izz="0.004603" ixy="0.0" iyz="0.001154" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.07 0.2225 -0.805" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1._tube_2_single_component_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.07 0.2225 -0.805" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1._tube_2_single_component_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="link5">
+  <inertial>
+    <origin xyz="-0.00019343861423758157 0.10154404613786167 0.021682763192527377" rpy="0 0 0"/>
+    <mass value="4.6341269008415775"/>
+    <inertia ixx="0.028645" iyy="0.018526" izz="0.020818" ixy="-8e-06" iyz="-0.002659" ixz="-9.3e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.07 0.2385 -1.128" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1._J1J2_v2_v2_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.07 0.2385 -1.128" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/1._J1J2_v2_v2_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="link6">
+  <inertial>
+    <origin xyz="-0.0003178609482202416 -0.000257514080764229 0.06769985638413734" rpy="0 0 0"/>
+    <mass value="0.236737000660016"/>
+    <inertia ixx="0.000328" iyy="0.000476" izz="0.00022" ixy="0.0" iyz="1e-06" ixz="-4e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.07 0.12 -1.2465" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Gripper_no_torque_sensor_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.07 0.12 -1.2465" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Gripper_no_torque_sensor_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Arm_A_v6_2">
+  <inertial>
+    <origin xyz="0.01895133656783434 0.003750000076247456 0.034431297042308184" rpy="0 0 0"/>
+    <mass value="0.11091056155247334"/>
+    <inertia ixx="0.000106" iyy="0.000118" izz="1.4e-05" ixy="-0.0" iyz="-0.0" ixz="1.1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.055 0.0975 -1.328" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Arm_A_v6_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.055 0.0975 -1.328" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Arm_A_v6_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Arm_A_v6_1">
+  <inertial>
+    <origin xyz="-0.018951336567834404 0.0037499999238455595 0.034431297042308406" rpy="0 0 0"/>
+    <mass value="0.11091056155247334"/>
+    <inertia ixx="0.000106" iyy="0.000118" izz="1.4e-05" ixy="-0.0" iyz="0.0" ixz="-1.1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.085 0.0975 -1.328" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Arm_A_v6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.085 0.0975 -1.328" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Arm_A_v6_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Finger_v1_2">
+  <inertial>
+    <origin xyz="0.009336732205807656 -0.02249999638344631 8.540730686679154e-06" rpy="0 0 0"/>
+    <mass value="0.21086382762249625"/>
+    <inertia ixx="3.4e-05" iyy="3.6e-05" izz="5.6e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.052082 0.0975 -1.41458" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Finger_v1_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.052082 0.0975 -1.41458" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Finger_v1_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Finger_v1_1">
+  <inertial>
+    <origin xyz="-0.009336732205807885 -0.02250000361645496 8.540730686901199e-06" rpy="0 0 0"/>
+    <mass value="0.21086382762249625"/>
+    <inertia ixx="3.4e-05" iyy="3.6e-05" izz="5.6e-05" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.087918 0.0975 -1.41458" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Finger_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.087918 0.0975 -1.41458" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find new_description)/meshes/Finger_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+
+
+
+
+<joint name="hd_joint1" type="revolute">
+  <origin xyz="-0.07 -0.2225 0.195" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="link1"/>
+  <axis xyz="0.0 0.0 -1.0"/>
+  <xacro:insert_block name="joint1_limits"/>
+</joint>
+
+<joint name="hd_joint2" type="revolute">
+  <origin xyz="0.0 0.1185 0.1185" rpy="0 0 0"/>
+  <parent link="link1"/>
+  <child link="link2"/>
+  <axis xyz="-0.0 -1.0 -0.0"/>
+  <xacro:insert_block name="joint2_limits"/>
+</joint>
+
+<joint name="hd_joint3" type="revolute">
+  <origin xyz="0.0 0.0 0.373" rpy="0 0 0"/>
+  <parent link="link2"/>
+  <child link="link3"/>
+  <axis xyz="0.0 1.0 -0.0"/>
+  <xacro:insert_block name="joint3_limits"/>
+</joint>
+
+<joint name="hd_joint4" type="revolute">
+  <origin xyz="0.0 -0.1185 0.1185" rpy="0 0 0"/>
+  <parent link="link3"/>
+  <child link="link4"/>
+  <axis xyz="-0.0 -0.0 -1.0"/>
+  <xacro:insert_block name="joint4_limits"/>
+</joint>
+
+<joint name="hd_joint5" type="revolute">
+  <origin xyz="0.0 -0.016 0.323" rpy="0 0 0"/>
+  <parent link="link4"/>
+  <child link="link5"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+  <xacro:insert_block name="joint5_limits"/>
+</joint>
+
+<joint name="hd_joint6" type="revolute">
+  <origin xyz="0.0 0.1185 0.1185" rpy="0 0 ${pi/2}"/>
+  <parent link="link5"/>
+  <child link="link6"/>
+  <axis xyz="-0.0 -0.0 -1.0"/>
+  <xacro:insert_block name="joint6_limits"/>
+</joint>
+
+<joint name="finger_joint1" type="continuous">
+  <origin xyz="0.015 0.0225 0.0815" rpy="0 0 0"/>
+  <parent link="link6"/>
+  <child link="Arm_A_v6_2"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="finger_joint2" type="continuous">
+  <origin xyz="-0.015 0.0225 0.0815" rpy="0 0 0"/>
+  <parent link="link6"/>
+  <child link="Arm_A_v6_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+  <mimic joint="finger_joint1" multiplier="-1"/>
+</joint>
+
+<joint name="finger_joint3" type="continuous">
+  <origin xyz="0.002918 0.0 0.08658" rpy="0 0 0"/>
+  <parent link="Arm_A_v6_2"/>
+  <child link="Finger_v1_2"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
+  <mimic joint="finger_joint1" multiplier="1"/>
+</joint>
+
+<joint name="finger_joint4" type="continuous">
+  <origin xyz="-0.002918 0.0 0.08658" rpy="0 0 0"/>
+  <parent link="Arm_A_v6_1"/>
+  <child link="Finger_v1_1"/>
+  <axis xyz="0.0 1.0 -0.0"/>
+  <mimic joint="finger_joint1" multiplier="-1"/>
+</joint>
+
+</robot>

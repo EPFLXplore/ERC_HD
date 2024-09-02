@@ -1,0 +1,50 @@
+# # joint_limits.yaml allows the dynamics properties specified in the URDF to be overwritten or augmented as needed
+
+# # For beginners, we downscale velocity and acceleration limits.
+# # You can always specify higher scaling factors (<= 1.0) in your motion requests.  # Increase the values below to 1.0 to always move at maximum speed.
+default_velocity_scaling_factor: 1.0
+default_acceleration_scaling_factor: 1.0
+
+# # Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
+# # Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+
+
+
+joint_limits:
+  hd_joint1:
+    has_position_limits: true
+    min_position: -1.5
+    max_position: 1.5
+
+#   hd_joint2:
+#     has_position_limits: true
+#     min_position: -1.2217304763960306
+#     max_position: 1.0471975511965976
+
+#   hd_joint3:
+#     has_position_limits: true
+#     min_position: -0.5235987755982988
+#     max_position: 2.792526803190927
+
+#   hd_joint4:
+#     has_position_limits: true
+#     min_position: -2.748893571891069
+#     max_position: 2.748893571891069
+
+#   hd_joint5:
+#     has_position_limits: true
+#     min_position: -2.748893571891069
+#     max_position: 2.748893571891069
+
+#   hd_joint6:
+#     has_position_limits: true
+#     min_position: -2.748893571891069
+#     max_position: 2.748893571891069
+
+
+
+# cartesian_limits:
+#   max_trans_vel: 0.01
+#   max_trans_acc: 0.02
+#   max_trans_dec: -0.02
+#   max_rot_vel: 0.01

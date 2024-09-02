@@ -40,7 +40,7 @@ listener.listen()
 
 
 def artag_callback(msg):
-    from_camera = True
+    from_camera = False
     
     def extract_pose(source: Pose, dest: Pose):
         pose = Pose()

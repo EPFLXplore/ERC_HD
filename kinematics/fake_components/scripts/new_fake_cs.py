@@ -9,8 +9,8 @@ import evdev.events
 import threading
 from time import sleep
 from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
-from custom_msg.msg import Task
-from custom_msg.srv import HDMode
+from custom_msg.msg import Task, HDGoal
+from custom_msg.srv import HDMode, RequestHDGoal
 import math
 import itertools
 from collections.abc import Callable
@@ -92,6 +92,17 @@ def map_param(node: Node, name: str,choices: Dict[str, Any], default: str = "", 
     return choices[value]
 
 
+class DoneFlag:
+    def __init__(self):
+        self.done = False
+    
+    def trigger(self, *args, **kwargs):
+        self.done = True
+    
+    def __bool__(self) -> bool:
+        return self.done
+
+
 class ControlStation(Node):
     """
     Class reading gamepad and sending commands (to handling device) accordingly
@@ -110,6 +121,8 @@ class ControlStation(Node):
         self.man_inv_twist = Twist()
         self.man_inv_velocity_scaling = 1.0
         self.semi_auto_cmd = Task.NO_TASK
+        self.goal_msg = HDGoal()
+        self.new_goal_msg = False
 
         # direction of joint 3, 4
         self.joint3_dir = 1
@@ -117,11 +130,12 @@ class ControlStation(Node):
 
         self.hd_mode = Mode.IDLE
 
-        self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, self.get_param("rover_hd_man_dir_topic", default="aa"), 10)
-        self.man_inv_twist_pub = self.create_publisher(Float32MultiArray, self.get_param("rover_hd_man_inv_topic", default="aaa"), 10)
+        self.joint_vel_cmd_pub = self.create_publisher(Float32MultiArray, self.get_str_param("rover_hd_man_dir_topic", default="aa"), 10)
+        self.man_inv_twist_pub = self.create_publisher(Float32MultiArray, self.get_str_param("rover_hd_man_inv_topic", default="aaa"), 10)
         self.task_pub = self.create_publisher(Task, "/ROVER/semi_auto_task", 10)
         # self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
-        self.mode_cli = self.create_client(HDMode, self.get_param("hd_fsm_mode_srv", "aaaa"))
+        self.mode_cli = self.create_client(HDMode, self.get_str_param("hd_fsm_mode_srv", "aaaa"))
+        self.fsm_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_fsm_goal_srv"))
 
         if keyboard_control:
             from input_handling.keyboard import KeyboardConfig
@@ -136,7 +150,7 @@ class ControlStation(Node):
         self.timer_period = 1/30
         self.timer = self.create_timer(self.timer_period, self.publish_cmd)
 
-    def get_param(self, name: str, default: str = ""):
+    def get_str_param(self, name: str, default: str = "") -> str:
         self.declare_parameter(name, default)
         return self.get_parameter(name).get_parameter_value().string_value
     
@@ -190,7 +204,9 @@ class ControlStation(Node):
             self.input_config.bind(input, self.set_gripper_speed, "event_value", value=val)
 
         # ==== semi auto ====
-        self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd2, "event_value")
+        self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
+        self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.BUTTON_TOOL)
+        self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.BUTTON_TOOL)
     
         # ==== manual inverse ====
         self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
@@ -224,6 +240,10 @@ class ControlStation(Node):
             data = [linear.x, linear.y, linear.z, angular.x, angular.y, angular.z, gripper_torque]
             self.man_inv_twist_pub.publish(Float32MultiArray(data=data))
         elif self.hd_mode == Mode.SEMI_AUTONOMOUS:
+            if self.new_goal_msg:
+                self.send_fsm_goal_request()
+                self.new_goal_msg = False
+            return
             msg = Task(type=self.semi_auto_cmd)
             if self.semi_auto_cmd == Task.NO_TASK:
                 return
@@ -232,6 +252,22 @@ class ControlStation(Node):
                 msg.str_slot = "optimal_view"
             self.task_pub.publish(msg)
             self.semi_auto_cmd = Task.NO_TASK
+    
+    def send_fsm_goal_request(self):
+        req = RequestHDGoal.Request()
+        req.goal = self.goal_msg
+        while not self.fsm_goal_assignment_cli.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting again...')
+
+        future = self.fsm_goal_assignment_cli.call_async(req)
+        return
+        done_flag = DoneFlag()
+        future.add_done_callback(done_flag.trigger)
+        
+        while not done_flag:
+            continue
+        
+        return future.result()
     
     @staticmethod
     def restrict_mode(target_mode: int):
@@ -304,9 +340,17 @@ class ControlStation(Node):
         self.semi_auto_cmd = SemiAutoTask[index]
     
     @restrict_mode(Mode.SEMI_AUTONOMOUS)
-    def set_semi_auto_cmd2(self, event_value: float):
+    def set_semi_auto_cmd2(self, event_value: float, task: int = SemiAutoTask.BTN_TASK):
         if event_value != 1: return
-        self.semi_auto_cmd = SemiAutoTask.BTN_TASK
+        self.semi_auto_cmd = task
+    
+    @restrict_mode(Mode.SEMI_AUTONOMOUS)
+    def set_semi_auto_cmd3(self, event_value: float, target: str, **kwargs):
+        if event_value != 1: return
+        self.goal_msg.target = target
+        for kw, value in kwargs.items():
+            setattr(self.goal_msg, kw, value)
+        self.new_goal_msg = True
     
     @restrict_mode(Mode.MANUAL_INVERSE)
     def set_man_inv_velocity_scaling(self, value: float):

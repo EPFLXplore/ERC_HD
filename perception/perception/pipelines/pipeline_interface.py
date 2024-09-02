@@ -4,6 +4,7 @@ from rclpy.node import Node
 from numpy import ndarray
 from abc import ABC, abstractmethod
 
+from custom_msg.msg import SegmentationData
 
 class PipelineInterface(ABC):
     def __init__(self, config_file: str, node: Node, draw_results: bool = True):
@@ -24,7 +25,7 @@ class PipelineInterface(ABC):
         self._initialize_publishers(node)
 
         # Initialize any other necessary components based on the config
-        self._initialize_pipeline()
+        self._initialize_pipeline(node)
 
     @abstractmethod
     def _initialize_publishers(self, node: Node):
@@ -39,7 +40,7 @@ class PipelineInterface(ABC):
         )
 
     @abstractmethod
-    def _initialize_pipeline(self):
+    def _initialize_pipeline(self, node: Node):
         """
         Initializes the pipeline components based on the configuration.
         This method can be overridden in subclasses to initialize specific components.
@@ -60,7 +61,7 @@ class PipelineInterface(ABC):
         )
 
     @abstractmethod
-    def draw(self, frame: ndarray):
+    def draw(self, segmentation_data: SegmentationData): #frame: ndarray):   #TODO
         """
         Draws the results of the pipeline on the given frame. but does not display the results another node displays the modified image
         does not draw itself but calls the draw method of its modules
@@ -80,3 +81,9 @@ class PipelineInterface(ABC):
         raise NotImplementedError(
             "The draw method must be implemented by the subclass."
         )
+    
+    @property
+    @abstractmethod
+    def name(self):
+        """Each pipeline step must have a 'name' attribute"""
+        pass

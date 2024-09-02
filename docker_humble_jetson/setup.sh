@@ -1,0 +1,1 @@
+export PYTHONPATH=/usr/local/lib/python3.10/dist-packages/pyrealsense2:$PYTHONPATH

@@ -4,11 +4,20 @@ from std_msgs.msg import String
 import tkinter as tk
 from custom_msg.srv import ButtonPressControlPanel
 
+from sensor_msgs.msg import CompressedImage  # Image is the message type
+from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Images
+
+
 BUTTON_WIDTH = 38
 BUTTON_HEIGHT = 30
 
 GRID_H_SPACING = 2 * BUTTON_WIDTH + 20  # Horizontal spacing between buttons
 GRID_V_SPACING = 2 * BUTTON_HEIGHT + 30  # Vertical spacing between buttons
+
+PIPELINES_H_OFFSET = 150
+PIPELINES_V_OFFSET = 30
+PIPELINE_WIDTH = 150
+PIPELINE_HEIGHT = BUTTON_HEIGHT
 
 
 class GuiNode(Node):
@@ -42,7 +51,8 @@ class GuiNode(Node):
         )
 
         # Dynamically create buttons based on a grid
-        self.create_buttons()
+        self.create_buttons() # control panel buttons
+        self._create_pipelines_buttons()
 
         # Close the node when the window is closed
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -92,6 +102,25 @@ class GuiNode(Node):
 
     def run(self):
         self.window.mainloop()
+
+    def _create_pipelines_buttons(self):
+        pipelines = [{'name':'rocks', 'x':PIPELINES_H_OFFSET, 'y':PIPELINES_V_OFFSET}]
+        for pipe in pipelines:
+            x, y, name = pipe["x"], pipe["y"], pipe["name"]
+
+
+            button = tk.Button(
+                self.window,
+                text=f"{name}",
+                command=lambda b=f"{name}": self.send_command(
+                    b
+                ),
+                bg="white",
+            )
+            button.place(
+                x=(x  + PIPELINE_WIDTH),
+                y=(y + PIPELINE_HEIGHT),
+            )
 
 
 def get_grid():

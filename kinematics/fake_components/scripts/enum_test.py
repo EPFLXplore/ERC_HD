@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, TypeVar, Generic
+from typing import Any, TypeVar, Generic, Type
 
 T = TypeVar('T')
 
@@ -31,11 +31,12 @@ class EnumOld:
         return self.slot_values[i]
 
 
-def Enum(**kwargs: T) -> type:
+def Enum(**kwargs: T) -> Type[int]:
     """
-    *** very overkill and very useless but I was bored ***
-    Tries to mimic a C-style enum with some additional useful properties.
-    :param kwargs: the members of the enum
+    ***Very overkill and very useless but I was bored.***
+    
+    Tries to mimic a C-style enum with some additional useful properties.\\
+    :param kwargs: the members of the enum\\
     :return: A class type having as class attributes instances of that class corresponding to the members of the enum.
         Thanks to the class being constructed on a custom metaclass, iteration, len computation and item query can be performed directly on the enum class object.
     """
@@ -90,6 +91,19 @@ def Enum(**kwargs: T) -> type:
     return EnumClass
 
 
+Fruit = Enum(
+    apple = 0,
+    orange = 1,
+    banana = 2,
+)
+
+
+def fff(fruit: Fruit) -> Fruit:
+    """
+    *hey* *** hey *** \6
+    """
+    
+fff
 
 if __name__ == "__main__":
     Fruits = Enum(
@@ -97,3 +111,4 @@ if __name__ == "__main__":
         orange = 1,
         banana = 2,
     )
+    

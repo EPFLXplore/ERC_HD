@@ -24,12 +24,15 @@ class GripperCommand(Command):
     def getTorqueSign(self):
         return 1 if self.action == self.OPEN else -1
     
+    def getTorqueValue(self):
+        return self.getTorqueSign() * self.torque_scaling_factor
+    
     def execute(self):
         super().execute()
         start = time.time()
         rate = self.executor.create_rate(25)    # 25 hz rate in order to release ressources
         while not(self.stop_flag) and time.time()-start < self.duration:
-            self.executor.sendGripperTorque(self.getTorqueSign() * self.torque_scaling_factor)
+            self.executor.sendGripperTorque(self.getTorqueValue())
             rate.sleep()
         self.executor.sendGripperTorque(0)  # stop the torque at the end
 
@@ -48,8 +51,11 @@ class GripperBackgroundCommand(BackgroundCommand):
     def getTorqueSign(self):
         return 1 if self.action == self.OPEN else -1
     
+    def getTorqueValue(self):
+        return self.getTorqueSign() * self.torque_scaling_factor
+    
     def _executeCycle(self):
-        self.executor.sendGripperTorque(self.getTorqueSign() * self.torque_scaling_factor)
+        self.executor.sendGripperTorque(self.getTorqueValue())
 
     def _cleanup(self):
         self.executor.sendGripperTorque(0)

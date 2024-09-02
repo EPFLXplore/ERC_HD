@@ -105,7 +105,7 @@ class BackgroundCommand:
         self._has_finished = False
         self._stop_flag = False
         self.execution_thread = threading.Thread(target=self.execute)
-        self.rate: Rate = self.executor.create_rate(25)
+        self.rate: Rate = None
     
     def isAlive(self) -> bool:
         return self.execution_thread.is_alive()
@@ -139,26 +139,37 @@ class BackgroundCommand:
         pass
 
     def execute(self):
+        self.setRate(25)
         while not self._stop_flag:
             self._executeCycle()
             self.rate.sleep()
         self._cleanup()
 
 
-class BackgroundCommandStart(Command):
-    def __init__(self, background_command: BackgroundCommand):
+
+LazyEvalBackgroundCommand = Callable[[], BackgroundCommand]
+
+
+class BackgroundCommandActionPoint(Command):
+    def __init__(self, background_command: LazyEvalBackgroundCommand):
+        """lazy evaluation on the background_command argument for technical purposes"""
         super().__init__()
-        self.background_command = background_command
+        self._background_command = background_command
     
+    @property
+    def background_command(self) -> BackgroundCommand:
+        return self._background_command()
+
+
+class BackgroundCommandStart(BackgroundCommandActionPoint):
     def execute(self):
         super().execute()
         self.background_command.start()
 
 
-class BackgroundCommandStop(Command):
-    def __init__(self, background_command: BackgroundCommand, wait: bool = True):
-        super().__init__()
-        self.background_command = background_command
+class BackgroundCommandStop(BackgroundCommandActionPoint):
+    def __init__(self, background_command: LazyEvalBackgroundCommand, wait: bool = True):
+        super().__init__(background_command)
         self.wait = wait
     
     def execute(self):

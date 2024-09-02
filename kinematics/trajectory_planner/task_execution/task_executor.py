@@ -9,13 +9,16 @@ import task_execution.task as task
 # from task_execution.command import NamedJointTargetCommand
 import task_execution.command as command
 from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, TargetInstruction, MotorCommand
+from custom_msg.msg import HDGoal
 from custom_msg.msg import ServoRequest, ServoResponse
+from custom_msg.srv import RequestHDGoal
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
 import threading
 import kinematics_utils.pose_tracker as pt
 # import kinematics_utils.pose_corrector as pc
 from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
+from kinematics_utils.pose_corrector_new import Tools
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as qan
 from typing import List, Type
@@ -28,24 +31,34 @@ class TaskSelect:
     info_msg: str
     task_type: Type[task.Task]
     
-    def select(self, executor: Executor):
+    def select(self, executor: Executor, **kwargs):
         executor.loginfo(self.info_msg)
-        return self.task_type(executor)
+        return self.task_type(executor, **kwargs)
 
 
 class Executor(Node):
     INSTANCE: Executor = None
     KNOWN_TASKS = {
-        Task.BUTTON:                    TaskSelect("Button task",               task.PressButton),#Dummy),
-        Task.PLUG_VOLTMETER_ALIGN:      TaskSelect("Plug voltmeter task",       task.PlugVoltmeterAlign),
-        Task.METAL_BAR_APPROACH:        TaskSelect("Metal bar approach task",   task.BarMagnetApproach),
-        Task.NAMED_TARGET:              TaskSelect("Named target task",         task.Task),
-        Task.RASSOR_SAMPLE:             TaskSelect("Rassor sample task",        task.RassorSampling),
-        Task.ETHERNET_CABLE:            TaskSelect("Plug ethernet task",        task.EthernetApproach),
-        Task.ALIGN_PANEL:               TaskSelect("Align panel",               task.AlignPanel),
-        Task.ROCK_SAMPLING_APPROACH:    TaskSelect("Rock sampling approach",    task.RockSamplingApproach),
-        Task.ROCK_SAMPLING_DROP:        TaskSelect("Rock sampling drop",        task.RockSamplingDrop),
-        Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",    task.RockSamplingComplete),
+        Task.BUTTON:                    TaskSelect("Button task",                   task.PressButton),#DummyWithTools),
+        Task.PLUG_VOLTMETER_ALIGN:      TaskSelect("Plug voltmeter task",           task.PlugVoltmeterAlign),
+        Task.METAL_BAR_APPROACH:        TaskSelect("Metal bar approach task",       task.BarMagnetApproach),
+        Task.NAMED_TARGET:              TaskSelect("Named target task",             task.Task),
+        Task.RASSOR_SAMPLE:             TaskSelect("Rassor sample task",            task.RassorSampling),
+        Task.ETHERNET_CABLE:            TaskSelect("Plug ethernet task",            task.EthernetApproach),
+        Task.ALIGN_PANEL:               TaskSelect("Align panel",                   task.AlignPanel),
+        Task.ROCK_SAMPLING_APPROACH:    TaskSelect("Rock sampling approach",        task.RockSamplingApproach),
+        Task.ROCK_SAMPLING_DROP:        TaskSelect("Rock sampling drop",            task.RockSamplingDrop),
+        Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",        task.RockSamplingComplete),
+    }
+    KNOWN_TASKS_NEW = {
+        btn_task:                       TaskSelect("Button task",                   task.PressButton)
+        for btn_task in [HDGoal.BUTTON_A0, HDGoal.BUTTON_A1, HDGoal.BUTTON_A2, HDGoal.BUTTON_A3, HDGoal.BUTTON_A4, HDGoal.BUTTON_A5, HDGoal.BUTTON_A6, HDGoal.BUTTON_A7, HDGoal.BUTTON_A8, HDGoal.BUTTON_A9, HDGoal.BUTTON_B1]
+    } | {
+        HDGoal.TOOL_PICKUP:             TaskSelect("Pick tool up task",             task.ToolPickup),
+        HDGoal.TOOL_PLACEBACK:          TaskSelect("Place tool back task",          task.ToolRelease),
+        HDGoal.PREDEFINED_POSE:         TaskSelect("Predefined target pose task",   task.PredefinedTargetPose),
+    } | {
+        
     }
 
     def __new__(cls):
@@ -74,6 +87,10 @@ class Executor(Node):
 
         self.received_voltmeter_response = False
     
+    def get_str_param(self, name: str, default: str = "") -> str:
+        self.declare_parameter(name, default)
+        return self.get_parameter(name).get_parameter_value().string_value
+    
     def createRosInterfaces(self):
         self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignementCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
@@ -83,6 +100,7 @@ class Executor(Node):
         self.create_subscription(UInt32, "/HD/vision/depth", pt.depth_callback, 10)
         self.create_subscription(Float64MultiArray, "/HD/kinematics/set_camera_transform", pc.set_camera_transform_position, 10)
         self.create_subscription(ServoResponse, "/EL/servo_response", self.voltmeterResponseCallback, 10)
+        
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
         self.add_object_pub = self.create_publisher(Object, "/HD/kinematics/add_object", 10)
@@ -91,6 +109,8 @@ class Executor(Node):
         self.task_outcome_pub = self.create_publisher(Int8, "HD/kinematics/task_outcome", 10)
         self.voltmeter_pub = self.create_publisher(ServoRequest, "EL/servo_req", 10)
         self.joint_space_cmd_pub = self.create_publisher(JointSpaceCmd, "HD/kinematics/joint_goal2", 10)
+        
+        self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_task_executor_goal_srv"), self.goalAssignementCallback)
 
     def loginfo(self, text: str):
         self.get_logger().info(text)
@@ -150,7 +170,7 @@ class Executor(Node):
         msg = MotorCommand(
             name = "Gripper",
             mode = MotorCommand.TORQUE,
-            command = torque_scaling_factor
+            command = float(torque_scaling_factor)
         )
         self.motor_command_pub.publish(msg)
     
@@ -159,7 +179,7 @@ class Executor(Node):
         msg = MotorCommand(
             name = "Rassor",
             mode = MotorCommand.TORQUE,
-            command = torque_scaling_factor
+            command = float(torque_scaling_factor)
         )
         self.motor_command_pub.publish(msg)
 
@@ -206,6 +226,33 @@ class Executor(Node):
         if msg.success:
             self.received_voltmeter_response = True
 
+    def goalAssignementCallback(self, request: RequestHDGoal.Request, response: RequestHDGoal.Response) -> RequestHDGoal.Response:
+        self.loginfo("Task executor received cmd")
+        goal = request.goal
+        if self.hasTask():
+            self.loginfo("but already has task : ignoring")
+            response.success = False
+            response.message = HDGoal.ALREADY_HAS_GOAL
+            return response
+        if goal.target not in self.KNOWN_TASKS_NEW:
+            self.loginfo("Unknown task")
+            response.success = False
+            response.message = HDGoal.UNKNOWN_GOAL
+            return response
+
+        k = {
+            HDGoal.TOOL_PICKUP: {"tool": goal.tool},
+            HDGoal.TOOL_PLACEBACK: {"tool": goal.tool},
+            HDGoal.PREDEFINED_POSE: {"name": goal.predefined_pose},
+        }
+        kwargs = k.get(goal.target, {})
+        self.task = self.KNOWN_TASKS_NEW[goal.target].select(self, **kwargs)
+        self.new_task = True
+        response.success = True
+        response.message = HDGoal.OK
+        self.logerror("Z"*10000 + "goal assignment accepted")
+        return response
+        
     def taskAssignementCallback(self, msg: Task):
         """listens to /HD/fsm/task_assignment topic"""
         self.loginfo("Task executor received cmd")
@@ -274,7 +321,6 @@ class Executor(Node):
 def main():
     rclpy.init()
     executor = Executor()
-    Executor.get_instance().loginfo("B"*1000)
 
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(executor, ), daemon=True)

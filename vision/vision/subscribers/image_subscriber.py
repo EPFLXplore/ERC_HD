@@ -34,7 +34,7 @@ class ImageSubscriber(Node):
         # from the video_frames topic. The queue size is 10 messages.
         self.subscription = self.create_subscription(
             CompressedImage,
-            "/hd/perception/image",
+            "/HD/perception/image",
             self.listener_callback,
             10,
         )
@@ -55,6 +55,9 @@ class ImageSubscriber(Node):
 
         # Used to convert between ROS and OpenCV images
         self.br = CvBridge()
+
+        self.save_path = './captured_images'
+        os.makedirs(self.save_path, exist_ok=True)
 
     def update_fps(self):
         """
@@ -92,8 +95,13 @@ class ImageSubscriber(Node):
         # Convert ROS Image message to OpenCV image
         current_frame = self.br.compressed_imgmsg_to_cv2(data)
 
+        name = str(time.time()) + '.png'
+        image_path = os.path.join(self.save_path, name)
+        cv2.imwrite(    image_path, current_frame)
+
         self.draw_fps(current_frame)
 
+        self.get_logger().info("Displaying Perception Image")
         # Display image
         cv2.imshow("Perception", current_frame)
         cv2.waitKey(1)
