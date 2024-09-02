@@ -23,7 +23,7 @@ class InstanceSegmentation(ModuleInterface):
         # # Create a config and configure the pipeline to stream color frames
         # self.config = rs.config()
         # self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
-        pass
+        passs
 
     def get_model(self):
         return self.model
