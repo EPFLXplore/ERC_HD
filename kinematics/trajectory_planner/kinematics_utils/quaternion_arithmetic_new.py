@@ -79,6 +79,9 @@ class Point(gmsg.Point):
             z = random_in_range(*z_range)
         )
     
+    def copy(self) -> Point:
+        return Point(x=self.x, y=self.y, z=self.z)
+    
     @classmethod
     def eq(cls, p1: PointLike, p2: PointLike, precision: float=10**-10) -> bool:
         """
@@ -198,6 +201,9 @@ class Quaternion(gmsg.Quaternion):
         if random.random() < 0.5:
             w = -w
         return cls(x=x, y=y, z=z, w=w)
+    
+    def copy(self) -> Quaternion:
+        return Quaternion(x=self.x, y=self.y, z=self.z, w=self.w)
     
     @classmethod
     def eq(cls, q1: QuaternionLike, q2: QuaternionLike, precision: float=10**-10) -> bool:
@@ -384,6 +390,9 @@ class Pose(gmsg.Pose):
             position = Point.random(x_range, y_range, z_range),
             orientation = Quaternion.random()
         )
+    
+    def copy(self) -> Pose:
+        return Pose(position=self.position.copy(), orientation=self.orientation.copy())
     
     @classmethod
     def eq(cls, pose1: PoseLike, pose2: PoseLike, precision: float=10**-10) -> bool:
