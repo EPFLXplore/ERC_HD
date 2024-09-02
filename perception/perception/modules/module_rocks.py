@@ -18,11 +18,7 @@ cuda_available = torch.cuda.is_available()
 device = torch.device("cuda" if cuda_available else "cpu")
 
 class ModuleRocks(ModuleInterface):
-    def __init__(self):
-        # Load the YOLO model with a predefined path  
-        # self.model = YOLO('medium_200_epochs.pt')
-        # self.model.to(device)
-
+    def __init__(self, camera_matrix, camera_depth_scale):
         # Placeholder for the current processed frame
         self.current_frame = None
         self.detected_objects = None
@@ -31,58 +27,58 @@ class ModuleRocks(ModuleInterface):
         self.depth_scale = None
         self.intrinsics = None
 
-    def set_camera_parameters(self, depth_scale, intrinsics):
-        self.depth_scale = depth_scale
-        self.intrinsics = intrinsics
+        self.depth_scale = camera_depth_scale
+        self.intrinsics = camera_matrix
 
-    def __call__(self, rgb_frame: np.ndarray, depth_frame: np.ndarray, detected_objs):
+    def __call__(self, rgb_frame: np.ndarray, depth_frame: np.ndarray, segmentation_data):
         print("Called Rocks Module method")
 
         # Process the frame with the model
         self.current_frame    = rgb_frame
-        self.detected_objects =  detected_objs
+        self.detected_objects =  segmentation_data
         
         # Draw bounding boxes and masks
-        # self.current_frame, self.detected_objects = self.draw_bounding_boxes(self.current_frame, self.detected_objects)
-        # self.current_frame, self.detected_objects = self.draw_masks_and_contours(self.current_frame, self.detected_objects)
+        self.current_frame, self.detected_objects = self.draw_bounding_boxes(self.current_frame, self.detected_objects)
+        self.detected_objects = self.draw_masks_and_contours(self.detected_objects)
         
         results = []
         # Calculate axes, dimensions, and quasi-center for each detected object
-        # for obj in self.detected_objects:
-        #     contour = obj['contour']
-        #     if contour is not None:
-        #         center = obj['center']
-        #         bounding_box = obj['bounding_box']
-        #         depth_surface = depth_frame[center[1], center[0]] * self.depth_scale  # Depth at the rock surface
+        for obj in self.detected_objects:
+            # for obj in objs:
+                contour = obj['contour']
+                if contour is not None:
+                    center = obj['center']
+                    bounding_box = obj['bounding_box']
+                    depth_surface = depth_frame[center[1], center[0]] * self.depth_scale  # Depth at the rock surface
 
-        #         max_dist, min_dist, max_pts, min_pts = self.calculate_axes(contour, center)
-        #         self.current_frame = self.draw_axes(self.current_frame, max_pts, min_pts)
+                    max_dist, min_dist, max_pts, min_pts = self.calculate_axes(contour, center)
+                    self.current_frame = self.draw_axes(self.current_frame, max_pts, min_pts)
 
-        #         self.current_frame, max_dim_cm, min_dim_cm = self.calculate_real_dimensions(
-        #             self.current_frame, obj, max_dist, min_dist, depth_surface, self.intrinsics)
+                    self.current_frame, max_dim_cm, min_dim_cm = self.calculate_real_dimensions(
+                        self.current_frame, obj, max_dist, min_dist, depth_surface, self.intrinsics)
 
-        #         # Calculate the quasi-center of the rock
-        #         rock_center_coordinates, rock_center_depth = self.calculate_rock_center(center, bounding_box, depth_frame, self.intrinsics, depth_surface)
+                    # Calculate the quasi-center of the rock
+                    rock_center_coordinates, rock_center_depth = self.calculate_rock_center(center, bounding_box, depth_frame, self.intrinsics, depth_surface)
 
-        #         # Calculate the minimal axis vector in 3D
-        #         min_axis_vector = self.calculate_minimal_axis_vector(min_pts, rock_center_coordinates, depth_frame)
+                    # Calculate the minimal axis vector in 3D
+                    min_axis_vector = self.calculate_minimal_axis_vector(min_pts, rock_center_coordinates, depth_frame)
 
-        #         # Compute the quaternion for aligning the Z-axis with the minimal axis vector
-        #         quaternion = self.calculate_quaternion_to_align_z(min_axis_vector)
+                    # Compute the quaternion for aligning the Z-axis with the minimal axis vector
+                    quaternion = self.calculate_quaternion_to_align_z(min_axis_vector)
 
-        #         # Append the details to results
-        #         results.append({
-        #             "center": center,
-        #             "max_dimension_cm": max_dim_cm,
-        #             "min_dimension_cm": min_dim_cm,
-        #             "depth_surface": depth_surface,
-        #             "rock_center_depth": rock_center_depth,
-        #             "rock_center_coordinates": rock_center_coordinates,
-        #             "quaternion": quaternion
-        #         })
+                    # Append the details to results
+                    results.append({
+                        "center": center,
+                        "max_dimension_cm": max_dim_cm,
+                        "min_dimension_cm": min_dim_cm,
+                        "depth_surface": depth_surface,
+                        "rock_center_depth": rock_center_depth,
+                        "rock_center_coordinates": rock_center_coordinates,
+                        "quaternion": quaternion
+                    })
 
         # Return the current frame and results
-        return self.current_frame, results
+        return results
 
     def calculate_minimal_axis_vector(self, min_pts, rock_center_coordinates, depth_frame):
         # Deproject the minimal axis points to 3D
@@ -149,11 +145,13 @@ class ModuleRocks(ModuleInterface):
         for result in results:  # segment in segments 
             if result.masks is not None:
                 for mask, box in zip(result.masks, result.boxes):
-                    mask = cv2.resize(mask, (image.shape[1], image.shape[0]))
-                    binary_mask = (mask > 0.5).astype(np.uint8)
+
+                    mask_np = np.array(mask.mask_pixel, dtype=np.float32)
+                    # Create the binary mask
+                    binary_mask = (mask_np > 0.5).astype(np.uint8)
+                    # binary_mask = (mask.mask_pixel.astype(np.uint8) > 0.5).astype(np.uint8)
 
                     # Extract bounding box data
-                    box = results.boxes[i]
                     x1 = int(box.x1)  # Top-left x coordinate
                     y1 = int(box.y1)  # Top-left y coordinate
                     x2 = int(box.x2)  # Bottom-right x coordinate
@@ -163,7 +161,7 @@ class ModuleRocks(ModuleInterface):
                     track_id = box.track_id  # Tracking ID
 
                     # Draw bounding box on the image
-                    cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)  # Blue color for bounding box
+                    # cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)  # Blue color for bounding box
 
                     # Draw the center of the bounding box
                     center_x = int((x1 + x2) / 2)
@@ -171,7 +169,7 @@ class ModuleRocks(ModuleInterface):
                     cv2.circle(image, (center_x, center_y), 5, (255, 255, 0), -1)  # Cyan color for center
 
                     detected_objects.append({
-                        'mask': binary_mask,
+                        'mask': binary_mask, #binary_mask
                         'contour': None,
                         'center': (center_x, center_y),
                         'bounding_box': (x1, y1, x2, y2)
@@ -179,8 +177,8 @@ class ModuleRocks(ModuleInterface):
         return image, detected_objects
 
 
-    def draw_masks_and_contours(self, image, detected_objects):
-        for obj in detected_objects:
+    def draw_masks_and_contours(self, segmentation_data):
+        for obj in segmentation_data:
             binary_mask = obj['mask']
 
             # Find contours
@@ -189,7 +187,8 @@ class ModuleRocks(ModuleInterface):
                 contour = max(contours, key=cv2.contourArea)
                 obj['contour'] = contour
 
-        return image, detected_objects
+        return segmentation_data
+
 
     def calculate_axes(self, contour, center):
         max_distance = 0

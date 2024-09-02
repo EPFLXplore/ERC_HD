@@ -12,8 +12,11 @@ from custom_msg.msg import BoundingBox
 from custom_msg.msg import Mask
 from custom_msg.msg import SegmentationData
 from custom_msg.msg import CompressedRGBD  # Custom message type
+from custom_msg.msg import Model 
 
 from sensor_msgs.msg import CompressedImage
+
+from custom_msg.srv import InitializeModel
 
 
 import time
@@ -23,12 +26,10 @@ class ModelNode(Node):
         super().__init__("HD_model_node")
         self._logger.info("Booting .....")
 
-
         # Initialize YOLO to None
         self._logger.info("Loading model")
         self.model = YOLO('./src/perception/models/probe_m_v3.pt')
         self._logger.info("Segmentation model loaded")
-
 
         # Initialize CvBridge
         self.bridge = CvBridge()
@@ -40,15 +41,18 @@ class ModelNode(Node):
 
         # ROS 2 Publishers
         self.processed_rgb_pub = self.create_publisher(
-            CompressedImage, "/hd/perception/image", 1
+            Model, "/HD/model/image", 1 # TODO publish on the /hd/model/image 
+        ) # TODO publish recieved message + results from segmentation    DONE
+
+        # Server (to initialize model)
+        self.init_model_srv = self.create_service(
+            InitializeModel, "/HD/model_node/init_model", self.change_model
         )
 
         self._logger.info('Up and Running, come and get segmented :p')
 
     
-    def init_model(self, request, response):
-        model_path = self.get_parameter('model_path').get_parameter_value().string_value
-
+    def change_model(self, request, response):
         self._logger.info("Received model_path request")
 
         # Load YOLO model using the model path provided in the request
@@ -67,17 +71,25 @@ class ModelNode(Node):
     def rgbd_callback(self, rgbd_msg: CompressedRGBD):
         """Producer method to add new data to the queue."""
         self.get_logger().info('rgbd_callback')
-        rgb = self.bridge.compressed_imgmsg_to_cv2(rgbd_msg.color)
-        detected = self.detect(rgb)
-        self.draw(rgb, detected)
-        rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
-        self.processed_rgb_pub.publish(rgb_msg)
 
+        rgb = self.bridge.compressed_imgmsg_to_cv2(rgbd_msg.color)
+        # Detect
+        detected = self.detect(rgb)
+
+        # Draw
+        #self.draw(rgb, detected)
+        rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
+
+        # Publish RGB + segmentation results  
+        model_msg = Model()
+        model_msg.image = rgbd_msg
+        model_msg.segmentation_data = detected
+
+        self.processed_rgb_pub.publish(model_msg)
 
 
     def detect(self, rgb: ndarray):
         start_time = time.time()
-
 
         # Perform inference on the color image
         results = self.model(rgb)
@@ -91,7 +103,7 @@ class ModelNode(Node):
             segment_data.masks = []
 
             # Extract and populate names using the class ID mapping
-            # segment_data.names = [results.names[int(class_id)] for class_id in result.boxes.cls]
+            segment_data.names = [result.names[int(class_id)] for class_id in result.boxes.cls]
 
             # Extract bounding boxes, confidence scores, class labels, and tracking IDs
             for i in range(len(result.boxes.xyxy)):
@@ -113,7 +125,7 @@ class ModelNode(Node):
 
             # Extract and populate masks
             if result.masks is not None:
-                print(result.masks.xy)
+                # print(result.masks.xy)
                 for xy in result.masks.xy:
                     mask_msg = Mask()
                     mask_msg.mask_pixel = xy.flatten().tolist()  # Convert ndarray to flat list
@@ -127,38 +139,30 @@ class ModelNode(Node):
             segmentation_data.append(segment_data)
 
         # Assign the segmentation data to the response
-
-        
         end_time = time.time()
         self._logger.info(f'Detection took {round(end_time - start_time, 3)} seconds')
+
         return segmentation_data
     
 
-    def draw(self, image, segmentation_data):
-        # print(segmentation_data)
+    # def draw(self, image, segmentation_data): # TODO draw has to be moved to perception in instance segmentation.
+    #     # print(segmentation_data)
         
+    #     for segmentation in segmentation_data:
+    #         for vertices in segmentation.masks:
+    #             vertices = np.array(vertices.mask_pixel).reshape(-1,2)
+    #             # cv2.polylines(image,[vertices.astype(np.int32)],True,(0,255,255))
+    #             cv2.fillPoly(image, pts=[vertices.astype(np.int32)], color=(255, 0, 0))
+    #         for box in segmentation.boxes:
+    #             x1, y1, x2, y2 = int(box.x1), int(box.y1), int(box.x2), int(box.y2)
+    #             conf = box.confidence
+    #             cls = box.class_id
+
+    #             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)  # Red color box
+
+    #         # Annotate the frame with the class and confidence score
+    #             cv2.putText(image, f"{self.model.names[cls]}: {conf:.2f}", (x1, y1 - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
         
-        for segmentation in segmentation_data:
-            for vertices in segmentation.masks:
-                vertices = np.array(vertices.mask_pixel).reshape(-1,2)
-                # cv2.polylines(image,[vertices.astype(np.int32)],True,(0,255,255))
-                cv2.fillPoly(image, pts=[vertices.astype(np.int32)], color=(255, 0, 0))
-            for box in segmentation.boxes:
-                x1, y1, x2, y2 = int(box.x1), int(box.y1), int(box.x2), int(box.y2)
-                conf = box.confidence
-                cls = box.class_id
-
-                cv2.rectangle(image, (x1, y1), (x2, y2), (0, 0, 255), 2)  # Red color box
-
-            # Annotate the frame with the class and confidence score
-                cv2.putText(image, f"{self.model.names[cls]}: {conf:.2f}", (x1, y1 - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-        
-
-
-    # def extract_segmentation_data(self, segmentation_msg:SegmentationData):
-        
-
-
 
 def main(args=None):
     rclpy.init(args=args)
@@ -168,3 +172,6 @@ def main(args=None):
 
 if __name__ == "__main__":
     main()
+
+
+# TODO add service to load / change model    DONE 

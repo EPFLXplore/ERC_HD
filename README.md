@@ -1,5 +1,10 @@
 # ERC_HD
 
+## Running
+1. cd into the docker directory of your choice  ex. 
+''' cd docker_foxy_jetson_torch '''
+2. 
+
 ## Description
 
 Repository containing software for the EPFL Xplore robotic arm.

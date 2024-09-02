@@ -11,6 +11,7 @@ from .interfaces.monocular_camera_interface import MonocularCameraInterface
 from .camera_factory import CameraFactory
 import time
 
+import pyrealsense2 as rs
 
 class CameraNode(Node):
     """
@@ -62,10 +63,13 @@ class CameraNode(Node):
         msg.color = self.bridge.cv2_to_compressed_imgmsg(color)
 
         self.publisher_.publish(msg)
+        # self._logger.info('Publishing RGBD image')
 
     def camera_params_callback(self, request, response):
         intrinsics = self.camera.get_intrinsics()
+        depth_scale = self.camera.get_depth_scale()
         distortion_coefficients = self.camera.get_coeffs()
+        response.depth_scale = depth_scale
         response.fx = intrinsics["fx"]
         response.fy = intrinsics["fy"]
         response.cx = intrinsics["cx"]
