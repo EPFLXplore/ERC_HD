@@ -173,10 +173,10 @@ class Task:
         """executes all commands"""
         for _ in range(len(self.command_chain)):
             if not self._executeNextCommand():
-                self._terminate(wait=True)
+                self._terminate()
                 return False    # task failed
             time.sleep(self.pause_time)
-        if terminate: self._terminate(wait=True)
+        if terminate: self._terminate()
         return True             # task succeeded
     
     def _getActiveBackgroundCommands(self) -> Dict[str, BackgroundCommandData]:
@@ -186,16 +186,16 @@ class Task:
                 alive_cmds[cmd_id] = cmd_data
         return alive_cmds
     
-    def _terminate(self, wait=False):
+    def _terminate(self):
         """
         make sure execution finishes gracefully
         cleanup background commands that have been killed
         """
-        for id, cmd_data in self.BACKGROUND_COMMANDS.items():
+        for id, cmd_data in list(self.BACKGROUND_COMMANDS.items()):
             if not cmd_data.command.isAlive():
                 self.BACKGROUND_COMMANDS.pop(id)
     
-    def _old_terminate(self, wait=False):
+    def _old_terminate(self, wait: bool = True):
         """make sure execution finishes gracefully"""
         # deprecated: background commands are now class attributes and shouldn't be killed at the end of individual task execution
         for cmd_data in self.BACKGROUND_COMMANDS.values():
