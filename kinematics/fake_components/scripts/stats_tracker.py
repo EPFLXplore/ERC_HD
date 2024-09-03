@@ -5,7 +5,7 @@ from rclpy.node import Node
 import threading
 from geometry_msgs.msg import Pose, Quaternion
 from sensor_msgs.msg import JointState
-from custom_msg.msg import TargetInstruction
+from custom_msg.msg import ArucoObject
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as qan
 # import kinematics_utils.pose_corrector as pc
