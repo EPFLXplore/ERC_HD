@@ -39,8 +39,8 @@ class RockSamplingApproach(Task):
             )
             self.addCommand(
                 PoseCommand(),
-                pre_operation = lambda cmd: cmd.setPose(position=self.getApproachPosition(target),
-                                                        orientation=self.getApproachOrientation()),
+                pre_operation = lambda cmd: cmd.setPose(qan.Pose(position=self.getApproachPosition(target),
+                                                        orientation=self.getApproachOrientation())),
                 description = f"approach rock at {target} meters"
             )
 

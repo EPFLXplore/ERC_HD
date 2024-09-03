@@ -83,6 +83,7 @@ class PerceptionNode(Node):
 
     def _get_camera_params(self):
         """Request the camera matrix and distortion coefficients from the camera node."""
+        self.get_logger().info("Waiting for camera_params service...")
 
         while not self.camera_params_client.wait_for_service(timeout_sec=1.0):
             self.get_logger().info("Waiting for camera_params service...")
@@ -108,6 +109,7 @@ class PerceptionNode(Node):
         )
         self.dist_coeffs = np.array(camera_params.distortion_coefficients)
         self.depth_scale = camera_params.depth_scale
+        self.get_logger().info("Camera parameters successfully saved")
 
 
     def rgbd_callback(self, model_msg: Model):

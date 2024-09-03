@@ -14,6 +14,7 @@ from custom_msg.msg import ServoRequest, ServoResponse
 from custom_msg.srv import RequestHDGoal
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
+from std_srvs.srv import Trigger
 import threading
 import kinematics_utils.pose_tracker as pt
 # import kinematics_utils.pose_corrector as pc
@@ -22,6 +23,7 @@ import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as qan
 from typing import List, Type
 from dataclasses import dataclass
+from rclpy.task import Future
 
 
 @dataclass(frozen=True)
@@ -33,6 +35,19 @@ class TaskSelect:
     def select(self, executor: Executor, **kwargs):
         executor.loginfo(self.info_msg)
         return self.task_type(executor, **kwargs)
+
+
+class DoneFlag:
+    def __init__(self):
+        self.done = False
+        self.future: Future = None
+    
+    def trigger(self, future: Future):
+        self.done = True
+        self.future = future
+    
+    def __bool__(self) -> bool:
+        return self.done
 
 
 class Executor(Node):
@@ -54,7 +69,7 @@ class Executor(Node):
         for btn_task in [HDGoal.BUTTON_A0, HDGoal.BUTTON_A1, HDGoal.BUTTON_A2, HDGoal.BUTTON_A3, HDGoal.BUTTON_A4, HDGoal.BUTTON_A5, HDGoal.BUTTON_A6, HDGoal.BUTTON_A7, HDGoal.BUTTON_A8, HDGoal.BUTTON_A9, HDGoal.BUTTON_B1]
     } | {
         HDGoal.TOOL_PICKUP:             TaskSelect("Pick tool up task",             task.ToolPickup),
-        HDGoal.TOOL_PLACEBACK:          TaskSelect("Place tool back task",          task.ToolRelease),
+        HDGoal.TOOL_PLACEBACK:          TaskSelect("Place tool back task",          task.ToolPlaceback),
         HDGoal.PREDEFINED_POSE:         TaskSelect("Predefined target pose task",   task.PredefinedTargetPose),
     } | {
         
@@ -111,6 +126,8 @@ class Executor(Node):
         
         self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_task_executor_goal_srv"), self.goalAssignmentCallback)
 
+        self.human_verification_cli = self.create_client(Trigger, self.get_str_param("rover_hd_human_verification_srv"))
+        
     def loginfo(self, text: str):
         self.get_logger().info(text)
     
@@ -194,6 +211,21 @@ class Executor(Node):
             states = Float64MultiArray(data=states)
         )
         self.joint_space_cmd_pub.publish(msg)
+    
+    def requestHumanVerification(self) -> bool:
+        req = Trigger.Request()
+        while not self.human_verification_cli.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting again...')
+
+        future = self.human_verification_cli.call_async(req)
+        done_flag = DoneFlag(self)
+        future.add_done_callback(done_flag.trigger)
+        
+        while not done_flag:
+            time.sleep(0.2)
+        
+        result: Trigger.Response = done_flag.future.result()
+        return result.success
 
     def addObjectToWorld(self, shape: List[float], pose: Pose, name: str, type: int=Object.BOX, operation: int=Object.ADD):
         """sends an object to the planner, to be added to the world"""

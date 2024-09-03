@@ -39,15 +39,13 @@ def normalize(l):
 
 
 class DoneFlag:
-    def __init__(self, node: Node):
+    def __init__(self):
         self.done = False
-        self.node = node
         self.future: Future = None
     
     def trigger(self, future: Future):
         self.done = True
         self.future = future
-        self.node.get_logger().error("B"*10000 + "done flag triggered")
     
     def __bool__(self) -> bool:
         return self.done
@@ -216,7 +214,7 @@ class FSM(Node):
             self.get_logger().info('Service not available, waiting again...')
 
         future = client.call_async(req)
-        done_flag = DoneFlag(self)
+        done_flag = DoneFlag()
         future.add_done_callback(done_flag.trigger)
         
         # rate = self.create_rate(100)
@@ -224,7 +222,6 @@ class FSM(Node):
             self.get_logger().warn("call not done")
             # rate.sleep()
             time.sleep(0.05)
-            continue
         
         return done_flag.future.result()
     

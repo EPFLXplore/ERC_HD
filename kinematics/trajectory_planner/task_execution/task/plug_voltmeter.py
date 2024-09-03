@@ -41,8 +41,8 @@ class PlugVoltmeterAlign(Task):
         self.constructStandardDetectionCommands("plug", extended=True)
         self.addCommand(
             PoseCommand(self.executor),
-            pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(),
-                                                    orientation=self.getPressOrientation()),
+            pre_operation = lambda cmd: cmd.setPose(qan.Pose(position=self.getPressPosition(),
+                                                    orientation=self.getPressOrientation())),
             description = "go in front of plug"
         )
 

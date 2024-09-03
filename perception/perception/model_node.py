@@ -36,17 +36,17 @@ class ModelNode(Node):
 
         # ROS 2 Subscriptions
         self.rgbd_sub = self.create_subscription(
-            CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 1
+            CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 10
         )
 
         # ROS 2 Publishers
         self.processed_rgb_pub = self.create_publisher(
-            Model, "/HD/model/image", 1 # TODO publish on the /hd/model/image 
+            Model, "/HD/model/image", 1 # TODO publish on the /hd/model/image   DONE
         ) # TODO publish recieved message + results from segmentation    DONE
 
         # Server (to initialize model)
         self.init_model_srv = self.create_service(
-            InitializeModel, "/HD/model_node/init_model", self.change_model
+            InitializeModel, "/HD/model/init_model", self.change_model
         )
 
         self._logger.info('Up and Running, come and get segmented :p')
@@ -86,6 +86,7 @@ class ModelNode(Node):
         model_msg.segmentation_data = detected
 
         self.processed_rgb_pub.publish(model_msg)
+
 
 
     def detect(self, rgb: ndarray):

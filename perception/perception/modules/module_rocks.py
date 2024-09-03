@@ -28,7 +28,19 @@ class ModuleRocks(ModuleInterface):
         self.intrinsics = None
 
         self.depth_scale = camera_depth_scale
-        self.intrinsics = camera_matrix
+
+        intrin = rs.intrinsics()
+        intrin.width = 640  # Example width, adjust as needed
+        intrin.height = 480  # Example height, adjust as needed
+        intrin.ppx = camera_matrix[0][2]
+        intrin.ppy = camera_matrix[1][2]
+        intrin.fx = camera_matrix[0][0]
+        intrin.fy = camera_matrix[1][1]
+        intrin.model = rs.distortion.none  # Example, adjust if using distortion
+        intrin.coeffs = [0, 0, 0, 0, 0]  # Example, adjust if using distortion coefficients
+
+        self.intrinsics = intrin
+
 
     def __call__(self, rgb_frame: np.ndarray, depth_frame: np.ndarray, segmentation_data):
         print("Called Rocks Module method")
@@ -80,10 +92,18 @@ class ModuleRocks(ModuleInterface):
         # Return the current frame and results
         return results
 
-    def calculate_minimal_axis_vector(self, min_pts, rock_center_coordinates, depth_frame):
+    def calculate_minimal_axis_vector(self, min_pts, rock_center_coordinates, depth_frame: np.ndarray):
         # Deproject the minimal axis points to 3D
+        if self.intrinsics is None:
+            print("Error: 'self.intrinsics' is None.")
+        else:
+            print("self.intrinsics is correctly initialized.")
+
         p1_3d = np.array(rs.rs2_deproject_pixel_to_point(self.intrinsics, min_pts[0], depth_frame[min_pts[0][1], min_pts[0][0]] * self.depth_scale))
         p2_3d = np.array(rs.rs2_deproject_pixel_to_point(self.intrinsics, min_pts[1], depth_frame[min_pts[1][1], min_pts[1][0]] * self.depth_scale))
+            
+        # p1_3d = np.array(rs.rs2_deproject_pixel_to_point(self.intrinsics, min_pts[0], 2 * self.depth_scale))
+        # p2_3d = np.array(rs.rs2_deproject_pixel_to_point(self.intrinsics, min_pts[1], 2 * self.depth_scale))
 
         # Calculate the minimal axis vector from the rock center
         min_axis_vector = p1_3d - p2_3d
@@ -226,6 +246,8 @@ class ModuleRocks(ModuleInterface):
 
         fx = intrinsics.fx
         fy = intrinsics.fy
+        # fx = intrinsics[0][0]
+        # fy = intrinsics[1][1]
 
         max_dimension = (max_distance * depth_value) / fx
         min_dimension = (min_distance * depth_value) / fy

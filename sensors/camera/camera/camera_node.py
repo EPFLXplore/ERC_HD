@@ -33,7 +33,7 @@ class CameraNode(Node):
 
 
         # to the HD/vision/video_frames topic. The queue size is 10 messages.
-        self.publisher_ = self.create_publisher(CompressedRGBD, "HD/camera/rgbd", 1)
+        self.publisher_ = self.create_publisher(CompressedRGBD, "/HD/camera/rgbd", 1)
         self.get_logger().info("Image Publisher Created")
 
         # We will publish a message every 0.1 seconds
@@ -80,6 +80,9 @@ class CameraNode(Node):
         )
         self.get_logger().info(
             f"Provided distortion coefficients: {response.distortion_coefficients}"
+        )
+        self.get_logger().info(
+            f"Provided depth scale: {response.depth_scale}"
         )
         return response
 

@@ -7,7 +7,7 @@ from custom_msg.msg import HDGoal
 from math import pi
 
 
-# TRANSFORM CONSTRUCTORS
+# OLD TRANSFORM CONSTRUCTORS
 
 def link6_transform():
     # !!!=== deprecated ===!!!
@@ -186,10 +186,13 @@ class PoseCorrector:
     def has_tool(self) -> bool:
         return self.tool != ToolsList.NONE
     
-    def set_tool(self, tool: Tool):
+    def equip_tool(self, tool: Tool):
         self.tool = tool
     
-    def set_fingers(self, fingers: Fingers):
+    def unequip_tool(self):
+        self.tool = ToolsList.NONE
+    
+    def equip_fingers(self, fingers: Fingers):
         self.fingers = fingers
     
     def set_camera_transform(self, pose: Pose):
