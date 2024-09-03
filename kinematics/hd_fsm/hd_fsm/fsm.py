@@ -106,7 +106,7 @@ class FSM(Node):
         # clients
         self.servo_start_cli = self.create_client(Trigger, "/servo_node/start_servo")
         self.task_executor_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_task_executor_goal_srv"))
-        self.perception_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_perception_goal_srv"))
+        self.perception_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_model_set_goal_srv"))
 
     def deprecate_all_commands(self):
         self.received_manual_direct_cmd_at = time.time() - 2*self.command_expiration

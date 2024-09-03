@@ -73,10 +73,11 @@ class ModuleRocks(ModuleInterface):
                     rock_center_coordinates, rock_center_depth = self.calculate_rock_center(center, bounding_box, depth_frame, self.intrinsics, depth_surface)
 
                     # Calculate the minimal axis vector in 3D
-                    min_axis_vector = self.calculate_minimal_axis_vector(min_pts, rock_center_coordinates, depth_frame)
+                    # min_axis_vector = self.calculate_minimal_axis_vector(min_pts, rock_center_coordinates, depth_frame)
 
                     # Compute the quaternion for aligning the Z-axis with the minimal axis vector
-                    quaternion = self.calculate_quaternion_to_align_z(min_axis_vector)
+                    # quaternion = self.calculate_quaternion_to_align_z(min_axis_vector)
+                    quaternion = None 
 
                     # Append the details to results
                     results.append({
