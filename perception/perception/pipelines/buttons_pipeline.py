@@ -5,7 +5,7 @@ from .pipeline_interface import PipelineInterface
 from numpy import ndarray
 from rclpy.node import Node
 
-from custom_msg.msg import TargetInstruction
+from custom_msg.msg import ArucoObject
 
 from ..modules.aruco_detector import ArucoDetector
 
@@ -62,7 +62,7 @@ class ButtonsPipeline(PipelineInterface):
 
     def _initialize_publishers(self, node: Node):
         self.pose_publisher = node.create_publisher(
-            TargetInstruction, "/HD/perception/button_pose", 10
+            ArucoObject, "/HD/perception/button_pose", 10
         )
 
     def _initialize_pipeline(self, node: Node):
