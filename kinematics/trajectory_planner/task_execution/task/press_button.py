@@ -29,8 +29,8 @@ class PressButton(Task):
         
         self.addCommand(
             PoseCommand(),
-            pre_operation = lambda cmd: cmd.setPose(position=self.getPressPosition(),
-                                                    orientation=self.getPressOrientation()),
+            pre_operation = lambda cmd: cmd.setPose(qan.Pose(position=self.getPressPosition(),
+                                                    orientation=self.getPressOrientation())),
             description = "go in front of button"
         )
         self.addCommand(

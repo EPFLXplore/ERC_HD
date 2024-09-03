@@ -39,8 +39,8 @@ class Dummy(Task):
         # )
         self.addCommand(
             PoseCommand(),
-            pre_operation = lambda cmd: cmd.setPose(position=self.getAlignedPosition(),
-                                                    orientation=self.getScanOrientation()),
+            pre_operation = lambda cmd: cmd.setPose(qan.Pose(position=self.getAlignedPosition(),
+                                                    orientation=self.getScanOrientation())),
             description = "go in front of ARtag"
         )
 

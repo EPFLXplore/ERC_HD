@@ -49,6 +49,7 @@ class Command:
         self.executor: Executor = None
         self.execute_count = 0
         self.has_failed = False
+        self.fail_message = ""
         self.is_background = False
 
     def createSetter(self, attribute: str):
@@ -93,6 +94,9 @@ class Command:
 
     def hasFailed(self) -> bool:
         return self.has_failed
+    
+    def getFailMessage(self) -> str:
+        return self.fail_message
 
 
 class BackgroundCommand:
