@@ -27,6 +27,26 @@ class ToolManip(Task):
         tool_pose.position = tool_pose.point_image(p)
         return tool_pose
 
+    def equipToolCommand(self):
+        class EquipToolCommand(Command):
+            def execute(s):
+                super().execute()
+                pc.equip_tool(self.tool)
+        self.addCommand(
+            EquipToolCommand(),
+            description = "equip tool"
+        )
+
+    def unequipToolCommand(self):
+        class UnequipToolCommand(Command):
+            def execute(s):
+                super().execute()
+                pc.unequip_tool(self.tool)
+        self.addCommand(
+            UnequipToolCommand(),
+            description = "unequip tool"
+        )
+
 
 class ToolPickup(ToolManip):
     def constructCommandChain(self):
@@ -56,9 +76,11 @@ class ToolPickup(ToolManip):
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation, reverse=True),
             description = "Retract with tool"
         )
+        
+        self.equipToolCommand()
 
 
-class ToolRelease(ToolManip):
+class ToolPlaceback(ToolManip):
     def constructCommandChain(self):
         super().constructCommandChain()
         
@@ -87,4 +109,4 @@ class ToolRelease(ToolManip):
             description = "Retract away from tool station"
         )
 
-
+        self.unequipToolCommand()

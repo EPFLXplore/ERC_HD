@@ -45,4 +45,4 @@ class Dummy(Task):
         )
 
 
-DummyWithTools = combine_tasks(ToolPickup, Dummy, ToolRelease)
+DummyWithTools = combine_tasks(ToolPickup, Dummy, ToolPlaceback)
