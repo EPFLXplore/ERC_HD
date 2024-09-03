@@ -1,7 +1,8 @@
 from geometry_msgs.msg import Pose
-from custom_msg.msg import TargetInstruction
+from custom_msg.msg import TargetInstruction, Rock
 from std_msgs.msg import UInt32
-import kinematics_utils.quaternion_arithmetic as qa
+import kinematics_utils.quaternion_arithmetic_new as qan
+from typing import Any
 import math
 import copy
 # import kinematics_utils.pose_corrector as pc
@@ -74,3 +75,57 @@ def detected_object_pose_callback(msg: TargetInstruction):
 def deprecate_detection():
     global DETECTION_UPDATED
     DETECTION_UPDATED = False
+
+
+class Detection:
+    def __init__(self):
+        self.locked = False
+        self.deprecated = True
+    
+    def lock(self):
+        self.locked = True
+    
+    def unlock(self):
+        self.locked = False
+    
+    def deprecate(self):
+        self.deprecated = True
+    
+    def callback(self, msg: Any):
+        self.lock()
+        self._callback()
+        self.unlock()
+        self.deprecated = False
+
+    def _callback(self, msg: Any):
+        raise NotImplementedError()
+
+
+class ARTagDetection(Detection):
+    def __init__(self):
+        self.artag_pose = qan.Pose()
+        self.object_pose = qan.Pose()
+    
+    def _callback(self, msg: Any):
+        pass
+
+
+class ButtonDetection(ARTagDetection):
+    @property
+    def button_pose(self) -> qan.Pose:
+        return self.object_pose
+    
+
+
+class RockDetection(Detection):
+    def __init__(self):
+        self.rock_pose = qan.Pose()
+        self.max_diameter = 0.0
+        self.min_diameter = 0.0
+    
+    def callback(self, msg: Rock):
+        self.rock_pose = qan.Pose.make(msg.pose)
+        self.max_diameter = msg.max_diameter
+        self.grab_axis = self.min_diameter
+
+
