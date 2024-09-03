@@ -69,7 +69,7 @@ class Executor(Node):
         for btn_task in [HDGoal.BUTTON_A0, HDGoal.BUTTON_A1, HDGoal.BUTTON_A2, HDGoal.BUTTON_A3, HDGoal.BUTTON_A4, HDGoal.BUTTON_A5, HDGoal.BUTTON_A6, HDGoal.BUTTON_A7, HDGoal.BUTTON_A8, HDGoal.BUTTON_A9, HDGoal.BUTTON_B1]
     } | {
         HDGoal.TOOL_PICKUP:             TaskSelect("Pick tool up task",             task.ToolPickup),
-        HDGoal.TOOL_PLACEBACK:          TaskSelect("Place tool back task",          task.ToolRelease),
+        HDGoal.TOOL_PLACEBACK:          TaskSelect("Place tool back task",          task.ToolPlaceback),
         HDGoal.PREDEFINED_POSE:         TaskSelect("Predefined target pose task",   task.PredefinedTargetPose),
     } | {
         
