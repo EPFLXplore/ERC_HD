@@ -1,8 +1,8 @@
 from geometry_msgs.msg import Pose
-from custom_msg.msg import TargetInstruction, Rock
+from custom_msg.msg import ArucoObject, Rock, Brick, Ethernet, Probe
 from std_msgs.msg import UInt32
 import kinematics_utils.quaternion_arithmetic_new as qan
-from typing import Any
+from typing import Any, Union
 import math
 import copy
 # import kinematics_utils.pose_corrector as pc
@@ -39,7 +39,7 @@ def depth_callback(msg: UInt32):
     DEPTH = msg.data * mm_to_m
 
 
-def detected_object_pose_callback(msg: TargetInstruction):
+def detected_object_pose_callback(msg: ArucoObject):
     """listens to detected_elements topic and updates the pose of the detected elements (with respect to the end effector pose)"""
     global DETECTED_OBJECTS_LOCKED
     global DETECTION_UPDATED
@@ -77,6 +77,16 @@ def deprecate_detection():
     DETECTION_UPDATED = False
 
 
+def mm2m(pose: Pose) -> qan.Pose:
+    conversion = 0.001
+    pose = qan.Pose.make(pose)
+    pose.position *= conversion
+    return pose
+
+
+MessageType = Union[ArucoObject, Rock, Brick, Ethernet, Probe]
+
+
 class Detection:
     def __init__(self):
         self.locked = False
@@ -91,30 +101,39 @@ class Detection:
     def deprecate(self):
         self.deprecated = True
     
-    def callback(self, msg: Any):
+    def is_detection_valid(self, msg: MessageType) -> bool:
+        return msg.is_detected
+        raise NotImplementedError()
+    
+    def callback(self, msg: MessageType):
+        if not self.is_detection_valid(msg):
+            return
         self.lock()
         self._callback()
         self.unlock()
         self.deprecated = False
 
-    def _callback(self, msg: Any):
+    def _callback(self, msg: MessageType):
         raise NotImplementedError()
 
 
-class ARTagDetection(Detection):
+class FromArucoTagDetection(Detection):
     def __init__(self):
         self.artag_pose = qan.Pose()
         self.object_pose = qan.Pose()
     
-    def _callback(self, msg: Any):
-        pass
+    def _callback(self, msg: ArucoObject):
+        def correct_pose(pose: Pose) -> Pose:
+            return pc.vision_to_abs(mm2m(pose))
+
+        self.artag_pose = correct_pose(msg.ar_tag_pose)
+        self.object_pose = correct_pose(msg.object_pose)
 
 
-class ButtonDetection(ARTagDetection):
+class ButtonDetection(FromArucoTagDetection):
     @property
     def button_pose(self) -> qan.Pose:
         return self.object_pose
-    
 
 
 class RockDetection(Detection):
@@ -122,10 +141,24 @@ class RockDetection(Detection):
         self.rock_pose = qan.Pose()
         self.max_diameter = 0.0
         self.min_diameter = 0.0
-    
-    def callback(self, msg: Rock):
-        self.rock_pose = qan.Pose.make(msg.pose)
+
+    def _callback(self, msg: Rock):
+        self.rock_pose = mm2m(msg.pose)
         self.max_diameter = msg.max_diameter
         self.grab_axis = self.min_diameter
 
 
+class ProbeDetection(Detection):
+    def __init__(self):
+        self.pose = qan.Pose()
+    
+    def _callback(self, msg: Probe):
+        self.pose = msg.pose
+
+
+class Perception:
+    def __init__(self):
+        # self.button_detection = ButtonDetection()
+        self.aruco_object_detection = FromArucoTagDetection()
+        self.rock_detection = RockDetection()
+        self.probe_detection = ProbeDetection()

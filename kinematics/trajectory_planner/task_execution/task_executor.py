@@ -8,7 +8,7 @@ from rclpy.node import Node
 import task_execution.task as task
 # from task_execution.command import NamedJointTargetCommand
 import task_execution.command as command
-from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, TargetInstruction, MotorCommand
+from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, ArucoObject, MotorCommand
 from custom_msg.msg import HDGoal
 from custom_msg.msg import ServoRequest, ServoResponse
 from custom_msg.srv import RequestHDGoal
@@ -91,7 +91,7 @@ class Executor(Node):
         super().__init__("kinematics_task_executor")
         self.createRosInterfaces()
 
-        self.task: task.task_execution.task.Task = None
+        self.task: task.Task = None
         self.new_task = False
 
         # indicates whether trajectory feedback has been updated
@@ -108,7 +108,7 @@ class Executor(Node):
     def createRosInterfaces(self):
         self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignmentCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-        self.create_subscription(TargetInstruction, "/HD/perception/button_pose", pt.detected_object_pose_callback, 10)
+        self.create_subscription(ArucoObject, "/HD/perception/button_pose", pt.detected_object_pose_callback, 10)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
         self.create_subscription(Int8, "/ROVER/Maintenance", self.CSMaintenanceCallback, 10)
         self.create_subscription(UInt32, "/HD/vision/depth", pt.depth_callback, 10)

@@ -6,7 +6,7 @@ from rclpy.node import Node
 from task_execution.task import PressButton, PlugVoltmeterAlign, PlugVoltmeterApproach, RassorSampling, BarMagnetApproach, EthernetApproach, AlignPanel, RockSamplingApproach, RockSamplingDrop, RockSamplingComplete
 import task_execution.task
 from task_execution.command import NamedJointTargetCommand
-from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, TargetInstruction, MotorCommand
+from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, ArucoObject, MotorCommand
 from custom_msg.msg import ServoRequest, ServoResponse
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
