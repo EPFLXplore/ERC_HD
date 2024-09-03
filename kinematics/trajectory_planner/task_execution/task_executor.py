@@ -91,7 +91,7 @@ class Executor(Node):
         return self.get_parameter(name).get_parameter_value().string_value
     
     def createRosInterfaces(self):
-        self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignementCallback, 10)
+        self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignmentCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
         self.create_subscription(TargetInstruction, "/HD/perception/button_pose", pt.detected_object_pose_callback, 10)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
@@ -109,7 +109,7 @@ class Executor(Node):
         self.voltmeter_pub = self.create_publisher(ServoRequest, "EL/servo_req", 10)
         self.joint_space_cmd_pub = self.create_publisher(JointSpaceCmd, "HD/kinematics/joint_goal2", 10)
         
-        self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_task_executor_goal_srv"), self.goalAssignementCallback)
+        self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_task_executor_goal_srv"), self.goalAssignmentCallback)
 
     def loginfo(self, text: str):
         self.get_logger().info(text)
@@ -225,7 +225,7 @@ class Executor(Node):
         if msg.success:
             self.received_voltmeter_response = True
 
-    def goalAssignementCallback(self, request: RequestHDGoal.Request, response: RequestHDGoal.Response) -> RequestHDGoal.Response:
+    def goalAssignmentCallback(self, request: RequestHDGoal.Request, response: RequestHDGoal.Response) -> RequestHDGoal.Response:
         self.loginfo("Task executor received cmd")
         goal = request.goal
         if self.hasTask():
@@ -252,7 +252,7 @@ class Executor(Node):
         self.logerror("Z"*10000 + "goal assignment accepted")
         return response
         
-    def taskAssignementCallback(self, msg: Task):
+    def taskAssignmentCallback(self, msg: Task):
         """listens to /HD/fsm/task_assignment topic"""
         self.loginfo("Task executor received cmd")
         if self.hasTask():
