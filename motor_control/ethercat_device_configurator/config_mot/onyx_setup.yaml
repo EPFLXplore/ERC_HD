@@ -19,7 +19,7 @@ ethercat_devices:
     name: J3
     configuration_file: onyx_device_configurations/conf_j3.yaml
     ethercat_bus: eno2
-    ethercat_address: 4
+    ethercat_address: 5
 
   - type: Maxon
     name: J4
