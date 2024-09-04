@@ -28,7 +28,7 @@ class ModelNode(Node):
 
         # Initialize YOLO to None
         self._logger.info("Loading model")
-        self.model = YOLO('./src/perception/models/rock_nael_200.pt')
+        self.model = YOLO('./src/perception/models/rock_m_200.pt')
         self._logger.info("Segmentation model loaded")
 
         # Initialize CvBridge
