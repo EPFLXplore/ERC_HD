@@ -57,7 +57,7 @@ class ButtonsPipeline(PipelineInterface):
         else:
             self.pose_publisher.publish(TargetInstructionMsg.empty_message())
 
-    def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray) -> None:
+    def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray, unused) -> None:
         self.run_rgb(rgb_image)
 
     def _initialize_publishers(self, node: Node):
