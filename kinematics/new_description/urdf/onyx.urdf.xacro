@@ -15,7 +15,7 @@
 </xacro:macro>
 
 <xacro:property name="joint1_limits">
-  <xacro:aaa_joint_limits lower="${-pi/2}" upper="${pi/2}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
+  <xacro:aaa_joint_limits lower="${-pi}" upper="${pi}" velocity="${1.83 * rpm_to_Radps * velocity_scaling}" />
 </xacro:property>
 
 <xacro:property name="joint2_limits">
