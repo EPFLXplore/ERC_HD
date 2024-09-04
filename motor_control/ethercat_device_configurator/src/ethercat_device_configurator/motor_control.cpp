@@ -637,18 +637,17 @@ int main(int argc, char **argv)
     // Set the abrt_ flag upon receiving an interrupt signal (e.g. Ctrl-c)
     std::signal(SIGINT, signal_handler);
 
-    // if (argc < 2)
-    // {
-    //     std::cerr << "pass path to 'setup.yaml' as command line argument" << std::endl;
-    //     return EXIT_FAILURE;
-    // }
-    // a new EthercatDeviceConfigurator object (path to setup.yaml as constructor argument)
-
     // char *path = "src/motor_control/ethercat_device_configurator/config_mot/kerby_setup.yaml"; // kerby setup
-    char *path = "motor_control/ethercat_device_configurator/config_mot/onyx_setup.yaml"; // onyx setup
-
     std::cout << "=== Creating Ethercat Device Configurator ===" << std::endl;
-    configurator = std::make_shared<EthercatDeviceConfigurator>(path);
+    try {         
+        char *path = "motor_control/ethercat_device_configurator/config_mot/onyx_setup.yaml";
+        configurator = std::make_shared<EthercatDeviceConfigurator>(path);
+    } 
+    catch (const std::exception& e)  {   
+        char *path = "src/motor_control/ethercat_device_configurator/config_mot/onyx_setup.yaml";
+        std::cout << "=== Creating Ethercat Device Configurator ===" << std::endl;
+        configurator = std::make_shared<EthercatDeviceConfigurator>(path);
+    }
 
     /*
     ** Start all masters.
