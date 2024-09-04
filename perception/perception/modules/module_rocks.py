@@ -5,6 +5,7 @@ import cv2
 #from ultralytics import YOLO
 import torch
 from scipy.spatial.transform import Rotation as R  # Use scipy for quaternion operations
+import rclpy
 
 '''
 PURPOSE OF THE MODULE
@@ -30,8 +31,8 @@ class ModuleRocks(ModuleInterface):
         self.depth_scale = camera_depth_scale
 
         intrin = rs.intrinsics()
-        intrin.width = 640  # Example width, adjust as needed
-        intrin.height = 480  # Example height, adjust as needed
+        # intrin.width = 641  # Example width, adjust as needed
+        # intrin.height = 481  # Example height, adjust as needed
         intrin.ppx = camera_matrix[0][2]
         intrin.ppy = camera_matrix[1][2]
         intrin.fx = camera_matrix[0][0]
@@ -131,34 +132,6 @@ class ModuleRocks(ModuleInterface):
         key = cv2.waitKey(1)
         if key == ord('q'):
             cv2.destroyAllWindows()
-
-    # def process_frame(self, image):
-    #     results = self.model(image, imgsz=640)
-    #     return image, results
-
-    # def draw_bounding_boxes(self, image, results):
-    #     detected_objects = []
-    #     for result in results:
-    #         if result.masks is not None:
-    #             masks = result.masks.data.cpu().numpy()
-    #             boxes = result.boxes.xyxy.cpu().numpy()
-    #             for mask, box in zip(masks, boxes):
-    #                 mask = cv2.resize(mask, (image.shape[1], image.shape[0]))
-    #                 binary_mask = (mask > 0.5).astype(np.uint8)
-
-    #                 x1, y1, x2, y2 = box.astype(int)
-    #                 cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)  # Blue color for bounding box
-    #                 center_x = int((x1 + x2) / 2)
-    #                 center_y = int((y1 + y2) / 2)
-    #                 cv2.circle(image, (center_x, center_y), 5, (255, 255, 0), -1)  # Cyan color for center
-
-    #                 detected_objects.append({
-    #                     'mask': binary_mask,
-    #                     'contour': None,
-    #                     'center': (center_x, center_y),
-    #                     'bounding_box': (x1, y1, x2, y2)
-    #                 })
-    #     return image, detected_objects
 
 
     def draw_bounding_boxes(self, image, results):
@@ -280,15 +253,20 @@ class ModuleRocks(ModuleInterface):
         float: The distance from the camera to the quasi-center.
         """
         x1, y1, x2, y2 = bounding_box
+        rclpy
+        print(f'bb corners: x1: {x1}, y1: {y1}, x2: {x2}, y2: {y2}')
+        print(f'depth frame shape {depth_frame.shape}')
 
         # Calculate depth values at the four corners of the bounding box (distance to ground)
         depth_corners = [
             depth_frame[y1, x1] * self.depth_scale,  # top-left corner
-            depth_frame[y1, x2] * self.depth_scale,  # top-right corner
-            depth_frame[y2, x1] * self.depth_scale,  # bottom-left corner
-            depth_frame[y2, x2] * self.depth_scale   # bottom-right corner
+            depth_frame[y1, x2-1] * self.depth_scale,  # top-right corner
+            depth_frame[y2-1, x1] * self.depth_scale,  # bottom-left corner
+            depth_frame[y2-1, x2-1] * self.depth_scale   # bottom-right corner
         ]
         depth_ground = np.mean(depth_corners)
+
+        # depth_ground = depth_frame[y1, x1] * self.depth_scale,  # top-left corner
 
         # Calculate the distance to the quasi-center as the average of the depth to the rock and the depth to the ground
         rock_center_depth = (depth_surface + depth_ground) / 2

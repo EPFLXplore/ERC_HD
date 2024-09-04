@@ -27,6 +27,8 @@ class RealSenseStereoCamera(StereoCameraInterface):
         # Start streaming from file
         self.profile = self.pipe.start(config)
 
+        self.align = rs.align(rs.stream.color) #TODO added
+
     def get_depth_scale(self):
         depth_scale = self.profile.get_device().first_depth_sensor().get_depth_scale()
         return depth_scale
@@ -62,10 +64,13 @@ class RealSenseStereoCamera(StereoCameraInterface):
         frameset = (
             self.pipe.wait_for_frames()
         )  # Wait for the next set of frames from the pipeline.
+        aligned_frame = self.align.process(frameset) # TODO added
         depth_frame = (
-            frameset.get_depth_frame()
-        )  # Get the depth frame from the frameset.
-
+            aligned_frame.get_depth_frame()
+        ) 
+        # depth_frame = (
+        #     frameset.get_depth_frame()
+        # )  # Get the depth frame from the frameset.
         depth = np.asanyarray(
             depth_frame.get_data()
         )  # Convert the depth frame to a NumPy array.
@@ -92,5 +97,6 @@ class RealSenseStereoCamera(StereoCameraInterface):
     def get_rgbd(self):
         frameset = self.pipe.wait_for_frames()
         color_frame = np.asanyarray((frameset.get_color_frame().get_data()))
-        depth_frame = np.asanyarray(frameset.get_depth_frame().get_data())
+        # depth_frame = np.asanyarray(frameset.get_depth_frame().get_data())
+        depth_frame = self.get_depth()
         return color_frame, depth_frame

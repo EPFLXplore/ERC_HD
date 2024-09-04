@@ -109,6 +109,9 @@ class PerceptionNode(Node):
         )
         self.dist_coeffs = np.array(camera_params.distortion_coefficients)
         self.depth_scale = camera_params.depth_scale
+        # self.get_logger().info(f"Fx: {camera_params.fx}, fy: {camera_params.fy}")
+        # self.get_logger().info(f"Depth scale: {camera_params.depth_scale}")
+
         self.get_logger().info("Camera parameters successfully saved")
 
 

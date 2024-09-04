@@ -17,7 +17,12 @@ class RocksPipeline(PipelineInterface):
     def __init__(self, config_file: str, node: Node, camera_matrix: ndarray = None, camera_depth_scale: ndarray = None, draw_results: bool = True):
         self.camera_matrix = camera_matrix
         self.camera_depth_scale = camera_depth_scale
+
+        # node.get_logger().info(f"Fx: {camera_matrix[0][0]}, fy: {camera_matrix[1][1]}")
+        # node.get_logger().info(f"Depth scale: {camera_depth_scale}")
+
         super().__init__(config_file, node, draw_results)
+        self.node = node  # TODO temp for logging
 
 
     def _initialize_publishers(self, node: Node):
@@ -45,6 +50,12 @@ class RocksPipeline(PipelineInterface):
         results = self.obj_module(rgb_image, depth_image, segmentation_data)
 
         for result in results:
+
+            # rock_center_depth = result["rock_center_depth"]
+            # rock_center_coords = result["rock_center_coordinates"]
+            # self.node._logger.info(f"Center depth: {rock_center_depth}")
+            # self.node._logger.info(f"Center coordinates: {rock_center_coords}")
+
             # New Rock
             rock = Rock()
 
