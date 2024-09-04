@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 import threading
 from geometry_msgs.msg import Pose, Quaternion
-from custom_msg.msg import TargetInstruction
+from custom_msg.msg import ArucoObject
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as qan
 # import kinematics_utils.pose_corrector as pc
@@ -81,7 +81,7 @@ def main():
     node = rclpy.create_node("fake_vision")
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-    detected_element_pub = node.create_publisher(TargetInstruction, "/HD/perception/button_pose", 10)
+    detected_element_pub = node.create_publisher(ArucoObject, "/HD/perception/button_pose", 10)
 
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
@@ -104,7 +104,7 @@ def main():
             pose.position *= scale
 
             pose = pose.publishable()
-            msg = TargetInstruction(ar_tag_pose=pose, object_pose=pose)
+            msg = ArucoObject(ar_tag_pose=pose, object_pose=pose)
             detected_element_pub.publish(msg)
 
             rate.sleep()

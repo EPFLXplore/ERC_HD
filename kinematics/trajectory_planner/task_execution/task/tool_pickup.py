@@ -10,8 +10,8 @@ class ToolManip(Task):
         tool = ToolsList.FROM_ROS_MSG_MAP[tool]
         super().__init__(executor, construct_command_chain=False)
         self.tool: Tool = tool
-        self.above_distance = 0.1
-        self.tool_maintaining_torque_scaling = 0.8
+        self.above_distance = 0.15
+        self.tool_maintaining_torque_scaling = 0.1
         if declare_tool_maintaining_torque_cmd:
             self.declareBackgroundCommand(
                 id = self.TOOL_MAINTAINING_TORQUE_ID,
@@ -60,7 +60,7 @@ class ToolPickup(ToolManip):
         self.constructOpenGripperCommands()
 
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.5, distance=self.above_distance),
+            StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation),
             description = "Reach tool"
         )
@@ -72,7 +72,7 @@ class ToolPickup(ToolManip):
         )
 
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.5, distance=self.above_distance),
+            StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation, reverse=True),
             description = "Retract with tool"
         )
@@ -90,7 +90,7 @@ class ToolPlaceback(ToolManip):
         )
         
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.5, distance=self.above_distance),
+            StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation),
             description = "Reach tool station"
         )
@@ -104,7 +104,7 @@ class ToolPlaceback(ToolManip):
         self.constructOpenGripperCommands()
         
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.5, distance=self.above_distance),
+            StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation, reverse=True),
             description = "Retract away from tool station"
         )

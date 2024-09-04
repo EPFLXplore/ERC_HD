@@ -33,8 +33,8 @@ def generate_launch_description():
 
             # Camera node with the parameter set from the launch argument
            launch_include,
-            Node(package="perception", executable="perception_node", name="perception"),
-            Node(package="vision", executable="img_subscriber", name="vision"),
-            Node(package="perception", executable="gui_node", name="perception"),
+            Node(package="perception", executable="perception_node", name="perception", parameters=[hd_topic_names_file]),
+            Node(package="vision", executable="img_subscriber", name="vision", parameters=[hd_topic_names_file]),
+            Node(package="perception", executable="gui_node", name="perception", parameters=[hd_topic_names_file]),
         ]
     )

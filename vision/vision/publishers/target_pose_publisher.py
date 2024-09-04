@@ -4,14 +4,14 @@ from geometry_msgs.msg import Quaternion
 from rclpy.node import Node
 
 from std_msgs.msg import Int8
-from custom_msg.msg import TargetInstruction
+from custom_msg.msg import ArucoObject
 
 
 class TargetPosePublisher(Node):
     def __init__(self):
         super().__init__("target_pose_publisher")
 
-        self.publisher_ = self.create_publisher(TargetInstruction, "HD/vision/target_pose", 10)
+        self.publisher_ = self.create_publisher(ArucoObject, "HD/vision/target_pose", 10)
         self.get_logger().info("Target Pose Publisher Created")
 
     def timer_callback(self):
@@ -29,7 +29,7 @@ class TargetPosePublisher(Node):
             f"difference: x:{pose.position.x - ar_tag_pose.position.x}, y: {pose.position.y - ar_tag_pose.position.y}, z: {pose.position.z - ar_tag_pose.position.z}"
         )
 
-        instruction = TargetInstruction()
+        instruction = ArucoObject()
         instruction.object_pose = pose
         instruction.ar_tag_pose = ar_tag_pose
         instruction.task_id = task
