@@ -73,7 +73,7 @@ USER $USERNAME
 RUN pip install --no-cache-dir --upgrade pip
 
 # Install the necessary Python packages
-RUN pip install --no-cache-dir -v evdev pyrealsense2
+RUN pip install --no-cache-dir -v evdev pyrealsense2 ultralytics
 
 # Set a diretory to store the project
 WORKDIR /home/$USERNAME/dev_ws/src
