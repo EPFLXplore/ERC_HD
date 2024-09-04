@@ -43,7 +43,7 @@ class BarMagnetApproach(Task):
         # approach
         self.addCommand(
             PoseCommand(),
-            pre_operation = lambda cmd: cmd.setPose(position=self.getAboveBarPosition(), orientation=self.getBarOrientation()),
+            pre_operation = lambda cmd: cmd.setPose(qan.Pose(position=self.getAboveBarPosition(), orientation=self.getBarOrientation())),
             description="go above metal bar"
         )
 

@@ -9,6 +9,7 @@ import evdev.events
 import threading
 from time import sleep
 from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
+from std_srvs.srv import Trigger
 from custom_msg.msg import Task, HDGoal
 from custom_msg.srv import HDMode, RequestHDGoal
 import math
@@ -123,6 +124,7 @@ class ControlStation(Node):
         self.semi_auto_cmd = Task.NO_TASK
         self.goal_msg = HDGoal()
         self.new_goal_msg = False
+        self.human_verification_needed = False
 
         # direction of joint 3, 4
         self.joint3_dir = 1
@@ -136,6 +138,7 @@ class ControlStation(Node):
         # self.mode_change_pub = self.create_publisher(Int8, "/ROVER/HD_mode", 10)
         self.mode_cli = self.create_client(HDMode, self.get_str_param("hd_fsm_mode_srv", "aaaa"))
         self.fsm_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_fsm_goal_srv"))
+        self.human_verification_srv = self.create_service(Trigger, self.get_str_param("rover_hd_human_verification_srv"), self.human_verification_callback)
 
         if keyboard_control:
             from input_handling.keyboard import KeyboardConfig
@@ -184,7 +187,9 @@ class ControlStation(Node):
         self.input_config.bind(KeyboardConfig._1, self.set_man_inv_angular, "value", coordinate=2, multiplier=1)
         self.input_config.bind(KeyboardConfig._3, self.set_man_inv_angular, "value", coordinate=2, multiplier=-1)
         
-        self.input_config.bind(KeyboardConfig.x, self.set_semi_auto_cmd2, "event_value")
+        self.input_config.bind(KeyboardConfig.b, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
+        self.input_config.bind(KeyboardConfig.e, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.BUTTON_TOOL)
+        self.input_config.bind(KeyboardConfig.u, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.BUTTON_TOOL)
     
     def create_gamepad_bindings(self):
         from input_handling.gamepad import GamePadConfig
@@ -205,8 +210,8 @@ class ControlStation(Node):
 
         # ==== semi auto ====
         self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
-        self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.BUTTON_TOOL)
-        self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.BUTTON_TOOL)
+        self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.SHOVEL_TOOL)
+        self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.SHOVEL_TOOL)
     
         # ==== manual inverse ====
         self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
@@ -252,6 +257,10 @@ class ControlStation(Node):
                 msg.str_slot = "optimal_view"
             self.task_pub.publish(msg)
             self.semi_auto_cmd = Task.NO_TASK
+    
+    def human_verification_callback(self, request, response):
+        # TODO
+        return response
     
     def send_fsm_goal_request(self):
         req = RequestHDGoal.Request()

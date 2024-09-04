@@ -9,7 +9,6 @@ endif()
 find_package(moveit_common REQUIRED)
 moveit_package()
 find_package(trajectory_planner)
-find_package(kerby_moveit_config)
 find_package(custom_msg)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS

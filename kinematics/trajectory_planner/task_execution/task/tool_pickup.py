@@ -1,24 +1,17 @@
 from __future__ import annotations
 from .task import *
-from kinematics_utils.pose_corrector_new import Tools
+from kinematics_utils.pose_corrector_new import Tool, ToolsList
 from custom_msg.msg import HDGoal
 
 
 class ToolManip(Task):
     TOOL_MAINTAINING_TORQUE_ID = "tool_maintaining_torque"
-    def __init__(self, executor: Executor, tool: int = Tools.BUTTONS, declare_tool_maintaining_torque_cmd: bool = True):
-        tool_map = {
-            HDGoal.SHOVEL_TOOL: Tools.SHOVEL,
-            HDGoal.VOLTMETER_TOOL: Tools.VOLTMETER,
-            HDGoal.BUTTON_TOOL: Tools.BUTTONS,
-        }
-        tool = tool_map[tool]
-        if tool not in Tools.SWAPABLE:
-            raise ValueError("Tool is unknown or isn't swapable")
+    def __init__(self, executor: Executor, tool: str, declare_tool_maintaining_torque_cmd: bool = True):
+        tool = ToolsList.FROM_ROS_MSG_MAP[tool]
         super().__init__(executor, construct_command_chain=False)
-        self.tool = tool
-        self.above_distance = 0.1
-        self.tool_maintaining_torque_scaling = 0.8
+        self.tool: Tool = tool
+        self.above_distance = 0.15
+        self.tool_maintaining_torque_scaling = 0.1
         if declare_tool_maintaining_torque_cmd:
             self.declareBackgroundCommand(
                 id = self.TOOL_MAINTAINING_TORQUE_ID,
@@ -30,9 +23,29 @@ class ToolManip(Task):
     def aboveToolPose(self) -> qan.Pose:
         d = 0.001 + self.above_distance
         p = [0.0, 0.0, -d]
-        tool_pose = Tools.PICKUP_POSE[self.tool]
+        tool_pose = self.tool.pickup_pose
         tool_pose.position = tool_pose.point_image(p)
         return tool_pose
+
+    def equipToolCommand(self):
+        class EquipToolCommand(Command):
+            def execute(s):
+                super().execute()
+                pc.equip_tool(self.tool)
+        self.addCommand(
+            EquipToolCommand(),
+            description = "equip tool"
+        )
+
+    def unequipToolCommand(self):
+        class UnequipToolCommand(Command):
+            def execute(s):
+                super().execute()
+                pc.unequip_tool(self.tool)
+        self.addCommand(
+            UnequipToolCommand(),
+            description = "unequip tool"
+        )
 
 
 class ToolPickup(ToolManip):
@@ -47,7 +60,7 @@ class ToolPickup(ToolManip):
         self.constructOpenGripperCommands()
 
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.5, distance=self.above_distance),
+            StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation),
             description = "Reach tool"
         )
@@ -59,16 +72,15 @@ class ToolPickup(ToolManip):
         )
 
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.5, distance=self.above_distance),
+            StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation, reverse=True),
             description = "Retract with tool"
         )
-
-
-class ToolRelease(ToolManip):
-    # def __init__(self, executor: Executor, tool: int = Tools.BUTTONS):
-    #     super().__init__(executor, tool, declare_tool_maintaining_torque_cmd=False)
         
+        self.equipToolCommand()
+
+
+class ToolPlaceback(ToolManip):
     def constructCommandChain(self):
         super().constructCommandChain()
         
@@ -78,7 +90,7 @@ class ToolRelease(ToolManip):
         )
         
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.5, distance=self.above_distance),
+            StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation),
             description = "Reach tool station"
         )
@@ -92,9 +104,9 @@ class ToolRelease(ToolManip):
         self.constructOpenGripperCommands()
         
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.5, distance=self.above_distance),
+            StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation, reverse=True),
             description = "Retract away from tool station"
         )
 
-
+        self.unequipToolCommand()

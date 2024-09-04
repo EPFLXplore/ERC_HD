@@ -13,7 +13,8 @@ import array
 import math
 from std_srvs.srv import Trigger
 from rclpy.task import Future
-
+from rclpy.executors import MultiThreadedExecutor, ExternalShutdownException
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
 
 VERBOSE = True
 
@@ -38,15 +39,13 @@ def normalize(l):
 
 
 class DoneFlag:
-    def __init__(self, node: Node):
+    def __init__(self):
         self.done = False
-        self.node = node
         self.future: Future = None
     
     def trigger(self, future: Future):
         self.done = True
         self.future = future
-        self.node.get_logger().error("B"*10000 + "done flag triggered")
     
     def __bool__(self) -> bool:
         return self.done
@@ -61,6 +60,8 @@ class FSM(Node):
 
     def __init__(self):
         super().__init__("HD_fsm")
+        self.mutually_exclusive_callback_group = MutuallyExclusiveCallbackGroup()
+        self.retrant_callback_group = ReentrantCallbackGroup()
         self.create_ros_interfaces()
         self.velocity = 0
         self.command_expiration = .5   # seconds
@@ -92,7 +93,7 @@ class FSM(Node):
         
         # servers
         self.hd_mode_srv = self.create_service(HDMode, self.get_str_param("hd_fsm_mode_srv"), self.new_mode_callback)
-        self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_fsm_goal_srv"), self.goal_assignement_callback)
+        self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_fsm_goal_srv"), self.goal_assignement_callback, callback_group=self.retrant_callback_group)
 
 
         # subscriptions
@@ -105,7 +106,7 @@ class FSM(Node):
         # clients
         self.servo_start_cli = self.create_client(Trigger, "/servo_node/start_servo")
         self.task_executor_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_task_executor_goal_srv"))
-        self.perception_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_perception_goal_srv"))
+        self.perception_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_model_set_goal_srv"))
 
     def deprecate_all_commands(self):
         self.received_manual_direct_cmd_at = time.time() - 2*self.command_expiration
@@ -195,9 +196,7 @@ class FSM(Node):
                 return response
         
         task_exec_response = self.send_request(self.task_executor_goal_assignment_cli, goal)
-        response.success = True
-        response.message = HDGoal.OK
-        return response
+        self.get_logger().warn("X"*10000)
         if not task_exec_response.success:
             response.success = False
             response.message = task_exec_response.message
@@ -215,17 +214,20 @@ class FSM(Node):
             self.get_logger().info('Service not available, waiting again...')
 
         future = client.call_async(req)
-        return
-        done_flag = DoneFlag(self)
+        done_flag = DoneFlag()
         future.add_done_callback(done_flag.trigger)
         
-        rate = self.create_rate(100)
+        # rate = self.create_rate(100)
         while not done_flag:
             self.get_logger().warn("call not done")
-            rate.sleep()
-            # continue
+            # rate.sleep()
+            time.sleep(0.05)
         
         return done_flag.future.result()
+    
+    def schedule_done_callback(self, future, callback):
+        # Schedule the done callback within the callback group
+        self.spare_callback_group.add_callback(callback, future)
     
     def task_cmd_callback(self, msg: Task):
         self.semi_autonomous_command = msg
@@ -388,7 +390,11 @@ def main(args=None):
     node = FSM()
 
     # Spin in a separate thread
-    thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
+    executor = MultiThreadedExecutor(num_threads=4)
+    executor.add_node(node)
+    # thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
+    # thread.start()
+    thread = threading.Thread(target=spin, args=(executor, ), daemon=True)
     thread.start()
 
     try:
@@ -400,5 +406,12 @@ def main(args=None):
     thread.join()
 
 
+def spin(executor):
+    try:
+        executor.spin()
+    except ExternalShutdownException:
+        pass
+    
+    
 if __name__ == '__main__':
     main()

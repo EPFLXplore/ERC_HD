@@ -173,10 +173,10 @@ class Task:
         """executes all commands"""
         for _ in range(len(self.command_chain)):
             if not self._executeNextCommand():
-                self._terminate(wait=True)
+                self._terminate()
                 return False    # task failed
             time.sleep(self.pause_time)
-        if terminate: self._terminate(wait=True)
+        if terminate: self._terminate()
         return True             # task succeeded
     
     def _getActiveBackgroundCommands(self) -> Dict[str, BackgroundCommandData]:
@@ -186,16 +186,16 @@ class Task:
                 alive_cmds[cmd_id] = cmd_data
         return alive_cmds
     
-    def _terminate(self, wait=False):
+    def _terminate(self):
         """
         make sure execution finishes gracefully
         cleanup background commands that have been killed
         """
-        for id, cmd_data in self.BACKGROUND_COMMANDS.items():
+        for id, cmd_data in list(self.BACKGROUND_COMMANDS.items()):
             if not cmd_data.command.isAlive():
                 self.BACKGROUND_COMMANDS.pop(id)
     
-    def _old_terminate(self, wait=False):
+    def _old_terminate(self, wait: bool = True):
         """make sure execution finishes gracefully"""
         # deprecated: background commands are now class attributes and shouldn't be killed at the end of individual task execution
         for cmd_data in self.BACKGROUND_COMMANDS.values():
@@ -255,8 +255,8 @@ class Task:
             )
             self.addCommand(
                 PoseCommand(),
-                pre_operation = lambda cmd: cmd.setPose(position=self.getScanPosition(),
-                                                        orientation=self.getScanOrientation()),
+                pre_operation = lambda cmd: cmd.setPose(qan.Pose(position=self.getScanPosition(),
+                                                        orientation=self.getScanOrientation())),
                 description = "go in front of ARtag"
             )
         self.addCommand(
@@ -310,24 +310,26 @@ class Task:
             description = "add axis of the object to visualize orientation"
         )
     
-    def constructOpenGripperCommands(self, high_torque: float = 1.0, low_torque: float = 0.1, post_completion_wait: float = 0.0):
+    def constructOpenGripperCommands(self, high_torque: float = 1.0, low_torque: float = 0.1, 
+                                     high_torque_duration: float = 1.0, low_torque_duration: float = 5.0, post_completion_wait: float = 0.0):
         self.addCommand(
-            GripperCommand(GripperCommand.OPEN, duration=1.0, torque_scaling_factor=high_torque),
+            GripperCommand(GripperCommand.OPEN, duration=high_torque_duration, torque_scaling_factor=high_torque),
             description = "open gripper high torque"
         )
         self.addCommand(
-            GripperCommand(GripperCommand.OPEN, duration=3.0, torque_scaling_factor=low_torque),
+            GripperCommand(GripperCommand.OPEN, duration=low_torque_duration, torque_scaling_factor=low_torque),
             post_operation = lambda cmd: time.sleep(post_completion_wait),
             description = "open gripper low torque"
         )
     
-    def constructCloseGripperCommands(self, high_torque: float = 1.0, low_torque: float = 0.1, post_completion_wait: float = 0.0):
+    def constructCloseGripperCommands(self, high_torque: float = 1.0, low_torque: float = 0.1, 
+                                      high_torque_duration: float = 1.0, low_torque_duration: float = 10.0, post_completion_wait: float = 0.0):
         self.addCommand(
-            GripperCommand(GripperCommand.CLOSE, duration=1.0, torque_scaling_factor=high_torque),
+            GripperCommand(GripperCommand.CLOSE, duration=high_torque_duration, torque_scaling_factor=high_torque),
             description = "close gripper high torque"
         )
         self.addCommand(
-            GripperCommand(GripperCommand.CLOSE, duration=3.0, torque_scaling_factor=low_torque),
+            GripperCommand(GripperCommand.CLOSE, duration=low_torque_duration, torque_scaling_factor=low_torque),
             post_operation = lambda cmd: time.sleep(post_completion_wait),
             description = "close gripper low torque"
         )

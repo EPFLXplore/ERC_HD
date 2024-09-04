@@ -10,6 +10,9 @@ from custom_msg.msg import RockArray
 from custom_msg.msg import Rock
 from custom_msg.msg import SegmentationData
 
+from geometry_msgs.msg import Pose, Point, Quaternion
+
+
 class RocksPipeline(PipelineInterface):
     def __init__(self, config_file: str, node: Node, camera_matrix: ndarray = None, camera_depth_scale: ndarray = None, draw_results: bool = True):
         self.camera_matrix = camera_matrix
@@ -37,17 +40,39 @@ class RocksPipeline(PipelineInterface):
         # New ROS msg
         msg = RockArray()
 
+        temp = []
+
         results = self.obj_module(rgb_image, depth_image, segmentation_data)
 
         for result in results:
             # New Rock
             rock = Rock()
-            rock.pose         = result["quaternion"]
-            self._logger.info("Quaternion: " + result["quaternion"])
-            rock.max_diameter = result["max_dimension_cm"]
-            rock.grab_axis    = result["min_dimension_cm"]
-            msg.append(rock)
 
+            # rock.pose         = p #result["quaternion"]
+
+            # Instantiate a Pose message
+            pose = Pose()
+
+            # Set the position part of the Pose
+            pose.position = Point()
+            pose.position.x = 1.0
+            pose.position.y = 2.0
+            pose.position.z = 3.0
+
+            # Set the orientation part of the Pose
+            pose.orientation = Quaternion()
+            pose.orientation.x = 0.0
+            pose.orientation.y = 0.0
+            pose.orientation.z = 0.0
+            pose.orientation.w = 1.0
+
+            # self._logger.info("Quaternion: " + result["quaternion"])
+            rock.pose = pose 
+            rock.max_diameter = float(result["max_dimension_cm"])
+            rock.min_diameter = float(result["min_dimension_cm"])
+            temp.append(rock)
+
+        msg.rocks = temp 
         self._publish(msg)
         
 

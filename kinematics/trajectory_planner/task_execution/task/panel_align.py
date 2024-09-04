@@ -22,8 +22,8 @@ class AlignPanel(Task):
         )
         self.addCommand(
             PoseCommand(),
-            pre_operation = lambda cmd: cmd.setPose(position=self.getScanPosition(),
-                                                    orientation=self.getScanOrientation()),
+            pre_operation = lambda cmd: cmd.setPose(qan.Pose(position=self.getScanPosition(),
+                                                    orientation=self.getScanOrientation())),
             description = "go in front of ARtag"
         )
         self.addCommand(
@@ -33,7 +33,7 @@ class AlignPanel(Task):
         )
         self.addCommand(
             PoseCommand(),
-            pre_operation = lambda cmd: cmd.setPose(position=self.getScanPosition(),
-                                                    orientation=self.getScanOrientation()),
+            pre_operation = lambda cmd: cmd.setPose(qan.Pose(position=self.getScanPosition(),
+                                                    orientation=self.getScanOrientation())),
             description = "go in front of ARtag again"
         )

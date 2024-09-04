@@ -9,7 +9,7 @@ import kinematics_utils.quaternion_arithmetic as qa
 # import kinematics_utils.pose_corrector as pc
 from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
 import kinematics_utils.pose_tracker as pt
-from custom_msg.msg import Task, Object, TargetInstruction
+from custom_msg.msg import Task, Object, ArucoObject
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Bool, Float64MultiArray
 import time
@@ -103,7 +103,7 @@ def main():
     node = rclpy.create_node("kinematics_vision_test")
 
     node.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-    node.create_subscription(TargetInstruction, "/HD/perception/button_pose", artag_callback, 10)
+    node.create_subscription(ArucoObject, "/HD/perception/button_pose", artag_callback, 10)
     #node.create_subscription(PanelObject, "/HD/vision/distance_topic", pt.detected_object_pose_callback, 10)
 
     add_object_pub = node.create_publisher(Object, "/HD/kinematics/add_object", 10)

@@ -16,7 +16,7 @@ from custom_msg.msg import Model
 
 from sensor_msgs.msg import CompressedImage
 
-from custom_msg.srv import InitializeModel
+from custom_msg.srv import RequestHDGoal
 
 
 import time
@@ -36,28 +36,31 @@ class ModelNode(Node):
 
         # ROS 2 Subscriptions
         self.rgbd_sub = self.create_subscription(
-            CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 1
+            CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 10
         )
 
         # ROS 2 Publishers
         self.processed_rgb_pub = self.create_publisher(
-            Model, "/HD/model/image", 1 # TODO publish on the /hd/model/image 
+            Model, "/HD/model/image", 1 # TODO publish on the /hd/model/image   DONE
         ) # TODO publish recieved message + results from segmentation    DONE
 
         # Server (to initialize model)
-        self.init_model_srv = self.create_service(
-            InitializeModel, "/HD/model_node/init_model", self.change_model
+        self.goal_request_srv = self.create_service(
+            RequestHDGoal, self.get_str_param("hd_model_set_goal_srv"), self.set_model
         )
 
         self._logger.info('Up and Running, come and get segmented :p')
 
+    def get_str_param(self, name: str, default: str = "") -> str:
+        self.declare_parameter(name, default)
+        return self.get_parameter(name).get_parameter_value().string_value
     
-    def change_model(self, request, response):
+    def set_model(self, request, response):
         self._logger.info("Received model_path request")
 
         # Load YOLO model using the model path provided in the request
         try:
-            self.model = YOLO(request.model_path)
+            self.model = YOLO(request.goal.target)
             response.success = True
             self.get_logger().info(f"Model initialized successfully with model path: {request.model_path}")
         except Exception as e:
@@ -86,6 +89,7 @@ class ModelNode(Node):
         model_msg.segmentation_data = detected
 
         self.processed_rgb_pub.publish(model_msg)
+
 
 
     def detect(self, rgb: ndarray):

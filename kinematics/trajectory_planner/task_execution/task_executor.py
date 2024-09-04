@@ -8,21 +8,22 @@ from rclpy.node import Node
 import task_execution.task as task
 # from task_execution.command import NamedJointTargetCommand
 import task_execution.command as command
-from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, TargetInstruction, MotorCommand
+from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, ArucoObject, MotorCommand
 from custom_msg.msg import HDGoal
 from custom_msg.msg import ServoRequest, ServoResponse
 from custom_msg.srv import RequestHDGoal
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
+from std_srvs.srv import Trigger
 import threading
 import kinematics_utils.pose_tracker as pt
 # import kinematics_utils.pose_corrector as pc
 from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
-from kinematics_utils.pose_corrector_new import Tools
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as qan
 from typing import List, Type
 from dataclasses import dataclass
+from rclpy.task import Future
 
 
 @dataclass(frozen=True)
@@ -34,6 +35,19 @@ class TaskSelect:
     def select(self, executor: Executor, **kwargs):
         executor.loginfo(self.info_msg)
         return self.task_type(executor, **kwargs)
+
+
+class DoneFlag:
+    def __init__(self):
+        self.done = False
+        self.future: Future = None
+    
+    def trigger(self, future: Future):
+        self.done = True
+        self.future = future
+    
+    def __bool__(self) -> bool:
+        return self.done
 
 
 class Executor(Node):
@@ -55,7 +69,7 @@ class Executor(Node):
         for btn_task in [HDGoal.BUTTON_A0, HDGoal.BUTTON_A1, HDGoal.BUTTON_A2, HDGoal.BUTTON_A3, HDGoal.BUTTON_A4, HDGoal.BUTTON_A5, HDGoal.BUTTON_A6, HDGoal.BUTTON_A7, HDGoal.BUTTON_A8, HDGoal.BUTTON_A9, HDGoal.BUTTON_B1]
     } | {
         HDGoal.TOOL_PICKUP:             TaskSelect("Pick tool up task",             task.ToolPickup),
-        HDGoal.TOOL_PLACEBACK:          TaskSelect("Place tool back task",          task.ToolRelease),
+        HDGoal.TOOL_PLACEBACK:          TaskSelect("Place tool back task",          task.ToolPlaceback),
         HDGoal.PREDEFINED_POSE:         TaskSelect("Predefined target pose task",   task.PredefinedTargetPose),
     } | {
         
@@ -77,7 +91,7 @@ class Executor(Node):
         super().__init__("kinematics_task_executor")
         self.createRosInterfaces()
 
-        self.task: task.task_execution.task.Task = None
+        self.task: task.Task = None
         self.new_task = False
 
         # indicates whether trajectory feedback has been updated
@@ -92,9 +106,9 @@ class Executor(Node):
         return self.get_parameter(name).get_parameter_value().string_value
     
     def createRosInterfaces(self):
-        self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignementCallback, 10)
+        self.create_subscription(Task, "/HD/fsm/task_assignment", self.taskAssignmentCallback, 10)
         self.create_subscription(Pose, "/HD/kinematics/eef_pose", pt.eef_pose_callback, 10)
-        self.create_subscription(TargetInstruction, "/HD/perception/button_pose", pt.detected_object_pose_callback, 10)
+        self.create_subscription(ArucoObject, "/HD/perception/button_pose", pt.detected_object_pose_callback, 10)
         self.create_subscription(Bool, "/HD/kinematics/traj_feedback", self.trajFeedbackUpdate, 10)
         self.create_subscription(Int8, "/ROVER/Maintenance", self.CSMaintenanceCallback, 10)
         self.create_subscription(UInt32, "/HD/vision/depth", pt.depth_callback, 10)
@@ -110,8 +124,10 @@ class Executor(Node):
         self.voltmeter_pub = self.create_publisher(ServoRequest, "EL/servo_req", 10)
         self.joint_space_cmd_pub = self.create_publisher(JointSpaceCmd, "HD/kinematics/joint_goal2", 10)
         
-        self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_task_executor_goal_srv"), self.goalAssignementCallback)
+        self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_task_executor_goal_srv"), self.goalAssignmentCallback)
 
+        self.human_verification_cli = self.create_client(Trigger, self.get_str_param("rover_hd_human_verification_srv"))
+        
     def loginfo(self, text: str):
         self.get_logger().info(text)
     
@@ -195,6 +211,21 @@ class Executor(Node):
             states = Float64MultiArray(data=states)
         )
         self.joint_space_cmd_pub.publish(msg)
+    
+    def requestHumanVerification(self) -> bool:
+        req = Trigger.Request()
+        while not self.human_verification_cli.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting again...')
+
+        future = self.human_verification_cli.call_async(req)
+        done_flag = DoneFlag(self)
+        future.add_done_callback(done_flag.trigger)
+        
+        while not done_flag:
+            time.sleep(0.2)
+        
+        result: Trigger.Response = done_flag.future.result()
+        return result.success
 
     def addObjectToWorld(self, shape: List[float], pose: Pose, name: str, type: int=Object.BOX, operation: int=Object.ADD):
         """sends an object to the planner, to be added to the world"""
@@ -226,7 +257,7 @@ class Executor(Node):
         if msg.success:
             self.received_voltmeter_response = True
 
-    def goalAssignementCallback(self, request: RequestHDGoal.Request, response: RequestHDGoal.Response) -> RequestHDGoal.Response:
+    def goalAssignmentCallback(self, request: RequestHDGoal.Request, response: RequestHDGoal.Response) -> RequestHDGoal.Response:
         self.loginfo("Task executor received cmd")
         goal = request.goal
         if self.hasTask():
@@ -253,7 +284,7 @@ class Executor(Node):
         self.logerror("Z"*10000 + "goal assignment accepted")
         return response
         
-    def taskAssignementCallback(self, msg: Task):
+    def taskAssignmentCallback(self, msg: Task):
         """listens to /HD/fsm/task_assignment topic"""
         self.loginfo("Task executor received cmd")
         if self.hasTask():
