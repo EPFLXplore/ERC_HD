@@ -84,7 +84,7 @@ class EventHandlerConfig(metaclass=MetaEventHandler):
             self.input_offsets[input] = kwargs.get(attr, 0.0)
             attr = f"{name}_amplitude"
             self.input_amplitudes[input] = kwargs.get(attr, 1.0)
-
+        self.smoothing_epsilon = kwargs.get("smoothing_epsilon", 0)
         # dict of inputs correspondig to ids (if multiple inputs have the same id, for instance -1, the behaviour is undefined)
         self.reverse_id_dict : Dict[int, int] = {}
         for inp, id in self.input_ids.items():
@@ -137,10 +137,16 @@ class EventHandlerConfig(metaclass=MetaEventHandler):
         """
         return 1.0
     
+    def smoothen(self, value: float) -> float:
+        if abs(value) < self.smoothing_epsilon:
+            return 0.0
+        return value
+    
     def get_event_value(self, input: EventHandlerConfig.InputType, raw_value: float) -> float:
         offset = self.input_offsets[input]
         amplitude = self.input_amplitudes[input]
         event_value = (raw_value - offset) / amplitude
+        event_value = self.smoothen(event_value)
         return event_value
     
     def get_event_info(self, event) -> EventInfo:
