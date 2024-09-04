@@ -31,8 +31,8 @@ class ModuleRocks(ModuleInterface):
         self.depth_scale = camera_depth_scale
 
         intrin = rs.intrinsics()
-        # intrin.width = 641  # Example width, adjust as needed
-        # intrin.height = 481  # Example height, adjust as needed
+        intrin.width = 640  # Example width, adjust as needed
+        intrin.height = 480  # Example height, adjust as needed
         intrin.ppx = camera_matrix[0][2]
         intrin.ppy = camera_matrix[1][2]
         intrin.fx = camera_matrix[0][0]
@@ -55,8 +55,13 @@ class ModuleRocks(ModuleInterface):
         self.detected_objects = self.draw_masks_and_contours(self.detected_objects)
         
         results = []
+
+        closest_index = 65535 # MAX (-1 not within bounds)
+        closest_distance = float('inf')
+        frame_center = (self.intrinsics.width, self.intrinsics.height)
+
         # Calculate axes, dimensions, and quasi-center for each detected object
-        for obj in self.detected_objects:
+        for i, obj in enumerate(self.detected_objects):
             # for obj in objs:
                 contour = obj['contour']
                 if contour is not None:
@@ -73,26 +78,63 @@ class ModuleRocks(ModuleInterface):
                     # Calculate the quasi-center of the rock
                     rock_center_coordinates, rock_center_depth = self.calculate_rock_center(center, bounding_box, depth_frame, self.intrinsics, depth_surface)
 
+                    # Check if the object's max dimension is greater than or equal to the minimum required
+                    if max_dim_cm >= 15:
+                        object_center = center
+                        distance_to_center = np.linalg.norm(np.array(object_center) - np.array(frame_center))
+
+                        # Update the closest object if this one is nearer
+                        if distance_to_center < closest_distance:
+                            closest_distance = distance_to_center
+                            closest_index = i
+
                     # Calculate the minimal axis vector in 3D
                     # min_axis_vector = self.calculate_minimal_axis_vector(min_pts, rock_center_coordinates, depth_frame)
 
                     # Compute the quaternion for aligning the Z-axis with the minimal axis vector
                     # quaternion = self.calculate_quaternion_to_align_z(min_axis_vector)
-                    quaternion = None 
+                    angle = float(0)  #TODO
 
                     # Append the details to results
                     results.append({
                         "center": center,
                         "max_dimension_cm": max_dim_cm,
                         "min_dimension_cm": min_dim_cm,
-                        "depth_surface": depth_surface,
-                        "rock_center_depth": rock_center_depth,
+                        "depth_surface": depth_surface, # from camera to rock
+                        "rock_center_depth": rock_center_depth, # from camera to center of rock 
                         "rock_center_coordinates": rock_center_coordinates,
-                        "quaternion": quaternion
+                        "angle": angle
                     })
 
-        # Return the current frame and results
-        return results
+        # target_idx = self.find_closest_result_to_center(results, self.intrinsics.width, self.intrinsics.height)
+
+        # Return the results and target 
+        return results, closest_index
+
+
+    def find_closest_result_to_center(results, frame_width, frame_height, min_dimension_cm=15):
+        # Calculate the center of the frame
+        # frame_center = (frame_width // 2, frame_height // 2)
+        frame_center = (320, 240)
+        
+        closest_index = -1
+        closest_distance = float('inf')
+
+        for i, result in enumerate(results):
+            max_dimension_cm = result.get("max_dimension_cm", 0)
+
+            # Check if the object's max dimension is greater than or equal to the minimum required
+            if max_dimension_cm >= min_dimension_cm:
+                object_center = result.get("center", (0, 0))
+                distance_to_center = np.linalg.norm(np.array(object_center) - np.array(frame_center))
+
+                # Update the closest object if this one is nearer
+                if distance_to_center < closest_distance:
+                    closest_distance = distance_to_center
+                    closest_index = i
+
+        return closest_index
+
 
     def calculate_minimal_axis_vector(self, min_pts, rock_center_coordinates, depth_frame: np.ndarray):
         # Deproject the minimal axis points to 3D
