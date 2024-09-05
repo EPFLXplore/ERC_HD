@@ -22,6 +22,9 @@ import re
 from .pipelines.pipeline_interface import PipelineInterface
 from .pipelines.pipeline_factory import PipelineFactory
 
+
+
+
 class PerceptionNode(Node):
     def __init__(self):
         super().__init__("perception_node")
@@ -197,6 +200,10 @@ class PerceptionNode(Node):
         self.get_logger().info('Thread stopped.')
         super().destroy_node()
 
+    
+    def get_str_param(self, name: str, default: str = "") -> str:
+        self.declare_parameter(name, default)
+        return self.get_parameter(name).get_parameter_value().string_value
 
 def main(args=None):
     rclpy.init(args=args)
