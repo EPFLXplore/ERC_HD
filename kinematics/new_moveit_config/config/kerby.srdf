@@ -46,6 +46,42 @@
         <joint name="hd_joint6" value="0"/>
     </group_state>
 
+    <group_state name="sample_container_drop" group="kerby_arm_group">
+        <joint name="hd_joint1" value="-2.356194490192345"/>
+        <joint name="hd_joint2" value="1.3962634015954636"/>
+        <joint name="hd_joint3" value="2.5656340004316642"/>
+        <joint name="hd_joint4" value="0"/>
+        <joint name="hd_joint5" value="-1.4486232791552935"/>
+        <joint name="hd_joint6" value="0"/>
+    </group_state>
+
+    <group_state name="above_sample_container" group="kerby_arm_group">
+        <joint name="hd_joint1" value="-2.356194490192345"/>
+        <joint name="hd_joint2" value="1.3962634015954636"/>
+        <joint name="hd_joint3" value="2.5656340004316642"/>
+        <joint name="hd_joint4" value="0"/>
+        <joint name="hd_joint5" value="-0.41887902047863906"/>
+        <joint name="hd_joint6" value="0"/>
+    </group_state>
+
+    <!-- <group_state name="sample_retract" group="kerby_arm_group">
+        <joint name="hd_joint1" value="0"/>
+        <joint name="hd_joint2" value="1.3962634015954636"/>
+        <joint name="hd_joint3" value="2.5656340004316642"/>
+        <joint name="hd_joint4" value="0"/>
+        <joint name="hd_joint5" value="-0.41887902047863906"/>
+        <joint name="hd_joint6" value="0"/>
+    </group_state> -->
+
+     <group_state name="sample_retract" group="kerby_arm_group">
+        <joint name="hd_joint1" value="0"/>
+        <joint name="hd_joint2" value="1.0297442586766543"/>
+        <joint name="hd_joint3" value="2.495820830351891"/>
+        <joint name="hd_joint4" value="0"/>
+        <joint name="hd_joint5" value="-0.12217304763960307"/>
+        <joint name="hd_joint6" value="0"/>
+    </group_state>
+
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="kerby_vritual_joint" type="fixed" parent_frame="world" child_link="base_link"/>
 

@@ -212,6 +212,8 @@ class ControlStation(Node):
         self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
         self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.SHOVEL_TOOL)
         self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.SHOVEL_TOOL)
+        self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.DROP_SAMPLE)
+        
     
         # ==== manual inverse ====
         self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
