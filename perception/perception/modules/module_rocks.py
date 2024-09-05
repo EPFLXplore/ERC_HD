@@ -3,7 +3,6 @@ import pyrealsense2 as rs
 import numpy as np
 import cv2
 #from ultralytics import YOLO
-import torch
 from scipy.spatial.transform import Rotation as R  # Use scipy for quaternion operations
 import rclpy
 
@@ -14,9 +13,7 @@ return: a list of rocks with their positions (quaternions), max dimensions
 
 
 '''
-# Check if CUDA is available
-cuda_available = torch.cuda.is_available()
-device = torch.device("cuda" if cuda_available else "cpu")
+
 
 class ModuleRocks(ModuleInterface):
     def __init__(self, camera_matrix, camera_depth_scale):
