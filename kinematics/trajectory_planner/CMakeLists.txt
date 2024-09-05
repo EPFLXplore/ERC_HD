@@ -25,7 +25,7 @@ find_package(moveit_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(custom_msg REQUIRED)
-find_package(rviz_visual_tools REQUIRED)
+# find_package(rviz_visual_tools REQUIRED)
 
 
 # install launch directory
@@ -53,19 +53,19 @@ install(TARGETS planner
   DESTINATION lib/${PROJECT_NAME})
 
 
-add_executable(test_demo src/test.cpp)
-target_include_directories(test_demo PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(
-  test_demo
-  "moveit_ros_planning_interface"
-  "rclcpp"
-  "moveit_msgs"
-  "rviz_visual_tools"
-)
-install(TARGETS test_demo
-  DESTINATION lib/${PROJECT_NAME})
+# add_executable(test_demo src/test.cpp)
+# target_include_directories(test_demo PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
+# ament_target_dependencies(
+#   test_demo
+#   "moveit_ros_planning_interface"
+#   "rclcpp"
+#   "moveit_msgs"
+#   "rviz_visual_tools"
+# )
+# install(TARGETS test_demo
+#   DESTINATION lib/${PROJECT_NAME})
 
 
 add_executable(planner_supervisor src/planner_supervisor.cpp)
