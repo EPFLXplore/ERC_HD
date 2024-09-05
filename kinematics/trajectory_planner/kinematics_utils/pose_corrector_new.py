@@ -82,9 +82,12 @@ class Fingers(EEF):
 
 
 class Tool(EEF):
-    def __init__(self, transform_to_eef: qan.Pose, pickup_pose: qan.Pose):
+    def __init__(self, transform_to_eef: qan.Pose, pickup_pose: qan.Pose = None, pickup_joint_space_pose: str = ""):
         super().__init__(transform_to_eef)
+        if pickup_pose is None:
+            pickup_pose = qan.Pose()
         self._pickup_pose = pickup_pose
+        self.pickup_joint_space_pose = pickup_joint_space_pose
     
     @property
     def pickup_pose(self) -> qan.Pose:
@@ -115,7 +118,8 @@ class ToolsList:
         pickup_pose = qan.Pose(
             position=qan.Point(x=-0.37242027556714846, y=0.005129865076077739, z=0.4421790104031025),
             orientation=qan.Quaternion(x=0.91762533697516, y=0.3962204472950818, z=-0.025725402585351154, w=-0.017643745303388438)
-        )
+        ),
+        pickup_joint_space_pose = "above_shovel_tool"
     )
     
     VOLTMETER = Tool(
