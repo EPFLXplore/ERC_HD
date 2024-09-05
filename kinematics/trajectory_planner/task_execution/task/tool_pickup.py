@@ -7,9 +7,10 @@ from custom_msg.msg import HDGoal
 class ToolManip(Task):
     TOOL_MAINTAINING_TORQUE_ID = "tool_maintaining_torque"
     def __init__(self, executor: Executor, tool: str, declare_tool_maintaining_torque_cmd: bool = True, pose_in_joint_space: bool = True):
-        tool = ToolsList.FROM_ROS_MSG_MAP[tool]
+        tool_object = ToolsList.FROM_ROS_MSG_MAP[tool]
         super().__init__(executor, construct_command_chain=False)
-        self.tool: Tool = tool
+        self.tool = tool_object
+        self.tool_name = tool
         self.pose_in_joint_space = pose_in_joint_space
         self.above_distance = 0.15
         self.tool_maintaining_torque_scaling = 0.1
@@ -81,6 +82,12 @@ class ToolPickup(ToolManip):
             id = self.TOOL_MAINTAINING_TORQUE_ID,
         )
 
+        p = self.tool.transform_to_eef
+        p.position /= 2
+        self.addCommand(
+            AttachObjectCommand(pose=pc.GRIPPER_TRANSFORM_CORRECTION @ p, shape=[0.07, 0.07, self.tool.transform_to_eef.position.z], operation=Object.ADD, name=self.tool_name)
+        )
+        
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation, reverse=True),
@@ -88,6 +95,7 @@ class ToolPickup(ToolManip):
         )
         
         self.equipToolCommand()
+        
 
 
 class ToolPlaceback(ToolManip):
@@ -109,6 +117,12 @@ class ToolPlaceback(ToolManip):
         )
         
         self.constructOpenGripperCommands()
+        
+        p = self.tool.transform_to_eef
+        p.position /= 2
+        self.addCommand(
+            AttachObjectCommand(pose=p, shape=[0.07, 0.07, self.tool.transform_to_eef.position.z], operation=Object.REMOVE, name=self.tool_name)
+        )
         
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),

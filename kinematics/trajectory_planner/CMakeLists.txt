@@ -25,6 +25,7 @@ find_package(moveit_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(custom_msg REQUIRED)
+find_package(rviz_visual_tools REQUIRED)
 
 
 # install launch directory
@@ -61,6 +62,7 @@ ament_target_dependencies(
   "moveit_ros_planning_interface"
   "rclcpp"
   "moveit_msgs"
+  "rviz_visual_tools"
 )
 install(TARGETS test_demo
   DESTINATION lib/${PROJECT_NAME})

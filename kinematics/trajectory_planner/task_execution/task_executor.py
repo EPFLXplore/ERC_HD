@@ -119,6 +119,7 @@ class Executor(Node):
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
         self.add_object_pub = self.create_publisher(Object, "/HD/kinematics/add_object", 10)
+        self.attach_object_pub = self.create_publisher(Object, "/HD/kinematics/attach_object", 10)
         self.named_joint_target_pub = self.create_publisher(String, "/HD/kinematics/named_joint_target", 10)
         self.motor_command_pub = self.create_publisher(MotorCommand, "HD/kinematics/single_joint_cmd", 10)
         self.task_outcome_pub = self.create_publisher(Int8, "HD/kinematics/task_outcome", 10)
@@ -239,6 +240,18 @@ class Executor(Node):
             shape = Float64MultiArray(data=shape)
         )
         self.add_object_pub.publish(msg)
+    
+    def attachObjectToGripper(self, shape: List[float], pose: Pose, name: str, type: int=Object.BOX, operation: int=Object.ADD):
+        """sends an object to the planner, to be added to the world"""
+        # TODO: modify this function and its interface to send a moveit_msgs.msg.CollisionObject instead of custom_msg.msg.Object + change its name to manipulate or something
+        msg = Object(
+            type = type,
+            operation = operation,
+            name = name,
+            pose = pc.revert_from_vision(pose).publishable(),
+            shape = Float64MultiArray(data=shape)
+        )
+        self.attach_object_pub.publish(msg)
     
     def detectionUpdated(self):
         return pt.DETECTION_UPDATED

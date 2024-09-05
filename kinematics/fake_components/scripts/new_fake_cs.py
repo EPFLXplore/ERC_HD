@@ -188,8 +188,8 @@ class ControlStation(Node):
         self.input_config.bind(KeyboardConfig._3, self.set_man_inv_angular, "value", coordinate=2, multiplier=-1)
         
         self.input_config.bind(KeyboardConfig.b, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
-        self.input_config.bind(KeyboardConfig.e, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.BUTTON_TOOL)
-        self.input_config.bind(KeyboardConfig.u, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.BUTTON_TOOL)
+        self.input_config.bind(KeyboardConfig.e, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.SHOVEL_TOOL)
+        self.input_config.bind(KeyboardConfig.u, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.SHOVEL_TOOL)
     
     def create_gamepad_bindings(self):
         from input_handling.gamepad import GamePadConfig

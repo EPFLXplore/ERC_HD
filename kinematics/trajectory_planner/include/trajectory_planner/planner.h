@@ -85,6 +85,10 @@ public:
 
     void addBoxToWorld(const std::vector<double> &dim, const geometry_msgs::msg::Pose &pose, std::string &name);
 
+    void addGripperAttachedBoxToWorld(const std::vector<double> &shape, const geometry_msgs::msg::Pose &pose, std::string &name);
+
+    void removeGripperAttachedBoxToWorld(const std::vector<double> &shape, const geometry_msgs::msg::Pose &pose, std::string &name);
+
     void updateCurrentPosition();
 
     bool manualInverseCommandOld();
@@ -107,6 +111,8 @@ private:
     void removeFromWorld(std::string &name);
 
     void addObjectCallback(const custom_msg::msg::Object::SharedPtr msg);
+
+    void attachGripperObjectCallback(const custom_msg::msg::Object::SharedPtr msg);
 
     void modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg);
 
@@ -136,6 +142,7 @@ private:
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr       m_joint_target_sub;
     rclcpp::Subscription<custom_msg::msg::JointSpaceCmd>::SharedPtr         m_joint_target2_sub;
     rclcpp::Subscription<custom_msg::msg::Object>::SharedPtr                m_add_object_sub;
+    rclcpp::Subscription<custom_msg::msg::Object>::SharedPtr                m_attach_object_sub;
     rclcpp::Subscription<moveit_msgs::msg::CollisionObject>::SharedPtr      m_add_object2_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                    m_mode_change_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr       m_man_inv_axis_sub;

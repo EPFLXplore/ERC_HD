@@ -1,127 +1,226 @@
-#include <moveit/move_group_interface/move_group_interface.h>
-#include <moveit/planning_scene_interface/planning_scene_interface.h>
 
-#include <moveit_msgs/msg/display_robot_state.hpp>
-#include <moveit_msgs/msg/display_trajectory.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose.hpp>
 
+// MoveIt
+#include <moveit_msgs/msg/planning_scene.hpp>
 #include <moveit_msgs/msg/attached_collision_object.hpp>
-#include <moveit_msgs/msg/collision_object.hpp>
+#include <moveit_msgs/srv/get_state_validity.hpp>
+#include <moveit_msgs/msg/display_robot_state.hpp>
+#include <moveit_msgs/srv/apply_planning_scene.hpp>
 
+#include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/robot_state/robot_state.h>
+#include <moveit/robot_state/conversions.h>
 
-// All source files that use ROS logging should define a file-specific
-// static const rclcpp::Logger named LOGGER, located at the top of the file
-// and inside the namespace with the narrowest scope (if there is one)
-//static const rclcpp::Logger LOGGER = rclcpp::get_logger("test_demo");
+#include <rviz_visual_tools/rviz_visual_tools.hpp>
+
+static const rclcpp::Logger LOGGER = rclcpp::get_logger("planning_scene_ros_api_tutorial");
 
 int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
   rclcpp::NodeOptions node_options;
   node_options.automatically_declare_parameters_from_overrides(true);
-  auto move_group_node = rclcpp::Node::make_shared("test_demo", node_options);
-  const rclcpp::Logger LOGGER = move_group_node->get_logger();
+  auto node = rclcpp::Node::make_shared("planning_scene_ros_api_tutorial", node_options);
 
-  // We spin up a SingleThreadedExecutor for the current state monitor to get information
-  // about the robot's state.
   rclcpp::executors::SingleThreadedExecutor executor;
-  executor.add_node(move_group_node);
+  executor.add_node(node);
   std::thread([&executor]() { executor.spin(); }).detach();
-
   // BEGIN_TUTORIAL
   //
-  // Setup
-  // ^^^^^
+  // Visualization
+  // ^^^^^^^^^^^^^
+  // The package MoveItVisualTools provides many capabilities for visualizing objects, robots,
+  // and trajectories in RViz as well as debugging tools such as step-by-step introspection of a script.
+  rviz_visual_tools::RvizVisualTools visual_tools("base_link", "planning_scene_ros_api_tutorial", node);
+  visual_tools.loadRemoteControl();
+  visual_tools.deleteAllMarkers();
+
+  // ROS API
+  // ^^^^^^^
+  // The ROS API to the planning scene publisher is through a topic interface
+  // using "diffs". A planning scene diff is the difference between the current
+  // planning scene (maintained by the move_group node) and the new planning
+  // scene desired by the user.
   //
-  // MoveIt operates on sets of joints called "planning groups" and stores them in an object called
-  // the *JointModelGroup*. Throughout MoveIt, the terms "planning group" and "joint model group"
-  // are used interchangably.
-  static const std::string PLANNING_GROUP = "kerby_arm_group";
+  // Advertise the required topic
+  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  // We create a publisher and wait for subscribers.
+  // Note that this topic may need to be remapped in the launch file.
+  rclcpp::Publisher<moveit_msgs::msg::PlanningScene>::SharedPtr planning_scene_diff_publisher =
+      node->create_publisher<moveit_msgs::msg::PlanningScene>("planning_scene", 1);
+  while (planning_scene_diff_publisher->get_subscription_count() < 1)
+  {
+    rclcpp::sleep_for(std::chrono::milliseconds(500));
+  }
+  visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to continue the demo");
 
-  // The
-  // :moveit_codedir:`MoveGroupInterface<moveit_ros/planning_interface/move_group_interface/include/moveit/move_group_interface/move_group_interface.h>`
-  // class can be easily set up using just the name of the planning group you would like to control and plan for.
-  moveit::planning_interface::MoveGroupInterface move_group(move_group_node, PLANNING_GROUP);
+  // Define the attached object message
+  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  // We will use this message to add or
+  // subtract the object from the world
+  // and to attach the object to the robot.
+  moveit_msgs::msg::AttachedCollisionObject attached_object;
+  attached_object.link_name = "link6";
+  /* The header must contain a valid TF frame*/
+  attached_object.object.header.frame_id = "link6";
+  /* The id of the object */
+  attached_object.object.id = "box";
 
-  // We will use the
-  // :moveit_codedir:`PlanningSceneInterface<moveit_ros/planning_interface/planning_scene_interface/include/moveit/planning_scene_interface/planning_scene_interface.h>`
-  // class to add and remove collision objects in our "virtual world" scene
-  moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+  /* A default pose */
+  geometry_msgs::msg::Pose pose;
+  pose.position.z = 0.11;
+  pose.orientation.w = 1.0;
 
-  // Raw pointers are frequently used to refer to the planning group for improved performance.
-  const moveit::core::JointModelGroup* joint_model_group =
-      move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
+  /* Define a box to be attached */
+  shape_msgs::msg::SolidPrimitive primitive;
+  primitive.type = primitive.BOX;
+  primitive.dimensions.resize(3);
+  primitive.dimensions[0] = 0.075;
+  primitive.dimensions[1] = 0.075;
+  primitive.dimensions[2] = 0.075;
 
+  attached_object.object.primitives.push_back(primitive);
+  attached_object.object.primitive_poses.push_back(pose);
 
+  // Note that attaching an object to the robot requires
+  // the corresponding operation to be specified as an ADD operation.
+  attached_object.object.operation = attached_object.object.ADD;
 
-  // Getting Basic Information
-  // ^^^^^^^^^^^^^^^^^^^^^^^^^
+  // Since we are attaching the object to the robot hand to simulate picking up the object,
+  // we want the collision checker to ignore collisions between the object and the robot hand.
+  attached_object.touch_links = std::vector<std::string>{"link6", "Arm_A_v6_2", "Arm_A_v6_1", "Finger_v1_2", "Finger_v1_1"};
+
+  // Add an object into the environment
+  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  // Add the object into the environment by adding it to
+  // the set of collision objects in the "world" part of the
+  // planning scene. Note that we are using only the "object"
+  // field of the attached_object message here.
+  RCLCPP_INFO(LOGGER, "Adding the object into the world at the location of the hand.");
+  moveit_msgs::msg::PlanningScene planning_scene;
+  planning_scene.world.collision_objects.push_back(attached_object.object);
+  planning_scene.is_diff = true;
+  planning_scene_diff_publisher->publish(planning_scene);
+  visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to continue the demo");
+
+  // Interlude: Synchronous vs Asynchronous updates
+  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  // There are two separate mechanisms available to interact
+  // with the move_group node using diffs:
   //
-  // We can print the name of the reference frame for this robot.
-  RCLCPP_INFO(LOGGER, "Planning frame: %s", move_group.getPlanningFrame().c_str());
-
-  // We can also print the name of the end-effector link for this group.
-  RCLCPP_INFO(LOGGER, "End effector link: %s", move_group.getEndEffectorLink().c_str());
-
-  // We can get a list of all the groups in the robot:
-  RCLCPP_INFO(LOGGER, "Available Planning Groups:");
-  std::copy(move_group.getJointModelGroupNames().begin(), move_group.getJointModelGroupNames().end(),
-            std::ostream_iterator<std::string>(std::cout, ", "));
-
-
-  // Now, we call the planner to compute the plan and visualize it.
-  // Note that we are just planning, not asking move_group
-  // to actually move the robot.
-  moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-
-//   bool success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-
-//   RCLCPP_INFO(LOGGER, "Visualizing plan 1 (pose goal) %s", success ? "" : "FAILED");
-
-
-  // Moving to a pose goal
-  // ^^^^^^^^^^^^^^^^^^^^^
+  // * Send a diff via a rosservice call and block until
+  //   the diff is applied (synchronous update)
+  // * Send a diff via a topic, continue even though the diff
+  //   might not be applied yet (asynchronous update)
   //
-  // Moving to a pose goal is similar to the step above
-  // except we now use the ``move()`` function. Note that
-  // the pose goal we had set earlier is still active
-  // and so the robot will try to move to that goal. We will
-  // not use that function in this tutorial since it is
-  // a blocking function and requires a controller to be active
-  // and report success on execution of a trajectory.
+  // While most of this tutorial uses the latter mechanism (given the long sleeps
+  // inserted for visualization purposes asynchronous updates do not pose a problem),
+  // it would be perfectly justified to replace the planning_scene_diff_publisher
+  // by the following service client:
+  rclcpp::Client<moveit_msgs::srv::ApplyPlanningScene>::SharedPtr planning_scene_diff_client =
+      node->create_client<moveit_msgs::srv::ApplyPlanningScene>("apply_planning_scene");
+  planning_scene_diff_client->wait_for_service();
+  // and send the diffs to the planning scene via a service call:
+  auto request = std::make_shared<moveit_msgs::srv::ApplyPlanningScene::Request>();
+  request->scene = planning_scene;
+  std::shared_future<std::shared_ptr<moveit_msgs::srv::ApplyPlanningScene_Response>> response_future;
+  response_future = planning_scene_diff_client->async_send_request(request).future.share();
 
-  /* Uncomment below line when working with a real robot */
-  /* move_group.move(); */
+  // wait for the service to respond
+  std::chrono::seconds wait_time(1);
+  std::future_status fs = response_future.wait_for(wait_time);
+  if (fs == std::future_status::timeout)
+  {
+    RCLCPP_ERROR(LOGGER, "Service timed out.");
+  }
+  else
+  {
+    std::shared_ptr<moveit_msgs::srv::ApplyPlanningScene_Response> planning_response;
+    planning_response = response_future.get();
+    if (planning_response->success)
+    {
+      RCLCPP_INFO(LOGGER, "Service successfully added object.");
+    }
+    else
+    {
+      RCLCPP_ERROR(LOGGER, "Service failed to add object.");
+    }
+  }
 
-  // Planning to a joint-space goal
-  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  // Note that this does not continue until we are sure the diff has been applied.
   //
-  // Let's set a joint space goal and move towards it.  This will replace the
-  // pose target we set above.
+  // Attach an object to the robot
+  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  // When the robot picks up an object from the environment, we need to
+  // "attach" the object to the robot so that any component dealing with
+  // the robot model knows to account for the attached object, e.g. for
+  // collision checking.
   //
-  // To start, we'll create an pointer that references the current robot's state.
-  // RobotState is the object that contains all the current position/velocity/acceleration data.
-  //moveit::core::RobotStatePtr current_state = move_group.getCurrentState(10);
-  //
-  // Next get the current set of joint values for the group.
-  std::vector<double> joint_group_positions = {1, 0, 0, 0, 0, 0, 0};
-  //current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
+  // Attaching an object requires two operations
+  //  * Removing the original object from the environment
+  //  * Attaching the object to the robot
 
-  // Now, let's modify one of the joints, plan to the new joint space goal, and visualize the plan.
-  //joint_group_positions[0] = -1.0;  // radians
-  move_group.setJointValueTarget(joint_group_positions);
+  /* First, define the REMOVE object message*/
+  moveit_msgs::msg::CollisionObject remove_object;
+  remove_object.id = "box";
+  remove_object.header.frame_id = "link6";
+  remove_object.operation = remove_object.REMOVE;
 
-  // We lower the allowed maximum velocity and acceleration to 5% of their maximum.
-  // The default values are 10% (0.1).
-  // Set your preferred defaults in the joint_limits.yaml file of your robot's moveit_config
-  // or set explicit factors in your code if you need your robot to move faster.
-  move_group.setMaxVelocityScalingFactor(0.05);
-  move_group.setMaxAccelerationScalingFactor(0.05);
+  // Note how we make sure that the diff message contains no other
+  // attached objects or collisions objects by clearing those fields
+  // first.
+  /* Carry out the REMOVE + ATTACH operation */
+  RCLCPP_INFO(LOGGER, "Attaching the object to the hand and removing it from the world.");
+  planning_scene.world.collision_objects.clear();
+  planning_scene.world.collision_objects.push_back(remove_object);
+  planning_scene.robot_state.attached_collision_objects.push_back(attached_object);
+  planning_scene.robot_state.is_diff = true;
+  planning_scene_diff_publisher->publish(planning_scene);
+  visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to continue the demo");
 
-  bool success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  RCLCPP_INFO(LOGGER, "Visualizing plan 2 (joint space goal) %s", success ? "" : "FAILED");
+  // Detach an object from the robot
+  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  // Detaching an object from the robot requires two operations
+  //  * Detaching the object from the robot
+  //  * Re-introducing the object into the environment
 
-    move_group.execute(my_plan);
+  /* First, define the DETACH object message*/
+  moveit_msgs::msg::AttachedCollisionObject detach_object;
+  detach_object.object.id = "box";
+  detach_object.link_name = "link6";
+  detach_object.object.operation = attached_object.object.REMOVE;
 
+  // Note how we make sure that the diff message contains no other
+  // attached objects or collisions objects by clearing those fields
+  // first.
+  /* Carry out the DETACH + ADD operation */
+  RCLCPP_INFO(LOGGER, "Detaching the object from the robot and returning it to the world.");
+  planning_scene.robot_state.attached_collision_objects.clear();
+  planning_scene.robot_state.attached_collision_objects.push_back(detach_object);
+  planning_scene.robot_state.is_diff = true;
+  planning_scene.world.collision_objects.clear();
+  planning_scene.world.collision_objects.push_back(attached_object.object);
+  planning_scene.is_diff = true;
+  planning_scene_diff_publisher->publish(planning_scene);
+  visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to continue the demo");
+
+  // Remove the object from the collision world
+  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  // Removing the object from the collision world just requires
+  // using the remove object message defined earlier.
+  // Note, also how we make sure that the diff message contains no other
+  // attached objects or collisions objects by clearing those fields
+  // first.
+  RCLCPP_INFO(LOGGER, "Removing the object from the world.");
+  planning_scene.robot_state.attached_collision_objects.clear();
+  planning_scene.world.collision_objects.clear();
+  planning_scene.world.collision_objects.push_back(remove_object);
+  planning_scene_diff_publisher->publish(planning_scene);
+  // END_TUTORIAL
+
+  visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to end the demo");
 
   rclcpp::shutdown();
   return 0;

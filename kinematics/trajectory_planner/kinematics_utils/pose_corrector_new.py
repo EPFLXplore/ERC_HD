@@ -114,7 +114,7 @@ class ToolsList:
     )
     
     SHOVEL = Tool(
-        transform_to_eef = qan.Pose(),
+        transform_to_eef = qan.Pose(position=qan.Point(z=0.15)),
         pickup_pose = qan.Pose(
             position=qan.Point(x=-0.37242027556714846, y=0.005129865076077739, z=0.4421790104031025),
             orientation=qan.Quaternion(x=0.91762533697516, y=0.3962204472950818, z=-0.025725402585351154, w=-0.017643745303388438)
