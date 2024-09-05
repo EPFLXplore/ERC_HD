@@ -27,7 +27,7 @@ class RocksPipeline(PipelineInterface):
 
     def _initialize_publishers(self, node: Node):
         self.pose_publisher = node.create_publisher(
-            RockArray, "/HD/perception/rock_pose", 10    
+            RockArray, node.get_str_param('hd_perception_rocks'), 10    
         )
     
     def _initialize_pipeline(self, node: Node):

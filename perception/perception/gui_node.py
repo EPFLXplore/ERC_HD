@@ -11,6 +11,8 @@ from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Imag
 BUTTON_WIDTH = 38
 BUTTON_HEIGHT = 30
 
+BUTTON_HORIZONTAL_OFFSET = 150
+
 GRID_H_SPACING = 2 * BUTTON_WIDTH + 20  # Horizontal spacing between buttons
 GRID_V_SPACING = 2 * BUTTON_HEIGHT + 30  # Vertical spacing between buttons
 
@@ -43,7 +45,7 @@ class GuiNode(Node):
 
         # Draw the dark grey rectangle
         self.canvas.create_rectangle(
-            0,
+            BUTTON_HORIZONTAL_OFFSET,
             0,
             BUTTON_WIDTH * 4 + 30,
             BUTTON_HEIGHT * 6 + 70,
@@ -83,7 +85,7 @@ class GuiNode(Node):
                     bg="white",
                 )
                 button.place(
-                    x=(x + btn_info["x"] + BUTTON_WIDTH),
+                    x=(x + btn_info["x"] + BUTTON_WIDTH + BUTTON_HORIZONTAL_OFFSET),
                     y=(y + btn_info["y"] + BUTTON_HEIGHT),
                 )
 
@@ -104,7 +106,7 @@ class GuiNode(Node):
         self.window.mainloop()
 
     def _create_pipelines_buttons(self):
-        pipelines = [{'name':'rocks', 'x':PIPELINES_H_OFFSET, 'y':PIPELINES_V_OFFSET}]
+        pipelines = [{'name':'rocks', 'x':PIPELINES_H_OFFSET + BUTTON_HORIZONTAL_OFFSET, 'y':PIPELINES_V_OFFSET}]
         for pipe in pipelines:
             x, y, name = pipe["x"], pipe["y"], pipe["name"]
 
