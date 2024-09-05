@@ -36,6 +36,7 @@ public:
         SUCCESS,
         PLANNING_ERROR,
         EXECUTION_ERROR,
+        ABORTED,
         CANNOT_ATTEMPT
     };
 
@@ -113,6 +114,8 @@ private:
 
     void CSMaintenanceCallback(const std_msgs::msg::Int8::SharedPtr msg);
 
+    void abort(const std_msgs::msg::Int8::SharedPtr msg);
+
     void manualInverseFrameCallback(const std_msgs::msg::String::SharedPtr msg);
 
     void publishEEFPose();
@@ -129,15 +132,16 @@ private:
     std::shared_ptr<moveit::planning_interface::PlanningSceneInterface>     m_planning_scene_interface;
     const moveit::core::JointModelGroup*                                    m_joint_model_group;
     moveit::planning_interface::MoveGroupInterface::Plan                    m_plan;
-    rclcpp::Subscription<custom_msg::msg::PoseGoal>::SharedPtr           m_pose_target_sub;
+    rclcpp::Subscription<custom_msg::msg::PoseGoal>::SharedPtr              m_pose_target_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr       m_joint_target_sub;
-    rclcpp::Subscription<custom_msg::msg::JointSpaceCmd>::SharedPtr      m_joint_target2_sub;
-    rclcpp::Subscription<custom_msg::msg::Object>::SharedPtr             m_add_object_sub;
+    rclcpp::Subscription<custom_msg::msg::JointSpaceCmd>::SharedPtr         m_joint_target2_sub;
+    rclcpp::Subscription<custom_msg::msg::Object>::SharedPtr                m_add_object_sub;
     rclcpp::Subscription<moveit_msgs::msg::CollisionObject>::SharedPtr      m_add_object2_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                    m_mode_change_sub;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr       m_man_inv_axis_sub;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr                  m_named_target_sub;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                    m_cs_maintenance_sub;
+    rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                    m_abort_sub;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr                  m_man_inv_frame_sub;
     rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr                  m_eef_pose_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                       m_traj_feedback_pub;

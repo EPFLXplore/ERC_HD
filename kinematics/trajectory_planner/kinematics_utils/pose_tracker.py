@@ -156,9 +156,12 @@ class ProbeDetection(Detection):
         self.pose = msg.pose
 
 
-class Perception:
+class PerceptionTracker:
     def __init__(self):
         # self.button_detection = ButtonDetection()
         self.aruco_object_detection = FromArucoTagDetection()
         self.rock_detection = RockDetection()
         self.probe_detection = ProbeDetection()
+
+
+perception_tracker = PerceptionTracker()
