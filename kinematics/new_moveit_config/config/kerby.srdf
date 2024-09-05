@@ -64,15 +64,6 @@
         <joint name="hd_joint6" value="0"/>
     </group_state>
 
-    <!-- <group_state name="sample_retract" group="kerby_arm_group">
-        <joint name="hd_joint1" value="0"/>
-        <joint name="hd_joint2" value="1.3962634015954636"/>
-        <joint name="hd_joint3" value="2.5656340004316642"/>
-        <joint name="hd_joint4" value="0"/>
-        <joint name="hd_joint5" value="-0.41887902047863906"/>
-        <joint name="hd_joint6" value="0"/>
-    </group_state> -->
-
      <group_state name="sample_retract" group="kerby_arm_group">
         <joint name="hd_joint1" value="0"/>
         <joint name="hd_joint2" value="1.0297442586766543"/>
@@ -80,6 +71,15 @@
         <joint name="hd_joint4" value="0"/>
         <joint name="hd_joint5" value="-0.12217304763960307"/>
         <joint name="hd_joint6" value="0"/>
+    </group_state>
+
+    <group_state name="above_shovel_tool" group="kerby_arm_group">
+        <joint name="hd_joint1" value="0.37936593470211977"/>
+        <joint name="hd_joint2" value="-0.24717420036657137"/>
+        <joint name="hd_joint3" value="-1.733913516321011"/>
+        <joint name="hd_joint4" value="-0.011299702963964113"/>
+        <joint name="hd_joint5" value="1.5943420126198997"/>
+        <joint name="hd_joint6" value="-0.37674488516495125"/>
     </group_state>
 
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
