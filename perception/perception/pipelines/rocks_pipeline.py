@@ -47,43 +47,35 @@ class RocksPipeline(PipelineInterface):
 
         temp = []
 
-        results = self.obj_module(rgb_image, depth_image, segmentation_data)
+        results, target_idx = self.obj_module(rgb_image, depth_image, segmentation_data)
+
+        self.node._logger.info(f"Target idx: {target_idx}")
 
         for result in results:
 
-            # rock_center_depth = result["rock_center_depth"]
-            # rock_center_coords = result["rock_center_coordinates"]
-            # self.node._logger.info(f"Center depth: {rock_center_depth}")
-            # self.node._logger.info(f"Center coordinates: {rock_center_coords}")
+            rock_center_depth = result["rock_center_depth"]
+            rock_depth = result["depth_surface"]
+            self.node._logger.info(f"Rock center depth: {rock_center_depth}")
+            self.node._logger.info(f"Depth: {rock_depth}")
+
+            rock_center = result["center"]
+            self.node._logger.info(f"Rock center : {rock_center}")
 
             # New Rock
             rock = Rock()
 
-            # rock.pose         = p #result["quaternion"]
-
-            # Instantiate a Pose message
-            pose = Pose()
-
-            # Set the position part of the Pose
-            pose.position = Point()
-            pose.position.x = 1.0
-            pose.position.y = 2.0
-            pose.position.z = 3.0
-
-            # Set the orientation part of the Pose
-            pose.orientation = Quaternion()
-            pose.orientation.x = 0.0
-            pose.orientation.y = 0.0
-            pose.orientation.z = 0.0
-            pose.orientation.w = 1.0
-
-            # self._logger.info("Quaternion: " + result["quaternion"])
-            rock.pose = pose 
+            rock.center = Point()
+            rock.center.x = result["rock_center_coordinates"][0]
+            rock.center.y = result["rock_center_coordinates"][1]
+            rock.center.z = result["rock_center_coordinates"][2]
+            rock.height = 2*(result["rock_center_depth"]-result["depth_surface"])
+            rock.angle  = result["angle"] 
             rock.max_diameter = float(result["max_dimension_cm"])
             rock.min_diameter = float(result["min_dimension_cm"])
             temp.append(rock)
 
         msg.rocks = temp 
+        msg.target_index = target_idx
         self._publish(msg)
         
 

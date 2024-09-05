@@ -28,7 +28,8 @@ class ModelNode(Node):
 
         # Initialize YOLO to None
         self._logger.info("Loading model")
-        self.model = YOLO('./src/perception/models/rock_nael_200.pt')
+        # self.model = YOLO('./src/perception/models/rock_nael_200.pt')
+        self.model = None
         self._logger.info("Segmentation model loaded")
 
         # Initialize CvBridge
@@ -60,9 +61,16 @@ class ModelNode(Node):
 
         # Load YOLO model using the model path provided in the request
         try:
-            self.model = YOLO(request.goal.target)
-            response.success = True
-            self.get_logger().info(f"Model initialized successfully with model path: {request.model_path}")
+            if not '/' in request.goal.target:
+                self.model = None 
+                response.success = True
+                self.get_logger().info(f"No model set.  model path: {request.model_path}")
+
+            else:
+
+                self.model = YOLO(request.goal.target)
+                response.success = True
+                self.get_logger().info(f"Model initialized successfully with model path: {request.model_path}")
         except Exception as e:
             response.success = False
             response.message = str(e)
@@ -75,18 +83,24 @@ class ModelNode(Node):
         """Producer method to add new data to the queue."""
         self.get_logger().info('rgbd_callback')
 
-        rgb = self.bridge.compressed_imgmsg_to_cv2(rgbd_msg.color)
-        # Detect
-        detected = self.detect(rgb)
+        if self.model is None:
+            model_msg = Model()
+            model_msg.image = rgbd_msg
+        else:
 
-        # Draw
-        #self.draw(rgb, detected)
-        rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
 
-        # Publish RGB + segmentation results  
-        model_msg = Model()
-        model_msg.image = rgbd_msg
-        model_msg.segmentation_data = detected
+            rgb = self.bridge.compressed_imgmsg_to_cv2(rgbd_msg.color)
+            # Detect
+            detected = self.detect(rgb)
+
+            # Draw
+            #self.draw(rgb, detected)
+            rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
+
+            # Publish RGB + segmentation results  
+            model_msg = Model()
+            model_msg.image = rgbd_msg
+            model_msg.segmentation_data = detected
 
         self.processed_rgb_pub.publish(model_msg)
 
