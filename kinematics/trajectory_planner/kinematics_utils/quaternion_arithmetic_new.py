@@ -122,6 +122,11 @@ class Point(gmsg.Point):
         except TypeError:
             raise TypeError(f"Unsuported operand types for *: '{type(other).__name__}' and '{Point.__name__}'")
     
+    def __truediv__(self, other: Scalar) -> Point:
+        if not isinstance(other, Scalar):
+            raise TypeError()
+        return self * (1/other)
+    
     def __neg__(self) -> Point:
         return Point(x=-self.x, y=-self.y, z=-self.z)
     

@@ -1,0 +1,11 @@
+aruco:
+  aruco_tag_size: 32 # mm
+  aruco_tag_ids: [0, 1]
+  marker_type: "4x4"
+  vertical_distance_between_tags: 71 # mm
+
+
+electromagnet:
+  height: 157 # mm 
+  x: -185.5  # -123.5 - 62 mm 
+  y:    6    # mm, represents the center with respect to the bottom aruco tag

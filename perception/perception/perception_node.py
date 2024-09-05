@@ -22,10 +22,14 @@ import re
 from .pipelines.pipeline_interface import PipelineInterface
 from .pipelines.pipeline_factory import PipelineFactory
 
+
+
+
 class PerceptionNode(Node):
     def __init__(self):
         super().__init__("perception_node")
         # used to match button service requests to distinguish them from switching pipeline request
+        self.pipeline = None
         self.button_pattern = r"^\d[ud]$"  
 
         # Initialize CvBridge
@@ -75,7 +79,7 @@ class PerceptionNode(Node):
 
         # Initialize Pipeline 
         self.pipeline: PipelineInterface = PipelineFactory.create_pipeline(
-            "rocks", self, camera_matrix=self.camera_matrix, camera_depth_scale=self.depth_scale
+            "buttonsA", self, camera_matrix=self.camera_matrix, camera_depth_scale=self.depth_scale
         )
 
         self.get_logger().info(f"Perception Node started with {self.pipeline.name()} pipeline")
@@ -109,6 +113,9 @@ class PerceptionNode(Node):
         )
         self.dist_coeffs = np.array(camera_params.distortion_coefficients)
         self.depth_scale = camera_params.depth_scale
+        # self.get_logger().info(f"Fx: {camera_params.fx}, fy: {camera_params.fy}")
+        # self.get_logger().info(f"Depth scale: {camera_params.depth_scale}")
+
         self.get_logger().info("Camera parameters successfully saved")
 
 
@@ -118,15 +125,22 @@ class PerceptionNode(Node):
         self.get_logger().info('rgbd_callback')
         rgb = self.bridge.compressed_imgmsg_to_cv2(model_msg.image.color)
         depth_image = self.bridge.imgmsg_to_cv2(model_msg.image.depth, "mono16")
+        
+        if self.pipeline is None:
+            self.get_logger().info('The pipeline is not yet initialized')
+            rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
+            self.processed_rgb_pub.publish(rgb_msg)
 
-        self.get_logger().info('Run through pipeline: START')
-        self.pipeline.run_rgbd(rgb, depth_image, model_msg.segmentation_data)
-        self.get_logger().info('Run through pipeline: END')
+        else:
 
-        # Convert the processed image back to ROS message and publish
-        rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
-        self.processed_rgb_pub.publish(rgb_msg)
-        self.get_logger().info('Published annotated image')
+            self.get_logger().info('Run through pipeline: START')
+            self.pipeline.run_rgbd(rgb, depth_image, model_msg.segmentation_data)
+            self.get_logger().info('Run through pipeline: END')
+
+            # Convert the processed image back to ROS message and publish
+            rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
+            self.processed_rgb_pub.publish(rgb_msg)
+            self.get_logger().info('Published annotated image')
 
 
     def handle_button_press(self, request, response):
@@ -186,6 +200,10 @@ class PerceptionNode(Node):
         self.get_logger().info('Thread stopped.')
         super().destroy_node()
 
+    
+    def get_str_param(self, name: str, default: str = "") -> str:
+        self.declare_parameter(name, default)
+        return self.get_parameter(name).get_parameter_value().string_value
 
 def main(args=None):
     rclpy.init(args=args)

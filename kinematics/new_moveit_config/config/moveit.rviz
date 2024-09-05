@@ -457,6 +457,136 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: moveit_rviz_plugin/PlanningScene
+      Enabled: true
+      Move Group Namespace: ""
+      Name: PlanningScene
+      Planning Scene Topic: /monitored_planning_scene
+      Robot Description: robot_description
+      Scene Geometry:
+        Scene Alpha: 0.8999999761581421
+        Scene Color: 50; 230; 50
+        Scene Display Time: 0.009999999776482582
+        Show Scene Geometry: true
+        Voxel Coloring: Z-Axis
+        Voxel Rendering: Occupied Voxels
+      Scene Robot:
+        Attached Body Color: 150; 50; 150
+        Links:
+          1._driving_v2_1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          1._driving_v2_2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          1._driving_v2_3:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          1._driving_v2_4:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          1._pivot_steering_v2_1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          1._pivot_steering_v2_2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          1._wheel_simplified_v2_1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          1._wheel_simplified_v2_2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          1._wheel_simplified_v2_3:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          1._wheel_simplified_v2_4:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          All Links Enabled: false
+          Arm_A_v6_1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          Arm_A_v6_2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          Expand Joint Details: false
+          Expand Link Details: false
+          Expand Tree: false
+          Finger_v1_1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          Finger_v1_2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          Link Tree Style: Links in Alphabetic Order
+          base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          link1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          link2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          link3:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          link4:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          link5:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: false
+          link6:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+        Robot Alpha: 1
+        Show Robot Collision: false
+        Show Robot Visual: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -475,7 +605,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.8462114334106445
+      Distance: 1.8338178396224976
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -490,10 +620,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.33000001311302185
+      Pitch: 0.28499993681907654
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 1.962022304534912
+      Yaw: 1.6270266771316528
     Saved: ~
 Window Geometry:
   Displays:
@@ -511,5 +641,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1920
-  X: 1920
+  X: 0
   Y: 27

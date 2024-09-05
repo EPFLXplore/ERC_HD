@@ -3,8 +3,8 @@ import pyrealsense2 as rs
 import numpy as np
 import cv2
 #from ultralytics import YOLO
-import torch
 from scipy.spatial.transform import Rotation as R  # Use scipy for quaternion operations
+import rclpy
 
 '''
 PURPOSE OF THE MODULE
@@ -13,9 +13,7 @@ return: a list of rocks with their positions (quaternions), max dimensions
 
 
 '''
-# Check if CUDA is available
-cuda_available = torch.cuda.is_available()
-device = torch.device("cuda" if cuda_available else "cpu")
+
 
 class ModuleRocks(ModuleInterface):
     def __init__(self, camera_matrix, camera_depth_scale):
@@ -54,8 +52,13 @@ class ModuleRocks(ModuleInterface):
         self.detected_objects = self.draw_masks_and_contours(self.detected_objects)
         
         results = []
+
+        closest_index = 65535 # MAX (-1 not within bounds)
+        closest_distance = float('inf')
+        frame_center = (self.intrinsics.width, self.intrinsics.height)
+
         # Calculate axes, dimensions, and quasi-center for each detected object
-        for obj in self.detected_objects:
+        for i, obj in enumerate(self.detected_objects):
             # for obj in objs:
                 contour = obj['contour']
                 if contour is not None:
@@ -72,26 +75,63 @@ class ModuleRocks(ModuleInterface):
                     # Calculate the quasi-center of the rock
                     rock_center_coordinates, rock_center_depth = self.calculate_rock_center(center, bounding_box, depth_frame, self.intrinsics, depth_surface)
 
+                    # Check if the object's max dimension is greater than or equal to the minimum required
+                    if max_dim_cm >= 15:
+                        object_center = center
+                        distance_to_center = np.linalg.norm(np.array(object_center) - np.array(frame_center))
+
+                        # Update the closest object if this one is nearer
+                        if distance_to_center < closest_distance:
+                            closest_distance = distance_to_center
+                            closest_index = i
+
                     # Calculate the minimal axis vector in 3D
                     # min_axis_vector = self.calculate_minimal_axis_vector(min_pts, rock_center_coordinates, depth_frame)
 
                     # Compute the quaternion for aligning the Z-axis with the minimal axis vector
                     # quaternion = self.calculate_quaternion_to_align_z(min_axis_vector)
-                    quaternion = None 
+                    angle = float(0)  #TODO
 
                     # Append the details to results
                     results.append({
                         "center": center,
                         "max_dimension_cm": max_dim_cm,
                         "min_dimension_cm": min_dim_cm,
-                        "depth_surface": depth_surface,
-                        "rock_center_depth": rock_center_depth,
+                        "depth_surface": depth_surface, # from camera to rock
+                        "rock_center_depth": rock_center_depth, # from camera to center of rock 
                         "rock_center_coordinates": rock_center_coordinates,
-                        "quaternion": quaternion
+                        "angle": angle
                     })
 
-        # Return the current frame and results
-        return results
+        # target_idx = self.find_closest_result_to_center(results, self.intrinsics.width, self.intrinsics.height)
+
+        # Return the results and target 
+        return results, closest_index
+
+
+    def find_closest_result_to_center(results, frame_width, frame_height, min_dimension_cm=15):
+        # Calculate the center of the frame
+        # frame_center = (frame_width // 2, frame_height // 2)
+        frame_center = (320, 240)
+        
+        closest_index = -1
+        closest_distance = float('inf')
+
+        for i, result in enumerate(results):
+            max_dimension_cm = result.get("max_dimension_cm", 0)
+
+            # Check if the object's max dimension is greater than or equal to the minimum required
+            if max_dimension_cm >= min_dimension_cm:
+                object_center = result.get("center", (0, 0))
+                distance_to_center = np.linalg.norm(np.array(object_center) - np.array(frame_center))
+
+                # Update the closest object if this one is nearer
+                if distance_to_center < closest_distance:
+                    closest_distance = distance_to_center
+                    closest_index = i
+
+        return closest_index
+
 
     def calculate_minimal_axis_vector(self, min_pts, rock_center_coordinates, depth_frame: np.ndarray):
         # Deproject the minimal axis points to 3D
@@ -131,34 +171,6 @@ class ModuleRocks(ModuleInterface):
         key = cv2.waitKey(1)
         if key == ord('q'):
             cv2.destroyAllWindows()
-
-    # def process_frame(self, image):
-    #     results = self.model(image, imgsz=640)
-    #     return image, results
-
-    # def draw_bounding_boxes(self, image, results):
-    #     detected_objects = []
-    #     for result in results:
-    #         if result.masks is not None:
-    #             masks = result.masks.data.cpu().numpy()
-    #             boxes = result.boxes.xyxy.cpu().numpy()
-    #             for mask, box in zip(masks, boxes):
-    #                 mask = cv2.resize(mask, (image.shape[1], image.shape[0]))
-    #                 binary_mask = (mask > 0.5).astype(np.uint8)
-
-    #                 x1, y1, x2, y2 = box.astype(int)
-    #                 cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)  # Blue color for bounding box
-    #                 center_x = int((x1 + x2) / 2)
-    #                 center_y = int((y1 + y2) / 2)
-    #                 cv2.circle(image, (center_x, center_y), 5, (255, 255, 0), -1)  # Cyan color for center
-
-    #                 detected_objects.append({
-    #                     'mask': binary_mask,
-    #                     'contour': None,
-    #                     'center': (center_x, center_y),
-    #                     'bounding_box': (x1, y1, x2, y2)
-    #                 })
-    #     return image, detected_objects
 
 
     def draw_bounding_boxes(self, image, results):
@@ -280,15 +292,20 @@ class ModuleRocks(ModuleInterface):
         float: The distance from the camera to the quasi-center.
         """
         x1, y1, x2, y2 = bounding_box
+        rclpy
+        print(f'bb corners: x1: {x1}, y1: {y1}, x2: {x2}, y2: {y2}')
+        print(f'depth frame shape {depth_frame.shape}')
 
         # Calculate depth values at the four corners of the bounding box (distance to ground)
         depth_corners = [
             depth_frame[y1, x1] * self.depth_scale,  # top-left corner
-            depth_frame[y1, x2] * self.depth_scale,  # top-right corner
-            depth_frame[y2, x1] * self.depth_scale,  # bottom-left corner
-            depth_frame[y2, x2] * self.depth_scale   # bottom-right corner
+            depth_frame[y1, x2-1] * self.depth_scale,  # top-right corner
+            depth_frame[y2-1, x1] * self.depth_scale,  # bottom-left corner
+            depth_frame[y2-1, x2-1] * self.depth_scale   # bottom-right corner
         ]
         depth_ground = np.mean(depth_corners)
+
+        # depth_ground = depth_frame[y1, x1] * self.depth_scale,  # top-left corner
 
         # Calculate the distance to the quasi-center as the average of the depth to the rock and the depth to the ground
         rock_center_depth = (depth_surface + depth_ground) / 2

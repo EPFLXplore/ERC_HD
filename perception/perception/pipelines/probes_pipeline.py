@@ -1,66 +1,84 @@
-from .pipeline_interface import PipelineInterface
 from rclpy.node import Node
+from .pipeline_interface import PipelineInterface
 
 from ..modules.instance_segmentation import InstanceSegmentation
+from ..modules.module_probes import ModuleProbes
 from numpy import ndarray
 import cv2
 
 from custom_msg.msg import ProbeArray 
+from custom_msg.msg import Probe
 from custom_msg.msg import SegmentationData
 
+from geometry_msgs.msg import Pose, Point, Quaternion
+
+
 class ProbesPipeline(PipelineInterface):
-    def __init__(self, config_file: str, node: Node, draw_results: bool = True):
-        # self.camera_info = {"camera_matrix": camera_matrix, "dist_coeffs": dist_coeffs}   #TODO necessary ?
+    def __init__(self, config_file: str, node: Node, camera_matrix: ndarray = None, camera_depth_scale: ndarray = None, draw_results: bool = True):
+        self.camera_matrix = camera_matrix
+        self.camera_depth_scale = camera_depth_scale
         super().__init__(config_file, node, draw_results)
-        self.config_file = config_file
-        self.node = node 
+
 
     def _initialize_publishers(self, node: Node):
         self.pose_publisher = node.create_publisher(
             ProbeArray, "/HD/perception/probe_pose", 10    
         )
     
-    def _initialize_pipeline(self):
-        self.instance_segmentation = InstanceSegmentation(self, self.confg_file, self.node)
-    
-    def draw(self, segmentation_data: SegmentationData):
-        self.instance_segmentation.draw(segmentation_data)
+    def _initialize_pipeline(self, node: Node):
+        self.instance_segmentation_module = InstanceSegmentation(self.config, node)
+        self.obj_module = ModuleProbes(self.camera_matrix, self.camera_depth_scale)
+        self._name = self.config["name"]
 
-    def run_segmentation(self):
-        # Start the pipeline
-        pipeline = self.instance_segmentation.get_pipeline
-        pipeline.start(self.instance_segmentation.get_config)
 
-        try:
-            # # Create a window to display the livestream
-            # cv2.namedWindow("YOLOv8 Segmentation on RealSense", cv2.WINDOW_AUTOSIZE)
+    def run_rgbd(self, rgb_image: ndarray, depth_image: ndarray, segmentation_data) -> None:
+        # rgb_image is cv2 
 
-            # img_count = 0  # Image counter for naming the files
-            
-            while True:
-                # Wait for a coherent pair of frames: color frame
-                frames = pipeline.wait_for_frames()
-                color_frame = frames.get_color_frame()
+        # Perform inference on the color image
+        self.instance_segmentation_module(rgb_image, depth_image, segmentation_data)
 
-                if not color_frame:
-                    continue
+        # New ROS msg
+        msg = ProbeArray()
 
-                # Perform inference on the color image
-                segmentation_data_list = self.instance_segmentation.__call__(rgb_frame=color_frame)
+        temp = []
 
-                if segmentation_data_list:
-                    for segmentation_data in segmentation_data_list:
-                        self.draw(segmentation_data)
+        results = self.obj_module(rgb_image, depth_image, segmentation_data)
 
-                # Exit loop if 'q' is pressed
-                key = cv2.waitKey(1) & 0xFF
-                if key == ord('q'):
-                    break
-                
-        finally:
-            # Stop the pipeline and close OpenCV windows
-            pipeline.stop()
-            cv2.destroyAllWindows()
+        for result in results:
+            # New probe
+            probe = Probe()
 
-    def _publish(self):
-        pass
+            # pose = Pose()
+
+            # # Set the position part of the Pose
+            # pose.position = Point()
+            # pose.position.x = 1.0
+            # pose.position.y = 2.0
+            # pose.position.z = 3.0
+
+            # # Set the orientation part of the Pose
+            # pose.orientation = Quaternion()
+            # pose.orientation.x = 0.0
+            # pose.orientation.y = 0.0
+            # pose.orientation.z = 0.0
+            # pose.orientation.w = 1.0
+
+            # probe.pose = pose 
+            self._logger.info("Quaternion: " + result["quaternion"])
+            probe.pose         = result["quaternion"]
+            probe.max_diameter = float(result["max_dimension_cm"])
+            probe.min_diameter = float(result["min_dimension_cm"])
+            temp.append(probe)
+
+        msg.probes = temp 
+        self._publish(msg)
+        
+
+    def draw(self, frame):
+        self.obj_module.draw(frame)
+
+    def _publish(self, msg):
+        self.pose_publisher.publish(msg)
+
+    def name(self):
+        return self._name

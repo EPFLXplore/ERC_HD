@@ -1,10 +1,10 @@
 from .buttons_pipeline import ButtonsPipeline
-from .metal_bar_pipeline import MetalBarPipeline
-from .ethernet_pipeline import EthernetPipeline
+# from .metal_bar_pipeline import MetalBarPipeline
+# from .ethernet_pipeline import EthernetPipeline
 from .rocks_pipeline import RocksPipeline
 from .surface_sample_pipeline import SurfaceSamplePipeline
-from .bricks_pipeline import BricksPipeline
-from .probes_pipeline import ProbesPipeline
+# from .bricks_pipeline import BricksPipeline
+# from .probes_pipeline import ProbesPipeline
 from .identity_pipeline import IdentityPipeline
 
 from rclpy.node import Node
@@ -36,12 +36,12 @@ class PipelineFactory:
             "buttonsA":       {"cls": ButtonsPipeline,       "config": f"{configs_dir}buttonsA.yaml"},
             "big_buttons":    {"cls": ButtonsPipeline,       "config": f"{configs_dir}big_buttons.yaml"},
             "electric_plugs": {"cls": ButtonsPipeline,       "config": f"{configs_dir}electric_plugs.yaml"},
-            "metal_bar":      {"cls": MetalBarPipeline,      "config": f"{configs_dir}metal_bar.yaml"},
-            "ethernet":       {"cls": EthernetPipeline,      "config": f"{configs_dir}ethernet.yaml"},
+            # "metal_bar":      {"cls": MetalBarPipeline,      "config": f"{configs_dir}metal_bar.yaml"},
+            # "ethernet":       {"cls": EthernetPipeline,      "config": f"{configs_dir}ethernet.yaml"},
             "rocks":          {"cls": RocksPipeline,         "config": f"{configs_dir}rocks.yaml"},
             "surface_sample": {"cls": SurfaceSamplePipeline, "config": f"{configs_dir}surface_sample.yaml"},
-            "bricks":         {"cls": BricksPipeline,        "config": f"{configs_dir}bricks.yaml"},
-            "probes":         {"cls": ProbesPipeline,        "config": f"{configs_dir}probes.yaml"},
+            # "bricks":         {"cls": BricksPipeline,        "config": f"{configs_dir}bricks.yaml"},
+            # "probes":         {"cls": ProbesPipeline,        "config": f"{configs_dir}probes.yaml"},
             "identity":       {"cls": IdentityPipeline,      "config": f"{configs_dir}identity.yaml"},
         }
         # fmt: on

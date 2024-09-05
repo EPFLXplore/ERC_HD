@@ -6,10 +6,12 @@ from custom_msg.msg import HDGoal
 
 class ToolManip(Task):
     TOOL_MAINTAINING_TORQUE_ID = "tool_maintaining_torque"
-    def __init__(self, executor: Executor, tool: str, declare_tool_maintaining_torque_cmd: bool = True):
-        tool = ToolsList.FROM_ROS_MSG_MAP[tool]
+    def __init__(self, executor: Executor, tool: str, declare_tool_maintaining_torque_cmd: bool = True, pose_in_joint_space: bool = True):
+        tool_object = ToolsList.FROM_ROS_MSG_MAP[tool]
         super().__init__(executor, construct_command_chain=False)
-        self.tool: Tool = tool
+        self.tool = tool_object
+        self.tool_name = tool
+        self.pose_in_joint_space = pose_in_joint_space
         self.above_distance = 0.15
         self.tool_maintaining_torque_scaling = 0.1
         if declare_tool_maintaining_torque_cmd:
@@ -27,6 +29,18 @@ class ToolManip(Task):
         tool_pose.position = tool_pose.point_image(p)
         return tool_pose
 
+    def approachCommands(self):
+        if self.pose_in_joint_space:
+            self.addCommand(
+                NamedJointTargetCommand(self.tool.pickup_joint_space_pose),
+                description="go above tool"
+            )
+        else:
+            self.addCommand(
+                PoseCommand(pose=self.aboveToolPose(), in_urdf_eef_frame=True),
+                description = "go above tool"
+            )
+
     def equipToolCommand(self):
         class EquipToolCommand(Command):
             def execute(s):
@@ -41,7 +55,7 @@ class ToolManip(Task):
         class UnequipToolCommand(Command):
             def execute(s):
                 super().execute()
-                pc.unequip_tool(self.tool)
+                pc.unequip_tool()
         self.addCommand(
             UnequipToolCommand(),
             description = "unequip tool"
@@ -52,10 +66,7 @@ class ToolPickup(ToolManip):
     def constructCommandChain(self):
         super().constructCommandChain()
         
-        self.addCommand(
-            PoseCommand(pose=self.aboveToolPose(), in_urdf_eef_frame=True),
-            description = "go above tool"
-        )
+        self.approachCommands()
         
         self.constructOpenGripperCommands()
 
@@ -71,6 +82,12 @@ class ToolPickup(ToolManip):
             id = self.TOOL_MAINTAINING_TORQUE_ID,
         )
 
+        p = self.tool.transform_to_eef
+        p.position /= 2
+        self.addCommand(
+            AttachObjectCommand(pose=pc.GRIPPER_TRANSFORM_CORRECTION @ p, shape=[0.07, 0.07, self.tool.transform_to_eef.position.z], operation=Object.ADD, name=self.tool_name)
+        )
+        
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(pc.correct_eef_pose().orientation, reverse=True),
@@ -78,16 +95,14 @@ class ToolPickup(ToolManip):
         )
         
         self.equipToolCommand()
+        
 
 
 class ToolPlaceback(ToolManip):
     def constructCommandChain(self):
         super().constructCommandChain()
         
-        self.addCommand(
-            PoseCommand(pose=self.aboveToolPose(), in_urdf_eef_frame=True),
-            description = "go above tool station"
-        )
+        self.approachCommands()
         
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),
@@ -102,6 +117,12 @@ class ToolPlaceback(ToolManip):
         )
         
         self.constructOpenGripperCommands()
+        
+        p = self.tool.transform_to_eef
+        p.position /= 2
+        self.addCommand(
+            AttachObjectCommand(pose=p, shape=[0.07, 0.07, self.tool.transform_to_eef.position.z], operation=Object.REMOVE, name=self.tool_name)
+        )
         
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.above_distance),

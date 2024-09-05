@@ -88,6 +88,7 @@ class FSM(Node):
         self.manual_inverse_twist_pub = self.create_publisher(TwistStamped, self.get_str_param("hd_fsm_man_inv_twist_topic"), 10)
         self.task_pub = self.create_publisher(Task, self.get_str_param("hd_fsm_task_assignment_topic"), 10)
         self.mode_change_pub = self.create_publisher(Int8, self.get_str_param("hd_fsm_mode_transmission_topic"), 10)
+        self.abort_pub = self.create_publisher(Int8, self.get_str_param("hd_fsm_abort_topic"), 10)
         # old
         self.manual_inverse_cmd_pub = self.create_publisher(Float64MultiArray, "/HD/fsm/man_inv_axis_cmd", 10)
         
@@ -113,6 +114,7 @@ class FSM(Node):
         self.received_manual_inverse_cmd_at = time.time() - 2*self.command_expiration
     
     def new_mode_callback(self, request: HDMode.Request, response: HDMode.Response) -> HDMode.Response:
+        self.get_logger().error("X"*10000)
         temp_mode_map = {
             HDMode.Request.OFF: FSM.IDLE,
             HDMode.Request.MANUAL_DIRECT: FSM.MANUAL_DIRECT,
@@ -186,6 +188,12 @@ class FSM(Node):
     def goal_assignement_callback(self, request: RequestHDGoal.Request, response: RequestHDGoal.Response) -> RequestHDGoal.Response:
         goal = request.goal
         
+        if goal.target == HDGoal.ABORT:
+            threading.Thread(target=self.abort).start()
+            response.success = True
+            response.message = HDGoal.OK
+            return response
+        
         query_perception = False
         
         if query_perception:
@@ -207,7 +215,7 @@ class FSM(Node):
         response.message = HDGoal.OK
         return response
     
-    def send_request(self, client: Client, goal: HDGoal):
+    def send_request(self, client: Client, goal: HDGoal) -> RequestHDGoal.Response:
         req = RequestHDGoal.Request()
         req.goal = goal
         while not client.wait_for_service(timeout_sec=1.0):
@@ -224,10 +232,11 @@ class FSM(Node):
             time.sleep(0.05)
         
         return done_flag.future.result()
-    
-    def schedule_done_callback(self, future, callback):
-        # Schedule the done callback within the callback group
-        self.spare_callback_group.add_callback(callback, future)
+
+    def abort(self):
+        for _ in range(5):
+            self.abort_pub.publish(Int8())
+            time.sleep(0.1)
     
     def task_cmd_callback(self, msg: Task):
         self.semi_autonomous_command = msg

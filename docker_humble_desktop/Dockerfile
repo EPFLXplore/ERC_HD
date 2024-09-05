@@ -66,7 +66,7 @@ RUN /etc/init.d/udev restart
 
 
 # Install the necessary Python packages
-RUN pip install --no-cache-dir -v evdev pyrealsense2
+RUN pip install --no-cache-dir -v evdev pyrealsense2 ultralytics
 
 USER $USERNAME
 

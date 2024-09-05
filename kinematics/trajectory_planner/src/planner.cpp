@@ -25,6 +25,10 @@ void Planner::config()
 
     // addDronePlatform();
     // addLidar();
+    std::vector<double> shape = {0.05, 0.1, 0.3};
+    const geometry_msgs::msg::Pose pose;
+    std::string name = "attach_test";
+    // addGripperAttachedBoxToWorld(shape, pose, name);
 
     initCommunication();
 }
@@ -34,11 +38,13 @@ void Planner::initCommunication() {
     m_joint_target_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_goal", 10, std::bind(&Planner::jointTargetCallback, this, _1));
     m_joint_target2_sub = this->create_subscription<custom_msg::msg::JointSpaceCmd>("/HD/kinematics/joint_goal2", 10, std::bind(&Planner::jointTarget2Callback, this, _1));
     m_add_object_sub = this->create_subscription<custom_msg::msg::Object>("/HD/kinematics/add_object", 10, std::bind(&Planner::addObjectCallback, this, _1));
+    m_attach_object_sub = this->create_subscription<custom_msg::msg::Object>("/HD/kinematics/attach_object", 10, std::bind(&Planner::attachGripperObjectCallback, this, _1));
     m_add_object2_sub = this->create_subscription<moveit_msgs::msg::CollisionObject>("/HD/kinematics/add_object2", 10, std::bind(&Planner::addObjectToWorld, this, _1));
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&Planner::modeChangeCallback, this, _1));
     m_man_inv_axis_sub = this->create_subscription<std_msgs::msg::Float64MultiArray>("/HD/fsm/man_inv_axis_cmd", 10, std::bind(&Planner::manualInverseAxisCallback, this, _1));
     m_named_target_sub = this->create_subscription<std_msgs::msg::String>("/HD/kinematics/named_joint_target", 10, std::bind(&Planner::namedTargetCallback, this, _1));
     m_cs_maintenance_sub = this->create_subscription<std_msgs::msg::Int8>("/ROVER/Maintenance", 10, std::bind(&Planner::CSMaintenanceCallback, this, _1));
+    m_abort_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/abort", 10, std::bind(&Planner::abort, this, _1));
     m_man_inv_frame_sub = this->create_subscription<std_msgs::msg::String>("ROVER/HD_inverse_frame", 10, std::bind(&Planner::manualInverseFrameCallback, this, _1));
     m_eef_pose_pub = this->create_publisher<geometry_msgs::msg::Pose>("/HD/kinematics/eef_pose", 10);
     m_traj_feedback_pub = this->create_publisher<std_msgs::msg::Bool>("/HD/kinematics/traj_feedback", 10);
@@ -288,6 +294,72 @@ void Planner::addBoxToWorld(const std::vector<double> &shape, const geometry_msg
     m_planning_scene_interface->addCollisionObjects(collision_objects);
 }
 
+void Planner::addGripperAttachedBoxToWorld(const std::vector<double> &shape, const geometry_msgs::msg::Pose &pose, std::string &name) {
+    moveit_msgs::msg::AttachedCollisionObject attached_collision_object;
+    moveit_msgs::msg::CollisionObject collision_object;
+    collision_object.header.frame_id = "link6";
+    collision_object.id = name;
+    std::vector<moveit_msgs::msg::CollisionObject> collision_objects;
+    collision_objects.push_back(collision_object);
+
+    // Define the box to add to the world.
+    shape_msgs::msg::SolidPrimitive primitive;
+    primitive.type = primitive.BOX;
+    primitive.dimensions.resize(3);
+    primitive.dimensions[primitive.BOX_X] = shape[0];
+    primitive.dimensions[primitive.BOX_Y] = shape[1];
+    primitive.dimensions[primitive.BOX_Z] = shape[2];
+
+    collision_object.primitives.push_back(primitive);
+    collision_object.primitive_poses.push_back(pose);
+    collision_object.operation = collision_object.ADD;
+
+    attached_collision_object.object = collision_object;
+    attached_collision_object.link_name = "link6";
+    attached_collision_object.touch_links = std::vector<std::string>{"link6", "Arm_A_v6_2", "Arm_A_v6_1", "Finger_v1_2", "Finger_v1_1"};
+
+    std::vector<moveit_msgs::msg::AttachedCollisionObject> attached_collision_objects;
+    attached_collision_objects.push_back(attached_collision_object);
+
+    RCLCPP_INFO(this->get_logger(), "Add object '%s' into the world", name);
+    m_planning_scene_interface->addCollisionObjects(collision_objects);
+    // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    m_planning_scene_interface->applyAttachedCollisionObject(attached_collision_object);
+    // std::this_thread::sleep_for(std::chrono::milliseconds(500));
+}
+
+void Planner::removeGripperAttachedBoxToWorld(const std::vector<double> &shape, const geometry_msgs::msg::Pose &pose, std::string &name) {
+    moveit_msgs::msg::AttachedCollisionObject attached_collision_object;
+    moveit_msgs::msg::CollisionObject collision_object;
+    collision_object.header.frame_id = "link6";
+    collision_object.id = name;
+    std::vector<moveit_msgs::msg::CollisionObject> collision_objects;
+    collision_objects.push_back(collision_object);
+
+    // Define the box to add to the world.
+    shape_msgs::msg::SolidPrimitive primitive;
+    primitive.type = primitive.BOX;
+    primitive.dimensions.resize(3);
+    primitive.dimensions[primitive.BOX_X] = shape[0];
+    primitive.dimensions[primitive.BOX_Y] = shape[1];
+    primitive.dimensions[primitive.BOX_Z] = shape[2];
+
+    collision_object.primitives.push_back(primitive);
+    collision_object.primitive_poses.push_back(pose);
+    collision_object.operation = collision_object.REMOVE;
+
+    attached_collision_object.object = collision_object;
+    attached_collision_object.link_name = "link6";
+    attached_collision_object.touch_links = std::vector<std::string>{"link6", "Arm_A_v6_2", "Arm_A_v6_1", "Finger_v1_2", "Finger_v1_1"};
+
+    std::vector<moveit_msgs::msg::AttachedCollisionObject> attached_collision_objects;
+    attached_collision_objects.push_back(attached_collision_object);
+
+    RCLCPP_INFO(this->get_logger(), "Add object '%s' into the world", name);
+    m_planning_scene_interface->applyAttachedCollisionObject(attached_collision_object);
+    m_planning_scene_interface->addCollisionObjects(collision_objects);
+}
+
 void Planner::addObjectToWorld(const moveit_msgs::msg::CollisionObject::SharedPtr object) {
     // // std::vector<moveit_msgs::msg::CollisionObject> collision_objects;
     // // collision_objects.push_back(object);
@@ -465,6 +537,18 @@ void Planner::addObjectCallback(const custom_msg::msg::Object::SharedPtr msg)
     if (msg->type == msg->BOX) addBoxToWorld(msg->shape.data, msg->pose, msg->name);
 }
 
+void Planner::attachGripperObjectCallback(const custom_msg::msg::Object::SharedPtr msg)
+{
+    if (msg->type != msg->BOX) return;  // not implemented
+    RCLCPP_INFO(this->get_logger(), "Received new object to attach on gripper");
+    if (msg->operation == msg->REMOVE) {
+        removeGripperAttachedBoxToWorld(msg->shape.data, msg->pose, msg->name);
+    }
+    else {
+        addGripperAttachedBoxToWorld(msg->shape.data, msg->pose, msg->name);
+    }
+}
+
 void Planner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
 {
     Planner::CommandMode new_mode = static_cast<Planner::CommandMode>(msg->data);
@@ -495,6 +579,11 @@ void Planner::CSMaintenanceCallback(const std_msgs::msg::Int8::SharedPtr msg) {
             if (m_is_executing_path) sendTrajFeedback(Planner::TrajectoryStatus::EXECUTION_ERROR);
             break;
     }
+}
+
+void Planner::abort(const std_msgs::msg::Int8::SharedPtr msg) {
+    stop();
+    if (m_is_executing_path) sendTrajFeedback(Planner::TrajectoryStatus::ABORTED);
 }
 
 void Planner::manualInverseFrameCallback(const std_msgs::msg::String::SharedPtr msg) {

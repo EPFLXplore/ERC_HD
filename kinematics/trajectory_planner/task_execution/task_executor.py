@@ -8,9 +8,8 @@ from rclpy.node import Node
 import task_execution.task as task
 # from task_execution.command import NamedJointTargetCommand
 import task_execution.command as command
-from custom_msg.msg import Task, Object, PoseGoal, JointSpaceCmd, ArucoObject, MotorCommand
-from custom_msg.msg import HDGoal
-from custom_msg.msg import ServoRequest, ServoResponse
+from custom_msg.msg import (Task, Object, PoseGoal, JointSpaceCmd, ArucoObject, 
+                            MotorCommand, HDGoal, ServoRequest, ServoResponse, Rock, Brick, Ethernet, Probe)
 from custom_msg.srv import RequestHDGoal
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
@@ -71,6 +70,7 @@ class Executor(Node):
         HDGoal.TOOL_PICKUP:             TaskSelect("Pick tool up task",             task.ToolPickup),
         HDGoal.TOOL_PLACEBACK:          TaskSelect("Place tool back task",          task.ToolPlaceback),
         HDGoal.PREDEFINED_POSE:         TaskSelect("Predefined target pose task",   task.PredefinedTargetPose),
+        HDGoal.DROP_SAMPLE:             TaskSelect("Drop sample task",              task.DropSample),
     } | {
         
     }
@@ -114,10 +114,13 @@ class Executor(Node):
         self.create_subscription(UInt32, "/HD/vision/depth", pt.depth_callback, 10)
         self.create_subscription(Float64MultiArray, "/HD/kinematics/set_camera_transform", pc.set_camera_transform_position, 10)
         self.create_subscription(ServoResponse, "/EL/servo_response", self.voltmeterResponseCallback, 10)
+        self.create_subscription(Rock, self.get_str_param("hd_perception_rock"), pt.perception_tracker.rock_detection.callback, 10)
+        self.create_subscription(Int8, self.get_str_param("hd_fsm_abort_topic"), self.abortCallback, 10)
         
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
         self.add_object_pub = self.create_publisher(Object, "/HD/kinematics/add_object", 10)
+        self.attach_object_pub = self.create_publisher(Object, "/HD/kinematics/attach_object", 10)
         self.named_joint_target_pub = self.create_publisher(String, "/HD/kinematics/named_joint_target", 10)
         self.motor_command_pub = self.create_publisher(MotorCommand, "HD/kinematics/single_joint_cmd", 10)
         self.task_outcome_pub = self.create_publisher(Int8, "HD/kinematics/task_outcome", 10)
@@ -239,6 +242,18 @@ class Executor(Node):
         )
         self.add_object_pub.publish(msg)
     
+    def attachObjectToGripper(self, shape: List[float], pose: Pose, name: str, type: int=Object.BOX, operation: int=Object.ADD):
+        """sends an object to the planner, to be added to the world"""
+        # TODO: modify this function and its interface to send a moveit_msgs.msg.CollisionObject instead of custom_msg.msg.Object + change its name to manipulate or something
+        msg = Object(
+            type = type,
+            operation = operation,
+            name = name,
+            pose = pc.revert_from_vision(pose).publishable(),
+            shape = Float64MultiArray(data=shape)
+        )
+        self.attach_object_pub.publish(msg)
+    
     def detectionUpdated(self):
         return pt.DETECTION_UPDATED
 
@@ -260,6 +275,12 @@ class Executor(Node):
     def goalAssignmentCallback(self, request: RequestHDGoal.Request, response: RequestHDGoal.Response) -> RequestHDGoal.Response:
         self.loginfo("Task executor received cmd")
         goal = request.goal
+        is_abort = goal.target == HDGoal.ABORT
+        if is_abort:
+            self.abortTask()
+            response.success = True
+            response.message = HDGoal.OK
+            return response
         if self.hasTask():
             self.loginfo("but already has task : ignoring")
             response.success = False
@@ -271,17 +292,16 @@ class Executor(Node):
             response.message = HDGoal.UNKNOWN_GOAL
             return response
 
-        k = {
+        possible_kwargs = {
             HDGoal.TOOL_PICKUP: {"tool": goal.tool},
             HDGoal.TOOL_PLACEBACK: {"tool": goal.tool},
             HDGoal.PREDEFINED_POSE: {"name": goal.predefined_pose},
         }
-        kwargs = k.get(goal.target, {})
+        kwargs = possible_kwargs.get(goal.target, {})
         self.task = self.KNOWN_TASKS_NEW[goal.target].select(self, **kwargs)
         self.new_task = True
         response.success = True
         response.message = HDGoal.OK
-        self.logerror("Z"*10000 + "goal assignment accepted")
         return response
         
     def taskAssignmentCallback(self, msg: Task):
@@ -310,6 +330,9 @@ class Executor(Node):
             if self.hasTask():
                 self.abortTask()
 
+    def abortCallback(self, msg: Int8):
+        self.abortTask()
+        
     def initiateTask(self):
         """starts assigned task"""
         self.new_task = False
@@ -327,8 +350,9 @@ class Executor(Node):
 
     def abortTask(self):
         """stops the assigned task"""
-        self.task.abort()
-        self.task = None
+        if self.hasTask():
+            self.task.abort()
+            self.task = None
     
     def testVision(self):
         if len(pt.DETECTED_OBJECTS_POSE) == 0: return
