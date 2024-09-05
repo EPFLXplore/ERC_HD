@@ -126,7 +126,7 @@ def generate_launch_description():
         fsm_node,
         fake_motor_control_node,
         real_motor_control_node,
-        model_node,
+        # model_node,
         perception_node,
         camera_nodes,
         ]
