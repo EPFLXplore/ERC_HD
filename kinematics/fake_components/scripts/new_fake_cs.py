@@ -190,6 +190,8 @@ class ControlStation(Node):
         self.input_config.bind(KeyboardConfig.b, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
         self.input_config.bind(KeyboardConfig.e, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.SHOVEL_TOOL)
         self.input_config.bind(KeyboardConfig.u, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.SHOVEL_TOOL)
+        self.input_config.bind(KeyboardConfig.a, self.set_semi_auto_cmd3, "event_value", target=HDGoal.ABORT)
+        
     
     def create_gamepad_bindings(self):
         from input_handling.gamepad import GamePadConfig
@@ -212,7 +214,8 @@ class ControlStation(Node):
         self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
         self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.SHOVEL_TOOL)
         self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.SHOVEL_TOOL)
-        self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.DROP_SAMPLE)
+        # self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.DROP_SAMPLE)
+        self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.ABORT)
         
     
         # ==== manual inverse ====

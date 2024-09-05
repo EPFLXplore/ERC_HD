@@ -115,6 +115,7 @@ class Executor(Node):
         self.create_subscription(Float64MultiArray, "/HD/kinematics/set_camera_transform", pc.set_camera_transform_position, 10)
         self.create_subscription(ServoResponse, "/EL/servo_response", self.voltmeterResponseCallback, 10)
         self.create_subscription(Rock, self.get_str_param("hd_perception_rock"), pt.perception_tracker.rock_detection.callback, 10)
+        self.create_subscription(Int8, self.get_str_param("hd_fsm_abort_topic"), self.abortCallback, 10)
         
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
         self.joint_target_pub = self.create_publisher(Float64MultiArray, "/HD/kinematics/joint_goal", 10)
@@ -329,6 +330,9 @@ class Executor(Node):
             if self.hasTask():
                 self.abortTask()
 
+    def abortCallback(self, msg: Int8):
+        self.abortTask()
+        
     def initiateTask(self):
         """starts assigned task"""
         self.new_task = False
