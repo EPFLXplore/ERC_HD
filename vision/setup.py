@@ -30,6 +30,7 @@ setup(
             "fake_task_selector = vision.publishers.fake_cs_task_selector:main",
             "fake_cs_subsciber = vision.subscribers.fake_cs_subscriber:main",
             "camera = vision.camera_node:main",
+            "bare_camera_sub = vision.subscribers.bare_camera_sub:main"
         ],
     },
 )

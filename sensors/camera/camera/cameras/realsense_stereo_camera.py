@@ -12,14 +12,14 @@ class RealSenseStereoCamera(StereoCameraInterface):
         # TODO: Add a configuration object for the pipeline.
         config = rs.config()
 
-        res = {"x": 640, "y": 480}
+        # res = {"x": 640, "y": 480}
         # res = {"x": 1280, "y": 720}
-        # res = {"x": 848, "y": 480}
+        res = {"x": 848, "y": 480}
         res_depth = res
         res_col = res
         # res_col = {'x': 1920, 'y':1080}
         # res_depth = {'x':1280,'y':720}
-        FPS = 30
+        FPS = 6 # 15 # 30
 
         config.enable_stream(rs.stream.depth, res_depth["x"], res_depth["y"], rs.format.z16, FPS)
         config.enable_stream(rs.stream.color, res_col["x"], res_col["y"], rs.format.bgr8, FPS)
@@ -88,11 +88,8 @@ class RealSenseStereoCamera(StereoCameraInterface):
         color = np.asanyarray(
             color_frame.get_data()
         )  # Convert the color frame to a NumPy array.
-        frame = cv.cvtColor(
-            color, cv.COLOR_BGR2RGB
-        )  # Convert the color space of the image.
 
-        return frame
+        return color
 
     def get_rgbd(self):
         frameset = self.pipe.wait_for_frames()
