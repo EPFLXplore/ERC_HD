@@ -98,22 +98,22 @@ class BareImageSubscriber(Node):
         cv2.imshow("Perception", current_frame)
         cv2.waitKey(1)
 
-    def camera_callback(self, rgb_msg: CompressedImage):
-        self.get_logger().info("Receiving camera RGBD frame")
-        rgb = self.br.compressed_imgmsg_to_cv2(rgb_msg.color)
+    # def camera_callback(self, rgb_msg: CompressedImage):
+    #     self.get_logger().info("Receiving camera RGBD frame")
+    #     rgb = self.br.compressed_imgmsg_to_cv2(rgb_msg.color)
 
-        # Convert the byte data to a numpy array of uint16
-        # depth_image = np.frombuffer(rgbd_msg.depth.data, dtype=np.uint16)
-        depth_image = self.br.imgmsg_to_cv2(rgbd_msg.depth, "mono16")
+    #     # Convert the byte data to a numpy array of uint16
+    #     # depth_image = np.frombuffer(rgbd_msg.depth.data, dtype=np.uint16)
+    #     depth_image = self.br.imgmsg_to_cv2(rgbd_msg.depth, "mono16")
 
-        # Reshape the numpy array to match the image dimensions
-        depth_image = depth_image.reshape((rgbd_msg.depth.height, rgbd_msg.depth.width))
-        print(f"depth_image: {depth_image.shape}")
-        print(f"rgbd type: {depth_image.dtype}")
-        self.update_fps()
-        self.draw_fps(rgb)
-        cv2.imshow("camera", rgb)
-        cv2.waitKey(1)
+    #     # Reshape the numpy array to match the image dimensions
+    #     depth_image = depth_image.reshape((rgbd_msg.depth.height, rgbd_msg.depth.width))
+    #     print(f"depth_image: {depth_image.shape}")
+    #     print(f"rgbd type: {depth_image.dtype}")
+    #     self.update_fps()
+    #     self.draw_fps(rgb)
+    #     cv2.imshow("camera", rgb)
+    #     cv2.waitKey(1)
 
         # aruco_pose = self.pipeline_manager.process_rgb(rgb)
         # self.aruco_pub.publish(PoseMsg.create_message(*aruco_pose))

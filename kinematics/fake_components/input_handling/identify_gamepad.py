@@ -138,3 +138,122 @@ LB:
 
 
 """
+
+
+
+
+
+
+
+
+
+
+"""
+SZMY-POWER CO.,LTD. PLAYSTATION(R)3 Controller
+
+
+
+
+RH:
+    code: 3
+    offset: 128
+    amp: 128
+
+RV:
+    code: 4
+    offset: 128
+    amp: -128
+
+LH:
+    code: 0
+    offset: 128
+    amp: 128
+
+LV:
+    code: 1
+    offset: 128
+    amp: -128
+
+R2:
+    code: 5
+    offset: 0
+    amp: 255
+
+L2:
+    code: 2
+    offset: 0
+    amp: 255
+
+R1:
+    code: 311
+
+L1:
+    310
+
+circle:
+    305
+
+cross:
+    304
+
+square:
+    308
+
+triangle:
+    307
+
+options:
+    315
+
+share:
+    314
+
+ps:
+    316
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
