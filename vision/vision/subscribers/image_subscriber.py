@@ -46,12 +46,12 @@ class ImageSubscriber(Node):
             10,
         )
 
-        # self.camera_sub = self.create_subscription(
-        #     CompressedRGBD,
-        #     "/HD/camera/rgbd",
-        #     self.camera_callback,
-        #     1,
-        # )
+        self.camera_sub = self.create_subscription(
+            CompressedRGBD,
+            "/HD/camera/rgbd",
+            self.camera_callback,
+            1,
+        )
 
         # Used to convert between ROS and OpenCV images
         self.br = CvBridge()
