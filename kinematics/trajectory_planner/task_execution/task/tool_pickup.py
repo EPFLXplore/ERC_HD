@@ -131,3 +131,10 @@ class ToolPlaceback(ToolManip):
         )
 
         self.unequipToolCommand()
+
+        self.constructCloseGripperCommands()
+
+        self.addCommand(
+            NamedJointTargetCommand("cobra"),
+            description="go back to cobra"
+        )

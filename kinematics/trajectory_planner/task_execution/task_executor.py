@@ -9,7 +9,7 @@ import task_execution.task as task
 # from task_execution.command import NamedJointTargetCommand
 import task_execution.command as command
 from custom_msg.msg import (Task, Object, PoseGoal, JointSpaceCmd, ArucoObject, 
-                            MotorCommand, HDGoal, ServoRequest, ServoResponse, Rock, Brick, Ethernet, Probe)
+                            MotorCommand, HDGoal, ServoRequest, ServoResponse, Rock, RockArray, Brick, Ethernet, Probe)
 from custom_msg.srv import RequestHDGoal
 from geometry_msgs.msg import Pose
 from std_msgs.msg import Bool, Float64MultiArray, Int8, String, UInt32
@@ -64,7 +64,7 @@ class Executor(Node):
         Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",        task.RockSamplingComplete),
     }
     KNOWN_TASKS_NEW = {
-        btn_task:                       TaskSelect("Button task",                   task.PressButton)
+        btn_task:                       TaskSelect("Button task",                   task.Dummy)
         for btn_task in [HDGoal.BUTTON_A0, HDGoal.BUTTON_A1, HDGoal.BUTTON_A2, HDGoal.BUTTON_A3, HDGoal.BUTTON_A4, HDGoal.BUTTON_A5, HDGoal.BUTTON_A6, HDGoal.BUTTON_A7, HDGoal.BUTTON_A8, HDGoal.BUTTON_A9, HDGoal.BUTTON_B1]
     } | {
         HDGoal.TOOL_PICKUP:             TaskSelect("Pick tool up task",             task.ToolPickup),
@@ -114,7 +114,7 @@ class Executor(Node):
         self.create_subscription(UInt32, "/HD/vision/depth", pt.depth_callback, 10)
         self.create_subscription(Float64MultiArray, "/HD/kinematics/set_camera_transform", pc.set_camera_transform_position, 10)
         self.create_subscription(ServoResponse, "/EL/servo_response", self.voltmeterResponseCallback, 10)
-        self.create_subscription(Rock, self.get_str_param("hd_perception_rock"), pt.perception_tracker.rock_detection.callback, 10)
+        self.create_subscription(RockArray, self.get_str_param("hd_perception_rock"), pt.perception_tracker.rock_detection.callback, 10)
         self.create_subscription(Int8, self.get_str_param("hd_fsm_abort_topic"), self.abortCallback, 10)
         
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)
@@ -359,6 +359,14 @@ class Executor(Node):
         shape = [0.1, 0.2, 0.0001]
         pose = pt.DETECTED_OBJECTS_POSE[0].artag_pose
         name = "test_btn"
+        self.addObjectToWorld(shape, pose, name)
+        
+    def testRockDetection(self):
+        rd = pt.perception_tracker.rock_detection
+        if rd.deprecated(): return
+        shape = [rd.min_diameter, rd.max_diameter, rd.height]
+        pose = pt.perception_tracker.rock_detection.rock_pose
+        name = "test_rock"
         self.addObjectToWorld(shape, pose, name)
 
     def run(self):

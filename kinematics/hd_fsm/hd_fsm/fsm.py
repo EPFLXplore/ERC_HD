@@ -137,6 +137,8 @@ class FSM(Node):
 
     def manual_direct_cmd_callback(self, msg: Float32MultiArray):
         # TODO: add mode check in all callbacks
+        if self.mode != self.MANUAL_DIRECT:
+            return
         scalings = [-1, -1, -1, -1, -0.13/0.2, -1]
         self.manual_direct_command = msg.data
         for i in range(min(len(self.manual_direct_command), len(scalings))):

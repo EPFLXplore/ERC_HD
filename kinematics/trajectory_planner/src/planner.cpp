@@ -257,11 +257,11 @@ void Planner::addDronePlatform() {
 }
 
 void Planner::addLidar() {
-    std::vector<double> shape = {0.1, 0.1, 0.6};
+    std::vector<double> shape = {0.12, 0.12, 1};
     geometry_msgs::msg::Pose pose;
-    pose.position.x = 0.06;
-    pose.position.y = 0.2;
-    pose.position.z = 0.35;
+    pose.position.x = -0.4;
+    pose.position.y = -0.39;
+    pose.position.z = 0.58;
     std::string name = "lidar";
     addBoxToWorld(shape, pose, name);
 }

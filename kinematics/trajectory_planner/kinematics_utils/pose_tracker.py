@@ -1,5 +1,5 @@
 from geometry_msgs.msg import Pose
-from custom_msg.msg import ArucoObject, Rock, Brick, Ethernet, Probe
+from custom_msg.msg import ArucoObject, Rock, Brick, Ethernet, Probe, RockArray
 from std_msgs.msg import UInt32
 import kinematics_utils.quaternion_arithmetic_new as qan
 from typing import Any, Union
@@ -141,11 +141,20 @@ class RockDetection(Detection):
         self.rock_pose = qan.Pose()
         self.max_diameter = 0.0
         self.min_diameter = 0.0
+        self.height = 0.0
 
-    def _callback(self, msg: Rock):
-        self.rock_pose = mm2m(msg.pose)
-        self.max_diameter = msg.max_diameter
-        self.grab_axis = self.min_diameter
+    def _callback(self, msg: RockArray):
+        rock = msg.rocks[msg.target_index]
+        vision_pose = qan.Pose()
+        mm_to_m = 1/1000
+        cm_to_m = 1/100
+        vision_pose.position = qan.Point.make(rock.center) * mm_to_m
+        vision_pose.orientation = qan.Quaternion.from_axis_angle([0, 0, 1], rock.angle)
+        vision_pose = mm2m(vision_pose)
+        self.rock_pose = pc.vision_to_abs(vision_pose)
+        self.max_diameter = rock.max_diameter * cm_to_m
+        self.min_diameter = rock.min_diameter * cm_to_m
+        self.height = rock.height * cm_to_m
 
 
 class ProbeDetection(Detection):

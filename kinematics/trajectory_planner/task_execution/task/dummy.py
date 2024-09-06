@@ -18,6 +18,13 @@ class Dummy(Task):
         super().constructCommandChain()
 
         self.addCommand(
+            StraightMoveCommand(velocity_scaling_factor=0.5),
+            pre_operation = lambda cmd: (cmd.setDistance(0.15),
+                                         cmd.setAxisFromOrientation(pc.correct_gripper_pose().orientation, reverse=True)),
+            description = "move back from button"
+        )
+        return
+        self.addCommand(
             RequestDetectionCommand(),
             post_operation = lambda cmd: self.scanForObjects(),
             description = "request detection"
