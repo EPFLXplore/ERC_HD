@@ -153,7 +153,7 @@ class ControlStation(Node):
         self.timer_period = 1/30
         self.timer = self.create_timer(self.timer_period, self.publish_cmd)
 
-    def get_str_param(self, name: str, default: str = "") -> str:
+    def get_str_param(self, name: str, default: str = "aa") -> str:
         self.declare_parameter(name, default)
         return self.get_parameter(name).get_parameter_value().string_value
     

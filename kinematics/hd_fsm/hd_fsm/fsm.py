@@ -139,7 +139,7 @@ class FSM(Node):
         # TODO: add mode check in all callbacks
         if self.mode != self.MANUAL_DIRECT:
             return
-        scalings = [-1, -1, -1, -1, -0.13/0.2, -1]
+        scalings = [-1, 1, -1, -1, 0.13/0.2, -1]
         self.manual_direct_command = msg.data
         for i in range(min(len(self.manual_direct_command), len(scalings))):
             self.manual_direct_command[i] *= scalings[i]
