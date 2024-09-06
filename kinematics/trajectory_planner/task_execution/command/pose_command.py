@@ -1,5 +1,5 @@
 from task_execution.command.command import *
-import kinematics_utils.quaternion_arithmetic as qan
+import kinematics_utils.quaternion_arithmetic_new as qan
 
 
 class PoseCommand(Command):

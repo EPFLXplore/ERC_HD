@@ -71,6 +71,7 @@ class Executor(Node):
         HDGoal.TOOL_PLACEBACK:          TaskSelect("Place tool back task",          task.ToolPlaceback),
         HDGoal.PREDEFINED_POSE:         TaskSelect("Predefined target pose task",   task.PredefinedTargetPose),
         HDGoal.DROP_SAMPLE:             TaskSelect("Drop sample task",              task.DropSample),
+        HDGoal.ROCK:                    TaskSelect("Approach rock",                 task.RockPicking),
     } | {
         
     }

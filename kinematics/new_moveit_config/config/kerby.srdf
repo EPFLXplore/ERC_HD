@@ -82,6 +82,23 @@
         <joint name="hd_joint6" value="0.34131072530455514"/>
     </group_state>
 
+    <group_state name="above_ground" group="kerby_arm_group">
+        <joint name="hd_joint1" value="0"/>
+        <joint name="hd_joint2" value="-0.27613899964347943"/>
+        <joint name="hd_joint3" value="1.3262832791181738"/>
+        <joint name="hd_joint4" value="0"/>
+        <joint name="hd_joint5" value="-1.539785620916269"/>
+        <joint name="hd_joint6" value="0"/>
+    </group_state>
+
+    <group_state name="idle_for_navigation" group="kerby_arm_group">
+        <joint name="hd_joint1" value="0"/>
+        <joint name="hd_joint2" value="0.8577600328539943"/>
+        <joint name="hd_joint3" value="2.452359026656817"/>
+        <joint name="hd_joint4" value="0"/>
+        <joint name="hd_joint5" value="-1.3594943686851924"/>
+        <joint name="hd_joint6" value="0"/>
+    </group_state>
 
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="kerby_vritual_joint" type="fixed" parent_frame="world" child_link="base_link"/>
