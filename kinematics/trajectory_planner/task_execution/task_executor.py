@@ -59,9 +59,9 @@ class Executor(Node):
         Task.RASSOR_SAMPLE:             TaskSelect("Rassor sample task",            task.RassorSampling),
         Task.ETHERNET_CABLE:            TaskSelect("Plug ethernet task",            task.EthernetApproach),
         Task.ALIGN_PANEL:               TaskSelect("Align panel",                   task.AlignPanel),
-        Task.ROCK_SAMPLING_APPROACH:    TaskSelect("Rock sampling approach",        task.RockSamplingApproach),
-        Task.ROCK_SAMPLING_DROP:        TaskSelect("Rock sampling drop",            task.RockSamplingDrop),
-        Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",        task.RockSamplingComplete),
+        # Task.ROCK_SAMPLING_APPROACH:    TaskSelect("Rock sampling approach",        task.RockSamplingApproach),
+        # Task.ROCK_SAMPLING_DROP:        TaskSelect("Rock sampling drop",            task.RockSamplingDrop),
+        # Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",        task.RockSamplingComplete),
     }
     KNOWN_TASKS_NEW = {
         btn_task:                       TaskSelect("Button task",                   task.Dummy)
@@ -115,7 +115,7 @@ class Executor(Node):
         self.create_subscription(UInt32, "/HD/vision/depth", pt.depth_callback, 10)
         self.create_subscription(Float64MultiArray, "/HD/kinematics/set_camera_transform", pc.set_camera_transform_position, 10)
         self.create_subscription(ServoResponse, "/EL/servo_response", self.voltmeterResponseCallback, 10)
-        self.create_subscription(RockArray, self.get_str_param("hd_perception_rock"), pt.perception_tracker.rock_detection.callback, 10)
+        self.create_subscription(RockArray, self.get_str_param("hd_perception_rocks"), pt.perception_tracker.rock_detection.callback, 10)
         self.create_subscription(Int8, self.get_str_param("hd_fsm_abort_topic"), self.abortCallback, 10)
         
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)

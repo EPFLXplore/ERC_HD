@@ -32,7 +32,7 @@ class RequestRockDetectionCommand(Command):
         pt.perception_tracker.rock_detection.deprecate()
         start = time.time()
         rate = self.executor.create_rate(25)    # 25 hz rate in order to release ressources
-        while not pt.perception_tracker.rock_detection.deprecated:
+        while pt.perception_tracker.rock_detection.deprecated:
             if time.time()-start > self.timeout:
                 self.has_failed = True
                 return

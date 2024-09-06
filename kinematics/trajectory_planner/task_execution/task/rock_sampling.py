@@ -14,7 +14,8 @@ class RockPicking(Task):
         rd = pt.perception_tracker.rock_detection
         camera_pos = pc.CAMERA_TRANSFORM.position
         p = [camera_pos.x, camera_pos.y, -self.above_distance]
-        pose = rd.rock_pose.point_image(p)
+        pose = rd.rock_pose.copy()
+        pose.position = rd.rock_pose.point_image(p)
         return pose
     
     def grabPose(self) -> qan.Pose:
@@ -22,10 +23,15 @@ class RockPicking(Task):
         finger_len = FingersList.DEFAULT.transform_to_eef.position.z
         rat_len = 0.02
         p = [0, 0, -rd.height/2 + finger_len - rat_len]
-        return rd.rock_pose.point_image(p)
+        pose = rd.rock_pose.copy()
+        pose.position = rd.rock_pose.point_image(p)
+        return pose
     
     def beforeGrabPose(self) -> qan.Pose:
-        return self.grabPose().point_image([0, 0, self.before_grab_distance])
+        grab_pose = self.grabPose()
+        pose = grab_pose.copy()
+        pose.position = grab_pose.point_image([0, 0, self.before_grab_distance])
+        return pose
     
     def constructCommandChain(self):
         super().constructCommandChain()
