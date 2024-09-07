@@ -64,7 +64,7 @@ class Executor(Node):
         # Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",        task.RockSamplingComplete),
     }
     KNOWN_TASKS_NEW = {
-        btn_task:                       TaskSelect("Button task",                   task.Dummy)
+        btn_task:                       TaskSelect("Button task",                   task.PressButton)
         for btn_task in [HDGoal.BUTTON_A0, HDGoal.BUTTON_A1, HDGoal.BUTTON_A2, HDGoal.BUTTON_A3, HDGoal.BUTTON_A4, HDGoal.BUTTON_A5, HDGoal.BUTTON_A6, HDGoal.BUTTON_A7, HDGoal.BUTTON_A8, HDGoal.BUTTON_A9, HDGoal.BUTTON_B1]
     } | {
         HDGoal.TOOL_PICKUP:             TaskSelect("Pick tool up task",             task.ToolPickup),
@@ -72,6 +72,7 @@ class Executor(Node):
         HDGoal.PREDEFINED_POSE:         TaskSelect("Predefined target pose task",   task.PredefinedTargetPose),
         HDGoal.DROP_SAMPLE:             TaskSelect("Drop sample task",              task.DropSample),
         HDGoal.ROCK:                    TaskSelect("Approach rock",                 task.RockPicking),
+        HDGoal.VOLTMETER_ALIGN:         TaskSelect("Voltmeter align",               task.VoltmeterAlignNew),
     } | {
         
     }
@@ -116,6 +117,7 @@ class Executor(Node):
         self.create_subscription(Float64MultiArray, "/HD/kinematics/set_camera_transform", pc.set_camera_transform_position, 10)
         self.create_subscription(ServoResponse, "/EL/servo_response", self.voltmeterResponseCallback, 10)
         self.create_subscription(RockArray, self.get_str_param("hd_perception_rocks"), pt.perception_tracker.rock_detection.callback, 10)
+        # self.create_subscription(ArucoObject, self.get_str_param("hd_perception_rocks"), pt.perception_tracker.aruco_object_detection.callback, 10)
         self.create_subscription(Int8, self.get_str_param("hd_fsm_abort_topic"), self.abortCallback, 10)
         
         self.pose_target_pub = self.create_publisher(PoseGoal, "/HD/kinematics/pose_goal", 10)

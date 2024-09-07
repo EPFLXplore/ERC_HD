@@ -217,6 +217,9 @@ class Task:
     
     def scanForObjects(self):
         """try to get the pose of the ARtag and object for the task"""
+        # self.object_pose = pt.perception_tracker.aruco_object_detection.object_pose
+        # self.artag_pose = pt.perception_tracker.aruco_object_detection.artag_pose
+        # return
         while pt.DETECTED_OBJECTS_LOCKED:
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:

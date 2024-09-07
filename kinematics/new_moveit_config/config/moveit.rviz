@@ -339,116 +339,11 @@ Visualization Manager:
         Value: robot_description
       Enabled: true
       Links:
-        1._driving_v2_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        1._driving_v2_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        1._driving_v2_3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        1._driving_v2_4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        1._pivot_steering_v2_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        1._pivot_steering_v2_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        1._wheel_simplified_v2_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        1._wheel_simplified_v2_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        1._wheel_simplified_v2_3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        1._wheel_simplified_v2_4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         All Links Enabled: true
-        Arm_A_v6_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        Arm_A_v6_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
-        Finger_v1_1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        Finger_v1_2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         Link Tree Style: Links in Alphabetic Order
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        link1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        link2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        link3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        link4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        link5:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        link6:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Mass Properties:
         Inertia: false
         Mass: false
@@ -458,7 +353,7 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: moveit_rviz_plugin/PlanningScene
-      Enabled: true
+      Enabled: false
       Move Group Namespace: ""
       Name: PlanningScene
       Planning Scene Topic: /monitored_planning_scene
@@ -477,63 +372,63 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           1._driving_v2_2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           1._driving_v2_3:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           1._driving_v2_4:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           1._pivot_steering_v2_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           1._pivot_steering_v2_2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           1._wheel_simplified_v2_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           1._wheel_simplified_v2_2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           1._wheel_simplified_v2_3:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           1._wheel_simplified_v2_4:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
-          All Links Enabled: false
+            Value: true
+          All Links Enabled: true
           Arm_A_v6_1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           Arm_A_v6_2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           Expand Joint Details: false
           Expand Link Details: false
           Expand Tree: false
@@ -541,43 +436,43 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           Finger_v1_2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           Link Tree Style: Links in Alphabetic Order
           base_link:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           link1:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           link2:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           link3:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           link4:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           link5:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-            Value: false
+            Value: true
           link6:
             Alpha: 1
             Show Axes: false
@@ -586,7 +481,7 @@ Visualization Manager:
         Robot Alpha: 1
         Show Robot Collision: false
         Show Robot Visual: true
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -605,7 +500,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 1.8338178396224976
+      Distance: 7.661126613616943
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -637,7 +532,7 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002b40000039efc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d00000200000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000243000001980000017d00fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a00560069006500770073000000031d000000be000000a400ffffff000004c60000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002b40000039efc0200000005fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb000000100044006900730070006c006100790073010000003d00000200000000c900fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e00670100000243000001980000018800fffffffb0000000800480065006c0070000000029a0000006e0000006e00fffffffb0000000a00560069006500770073000000031d000000be000000a400ffffff000004c60000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1920

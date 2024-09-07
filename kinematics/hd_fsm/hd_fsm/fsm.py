@@ -96,7 +96,6 @@ class FSM(Node):
         self.hd_mode_srv = self.create_service(HDMode, self.get_str_param("hd_fsm_mode_srv"), self.new_mode_callback)
         self.goal_assignment_srv = self.create_service(RequestHDGoal, self.get_str_param("hd_fsm_goal_srv"), self.goal_assignement_callback, callback_group=self.retrant_callback_group)
 
-
         # subscriptions
         self.create_subscription(Float32MultiArray, self.get_str_param("rover_hd_man_dir_topic"), self.manual_direct_cmd_callback, 10)
         self.create_subscription(Float32MultiArray, self.get_str_param("rover_hd_man_inv_topic"), self.manual_inverse_cmd_callback, 10)
@@ -114,7 +113,6 @@ class FSM(Node):
         self.received_manual_inverse_cmd_at = time.time() - 2*self.command_expiration
     
     def new_mode_callback(self, request: HDMode.Request, response: HDMode.Response) -> HDMode.Response:
-        self.get_logger().error("X"*10000)
         temp_mode_map = {
             HDMode.Request.OFF: FSM.IDLE,
             HDMode.Request.MANUAL_DIRECT: FSM.MANUAL_DIRECT,
@@ -206,13 +204,11 @@ class FSM(Node):
                 return response
         
         task_exec_response = self.send_request(self.task_executor_goal_assignment_cli, goal)
-        self.get_logger().warn("X"*10000)
         if not task_exec_response.success:
             response.success = False
             response.message = task_exec_response.message
             return response
         
-        self.get_logger().warn("A"*10000)
         response.success = True
         response.message = HDGoal.OK
         return response
@@ -270,7 +266,7 @@ class FSM(Node):
             task_type = Task.ROCK_SAMPLING_DROP
         elif x == 82:
             task_type = Task.ROCK_SAMPLING_COMPLETE
-        self.get_logger().info("AAAAAAAAAAAAAAAAAAA :   " + str(x) + "  ;  " + str(task_type))
+        self.get_logger().info("AAAAAAAAAAAAAAAAAAA :   " + str(x) + "  ;  " + str(task_type), throttle_duration_sec=1)
         self.semi_autonomous_command = Task(
             type = task_type,
             str_slot = task_str
@@ -286,7 +282,7 @@ class FSM(Node):
         msg = Float64MultiArray()
         msg.data = array.array('d', self.manual_direct_command)
         if VERBOSE:
-            self.get_logger().info("FSM direct cmd :   " + str_pad_list(list(msg.data)))
+            self.get_logger().info("FSM direct cmd :   " + str_pad_list(list(msg.data)), throttle_duration_sec=1)
         self.manual_direct_cmd_pub.publish(msg)
 
     def send_manual_inverse_cmd_old(self):
@@ -299,7 +295,7 @@ class FSM(Node):
         #msg.data = array.array('d', data)
         msg = Float64MultiArray(data=data)
         if VERBOSE:
-            self.get_logger().info("FSM manual inverse cmd :   " + str_pad_list(list(msg.data)))
+            self.get_logger().info("FSM manual inverse cmd :   " + str_pad_list(list(msg.data)), throttle_duration_sec=1)
         self.manual_inverse_cmd_pub.publish(msg)
         
     def send_manual_inverse_cmd(self):
@@ -310,7 +306,7 @@ class FSM(Node):
         # msg.header.frame_id = "base_link"     #hd_link6   #Gripper_Finger_v1__1__1
         msg.twist = self.manual_inverse_twist
         if VERBOSE:
-            self.get_logger().info("FSM manual inverse cmd :    " + str(msg))
+            self.get_logger().info("FSM manual inverse cmd :    " + str(msg), throttle_duration_sec=1)
         self.manual_inverse_twist_pub.publish(msg)
         
     def send_semi_autonomous_cmd(self):
@@ -349,7 +345,7 @@ class FSM(Node):
 
     def normal_loop_action(self):
         if VERBOSE:
-            self.get_logger().info("MODE : " + str(self.mode))
+            self.get_logger().info("MODE : " + str(self.mode), throttle_duration_sec=1)
         
         if self.mode == self.IDLE:
             pass

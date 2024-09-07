@@ -46,5 +46,10 @@ class PressButton(Task):
             description = "move back from button"
         )
         
+        self.addCommand(
+            NamedJointTargetCommand("cobra"),
+            description="back to cobra"
+        )
+        
         # TODO: maybe remove the objects added to the world
         #self.constructRemoveObjectsCommands("button", extended=extended)
