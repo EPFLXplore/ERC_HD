@@ -153,7 +153,7 @@ class ControlStation(Node):
         self.timer_period = 1/30
         self.timer = self.create_timer(self.timer_period, self.publish_cmd)
 
-    def get_str_param(self, name: str, default: str = "") -> str:
+    def get_str_param(self, name: str, default: str = "aa") -> str:
         self.declare_parameter(name, default)
         return self.get_parameter(name).get_parameter_value().string_value
     
@@ -187,9 +187,11 @@ class ControlStation(Node):
         self.input_config.bind(KeyboardConfig._1, self.set_man_inv_angular, "value", coordinate=2, multiplier=1)
         self.input_config.bind(KeyboardConfig._3, self.set_man_inv_angular, "value", coordinate=2, multiplier=-1)
         
-        self.input_config.bind(KeyboardConfig.b, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
-        self.input_config.bind(KeyboardConfig.e, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.BUTTON_TOOL)
-        self.input_config.bind(KeyboardConfig.u, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.BUTTON_TOOL)
+        self.input_config.bind(KeyboardConfig.b, self.set_semi_auto_cmd3, "event_value", target=HDGoal.PROBE_STORE, probe_grab_option=HDGoal.TOP_GRAB)
+        self.input_config.bind(KeyboardConfig.e, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.SHOVEL_TOOL)
+        self.input_config.bind(KeyboardConfig.u, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.SHOVEL_TOOL)
+        self.input_config.bind(KeyboardConfig.a, self.set_semi_auto_cmd3, "event_value", target=HDGoal.ABORT)
+        
     
     def create_gamepad_bindings(self):
         from input_handling.gamepad import GamePadConfig
@@ -209,9 +211,14 @@ class ControlStation(Node):
             self.input_config.bind(input, self.set_gripper_speed, "event_value", value=val)
 
         # ==== semi auto ====
-        self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
-        self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.SHOVEL_TOOL)
-        self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.SHOVEL_TOOL)
+        # self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
+        self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.VOLTMETER_TOOL)
+        self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.VOLTMETER_TOOL)
+        # self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.DROP_SAMPLE)
+        self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.PROBE_STORE, probe_grab_option=HDGoal.TOP_GRAB)
+        self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.PROBE_STORE, probe_grab_option=HDGoal.SIDE_GRAB)
+    
+        
     
         # ==== manual inverse ====
         self.input_config.bind(GamePadConfig.RH, self.set_man_inv_axis, "value", coordinate=0, multiplier=1)
@@ -299,7 +306,10 @@ class ControlStation(Node):
         
         if not do:
             return
-        self.hd_mode = Mode.next(self.hd_mode)
+        if self.hd_mode == Mode.SEMI_AUTONOMOUS:
+            self.hd_mode = Mode.IDLE
+        else:
+            self.hd_mode = Mode.next(self.hd_mode)
         req = HDMode.Request(mode=temp_mode_map[self.hd_mode])
         future = self.mode_cli.call_async(req)
         # TODO: check result

@@ -8,7 +8,9 @@ class NamedJointTargetCommand(Command):
         self.name = name
     
     def execute(self):
-        """publishes on /arm_control/pose_goal topic for the trajectory planner"""
         super().execute()
         self.executor.sendNamedJointTarget(self.name)
         self.finished = self.executor.waitForFeedback()
+        if not self.finished:
+            self.has_failed = True
+            self.fail_message = "couldn't reach predefined pose"

@@ -60,13 +60,15 @@ RUN echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="03e7", MODE="0666"' | sudo tee /et
 RUN /etc/init.d/udev restart  
 
 
+RUN pip install --no-cache-dir -v evdev 
+
+
 USER $USERNAME
 
 # Ensure Python and pip are installed and updated
 RUN pip install --no-cache-dir --upgrade pip
 
 # Install the necessary Python packageslibrealsense
-RUN pip install --no-cache-dir -v evdev 
 # pyrealsense2 wrapper has to be build from source 
 
 # MISSING pyrealsense2 

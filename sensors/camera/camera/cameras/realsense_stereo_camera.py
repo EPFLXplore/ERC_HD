@@ -1,31 +1,51 @@
 import pyrealsense2 as rs
 import numpy as np
 import cv2 as cv
+import os
+import yaml
 
 from ..interfaces.stereo_camera_interface import StereoCameraInterface
 
 
 class RealSenseStereoCamera(StereoCameraInterface):
     def __init__(self):
+        self.config_path = f"{os.getcwd()}/src/sensors/camera/configs/realsense_config.yaml"
+        self.load_config()
+        
+
         self.pipe = rs.pipeline()  # Create a RealSense pipeline object.
 
         # TODO: Add a configuration object for the pipeline.
         config = rs.config()
 
-        res = {"x": 640, "y": 480}
+        # res = {"x": 640, "y": 480}
         # res = {"x": 1280, "y": 720}
-        # res = {"x": 848, "y": 480}
-        res_depth = res
-        res_col = res
         # res_col = {'x': 1920, 'y':1080}
         # res_depth = {'x':1280,'y':720}
-        FPS = 30
+        self.fps = self.config['fps']
+        # self.using_depth = self.config['use_depth']
 
-        config.enable_stream(rs.stream.depth, res_depth["x"], res_depth["y"], rs.format.z16, FPS)
-        config.enable_stream(rs.stream.color, res_col["x"], res_col["y"], rs.format.bgr8, FPS)
+        config.enable_stream(rs.stream.depth, self.config['x'], self.config['y'], rs.format.z16, self.fps)
+        config.enable_stream(rs.stream.color, self.config['x'], self.config['y'], rs.format.bgr8, self.fps)
 
         # Start streaming from file
         self.profile = self.pipe.start(config)
+
+        self.align = rs.align(rs.stream.color) #TODO added
+
+    def load_config(self):
+        with open(self.config_path, "r") as file:
+            conf = yaml.safe_load(file)
+        config = conf['x_y_fps']
+        self.config = {}
+        self.config['x'] = int(config[0])
+        self.config['y'] = int(config[1])
+        self.config['fps'] = int(config[2])
+        # if len(config) < 4:
+        #     self.config['use_depth'] = True
+        # else:
+        #     self.config['use_depth'] = bool(config[3])
+        
 
     def get_depth_scale(self):
         depth_scale = self.profile.get_device().first_depth_sensor().get_depth_scale()
@@ -62,10 +82,13 @@ class RealSenseStereoCamera(StereoCameraInterface):
         frameset = (
             self.pipe.wait_for_frames()
         )  # Wait for the next set of frames from the pipeline.
+        aligned_frame = self.align.process(frameset) # TODO added
         depth_frame = (
-            frameset.get_depth_frame()
-        )  # Get the depth frame from the frameset.
-
+            aligned_frame.get_depth_frame()
+        ) 
+        # depth_frame = (
+        #     frameset.get_depth_frame()
+        # )  # Get the depth frame from the frameset.
         depth = np.asanyarray(
             depth_frame.get_data()
         )  # Convert the depth frame to a NumPy array.
@@ -83,14 +106,12 @@ class RealSenseStereoCamera(StereoCameraInterface):
         color = np.asanyarray(
             color_frame.get_data()
         )  # Convert the color frame to a NumPy array.
-        frame = cv.cvtColor(
-            color, cv.COLOR_BGR2RGB
-        )  # Convert the color space of the image.
 
-        return frame
+        return color
 
     def get_rgbd(self):
         frameset = self.pipe.wait_for_frames()
         color_frame = np.asanyarray((frameset.get_color_frame().get_data()))
         depth_frame = np.asanyarray(frameset.get_depth_frame().get_data())
+        # depth_frame = self.get_depth()
         return color_frame, depth_frame

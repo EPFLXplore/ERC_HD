@@ -4,10 +4,6 @@ from std_msgs.msg import String
 import tkinter as tk
 from custom_msg.srv import ButtonPressControlPanel
 
-from sensor_msgs.msg import CompressedImage  # Image is the message type
-from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Images
-
-
 BUTTON_WIDTH = 38
 BUTTON_HEIGHT = 30
 

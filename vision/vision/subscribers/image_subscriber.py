@@ -8,7 +8,8 @@ import os
 
 from custom_msg.msg import CompressedRGBD  # Custom message type
 import numpy as np
-
+import yaml
+from ..get_interfaces import GetInterfaces
 
 class ImageSubscriber(Node):
     """
@@ -21,6 +22,10 @@ class ImageSubscriber(Node):
         """
         # Initiate the Node class's constructor and give it a name
         super().__init__("image_subscriber")
+        self.config_path = f"{os.getcwd()}/src/sensors/camera/configs/realsense_config.yaml"
+        self.load_config()
+
+
         self.get_logger().info("Image Subscriber Node Started")
         self.path = "./captured_images"
         os.makedirs(self.path, exist_ok=True)
@@ -32,19 +37,30 @@ class ImageSubscriber(Node):
 
         # Create the subscriber. This subscriber will receive an Image
         # from the video_frames topic. The queue size is 10 messages.
-        self.subscription = self.create_subscription(
-            CompressedImage,
-            "/HD/perception/image",
-            self.listener_callback,
-            10,
-        )
 
-        self.old_vision = self.create_subscription(
+        if self.config['publish_straigth_to_cs']:
+            self._logger.warn("GOING STRAIGHT TO CS")
+            self.subscription = self.create_subscription(
             CompressedImage,
-            "/HD/vision/video_frames",
-            self.old_vision_callback,
-            10,
+            GetInterfaces.get('hd_camera_rgb'),
+            self.listener_callback,
+            1,
         )
+        else:
+            self._logger.warn("LISTENING TO PERCEPTION")
+            self.subscription = self.create_subscription(
+                CompressedImage,
+                GetInterfaces.get('hd_perception_rgb'),
+                self.listener_callback,
+                1,
+            )
+
+        # self.old_vision = self.create_subscription(
+        #     CompressedImage,
+        #     "/HD/vision/video_frames",
+        #     self.old_vision_callback,
+        #     10,
+        # )
 
         # self.camera_sub = self.create_subscription(
         #     CompressedRGBD,
@@ -133,6 +149,10 @@ class ImageSubscriber(Node):
         self.draw_fps(current_frame)
         cv2.imshow("Old Vision", current_frame)
         cv2.waitKey(1)
+
+    def load_config(self):
+        with open(self.config_path, "r") as file:
+            self.config = yaml.safe_load(file)
 
 
 def main(args=None):

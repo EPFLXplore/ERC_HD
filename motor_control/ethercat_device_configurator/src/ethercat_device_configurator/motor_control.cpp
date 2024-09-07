@@ -172,7 +172,7 @@ private:
     // MATTHIAS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     void manual_direct_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
     {
-        RCLCPP_INFO(this->get_logger(), "manual_direct_command_callback", msg->data);
+        // RCLCPP_INFO(this->get_logger(), "manual_direct_command_callback", msg->data);
 
         for (uint i = 0; i < motor_command_list.size(); i++)
         {
@@ -274,7 +274,7 @@ private:
 
     void position_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
     {
-        RCLCPP_INFO(this->get_logger(), "position_command_callback");
+        // RCLCPP_INFO(this->get_logger(), "position_command_callback");
 
         double j5_pos = 0.0; // for decoupling of j5 and j6
         bool j6_on_hall = false;
@@ -376,7 +376,7 @@ private:
 
     void kill(const std_msgs::msg::Int8::SharedPtr msg)
     {
-        RCLCPP_INFO(this->get_logger(), "kill_command_callback");
+        // RCLCPP_INFO(this->get_logger(), "kill_command_callback");
 
         static const int LAUNCH = 1;
         static const int ABORT = 2;
@@ -396,7 +396,7 @@ private:
 
     void motor_command_callback(const custom_msg::msg::MotorCommand::SharedPtr msg)
     {
-        RCLCPP_INFO(this->get_logger(), "motor_command_callback");
+        // RCLCPP_INFO(this->get_logger(), "motor_command_callback");
 
         // TODO: add the multiplication by the direction of the corresponding joint in this function
         for (uint i = 0; i < motor_command_list.size(); i++)

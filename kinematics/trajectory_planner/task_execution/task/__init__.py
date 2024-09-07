@@ -8,3 +8,6 @@ from .panel_align import *
 from .tool_pickup import *
 from .dummy import *
 from .predefined_target_pose import *
+from .soil_digging import *
+from .voltmeter_new import *
+from .probe import *

@@ -1,5 +1,5 @@
 from task_execution.command.command import *
-import kinematics_utils.quaternion_arithmetic as qan
+import kinematics_utils.quaternion_arithmetic_new as qan
 
 
 class PoseCommand(Command):
@@ -17,7 +17,7 @@ class PoseCommand(Command):
         self.finished = False
 
     def setPose(self, pose:  qan.Pose, in_urdf_eef_frame: bool = False):
-        self.pose = pose if in_urdf_eef_frame else pc.revert_to_urdf_eef(self.pose)
+        self.pose = pose if in_urdf_eef_frame else pc.revert_to_urdf_eef(pose)
 
     def sesVelocityScalingFactor(self, factor: float):
         self.velocity_scaling_factor = factor

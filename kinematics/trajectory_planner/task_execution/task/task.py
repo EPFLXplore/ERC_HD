@@ -217,6 +217,9 @@ class Task:
     
     def scanForObjects(self):
         """try to get the pose of the ARtag and object for the task"""
+        # self.object_pose = pt.perception_tracker.aruco_object_detection.object_pose
+        # self.artag_pose = pt.perception_tracker.aruco_object_detection.artag_pose
+        # return
         while pt.DETECTED_OBJECTS_LOCKED:
             pass
         for obj in pt.DETECTED_OBJECTS_POSE:
@@ -230,12 +233,9 @@ class Task:
         camera_pos = pc.CAMERA_TRANSFORM.position
         p = [-camera_pos.x, camera_pos.y, self.scan_distance]
         return self.artag_pose.point_image(p)
-        p = [camera_pos.y, -camera_pos.x, self.scan_distance]   # not sure why I need to exchange x and y here (x needs to be negated but I think y doesn't although this hasn't been tested due to our y being 0)
-        return qa.point_object_image(p, self.artag_pose)
     
     def getScanOrientation(self) -> qan.Quaternion:
         return self.artag_pose.orientation.turn_around()
-        return qa.turn_around(self.artag_pose.orientation)
     
     def constructStandardDetectionCommands(self, object_name: str = "object", object_box: Union[tuple, list] = (0.1, 0.2, 0.0001), extended: bool = True, add_objects: bool = True):
         """an example of a series of commands for accurate detection of ARtag and associated object"""

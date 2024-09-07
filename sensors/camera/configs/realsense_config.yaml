@@ -1,0 +1,12 @@
+# x_y_fps: 
+#   - 848
+#   - 480
+#   - 30
+x_y_fps: 
+  - 424
+  - 240
+  - 5
+
+
+publish_straigth_to_cs: False
+bypass_model_node : True    

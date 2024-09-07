@@ -1,6 +1,6 @@
 aruco:
   aruco_tag_size: 50 #50 # mm
-  aruco_tag_ids: [2] #[2]
+  aruco_tag_ids: [11] #[2]
   marker_type: "4x4"
 
 name: "buttonsA"
@@ -13,6 +13,7 @@ buttons_vertical_distance: 71 # mm
 
 center_offset_fraction: 0.0
 
+# coordinates of the button in the grid of the buttons on the panel
 buttons:
   0: # Button 0
     x: 2

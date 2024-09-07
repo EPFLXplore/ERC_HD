@@ -19,11 +19,12 @@ class TargetInstructionMsg:
         target_instruction = ArucoObject()
         target_instruction.ar_tag_pose = aruco_msg
         target_instruction.object_pose = target_msg
-        target_instruction.task_id = Int8(data=target_id)
+        # target_instruction.task_id = Int8(data=target_id)
+        target_instruction.is_detected = True
         return target_instruction
 
     @staticmethod
     def empty_message() -> ArucoObject:
         target_instruction = ArucoObject()
-        target_instruction.task_id = Int8(data=-1)
+        target_instruction.is_detected = False
         return target_instruction

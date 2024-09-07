@@ -1,3 +1,23 @@
-aruco_tag_size: 32 # mm
-aruco_tag_ids: [1]
-marker_type: "4x4"
+aruco:
+  aruco_tag_size: 32 # mm
+  aruco_tag_ids: [1]
+  marker_type: "4x4"
+
+name: "buttonsB1"
+
+buttons_width:  50 # mm not clear from the rules
+buttons_height: 50 # mm not clear from the rules
+
+center_offset_fraction: 0.0  # value between 0 and 1
+
+
+# coordinates of the top left corner of the button in mm 
+# with respect to the center of the aruco tag
+# z x----> x
+#   |
+#   |
+#   y
+buttons:
+  0: # Button 0
+    x: -87   # mm -25 -62
+    y: 25 # mm 25 : half of the button assuming a size of 50 mm
