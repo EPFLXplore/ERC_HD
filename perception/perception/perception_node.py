@@ -21,8 +21,8 @@ import re
 
 from .pipelines.pipeline_interface import PipelineInterface
 from .pipelines.pipeline_factory import PipelineFactory
-
-
+import os
+import yaml
 
 
 class PerceptionNode(Node):
@@ -30,6 +30,8 @@ class PerceptionNode(Node):
         super().__init__("perception_node")
         # used to match button service requests to distinguish them from switching pipeline request
         self.pipeline = None
+        self.config_path = f"{os.getcwd()}/src/sensors/camera/configs/realsense_config.yaml"
+        self.load_config()
         self.button_pattern = r"^\d[ud]$"  
 
         # Initialize CvBridge
@@ -43,10 +45,13 @@ class PerceptionNode(Node):
         # self.rgbd_sub = self.create_subscription(
         #     CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 10
         # )  # TODO ?? no more need 
-
-        self.processed_rgb_sub = self.create_subscription(
-            Model, "/HD/model/image", self.rgbd_callback, 10
-        )
+        if self.config['bypass_model_node']:
+            self.processed_rgb_sub = self.create_subscription(
+                CompressedRGBD, "/HD/camera/rgbd", self.rgbd_callback, 1)
+        else:
+            self.processed_rgb_sub = self.create_subscription(
+                Model, "/HD/model/image", self.rgbd_callback, 1
+            )
 
         # ROS 2 Publishers
         self.processed_rgb_pub = self.create_publisher(
@@ -123,9 +128,13 @@ class PerceptionNode(Node):
         """Producer: Receives images and adds them to the queue."""
         # Convert compressed image to OpenCV format
         self.get_logger().info('rgbd_callback')
-        rgb = self.bridge.compressed_imgmsg_to_cv2(model_msg.image.color)
-        depth_image = self.bridge.imgmsg_to_cv2(model_msg.image.depth, "mono16")
+        # rgb = self.bridge.compressed_imgmsg_to_cv2(model_msg.image.color)
+        # depth_image = self.bridge.imgmsg_to_cv2(model_msg.image.depth, "mono16")
+        rgb = self.bridge.compressed_imgmsg_to_cv2(model_msg.color)
+        depth_image = self.bridge.imgmsg_to_cv2(model_msg.depth, "mono16")
         
+        
+
         if self.pipeline is None:
             self.get_logger().info('The pipeline is not yet initialized')
             rgb_msg = self.bridge.cv2_to_compressed_imgmsg(rgb)
@@ -204,6 +213,11 @@ class PerceptionNode(Node):
     def get_str_param(self, name: str, default: str = "") -> str:
         self.declare_parameter(name, default)
         return self.get_parameter(name).get_parameter_value().string_value
+    
+
+    def load_config(self):
+        with open(self.config_path, "r") as file:
+            self.config = yaml.safe_load(file)
 
 def main(args=None):
     rclpy.init(args=args)
