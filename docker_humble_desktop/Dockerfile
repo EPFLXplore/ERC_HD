@@ -64,6 +64,10 @@ RUN apt-get install -y \
 RUN echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="03e7", MODE="0666"' | sudo tee /etc/udev/rules.d/80-movidius.rules
 RUN /etc/init.d/udev restart
 
+RUN pip install --no-cache-dir -v evdev pyrealsense2 ultralytics
+
+
+
 USER $USERNAME
 
 # RUN pip install --no-cache-dir --upgrade pip && \
@@ -73,7 +77,6 @@ USER $USERNAME
 RUN pip install --no-cache-dir --upgrade pip
 
 # Install the necessary Python packages
-RUN pip install --no-cache-dir -v evdev pyrealsense2 ultralytics
 
 # Set a diretory to store the project
 WORKDIR /home/$USERNAME/dev_ws/src
