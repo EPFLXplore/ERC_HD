@@ -21,19 +21,24 @@ class ProbeStore(Task):
         self.station = station
         self.grab_option = grab_option
         
-        self.above_distance = 0.2
-        self.descend_distance = 0.09
+        self.above_distance = 0.25
+        self.descend_distance = 0.15
         
         super().__init__(executor)
     
     def station_pose(self) -> qan.Pose:
-        return qan.Pose(position=qan.Point(x=-0.4, y=-0.02, z=0.22))
+        station_poses = [
+            qan.Pose(position=qan.Point(x=-0.525, y=0.025, z=0.2)),
+            qan.Pose(position=qan.Point(x=-0.525 - 0.05, y=0.025, z=0.2)),
+            qan.Pose(position=qan.Point(x=-0.525 - 0.1, y=0.025, z=0.2)),
+        ]
+        return station_poses[self.station]
     
     def sideGrabAboveStationPose(self) -> qan.Pose:
         eef_pose = qan.Pose()
         probe_position = self.station_pose().point_image([0, 0, self.above_distance])
         eef_pose.orientation = qan.Quaternion.from_axis_angle([0,  0, 1], math.pi/2) * qan.Quaternion.from_axis_angle([1, 0, 0], -math.pi/2)
-        probe_to_eef_distance = 0.02
+        probe_to_eef_distance = 0.015
         eef_pose.position = probe_position + eef_pose.orientation.point_image([0, 0, probe_to_eef_distance])
         return eef_pose
     
@@ -54,15 +59,15 @@ class ProbeStore(Task):
     def constructCommandChain(self):
         super().constructCommandChain()
         
-        probe_to_eef_distance = 0.02
+        probe_to_eef_distance = 0.015
         p = qan.Pose(position=qan.Point(z=pc.fingers.transform_to_eef.position.z - probe_to_eef_distance))
-        shape = [0.07, 0.07, 0.2] if self.grab_option == GrabOptions.TOP else [0.07, 0.2, 0.07]
+        shape = [0.03, 0.03, 0.35] if self.grab_option == GrabOptions.TOP else [0.03, 0.35, 0.03]
         self.addCommand(
             AttachObjectCommand(pose=pc.GRIPPER_TRANSFORM_CORRECTION @ p, shape=shape, operation=Object.ADD, name="probe")
         )
         
         self.addCommand(        # TODO: maybe disable collisions for this object
-            AddObjectCommand(pose=self.station_pose(), shape=[0.1, 0.1, 0.001], name=f"station {self.station}"),
+            AddObjectCommand(pose=self.station_pose(), shape=[0.05, 0.05, 0.001], name=f"station {self.station}"),
             description=f"add station to world"
         )
         
@@ -70,7 +75,7 @@ class ProbeStore(Task):
             PoseCommand(pose=self.aboveStationPose()),
             description = "go above station"
         )
-        
+        return
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.descend_distance),
             pre_operation = lambda cmd: cmd.setAxisFromOrientation(self.station_pose().orientation, reverse=True),
