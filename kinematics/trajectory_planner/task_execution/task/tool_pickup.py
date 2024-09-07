@@ -94,7 +94,7 @@ class ToolPickup(ToolManip):
             description = "Retract with tool"
         )
         
-        # self.equipToolCommand()
+        self.equipToolCommand()
         
 
 
@@ -130,7 +130,7 @@ class ToolPlaceback(ToolManip):
             description = "Retract away from tool station"
         )
 
-        # self.unequipToolCommand()
+        self.unequipToolCommand()
 
         self.constructCloseGripperCommands()
 

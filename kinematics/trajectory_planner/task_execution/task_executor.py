@@ -73,6 +73,7 @@ class Executor(Node):
         HDGoal.DROP_SAMPLE:             TaskSelect("Drop sample task",              task.DropSample),
         HDGoal.ROCK:                    TaskSelect("Approach rock",                 task.RockPicking),
         HDGoal.VOLTMETER_ALIGN:         TaskSelect("Voltmeter align",               task.VoltmeterAlignNew),
+        HDGoal.PROBE_STORE:             TaskSelect("Store probe",                   task.ProbeStore),
     } | {
         
     }
@@ -299,6 +300,7 @@ class Executor(Node):
             HDGoal.TOOL_PICKUP: {"tool": goal.tool},
             HDGoal.TOOL_PLACEBACK: {"tool": goal.tool},
             HDGoal.PREDEFINED_POSE: {"name": goal.predefined_pose},
+            HDGoal.PROBE_STORE: {"grab_option": task.GrabOptions.TOP if goal.probe_grab_option == HDGoal.TOP_GRAB else task.GrabOptions.SIDE}
         }
         kwargs = possible_kwargs.get(goal.target, {})
         self.task = self.KNOWN_TASKS_NEW[goal.target].select(self, **kwargs)
