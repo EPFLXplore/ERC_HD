@@ -36,7 +36,7 @@ def main():
     rclpy.init()
     node = rclpy.create_node("set_camera_offsets_node")
 
-    pub = node.create_publisher(ArucoObject, "/HD/kinematics/set_camera_transform", 10)
+    pub = node.create_publisher(Float64MultiArray, "/HD/kinematics/set_camera_transform", 10)
     listener = Listener(pub)
     listener.listen()
 

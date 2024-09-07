@@ -64,6 +64,7 @@ install(PROGRAMS
   scripts/limbs_control.py
   scripts/new_fake_cs.py
   scripts/stats_tracker.py
+  scripts/set_camera_offsets.py
 
   input_handling/test_input_handling.py
   DESTINATION lib/${PROJECT_NAME}
