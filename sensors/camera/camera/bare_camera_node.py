@@ -7,7 +7,8 @@ from cv_bridge import CvBridge  # Package to convert between ROS and OpenCV Imag
 from .interfaces.monocular_camera_interface import MonocularCameraInterface
 from .camera_factory import CameraFactory
 import time
-
+import yaml
+import os
 import pyrealsense2 as rs
 
 class BareCameraNode(Node):
@@ -18,11 +19,13 @@ class BareCameraNode(Node):
     def __init__(self):
         super().__init__("camera_node")
 
+        self.load_config()
 
         self.camera =  CameraFactory.create_camera('realsense_stereo')
 
 
         # to the HD/vision/video_frames topic. The queue size is 10 messages.
+        # if self
         self.publisher_ = self.create_publisher(CompressedImage, "/HD/bare_camera/rgb", 1)
         self.get_logger().info("Image Publisher Created")
 
@@ -48,6 +51,12 @@ class BareCameraNode(Node):
 
         self.publisher_.publish(msg)
         # self._logger.info('Publishing RGBD image')
+
+
+    def load_config(self):
+        with open(self.config_path, "r") as file:
+            self.config = yaml.safe_load(file)
+        
 
 
 def main(args=None):

@@ -7,10 +7,11 @@ from custom_msg.msg import CompressedRGBD
 from custom_msg.srv import CameraParams
 
 
+import yaml
 from .interfaces.monocular_camera_interface import MonocularCameraInterface
 from .camera_factory import CameraFactory
 import time
-
+import os
 import pyrealsense2 as rs
 
 class CameraNode(Node):
@@ -20,6 +21,8 @@ class CameraNode(Node):
 
     def __init__(self):
         super().__init__("camera_node")
+        self.config_path = f"{os.getcwd()}/src/sensors/camera/configs/realsense_config.yaml"
+        self.load_config()
 
         camera_type = self.declare_parameter("camera_type", 'realsense_stereo').value
 
@@ -30,17 +33,21 @@ class CameraNode(Node):
         )
 
         self.camera =  CameraFactory.create_camera(camera_type)
+        timer_period = 1.0 / self.camera.fps
 
 
         # to the HD/vision/video_frames topic. The queue size is 10 messages.
-        self.publisher_ = self.create_publisher(CompressedRGBD, "/HD/camera/rgbd", 1)
+        if self.config['publish_straigth_to_cs']:
+            self.publisher_ = self.create_publisher(CompressedImage, "/HD/camera/rgb", 1)
+            self.timer = self.create_timer(timer_period, self.rgb_callback)
+        else:
+            self.publisher_ = self.create_publisher(CompressedRGBD, "/HD/camera/rgbd", 1)
+            self.timer = self.create_timer(timer_period, self.rgbd_callback)
+
         self.get_logger().info("Image Publisher Created")
 
-        # We will publish a message every 0.1 seconds
-        timer_period = 0.035  # seconds
 
         # Create the timer
-        self.timer = self.create_timer(timer_period, self.rgbd_callback)
 
         # Used to convert between ROS and OpenCV images
         self.bridge = CvBridge()
@@ -65,6 +72,18 @@ class CameraNode(Node):
         self.publisher_.publish(msg)
         # self._logger.info('Publishing RGBD image')
 
+
+    def rgb_callback(self):
+        """
+        Callback function.
+        Publishes a frame to the video_frames topic
+        """
+        color, depth = self.camera.get_rgbd()
+        msg = self.bridge.cv2_to_compressed_imgmsg(color)
+
+        self.publisher_.publish(msg)
+        # self._logger.info('Publishing RGBD image')
+
     def camera_params_callback(self, request, response):
         intrinsics = self.camera.get_intrinsics()
         depth_scale = self.camera.get_depth_scale()
@@ -85,6 +104,10 @@ class CameraNode(Node):
             f"Provided depth scale: {response.depth_scale}"
         )
         return response
+    
+    def load_config(self):
+        with open(self.config_path, "r") as file:
+            self.config = yaml.safe_load(file)
 
 
 def main(args=None):
