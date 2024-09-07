@@ -12,7 +12,7 @@ from .interfaces.monocular_camera_interface import MonocularCameraInterface
 from .camera_factory import CameraFactory
 import time
 import os
-import pyrealsense2 as rs
+from .get_interfaces import GetInterfaces
 
 class CameraNode(Node):
     """
@@ -28,7 +28,7 @@ class CameraNode(Node):
 
         self.camera_intrinsics_srv = self.create_service(
             CameraParams,
-            "/HD/camera/params",
+            GetInterfaces.get('hd_camera_params'),
             self.camera_params_callback,
         )
 
@@ -38,10 +38,10 @@ class CameraNode(Node):
 
         # to the HD/vision/video_frames topic. The queue size is 10 messages.
         if self.config['publish_straigth_to_cs']:
-            self.publisher_ = self.create_publisher(CompressedImage, "/HD/camera/rgb", 1)
+            self.publisher_ = self.create_publisher(CompressedImage, GetInterfaces.get('hd_camera_rgb'), 1)
             self.timer = self.create_timer(timer_period, self.rgb_callback)
         else:
-            self.publisher_ = self.create_publisher(CompressedRGBD, "/HD/camera/rgbd", 1)
+            self.publisher_ = self.create_publisher(CompressedRGBD, GetInterfaces.get('hd_camera_rgbd'), 1)
             self.timer = self.create_timer(timer_period, self.rgbd_callback)
 
         self.get_logger().info("Image Publisher Created")
@@ -70,7 +70,7 @@ class CameraNode(Node):
         msg.color = self.bridge.cv2_to_compressed_imgmsg(color)
 
         self.publisher_.publish(msg)
-        # self._logger.info('Publishing RGBD image')
+        self._logger.info('published RGB image', th)
 
 
     def rgb_callback(self):

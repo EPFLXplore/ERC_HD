@@ -9,6 +9,7 @@ import os
 from custom_msg.msg import CompressedRGBD  # Custom message type
 import numpy as np
 import yaml
+from ..get_interfaces import GetInterfaces
 
 class ImageSubscriber(Node):
     """
@@ -23,6 +24,8 @@ class ImageSubscriber(Node):
         super().__init__("image_subscriber")
         self.config_path = f"{os.getcwd()}/src/sensors/camera/configs/realsense_config.yaml"
         self.load_config()
+
+
         self.get_logger().info("Image Subscriber Node Started")
         self.path = "./captured_images"
         os.makedirs(self.path, exist_ok=True)
@@ -34,19 +37,22 @@ class ImageSubscriber(Node):
 
         # Create the subscriber. This subscriber will receive an Image
         # from the video_frames topic. The queue size is 10 messages.
+
         if self.config['publish_straigth_to_cs']:
+            self._logger.warn("GOING STRAIGHT TO CS")
             self.subscription = self.create_subscription(
             CompressedImage,
-            "/HD/camera/rgb",
+            GetInterfaces.get('hd_camera_rgb'),
             self.listener_callback,
             1,
         )
         else:
+            self._logger.warn("LISTENING TO PERCEPTION")
             self.subscription = self.create_subscription(
                 CompressedImage,
-                "/HD/perception/image",
+                GetInterfaces.get('hd_perception_rgb'),
                 self.listener_callback,
-                10,
+                1,
             )
 
         # self.old_vision = self.create_subscription(
