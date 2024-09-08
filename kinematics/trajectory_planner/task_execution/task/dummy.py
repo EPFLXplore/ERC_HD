@@ -18,11 +18,11 @@ class Dummy(Task):
         super().constructCommandChain()
 
         self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.5),
-            pre_operation = lambda cmd: (cmd.setDistance(0.15),
-                                         cmd.setAxisFromOrientation(pc.correct_gripper_pose().orientation, reverse=True)),
-            description = "move back from button"
+            StraightMoveCommand(velocity_scaling_factor=0.2, distance=0.07),
+            pre_operation = lambda cmd: cmd.setAxisFromOrientation(qan.Quaternion()),
+            description = "Descend towards station"
         )
+        
         return
         self.addCommand(
             RequestDetectionCommand(),

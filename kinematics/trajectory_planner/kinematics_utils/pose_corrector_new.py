@@ -98,7 +98,7 @@ class FingersList:
     DEFAULT = Fingers(qan.Pose(position=qan.Point(z=0.0867)))
     BRICKS = Fingers(qan.Pose())
     MAINTENANCE = Fingers(qan.Pose(position=qan.Point(y=-0.02, z=0.0867 + 0.03)))
-    PROBES = Fingers(qan.Pose(position=qan.Point(z=0.0867 + 0.073)))
+    PROBES = Fingers(qan.Pose(position=qan.Point(z=0.0867 + 0.073 + 0.01)))
 
 
 class ToolsList:
