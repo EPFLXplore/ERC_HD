@@ -38,9 +38,11 @@ class CameraNode(Node):
 
         # to the HD/vision/video_frames topic. The queue size is 10 messages.
         if self.config['publish_straigth_to_cs']:
+            self._logger.warn("PUBLISHING on /HD/camera/rgb ")
             self.publisher_ = self.create_publisher(CompressedImage, "/HD/camera/rgb", 1)
             self.timer = self.create_timer(timer_period, self.rgb_callback)
         else:
+            self._logger.warn("PUBLISHING on /HD/camera/rgbd ")
             self.publisher_ = self.create_publisher(CompressedRGBD, "/HD/camera/rgbd", 1)
             self.timer = self.create_timer(timer_period, self.rgbd_callback)
 
