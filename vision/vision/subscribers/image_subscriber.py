@@ -104,7 +104,7 @@ class ImageSubscriber(Node):
         Callback function.
         """
         # Display the message on the console
-        self.get_logger().info("Receiving video frame")
+        # self.get_logger().info("Receiving video frame")
 
         self.update_fps()
 
@@ -117,7 +117,7 @@ class ImageSubscriber(Node):
 
         self.draw_fps(current_frame)
 
-        self.get_logger().info("Displaying Perception Image")
+        # self.get_logger().info("Displaying Perception Image")
         # Display image
         cv2.imshow("Perception", current_frame)
         cv2.waitKey(1)
