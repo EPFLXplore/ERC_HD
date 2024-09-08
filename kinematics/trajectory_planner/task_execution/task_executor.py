@@ -300,7 +300,7 @@ class Executor(Node):
             HDGoal.TOOL_PICKUP: {"tool": goal.tool},
             HDGoal.TOOL_PLACEBACK: {"tool": goal.tool},
             HDGoal.PREDEFINED_POSE: {"name": goal.predefined_pose},
-            HDGoal.PROBE_STORE: {"grab_option": task.GrabOptions.TOP if goal.probe_grab_option == HDGoal.TOP_GRAB else task.GrabOptions.SIDE}
+            HDGoal.PROBE_STORE: {"grab_option": task.GrabOptions.TOP if goal.probe_grab_option == HDGoal.TOP_GRAB else task.GrabOptions.SIDE, "station": goal.probe_station}
         }
         kwargs = possible_kwargs.get(goal.target, {})
         self.task = self.KNOWN_TASKS_NEW[goal.target].select(self, **kwargs)

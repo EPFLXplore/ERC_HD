@@ -3,10 +3,10 @@
 #   - 480
 #   - 30
 x_y_fps: 
-  - 424
-  - 240
-  - 5
+  - 848
+  - 480
+  - 15
 
 
-publish_straigth_to_cs: False
+publish_straigth_to_cs: True
 bypass_model_node : True    

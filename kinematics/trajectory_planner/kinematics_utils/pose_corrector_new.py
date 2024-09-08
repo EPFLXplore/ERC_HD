@@ -98,6 +98,7 @@ class FingersList:
     DEFAULT = Fingers(qan.Pose(position=qan.Point(z=0.0867)))
     BRICKS = Fingers(qan.Pose())
     MAINTENANCE = Fingers(qan.Pose(position=qan.Point(y=-0.02, z=0.0867 + 0.03)))
+    PROBES = Fingers(qan.Pose(position=qan.Point(z=0.0867 + 0.073)))
 
 
 class ToolsList:
@@ -182,7 +183,7 @@ class PoseCorrector:
         position = qan.Point(x=-0.009, y=-0.07, z=-0.051 - 0.0037)    # 0.051 to camera glass and 0.0037 to focal point    # old x=-0.009 y=-0.063
     )
     
-    def __init__(self, fingers: Fingers = None, tool: Tool = None):
+    def __init__(self, fingers: Fingers = FingersList.PROBES, tool: Tool = None):
         if fingers is None:
             fingers = FingersList.DEFAULT
         if tool is None:
