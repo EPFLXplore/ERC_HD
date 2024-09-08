@@ -8,7 +8,7 @@ import evdev
 import evdev.events
 import threading
 from time import sleep
-from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool
+from std_msgs.msg import Float64MultiArray, Float32MultiArray, Int8, Bool, UInt8
 from std_srvs.srv import Trigger
 from custom_msg.msg import Task, HDGoal
 from custom_msg.srv import HDMode, RequestHDGoal
@@ -125,6 +125,7 @@ class ControlStation(Node):
         self.goal_msg = HDGoal()
         self.new_goal_msg = False
         self.human_verification_needed = False
+        self.probe_station = 0
 
         # direction of joint 3, 4
         self.joint3_dir = 1
@@ -140,6 +141,8 @@ class ControlStation(Node):
         self.fsm_goal_assignment_cli = self.create_client(RequestHDGoal, self.get_str_param("hd_fsm_goal_srv"))
         self.human_verification_srv = self.create_service(Trigger, self.get_str_param("rover_hd_human_verification_srv"), self.human_verification_callback)
 
+        self.create_subscription(UInt8, "HD/kinematics/probe_station", self.probe_station_callback, 10)
+        
         if keyboard_control:
             from input_handling.keyboard import KeyboardConfig
             self.input_config = KeyboardConfig()
@@ -187,7 +190,7 @@ class ControlStation(Node):
         self.input_config.bind(KeyboardConfig._1, self.set_man_inv_angular, "value", coordinate=2, multiplier=1)
         self.input_config.bind(KeyboardConfig._3, self.set_man_inv_angular, "value", coordinate=2, multiplier=-1)
         
-        self.input_config.bind(KeyboardConfig.b, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
+        self.input_config.bind(KeyboardConfig.b, self.set_semi_auto_cmd3, "event_value", target=HDGoal.PROBE_STORE, probe_grab_option=HDGoal.TOP_GRAB)
         self.input_config.bind(KeyboardConfig.e, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.SHOVEL_TOOL)
         self.input_config.bind(KeyboardConfig.u, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.SHOVEL_TOOL)
         self.input_config.bind(KeyboardConfig.a, self.set_semi_auto_cmd3, "event_value", target=HDGoal.ABORT)
@@ -211,10 +214,13 @@ class ControlStation(Node):
             self.input_config.bind(input, self.set_gripper_speed, "event_value", value=val)
 
         # ==== semi auto ====
-        self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
+        # self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
         self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.VOLTMETER_TOOL)
         self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.VOLTMETER_TOOL)
-        self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.VOLTMETER_ALIGN)
+        # self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.DROP_SAMPLE)
+        self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.PROBE_STORE, probe_grab_option=HDGoal.TOP_GRAB)
+        self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.PROBE_STORE, probe_grab_option=HDGoal.SIDE_GRAB)
+    
         
     
         # ==== manual inverse ====
@@ -281,6 +287,9 @@ class ControlStation(Node):
             continue
         
         return future.result()
+    
+    def probe_station_callback(self, msg: UInt8):
+        self.probe_station = msg.data
     
     @staticmethod
     def restrict_mode(target_mode: int):
@@ -364,6 +373,7 @@ class ControlStation(Node):
     def set_semi_auto_cmd3(self, event_value: float, target: str, **kwargs):
         if event_value != 1: return
         self.goal_msg.target = target
+        self.goal_msg.probe_station = self.probe_station
         for kw, value in kwargs.items():
             setattr(self.goal_msg, kw, value)
         self.new_goal_msg = True

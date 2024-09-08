@@ -35,7 +35,7 @@ class Button:
     def draw(self, frame, transform):
         # if self.is_target:
         projected_coords = self.project(transform)
-        print(f"Projected button coordinates: {projected_coords}")
+        # print(f"Projected button coordinates: {projected_coords}")
         if self.target == "no":
             button_color = (255, 0, 0)
         else:

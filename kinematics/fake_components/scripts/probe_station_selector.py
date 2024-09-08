@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 import threading
 from geometry_msgs.msg import Pose, Quaternion
-from std_msgs.msg import Bool, Float64MultiArray
+from std_msgs.msg import Bool, Float64MultiArray, UInt8
 from custom_msg.msg import ArucoObject
 import kinematics_utils.quaternion_arithmetic as qa
 import kinematics_utils.quaternion_arithmetic_new as qan
@@ -15,31 +15,11 @@ import math
 from math import pi
 
 
-class Listener:
-    def __init__(self, pub):
-        p = pc.CAMERA_TRANSFORM.position
-        self.vect = [p.x, p.y, p.z]
-        self.thread = threading.Thread(target=self.listen_loop, daemon=True)
-        self.pub = pub
-    
-    def listen_loop(self):
-        while True:
-            self.vect = list(map(float, input(f"Current offset: {self.vect}. New offset: ").split()))
-            msg = Float64MultiArray(data=self.vect)
-            self.pub.publish(msg)
-    
-    def listen(self):
-        self.thread.start()
-
-
 def main():
     rclpy.init()
     node = rclpy.create_node("set_camera_offsets_node")
 
-    pub = node.create_publisher(Float64MultiArray, "/HD/kinematics/set_camera_transform", 10)
-    listener = Listener(pub)
-    listener.listen()
-
+    pub = node.create_publisher(UInt8, "/HD/kinematics/probe_station", 10)
 
     # Spin in a separate thread
     thread = threading.Thread(target=rclpy.spin, args=(node, ), daemon=True)
@@ -49,7 +29,8 @@ def main():
 
     try:
         while rclpy.ok():
-            
+            station = int(input("Station to target: "))
+            pub.publish(UInt8(data=station))
             rate.sleep()
 
     except KeyboardInterrupt:

@@ -316,7 +316,7 @@ void Planner::addGripperAttachedBoxToWorld(const std::vector<double> &shape, con
 
     attached_collision_object.object = collision_object;
     attached_collision_object.link_name = "link6";
-    attached_collision_object.touch_links = std::vector<std::string>{"link6", "Arm_A_v6_2", "Arm_A_v6_1", "Finger_v1_2", "Finger_v1_1"};
+    attached_collision_object.touch_links = std::vector<std::string>{"link5", "link6", "Arm_A_v6_2", "Arm_A_v6_1", "Finger_v1_2", "Finger_v1_1"};
 
     std::vector<moveit_msgs::msg::AttachedCollisionObject> attached_collision_objects;
     attached_collision_objects.push_back(attached_collision_object);
