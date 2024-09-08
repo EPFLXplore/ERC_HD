@@ -214,9 +214,9 @@ class ControlStation(Node):
             self.input_config.bind(input, self.set_gripper_speed, "event_value", value=val)
 
         # ==== semi auto ====
-        # self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.BUTTON_A0)
-        self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.VOLTMETER_TOOL)
-        self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.VOLTMETER_TOOL)
+        self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.PREDEFINED_POSE, predefined_pose="cobra")
+        # self.input_config.bind(GamePadConfig.TRIANGLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PICKUP, tool=HDGoal.VOLTMETER_TOOL)
+        # self.input_config.bind(GamePadConfig.CROSS, self.set_semi_auto_cmd3, "event_value", target=HDGoal.TOOL_PLACEBACK, tool=HDGoal.VOLTMETER_TOOL)
         # self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.DROP_SAMPLE)
         self.input_config.bind(GamePadConfig.CIRCLE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.PROBE_STORE, probe_grab_option=HDGoal.TOP_GRAB)
         self.input_config.bind(GamePadConfig.SQUARE, self.set_semi_auto_cmd3, "event_value", target=HDGoal.PROBE_STORE, probe_grab_option=HDGoal.SIDE_GRAB)
