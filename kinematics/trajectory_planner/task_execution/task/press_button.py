@@ -46,6 +46,7 @@ class PressButton(Task):
             description = "move back from button"
         )
         
+        return
         self.addCommand(
             NamedJointTargetCommand("cobra"),
             description="back to cobra"

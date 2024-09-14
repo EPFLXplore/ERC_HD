@@ -59,7 +59,7 @@ def generate_points():
 class Listener:
     def __init__(self):
         self.vect = [0.0] * 3
-        self.vect = [0.6, -0.26, 0.59]
+        self.vect = [0.6, -0.26, 0.5]
         self.thread = threading.Thread(target=self.listen_loop, daemon=True)
     
     def listen_loop(self):
