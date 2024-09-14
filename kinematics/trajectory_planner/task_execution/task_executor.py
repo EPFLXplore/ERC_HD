@@ -64,7 +64,7 @@ class Executor(Node):
         # Task.ROCK_SAMPLING_COMPLETE:    TaskSelect("Complete rock sampling",        task.RockSamplingComplete),
     }
     KNOWN_TASKS_NEW = {
-        btn_task:                       TaskSelect("Button task",                   task.PressButton)
+        btn_task:                       TaskSelect("Button task",                   task.Dummy)
         for btn_task in [HDGoal.BUTTON_A0, HDGoal.BUTTON_A1, HDGoal.BUTTON_A2, HDGoal.BUTTON_A3, HDGoal.BUTTON_A4, HDGoal.BUTTON_A5, HDGoal.BUTTON_A6, HDGoal.BUTTON_A7, HDGoal.BUTTON_A8, HDGoal.BUTTON_A9, HDGoal.BUTTON_B1]
     } | {
         HDGoal.TOOL_PICKUP:             TaskSelect("Pick tool up task",             task.ToolPickup),

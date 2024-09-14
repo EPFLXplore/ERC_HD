@@ -116,6 +116,8 @@ def generate_launch_description():
                 'launch/camera_node.launch.py'))
     )
     
+    new_camera = Node(package="camera", executable="camera")
+    
     # Declare all the steps of the launch file process
     return LaunchDescription([
         model_path_arg,
@@ -127,7 +129,8 @@ def generate_launch_description():
         fake_motor_control_node,
         real_motor_control_node,
         # model_node,
-        perception_node,
-        camera_nodes,
+        # perception_node,
+        # camera_nodes,
+        new_camera,
         ]
     )

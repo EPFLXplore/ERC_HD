@@ -100,6 +100,64 @@
         <joint name="hd_joint6" value="0"/>
     </group_state>
 
+    <group_state name="side0" group="kerby_arm_group">
+        <joint name="hd_joint1" value="-2.4624226597534253"/>
+        <joint name="hd_joint2" value="0.30066023442558565"/>
+        <joint name="hd_joint3" value="2.2794954507980627"/>
+        <joint name="hd_joint4" value="0.7171360183365373"/>
+        <joint name="hd_joint5" value="0.3328738309711841"/>
+        <joint name="hd_joint6" value="-0.6810874698212247"/>
+    </group_state>
+
+    <group_state name="side1" group="kerby_arm_group">
+        <joint name="hd_joint1" value="-2.343539148692288"/>
+        <joint name="hd_joint2" value="0.49432530889614784"/>
+        <joint name="hd_joint3" value="2.408733332177428"/>
+        <joint name="hd_joint4" value="0.8950777897312716"/>
+        <joint name="hd_joint5" value="0.4621117123505494"/>
+        <joint name="hd_joint6" value="-0.8241311782915607"/>
+    </group_state>
+
+    <group_state name="side2" group="kerby_arm_group">
+        <joint name="hd_joint1" value="-2.085830376327501"/>
+        <joint name="hd_joint2" value="0.5602864827752304"/>
+        <joint name="hd_joint3" value="2.389175077131886"/>
+        <joint name="hd_joint4" value="1.374830281142506"/>
+        <joint name="hd_joint5" value="0.8229806927006464"/>
+        <joint name="hd_joint6" value="-1.2306360870812556"/>
+    </group_state>
+
+
+    <group_state name="top0" group="kerby_arm_group">
+        <joint name="hd_joint1" value="-2.5763207332539344"/>
+        <joint name="hd_joint2" value="-0.49317482330523366"/>
+        <joint name="hd_joint3" value="0.709466114397109"/>
+        <joint name="hd_joint4" value="0.0"/>
+        <joint name="hd_joint5" value="-1.912490547296423"/>
+        <joint name="hd_joint6" value="0.6952767921091668"/>
+    </group_state>
+
+    <group_state name="top1" group="kerby_arm_group">
+        <joint name="hd_joint1" value="-2.499238198662681"/>
+        <joint name="hd_joint2" value="-0.29950974883467146"/>
+        <joint name="hd_joint3" value="0.9667913915649253"/>
+        <joint name="hd_joint4" value="-0.02531068300011308"/>
+        <joint name="hd_joint5" value="-1.8269711183717987"/>
+        <joint name="hd_joint6" value="0.6665146523363111"/>
+    </group_state>
+
+    <group_state name="top2" group="kerby_arm_group">
+        <joint name="hd_joint1" value="-2.429825568010856"/>
+        <joint name="hd_joint2" value="-0.22779614700101772"/>
+        <joint name="hd_joint3" value="1.0638156763986921"/>
+        <joint name="hd_joint4" value="-0.02569417819708449"/>
+        <joint name="hd_joint5" value="-1.855349762947683"/>
+        <joint name="hd_joint6" value="0.7393787397608791"/>
+    </group_state>
+
+
+
+
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="kerby_vritual_joint" type="fixed" parent_frame="world" child_link="base_link"/>
 

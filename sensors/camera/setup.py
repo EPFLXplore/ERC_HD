@@ -27,7 +27,8 @@ setup(
         "console_scripts": [
             "camera = camera.camera_node:main",
             "depth = camera.depth_publisher:main",
-            "bare_camera = camera.bare_camera_node:main"
+            "bare_camera = camera.bare_camera_node:main",
+            "marg_top_left = camera.nav_marg_cam:main"
         ],
     },
 )

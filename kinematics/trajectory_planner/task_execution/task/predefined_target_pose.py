@@ -5,8 +5,8 @@ from .tool_pickup import *
 
 class PredefinedTargetPose(Task):
     def __init__(self, executor: Executor, name: str):
-        super().__init__(executor)
         self.name = name
+        super().__init__(executor)
     
     def constructCommandChain(self):
         super().constructCommandChain()

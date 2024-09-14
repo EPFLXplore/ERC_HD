@@ -22,15 +22,16 @@ class ProbeStore(Task):
         self.grab_option = grab_option
         
         self.above_distance = 0.25
-        self.descend_distance = 0.15
+        self.descend_distance = 0.08
         
         super().__init__(executor)
     
     def station_pose(self) -> qan.Pose:
+        offset = qan.Point(x=-0.008, y=0.008)
         station_poses = [
-            qan.Pose(position=qan.Point(x=-0.525, y=0.025, z=0.2)),
-            qan.Pose(position=qan.Point(x=-0.525 - 0.05, y=0.025, z=0.2)),
-            qan.Pose(position=qan.Point(x=-0.525 - 0.1, y=0.025, z=0.2)),
+            qan.Pose(position=qan.Point(x=-0.525 - 0.1, y=0.025, z=0.2) + offset),
+            qan.Pose(position=qan.Point(x=-0.525 - 0.05, y=0.025, z=0.2) + offset),
+            qan.Pose(position=qan.Point(x=-0.525, y=0.025, z=0.2) + offset),
         ]
         return station_poses[self.station]
     
@@ -61,38 +62,43 @@ class ProbeStore(Task):
         
         probe_to_eef_distance = 0.015
         p = qan.Pose(position=qan.Point(z=pc.fingers.transform_to_eef.position.z - probe_to_eef_distance))
-        shape = [0.03, 0.03, 0.35] if self.grab_option == GrabOptions.TOP else [0.03, 0.35, 0.03]
+        shape = [0.03, 0.03, 0.3] if self.grab_option == GrabOptions.TOP else [0.03, 0.3, 0.03]
         self.addCommand(
             AttachObjectCommand(pose=pc.GRIPPER_TRANSFORM_CORRECTION @ p, shape=shape, operation=Object.ADD, name="probe")
         )
         
-        self.addCommand(        # TODO: maybe disable collisions for this object
-            AddObjectCommand(pose=self.station_pose(), shape=[0.05, 0.05, 0.001], name=f"station {self.station}"),
-            description=f"add station to world"
-        )
+        # self.addCommand(        # TODO: maybe disable collisions for this object
+        #     AddObjectCommand(pose=self.station_pose(), shape=[0.05, 0.05, 0.001], name=f"station {self.station}"),
+        #     description=f"add station to world"
+        # )
         
+        # self.addCommand(
+        #     PoseCommand(pose=self.aboveStationPose()),
+        #     description = "go above station"
+        # )
+        target = ("side" if self.grab_option == GrabOptions.SIDE else "top") + str(self.station)
         self.addCommand(
-            PoseCommand(pose=self.aboveStationPose()),
-            description = "go above station"
+            NamedJointTargetCommand(target),
+            description="go above station"
         )
-        return
+
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.descend_distance),
-            pre_operation = lambda cmd: cmd.setAxisFromOrientation(self.station_pose().orientation, reverse=True),
+            pre_operation = lambda cmd: cmd.setAxisFromOrientation(qan.Quaternion(), reverse=True),
             description = "Descend towards station"
         )
         
-        self.constructOpenGripperCommands(low_torque_duration=5)
+        # self.constructOpenGripperCommands(low_torque_duration=5)
         
-        self.addCommand(
-            AttachObjectCommand( operation=Object.REMOVE, name="probe")
-        )
+        # self.addCommand(
+        #     AttachObjectCommand( operation=Object.REMOVE, name="probe")
+        # )
         
-        self.addCommand(
-            StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.descend_distance),
-            pre_operation = lambda cmd: cmd.setAxisFromOrientation(self.station_pose().orientation),
-            description = "Descend towards station"
-        )
+        # self.addCommand(
+        #     StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.descend_distance),
+        #     pre_operation = lambda cmd: cmd.setAxisFromOrientation(self.station_pose().orientation),
+        #     description = "Descend towards station"
+        # )
         
-        self.constructCloseGripperCommands(low_torque_duration=3)
+        # self.constructCloseGripperCommands(low_torque_duration=3)
         

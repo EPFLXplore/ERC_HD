@@ -17,6 +17,8 @@ class RealSenseStereoCamera(StereoCameraInterface):
 
         # TODO: Add a configuration object for the pipeline.
         config = rs.config()
+        # config.enable_device('123622270224')
+
 
         # res = {"x": 640, "y": 480}
         # res = {"x": 1280, "y": 720}
