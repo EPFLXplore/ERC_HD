@@ -62,7 +62,7 @@ class ProbeStore(Task):
         
         probe_to_eef_distance = 0.015
         p = qan.Pose(position=qan.Point(z=pc.fingers.transform_to_eef.position.z - probe_to_eef_distance))
-        shape = [0.03, 0.03, 0.35] if self.grab_option == GrabOptions.TOP else [0.03, 0.35, 0.03]
+        shape = [0.03, 0.03, 0.3] if self.grab_option == GrabOptions.TOP else [0.03, 0.3, 0.03]
         self.addCommand(
             AttachObjectCommand(pose=pc.GRIPPER_TRANSFORM_CORRECTION @ p, shape=shape, operation=Object.ADD, name="probe")
         )
@@ -84,7 +84,7 @@ class ProbeStore(Task):
 
         self.addCommand(
             StraightMoveCommand(velocity_scaling_factor=0.2, distance=self.descend_distance),
-            pre_operation = lambda cmd: cmd.setAxisFromOrientation(qan.Quaternion().orientation, reverse=True),
+            pre_operation = lambda cmd: cmd.setAxisFromOrientation(qan.Quaternion(), reverse=True),
             description = "Descend towards station"
         )
         
