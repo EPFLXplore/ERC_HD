@@ -1,0 +1,155 @@
+<?xml version="1.0" ?>
+<robot name="kerby" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<xacro:property name="body_color" value="Gazebo/Grey" />
+
+<gazebo reference="chassis_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <gravity>true</gravity>
+</gazebo>
+
+<gazebo reference="steering1_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="steering2_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="steering3_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="steering4_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="wheel3_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="wheel4_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="wheel2_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="wheel1_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="caster_wheel">
+  <material>Gazebo/Grey</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="caster_axis">
+  <material>Gazebo/Grey</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+</gazebo>
+
+  <gazebo reference="lidar_axis">
+        <material>Gazebo/LightGrey</material>  
+  </gazebo> 
+
+
+// <gazebo reference="hd_link2_1">
+//   <material>${body_color}</material>
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+// <gazebo reference="hd_link3_1">
+//   <material>${body_color}</material>
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+// <gazebo reference="hd_link4_1">
+//   <material>${body_color}</material>
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+// <gazebo reference="hd_link5_1">
+//   <material>${body_color}</material>
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+// <gazebo reference="hd_link6_1">
+//   <material>${body_color}</material>
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+// <gazebo reference="hd_finger2_1">
+//   <material>${body_color}</material>
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+// <gazebo reference="hd_finger1_1">
+//   <material>${body_color}</material>
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+// <gazebo reference="hd_motor_j3_1">
+//   <material>${body_color}</material>
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+<gazebo reference="right_leg">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <selfCollide>true</selfCollide>
+</gazebo>
+
+<gazebo reference="left_leg">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <selfCollide>true</selfCollide>
+</gazebo>
+
+// <gazebo reference="hd_link1_1">
+//   <material>${body_color}</material>
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+</robot>
