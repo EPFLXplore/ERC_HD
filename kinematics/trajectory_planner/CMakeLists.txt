@@ -48,9 +48,30 @@ ament_target_dependencies(planner
   rclcpp
   std_msgs
   custom_msg
+  geometry_msgs
 )
 install(TARGETS planner
   DESTINATION lib/${PROJECT_NAME})
+
+
+
+
+add_executable(servoing src/servoing_main.cpp src/servoing.cpp)
+# target_include_directories(planner PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(servoing
+  moveit_ros_planning_interface
+  rclcpp
+  std_msgs
+  custom_msg
+  geometry_msgs
+)
+install(TARGETS servoing
+  DESTINATION lib/${PROJECT_NAME})
+
+
+
 
 
 # add_executable(test_demo src/test.cpp)
