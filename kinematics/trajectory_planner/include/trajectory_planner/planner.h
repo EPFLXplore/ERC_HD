@@ -45,7 +45,7 @@ public:
         MANUAL_INVERSE = 0,
         MANUAL_DIRECT = 1,
         SEMI_AUTONOMOUS = 2,
-        AUTONOMOUS = 3
+        COMPLIANT_MOTION = 3,
     };
 
     Planner(rclcpp::NodeOptions node_options);
