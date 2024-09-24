@@ -15,6 +15,8 @@ default_acceleration_scaling_factor: 1.0
 #     has_position_limits: true
 #     min_position: -1.5
 #     max_position: 1.5
+#     has_velocity_limits: true
+#     max_velocity: 100.0
 
 #   hd_joint2:
 #     has_position_limits: true
