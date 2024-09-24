@@ -24,6 +24,9 @@ def list_add(l1: list, l2: list) -> list:
 def list_neg(l: list) -> list:
     return [-a for a in l]
 
+def list_mul(l: list, x: float) -> list:
+    return [a*x for a in l]
+
 
 class Timer:
     def __init__(self):
@@ -40,8 +43,9 @@ class Timer:
 class FakeMotorControl(Node):
     MOTOR_COUNT = 10     # number of motors
     rads2rpm = lambda x: x/pi*30
-    rmp2rads = lambda x: x*pi/30
-    MAX_VEL = list(map(rmp2rads, pad([1.83, 1.377, 1.377, 1.83, 1.83, 1.83, 0.15], MOTOR_COUNT)))    # max velocity of each motor in rad/s
+    rpm2rads = lambda x: x*pi/30
+    MAX_VEL = list(map(rpm2rads, pad([1.83, 1.377, 1.377, 1.83, 1.83, 1.83, 0.15], MOTOR_COUNT)))    # max velocity of each motor in rad/s
+    MAX_VEL = list_mul(MAX_VEL, 1)
     # POSITION_OFFSETS = pad([0, -0.959505, -2.424073, 0, -1.27857, -1.88833], MOTOR_COUNT)
     POSITION_OFFSETS = [0.0] * MOTOR_COUNT
     VELOCITY = 0
@@ -61,6 +65,8 @@ class FakeMotorControl(Node):
         self.last_vel_cmd = time.time()
 
         self.cmd_velocities = [0.0]*self.MOTOR_COUNT
+        self.target_positions = [0.0]*self.MOTOR_COUNT
+        self.scan_for_positions()
         self.timer = Timer()
 
     def init_state(self):
@@ -71,10 +77,15 @@ class FakeMotorControl(Node):
         self.state.velocity = [0.0]*self.MOTOR_COUNT
         self.state.effort = [0.0]*self.MOTOR_COUNT
 
+    def scan_for_positions(self):
+        make_list = lambda arr: [*arr]
+        self.target_positions = make_list(self.state.position)
+        
     def moveit_cmd_callback(self, msg: Float64MultiArray):
         if self.control_mode != self.POSITION:
             return
-        self.state.position[:len(msg.data)] = array.array('d', [msg_pos - offset for msg_pos, offset in zip(msg.data, self.POSITION_OFFSETS)])
+        # self.state.position[:len(msg.data)] = array.array('d', [msg_pos - offset for msg_pos, offset in zip(msg.data, self.POSITION_OFFSETS)])
+        self.target_positions[:len(msg.data)] = [msg_pos - offset for msg_pos, offset in zip(msg.data, self.POSITION_OFFSETS)]
 
     def vel_cmd_callback(self, msg: Float64MultiArray):
         self.last_vel_cmd = time.time()
@@ -105,11 +116,23 @@ class FakeMotorControl(Node):
         return time.time()-self.last_vel_cmd > 1
     
     def update(self):
-        if self.vel_cmd_deprecated():
-            self.control_mode = self.POSITION
+        if self.control_mode == self.POSITION:
+            self.reach_target_positions()
 
-        if self.control_mode == self.VELOCITY:
+        elif self.control_mode == self.VELOCITY:
+            if self.vel_cmd_deprecated():
+                self.scan_for_positions()
+                self.control_mode = self.POSITION
+                return
             self.update_from_velocities()
+
+    def reach_target_positions(self):
+        # mimicking a cyclic synchronous position mode: tries to reach the target position at the max allowed speed
+        t = self.timer.tick()
+        for i in range(self.MOTOR_COUNT):
+            diff = self.target_positions[i] - self.state.position[i]
+            dir = -1 if diff < 0 else 1
+            self.state.position[i] += dir * min(abs(diff), t*self.MAX_VEL[i])
 
     def update_from_velocities(self):
         self.state.velocity = self.cmd_velocities
