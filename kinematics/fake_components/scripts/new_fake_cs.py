@@ -71,9 +71,9 @@ class EnumOld:
 Mode = EnumOld(
     IDLE = -1,
     MANUAL_DIRECT = 1,
+    COMPLIANT_MOTION = 3,
     SEMI_AUTONOMOUS = 2,
     MANUAL_INVERSE = 0,
-    #AUTONOMOUS = 3
 )
 
 
@@ -306,6 +306,7 @@ class ControlStation(Node):
         temp_mode_map = {
             Mode.IDLE: HDMode.Request.OFF,
             Mode.MANUAL_DIRECT: HDMode.Request.MANUAL_DIRECT,
+            Mode.COMPLIANT_MOTION: HDMode.Request.COMPLIANT_MOTION,
             Mode.MANUAL_INVERSE: HDMode.Request.MANUAL_INVERSE,
             Mode.SEMI_AUTONOMOUS: HDMode.Request.AUTO,
         }

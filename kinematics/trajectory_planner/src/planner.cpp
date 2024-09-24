@@ -549,10 +549,14 @@ void Planner::attachGripperObjectCallback(const custom_msg::msg::Object::SharedP
     }
 }
 
+bool isMoveitMode(Planner::CommandMode mode) {
+    return mode == Planner::CommandMode::SEMI_AUTONOMOUS || mode == Planner::CommandMode::MANUAL_INVERSE;
+}
+
 void Planner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
 {
     Planner::CommandMode new_mode = static_cast<Planner::CommandMode>(msg->data);
-    if (new_mode != Planner::CommandMode::MANUAL_DIRECT && new_mode != Planner::CommandMode::IDLE) {
+    if (isMoveitMode(new_mode)) {
         m_mode_transition_ready = false;
         std::thread executor(&Planner::enforceCurrentState, this);
         executor.detach();

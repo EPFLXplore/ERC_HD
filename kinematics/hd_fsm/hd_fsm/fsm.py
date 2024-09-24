@@ -56,7 +56,7 @@ class FSM(Node):
     MANUAL_INVERSE = 0
     MANUAL_DIRECT = 1
     SEMI_AUTONOMOUS = 2
-    AUTONOMOUS = 3
+    COMPLIANT_MOTION = 3
 
     def __init__(self):
         super().__init__("HD_fsm")
@@ -118,6 +118,7 @@ class FSM(Node):
             HDMode.Request.MANUAL_DIRECT: FSM.MANUAL_DIRECT,
             HDMode.Request.MANUAL_INVERSE: FSM.MANUAL_INVERSE,
             HDMode.Request.AUTO: FSM.SEMI_AUTONOMOUS,
+            HDMode.Request.COMPLIANT_MOTION: FSM.COMPLIANT_MOTION,
         }
         self.target_mode = temp_mode_map[request.mode]
         self.mode_transitioning = True
@@ -349,8 +350,6 @@ class FSM(Node):
         
         if self.mode == self.IDLE:
             pass
-        elif self.mode == self.AUTONOMOUS:
-            pass
         elif self.mode == self.SEMI_AUTONOMOUS:
             #self.send_semi_autonomous_cmd()
             pass
@@ -364,8 +363,6 @@ class FSM(Node):
             self.send_trigger_request(self.servo_start_cli)
             
         if self.mode == self.IDLE:
-            pass
-        elif self.mode == self.AUTONOMOUS:
             pass
         elif self.mode == self.SEMI_AUTONOMOUS:
             pass
