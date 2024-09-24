@@ -66,6 +66,7 @@ install(PROGRAMS
   scripts/stats_tracker.py
   scripts/set_camera_offsets.py
   scripts/probe_station_selector.py
+  scripts/fake_torque_sensor.py
 
   input_handling/test_input_handling.py
   DESTINATION lib/${PROJECT_NAME}
