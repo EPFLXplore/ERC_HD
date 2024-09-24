@@ -98,6 +98,21 @@ def generate_launch_description():
             rover_topic_names_file,
         ]
     )
+    
+    servoing_node = Node(
+        package="trajectory_planner",
+        executable="servoing",
+        parameters=[
+            robot_description,
+            robot_description_semantic,
+            kinematics_yaml,
+            trajectory_execution,
+            planning_scene_monitor_parameters,
+            robot_description_kinematics,
+            hd_topic_names_file,
+            rover_topic_names_file,
+        ]
+    )
 
     kerby_task_executor_node = Node(
         package="trajectory_planner",
@@ -117,6 +132,7 @@ def generate_launch_description():
         [
             kerby_trajectory_planner_node,
             kerby_task_executor_node,
+            servoing_node,
             #gripper_frame_broadcaster,
         ]
     )

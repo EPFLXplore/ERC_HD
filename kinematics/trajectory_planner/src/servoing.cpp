@@ -9,7 +9,7 @@
 #include <geometry_msgs/msg/pose.h>
 
 
-ServoPlanner::ServoPlanner(rclcpp::NodeOptions node_options) : Node("kinematics_trajectory_planner", node_options)
+ServoPlanner::ServoPlanner(rclcpp::NodeOptions node_options) : Node("traj_planner_servoing", node_options)
 {}
 
 void ServoPlanner::config()
@@ -23,7 +23,8 @@ void ServoPlanner::config()
 
 void ServoPlanner::createROSInterfaces() {
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&ServoPlanner::modeChangeCallback, this, _1));
-    m_direction_torque_sub = this->create_subscription<geometry_msgs::msg::Point>("/HD/sensors/directional_torque", 10, std::bind(&ServoPlanner::followDirectionalTorque, this, _1));
+    m_direction_torque_sub = this->create_subscription<geometry_msgs::msg::Point>("/HD/sensors/directional_torque", 10, std::bind(&ServoPlanner::directionalTorqueCallback, this, _1));
+    m_posistion_command_pub = this->create_publisher<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_pos_cmd", 10);    
 }
 
 void ServoPlanner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
@@ -41,7 +42,7 @@ double norm(const geometry_msgs::msg::Point &vector) {
     return std::sqrt(squaredNorm(vector));
 }
 
-void normalize(const geometry_msgs::msg::Point &vector) {
+void normalize(geometry_msgs::msg::Point &vector) {
     double n = norm(vector);
     if (n > 0) {
         vector.x = vector.x/n;
@@ -50,30 +51,44 @@ void normalize(const geometry_msgs::msg::Point &vector) {
     }
 }
 
+void ServoPlanner::directionalTorqueCallback(const geometry_msgs::msg::Point::SharedPtr torque) {
+    std::thread executor(&ServoPlanner::followDirectionalTorque, this, torque);
+    executor.detach();
+}
+
 void ServoPlanner::followDirectionalTorque(const geometry_msgs::msg::Point::SharedPtr torque)
 {
-    double treshold_torque = 1;
-    if (squaredNorm(torque) < sq(treshold_torque)) return
+    // TODO:
+    // increase frequency
+    // maybe interpolate between distinct commands
+    // maybe (probably) update command at lower rate than sending
+    double treshold_torque = 0.5;
+    if (squaredNorm(*torque) < sq(treshold_torque)) return
 
-    normalize(torque);
+    normalize(*torque);
     geometry_msgs::msg::Pose current_pose;
     getEEFPose(current_pose);
     geometry_msgs::msg::Point current_point = current_pose.position;
     geometry_msgs::msg::Point target_point;
-    double scaling = 0.02;  // [m]
-    target_point.x = (current_point.x + torque.x) * scaling;
-    target_point.y = (current_point.y + torque.y) * scaling;
-    target_point.z = (current_point.z + torque.z) * scaling;
+    double scaling = 0.005;  // [m]
+    target_point.x = current_point.x + torque->x * scaling;
+    target_point.y = current_point.y + torque->y * scaling;
+    target_point.z = current_point.z + torque->z * scaling;
     geometry_msgs::msg::Pose target_pose;
     target_pose.position = target_point;
     target_pose.orientation = current_pose.orientation;
     std::vector<double> target_joint_config;
-    if (getIK(target_pose, current_pose, target_joint_config)) {
+    if (getIK(target_pose, target_joint_config)) {
         // send target joint positions to motor control
+        std_msgs::msg::Float64MultiArray msg;
+        for (auto x: target_joint_config) {
+            msg.data.push_back(x);
+        }
+        m_posistion_command_pub->publish(msg);
     }
 }
 
-void getEEFPose(geometry_msgs::msg::Pose &pose) {
+void ServoPlanner::getEEFPose(geometry_msgs::msg::Pose &pose) {
     pose = m_move_group->getCurrentPose().pose;
 }
 
@@ -105,10 +120,8 @@ void ServoPlanner::loop()
     while (rclcpp::ok())
     {
         switch(m_mode) {
-            case ServoPlanner::CommandMode::IDLE:
-            case ServoPlanner::CommandMode::MANUAL_DIRECT:
-                break;
-            case ServoPlanner::CommandMode::MANUAL_INVERSE:
+            case ServoPlanner::CommandMode::COMPLIANT_MOTION:
+                RCLCPP_INFO(this->get_logger(), "COMPLIANT BEHAVIOUR MODE");
                 break;
         }
         rate.sleep();

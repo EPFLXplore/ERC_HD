@@ -14,9 +14,13 @@ class NodeTemplate(Node):
     def create_ros_interfaces(self):
         pass
     
+    def loop_action(self):
+        pass
+    
     def loop(self, hz: int = 10):
         rate = self.create_rate(hz)
         while rclpy.ok():
+            self.loop_action()
             rate.sleep()
     
     @classmethod

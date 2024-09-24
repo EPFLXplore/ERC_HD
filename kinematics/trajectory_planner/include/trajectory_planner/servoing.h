@@ -11,6 +11,8 @@
 
 #include "std_msgs/msg/int8.hpp"
 
+#include <geometry_msgs/msg/point.h>
+
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 
@@ -24,7 +26,7 @@ public:
         MANUAL_INVERSE = 0,
         MANUAL_DIRECT = 1,
         SEMI_AUTONOMOUS = 2,
-        AUTONOMOUS = 3
+        COMPLIANT_MOTION = 3,
     };
 
     ServoPlanner(rclcpp::NodeOptions node_options);
@@ -42,7 +44,13 @@ private:
 
     bool getIK(const geometry_msgs::msg::Pose &ik_pose, std::vector<double> &solution);
 
+    void getEEFPose(geometry_msgs::msg::Pose &pose);
+
     void modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg);
+
+    void directionalTorqueCallback(const geometry_msgs::msg::Point::SharedPtr torque);
+
+    void followDirectionalTorque(const geometry_msgs::msg::Point::SharedPtr torque);
 
 
     const std::string                                                       m_planning_group = "kerby_arm_group";
@@ -50,5 +58,7 @@ private:
     std::shared_ptr<moveit::planning_interface::PlanningSceneInterface>     m_planning_scene_interface;
     const moveit::core::JointModelGroup*                                    m_joint_model_group;
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                    m_mode_change_sub;
+    rclcpp::Subscription<geometry_msgs::msg::Point>::SharedPtr              m_direction_torque_sub;
+    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr          m_posistion_command_pub;
     CommandMode                                                             m_mode = CommandMode::MANUAL_DIRECT;
 };

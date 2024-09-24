@@ -86,6 +86,7 @@ class FakeMotorControl(Node):
             return
         # self.state.position[:len(msg.data)] = array.array('d', [msg_pos - offset for msg_pos, offset in zip(msg.data, self.POSITION_OFFSETS)])
         self.target_positions[:len(msg.data)] = [msg_pos - offset for msg_pos, offset in zip(msg.data, self.POSITION_OFFSETS)]
+        # self.get_logger().info("new target positions: " + str(self.target_positions))
 
     def vel_cmd_callback(self, msg: Float64MultiArray):
         self.last_vel_cmd = time.time()
