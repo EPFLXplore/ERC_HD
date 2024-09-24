@@ -93,6 +93,15 @@ class Point(gmsg.Point):
     def xyz(self) -> Tuple[float, float, float]:
         return self.x, self.y, self.z
     
+    def set_x(self, x: float):
+        self.x = x
+    
+    def set_y(self, y: float):
+        self.y = y
+    
+    def set_z(self, z: float):
+        self.z = z
+    
     def __add__(self, other: PointLike) -> Point:
         # TODO: maybe add more direct typechecking via is_point_like (for now type checking is done indirectly in the make method), and same for __sub__ and __rsub__ methods
         other = Point.make(other)
@@ -217,6 +226,18 @@ class Quaternion(gmsg.Quaternion):
         (the precision margin is on the squared norm)
         """
         return (cls.make(q1) - cls.make(q2)).sq_norm() <= precision
+
+    def set_x(self, x: float):
+        self.x = x
+    
+    def set_y(self, y: float):
+        self.y = y
+    
+    def set_z(self, z: float):
+        self.z = z
+    
+    def set_w(self, w: float):
+        self.w = w
 
     @staticmethod
     def reverse_trig(cost: float, sint: float) -> float:
@@ -409,6 +430,12 @@ class Pose(gmsg.Pose):
         pose1, pose2 = cls.make(pose1), cls.make(pose2)
         return Point.eq(pose1.position, pose2.position, precision) and Quaternion.eq(pose1.orientation, pose2.orientation, precision)
     
+    def set_position(self, position: Point):
+        self.position = Point.make(position)
+    
+    def set_orientation(self, orientation: Quaternion):
+        self.orientation = Quaternion.make(orientation)
+        
     def point_image(self, point: PointLike) -> Point:
         return self.position + self.orientation.point_image(point)
 
