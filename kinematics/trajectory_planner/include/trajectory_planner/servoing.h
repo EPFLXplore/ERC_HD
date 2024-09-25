@@ -39,7 +39,7 @@ struct JointGoalInfo {
 
     void getAdvancement(std_msgs::msg::Float64MultiArray &array) {
         auto now = std::chrono::steady_clock::now();
-        double elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(now-start_time).count();
+        double elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(now-start_time).count() / 1000.0;
         if (elapsed_time >= execution_time_seconds) {
             array.data = target_state;
             stop();
@@ -87,8 +87,9 @@ private:
 
     void directionalTorqueCallback(const geometry_msgs::msg::Point::SharedPtr torque);
 
-    void followDirection(geometry_msgs::msg::Point torque);
+    void followDirection(geometry_msgs::msg::Point direction, double travel_distance, double execution_speed, double interpolation_ratio);
 
+    void publishJointCommand();
 
     const std::string                                                       m_planning_group = "kerby_arm_group";
     const uint                                                              m_joint_count = 6;

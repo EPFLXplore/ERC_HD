@@ -96,22 +96,21 @@ void ServoPlanner::directionalTorqueCallback(const geometry_msgs::msg::Point::Sh
     static const double treshold_torque = 0.5;
     if (squaredNorm(*torque) < sq(treshold_torque)) return;
 
-    std::thread executor(&ServoPlanner::followDirection, this, *torque);
+    std::thread executor(&ServoPlanner::followDirection, this, *torque, 0.005, 0.008, 0.1);
     executor.detach();
 }
 
-void ServoPlanner::followDirection(geometry_msgs::msg::Point direction)
+void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double travel_distance = 0.005, double execution_speed = 0.008, double interpolation_ratio = 0.1)
 {
-    // TODO:
-    // increase frequency
-    // maybe interpolate between distinct commands
-    // maybe (probably) update command at lower rate than sending
+    // travel_distance: [m]
+    // execution_speed: [m/s] in cartesian space
+    // interpolation_ratio: in [0, 1], will control at what percentage of remaining distance to previous goal (cartesian space) will new goal be accepted
+    // TODO: limit effective execution speed depending on max joint velocities
+    static const double allow_new_goal_treshold_distance = travel_distance * interpolation_ratio;   // accept new goal only if distance between current position and current goal position is at most this
 
-    static const double travel_distance = 0.03;  // [m]
     geometry_msgs::msg::Pose current_pose;
     getEEFPose(current_pose);
-    double new_goal_treshold_distance = travel_distance * 0.2;
-    if (m_joint_goal.is_active && squaredDistance(current_pose.position, m_joint_goal.target_pose.position) > sq(new_goal_treshold_distance)) {
+    if (m_joint_goal.is_active && squaredDistance(current_pose.position, m_joint_goal.target_pose.position) > sq(allow_new_goal_treshold_distance)) {
         return;
     }
 
@@ -126,7 +125,6 @@ void ServoPlanner::followDirection(geometry_msgs::msg::Point direction)
         return;
     }
     copyCurrentJointState(m_joint_goal.initial_state);
-    static const double execution_speed = 0.05;      // [m/s] in cartesian space
     m_joint_goal.execution_time_seconds = travel_distance * execution_speed;
     m_joint_goal.start();
 }
@@ -161,6 +159,15 @@ void ServoPlanner::spin()
     rclcpp::spin(shared_from_this());
 }
 
+void ServoPlanner::publishJointCommand() {
+    if (m_joint_goal.is_active) {
+        std_msgs::msg::Float64MultiArray msg;
+        m_joint_goal.getAdvancement(msg);
+        // RCLCPP_INFO_STREAM(this->get_logger(), msg.data[0] << ", " << msg.data[1] << ", " << msg.data[2] << ", " << msg.data[3] << ", " << msg.data[4] << ", " << msg.data[5]);
+        m_posistion_command_pub->publish(msg);
+    }
+}
+
 void ServoPlanner::loop()
 {
     rclcpp::Rate rate(30);
@@ -169,11 +176,7 @@ void ServoPlanner::loop()
         switch(m_mode) {
             case ServoPlanner::CommandMode::COMPLIANT_MOTION:
                 // RCLCPP_INFO(this->get_logger(), "COMPLIANT BEHAVIOUR MODE");
-                if (m_joint_goal.is_active) {
-                    std_msgs::msg::Float64MultiArray msg;
-                    m_joint_goal.getAdvancement(msg);
-                    m_posistion_command_pub->publish(msg);
-                }
+                publishJointCommand();
                 break;
         }
         rate.sleep();
