@@ -242,7 +242,6 @@ class PoseCorrector:
         pose: in eef frame
         """
         return pose @ self.tool_or_fingers_transform().inv() @ self.GRIPPER_TRANSFORM_CORRECTION.inv()
-        return pose @ self.correct_eef_pose().inv()
 
     def abs_to_eef(self, pose: Pose) -> qan.Pose:
         # input: pose in absolute frame
@@ -264,6 +263,10 @@ class PoseCorrector:
         # output: pose in camera frame (vision frame)
         return self.CAMERA_TRANSFORM.inv() @ self.correct_gripper_pose().inv() @ pose
 
+    def gripper_to_abs_vector(self, vector: Point) -> qan.Point:
+        gripper_pose = self.correct_gripper_pose()
+        return gripper_pose.orientation.point_image(vector)
+    
     def correct_vision_pose(self, pose: Pose) -> qan.Pose:
         # !!!=== deprecated ===!!!
         return qan.Pose.make(pose)
