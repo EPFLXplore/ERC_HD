@@ -21,6 +21,7 @@ setup(
         "console_scripts": [
             "talker = force_torque_sensor.publisher_member_function:main",
             "listener = force_torque_sensor.subscriber_member_function:main",
+            "bota = force_torque_sensor.bota_publisher:main"
         ],
     },
 )
