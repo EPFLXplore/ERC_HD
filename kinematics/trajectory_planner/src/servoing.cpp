@@ -50,7 +50,7 @@ double norm(const geometry_msgs::msg::Point &vector) {
 }
 
 double squaredDistance(const geometry_msgs::msg::Point &p1, const geometry_msgs::msg::Point &p2) {
-    return p1.x * p2.x + p1.y * p2.y + p1.z * p2.z;
+    return sq(p1.x - p2.x) + sq(p1.y - p2.y) + sq(p1.z - p2.z);
 }
 
 geometry_msgs::msg::Point pointMul(const geometry_msgs::msg::Point &p, double k) {
@@ -96,11 +96,11 @@ void ServoPlanner::directionalTorqueCallback(const geometry_msgs::msg::Point::Sh
     static const double treshold_torque = 0.5;
     if (squaredNorm(*torque) < sq(treshold_torque)) return;
 
-    std::thread executor(&ServoPlanner::followDirection, this, *torque, 0.005, 0.008, 0.1);
+    std::thread executor(&ServoPlanner::followDirection, this, *torque, 0.02, 0.02, 0.4);
     executor.detach();
 }
 
-void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double travel_distance = 0.005, double execution_speed = 0.008, double interpolation_ratio = 0.1)
+void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double travel_distance = 0.02, double execution_speed = 0.01, double interpolation_ratio = 0.1)
 {
     // travel_distance: [m]
     // execution_speed: [m/s] in cartesian space
@@ -111,6 +111,7 @@ void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double t
     geometry_msgs::msg::Pose current_pose;
     getEEFPose(current_pose);
     if (m_joint_goal.is_active && squaredDistance(current_pose.position, m_joint_goal.target_pose.position) > sq(allow_new_goal_treshold_distance)) {
+        RCLCPP_INFO(this->get_logger(), "Distance");
         return;
     }
 
@@ -125,7 +126,7 @@ void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double t
         return;
     }
     copyCurrentJointState(m_joint_goal.initial_state);
-    m_joint_goal.execution_time_seconds = travel_distance * execution_speed;
+    m_joint_goal.execution_time_seconds = travel_distance / execution_speed;
     m_joint_goal.start();
 }
 
@@ -163,19 +164,17 @@ void ServoPlanner::publishJointCommand() {
     if (m_joint_goal.is_active) {
         std_msgs::msg::Float64MultiArray msg;
         m_joint_goal.getAdvancement(msg);
-        // RCLCPP_INFO_STREAM(this->get_logger(), msg.data[0] << ", " << msg.data[1] << ", " << msg.data[2] << ", " << msg.data[3] << ", " << msg.data[4] << ", " << msg.data[5]);
         m_posistion_command_pub->publish(msg);
     }
 }
 
 void ServoPlanner::loop()
 {
-    rclcpp::Rate rate(30);
+    rclcpp::Rate rate(100);
     while (rclcpp::ok())
     {
         switch(m_mode) {
             case ServoPlanner::CommandMode::COMPLIANT_MOTION:
-                // RCLCPP_INFO(this->get_logger(), "COMPLIANT BEHAVIOUR MODE");
                 publishJointCommand();
                 break;
         }
