@@ -5,11 +5,12 @@ import kinematics_utils.quaternion_arithmetic_new as qan
 from typing import Any, Union
 import math
 import copy
+from rclpy.node import Node
 # import kinematics_utils.pose_corrector as pc
 from kinematics_utils.pose_corrector_new import POSE_CORRECTOR as pc
 
 
-END_EFFECTOR_POSE = Pose()
+END_EFFECTOR_POSE = qan.Pose()
 DETECTED_OBJECTS_POSE = []
 DETECTED_OBJECTS_LOCKED = False
 DETECTION_UPDATED = False
@@ -30,7 +31,11 @@ class DetectedObject:
 def eef_pose_callback(msg):
     """listens to /arm_control/end_effector_pose topic and updates the end effector pose"""
     global END_EFFECTOR_POSE
-    END_EFFECTOR_POSE = msg
+    END_EFFECTOR_POSE = qan.Pose.make(msg)
+
+
+def link_eef_pose_callback(node: Node):
+    node.create_subscription(Pose, "/HD/kinematics/eef_pose", eef_pose_callback, 10)
 
 
 def depth_callback(msg: UInt32):
