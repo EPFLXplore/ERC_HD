@@ -44,7 +44,8 @@ class FakeMotorControl(Node):
     MOTOR_COUNT = 10     # number of motors
     rads2rpm = lambda x: x/pi*30
     rpm2rads = lambda x: x*pi/30
-    MAX_VEL = list(map(rpm2rads, pad([1.83, 1.377, 1.377, 1.83, 1.83, 1.83, 0.15], MOTOR_COUNT)))    # max velocity of each motor in rad/s
+    # MAX_VEL = list(map(rpm2rads, pad([1.83, 1.377, 1.377, 1.83, 1.83, 1.83, 0.15], MOTOR_COUNT)))    # max velocity of each motor in rad/s
+    MAX_VEL = pad([0.2, 0.13, 0.13, 0.2, 0.2, 0.2], MOTOR_COUNT)    # max velocity of each motor in rad/s
     MAX_VEL = list_mul(MAX_VEL, 1)
     # POSITION_OFFSETS = pad([0, -0.959505, -2.424073, 0, -1.27857, -1.88833], MOTOR_COUNT)
     POSITION_OFFSETS = [0.0] * MOTOR_COUNT
@@ -74,6 +75,7 @@ class FakeMotorControl(Node):
         # self.state.position = pad([0.0, -0.9199, -0.7463, -0.0174, -1.2323, 1.2323], self.MOTOR_COUNT)
         # self.state.position = pad([0.0, -0.9199, -0.7463 + 0.3, -0.0174, -1.2323 + 0.3, 1.2323], self.MOTOR_COUNT)
         # self.state.position = list_add(self.state.position, list_neg(self.POSITION_OFFSETS))
+        self.state.position = pad([0.0, 0.33161255787892263, 2.1816615649929116, 0.0, 0.2617993877991494, 0.0], self.MOTOR_COUNT)
         self.state.velocity = [0.0]*self.MOTOR_COUNT
         self.state.effort = [0.0]*self.MOTOR_COUNT
 
@@ -89,9 +91,11 @@ class FakeMotorControl(Node):
         # self.get_logger().info("new target positions: " + str(self.target_positions))
 
     def vel_cmd_callback(self, msg: Float64MultiArray):
+        if self.vel_cmd_deprecated:
+            self.timer.tick()
+            
         self.last_vel_cmd = time.time()
         self.control_mode = self.VELOCITY
-        self.timer.tick()
 
         data = list(msg.data) + [0.0]*max(0, self.MOTOR_COUNT-len(msg.data))
         self.cmd_velocities = [max_ * vel for max_, vel in zip(self.MAX_VEL, data)]
