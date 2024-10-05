@@ -1,3 +1,6 @@
 [submodule "custom_msg"]
 	path = custom_msg
 	url = git@github.com:EPFLXplore/ERC_SE_CustomMessages.git
+[submodule "sensors/ERC_CAMERAS"]
+	path = sensors/ERC_CAMERAS
+	url = https://github.com/EPFLXplore/ERC_CAMERAS
