@@ -27,6 +27,8 @@ class FakeTorqueSensor(NodeTemplate):
         torque = self.torque
         if self.in_eef_frame:
             torque = pc.gripper_to_abs_vector(torque)
+        torque *= 100
+        print(torque)
         self.torque_pub.publish(torque.publishable())
 
 
