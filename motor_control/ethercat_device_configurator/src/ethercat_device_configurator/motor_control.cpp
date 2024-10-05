@@ -274,7 +274,10 @@ private:
 
     void position_command_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
     {
-        // RCLCPP_INFO(this->get_logger(), "position_command_callback");
+        if (msg->data.size() < 6) {
+            RCLCPP_WARN_STREAM(this->get_logger(), "position command callback received command list of size less than 6, size: " << msg->data.size());
+            return;
+        }
 
         double j5_pos = 0.0; // for decoupling of j5 and j6
         bool j6_on_hall = false;
