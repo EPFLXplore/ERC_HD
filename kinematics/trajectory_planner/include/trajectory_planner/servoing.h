@@ -25,10 +25,28 @@ struct JointGoalInfo {
     std::vector<double>                                 target_state;
     std::vector<double>                                 initial_state;
     geometry_msgs::msg::Pose                            target_pose;    // information not needed to compute joint space trajectory but can be useful
+    std::vector<double>                                 target_velocities_rads; // velocities that would allow reaching the target state in the requested time
     std::chrono::time_point<std::chrono::steady_clock>  start_time = std::chrono::steady_clock::now();
     double                                              execution_time_seconds;
+    const std::vector<double>                           max_velocities_rads = {0.2, 0.13, 0.13, 0.2, 0.2, 0.2};
+
+    void limitTrajectorySpeed() {
+        for (int i = 0; i < initial_state.size(); i++) {
+            double joint_distance_rad = abs(target_state[i]-initial_state[i]);
+            double joint_speed_rads = joint_distance_rad / execution_time_seconds;
+            double capped_speed = std::min(joint_speed_rads, max_velocities_rads[i]);
+            execution_time_seconds *= joint_speed_rads/capped_speed;
+        }
+        target_velocities_rads.clear();
+        for (int i = 0; i < initial_state.size(); i++) {
+            double joint_distance_rad = target_state[i]-initial_state[i];
+            double joint_speed_rads = joint_distance_rad / execution_time_seconds;
+            target_velocities_rads.push_back(joint_speed_rads);
+        }
+    }
 
     void start() {
+        limitTrajectorySpeed();
         start_time = std::chrono::steady_clock::now();
         is_active = true;
     }
@@ -37,18 +55,34 @@ struct JointGoalInfo {
         is_active = false;
     }
 
-    void getAdvancement(std_msgs::msg::Float64MultiArray &array) {
+    double getExecutionRatio() {
         auto now = std::chrono::steady_clock::now();
         double elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(now-start_time).count() / 1000.0;
         if (elapsed_time >= execution_time_seconds) {
-            array.data = target_state;
+            RCLCPP_WARN_STREAM(rclcpp::get_logger("traj_planner_servoing"), "RATIO IS 1");
+
             stop();
+            return 1.0;
+        }
+        return elapsed_time / execution_time_seconds;
+    }
+
+    void getPositionAdvancement(std_msgs::msg::Float64MultiArray &array) {
+        double ratio = getExecutionRatio();
+        if (ratio == 1.0) {
+            array.data = target_state;
             return;
         }
-        double ratio = elapsed_time / execution_time_seconds;
         array.data.clear();
-        for (uint i = 0; i < target_state.size(); i++) {
+        for (size_t i = 0; i < target_state.size(); i++) {
             array.data.push_back(initial_state[i] + (target_state[i]-initial_state[i])*ratio);
+        }
+    }
+
+    void getVelocityAdvancement(std_msgs::msg::Float64MultiArray &array) {
+        double ratio = getExecutionRatio();
+        for (size_t i = 0; i < target_velocities_rads.size(); i++) {
+            array.data.push_back(ratio == 1.0 ? 0.0 : target_velocities_rads[i]/max_velocities_rads[i]);
         }
     }
 };
@@ -87,8 +121,12 @@ private:
 
     void directionalTorqueCallback(const geometry_msgs::msg::Point::SharedPtr torque);
 
+    void directionalTorqueCallback2(const geometry_msgs::msg::Point::SharedPtr torque);
+
     void followDirection(geometry_msgs::msg::Point direction, double travel_distance, double execution_speed, double interpolation_ratio);
 
+    void stop();
+    
     void publishJointCommand();
 
     const std::string                                                       m_planning_group = "kerby_arm_group";
@@ -100,5 +138,6 @@ private:
     rclcpp::Subscription<std_msgs::msg::Int8>::SharedPtr                    m_mode_change_sub;
     rclcpp::Subscription<geometry_msgs::msg::Point>::SharedPtr              m_direction_torque_sub;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr          m_posistion_command_pub;
+    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr          m_velocity_command_pub;
     CommandMode                                                             m_mode = CommandMode::MANUAL_DIRECT;
 };

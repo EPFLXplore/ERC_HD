@@ -31,6 +31,7 @@ void ServoPlanner::createROSInterfaces() {
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&ServoPlanner::modeChangeCallback, this, _1));
     m_direction_torque_sub = this->create_subscription<geometry_msgs::msg::Point>("/HD/sensors/directional_torque", 10, std::bind(&ServoPlanner::directionalTorqueCallback, this, _1));
     m_posistion_command_pub = this->create_publisher<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_pos_cmd", 10);    
+    m_velocity_command_pub = this->create_publisher<std_msgs::msg::Float64MultiArray>("/HD/fsm/joint_vel_cmd", 10);    
 }
 
 void ServoPlanner::modeChangeCallback(const std_msgs::msg::Int8::SharedPtr msg)
@@ -93,29 +94,41 @@ void quaternionCopy(const geometry_msgs::msg::Quaternion &origin, geometry_msgs:
 }
 
 void ServoPlanner::directionalTorqueCallback(const geometry_msgs::msg::Point::SharedPtr torque) {
-    static const double treshold_torque = 0.5;
+    static const double treshold_torque = 5.0;
     if (squaredNorm(*torque) < sq(treshold_torque)) return;
 
-    std::thread executor(&ServoPlanner::followDirection, this, *torque, 0.02, 0.02, 0.4);
+    std::thread executor(&ServoPlanner::followDirection, this, *torque, 0.02, 0.08, 0.5);
     executor.detach();
 }
 
-void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double travel_distance = 0.02, double execution_speed = 0.01, double interpolation_ratio = 0.1)
+void ServoPlanner::directionalTorqueCallback2(const geometry_msgs::msg::Point::SharedPtr torque) {
+    static const double treshold_torque = 5.0;
+    if (squaredNorm(*torque) > sq(treshold_torque)) {
+        stop();
+        return;
+    }
+
+    geometry_msgs::msg::Point direction;
+    direction.x = 1.0;
+    std::thread executor(&ServoPlanner::followDirection, this, direction, 0.02, 0.08, 0.5);
+    executor.detach();
+}
+
+void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double travel_distance = 0.01, double execution_speed = 0.01, double interpolation_ratio = 0.1)
 {
     // travel_distance: [m]
     // execution_speed: [m/s] in cartesian space
     // interpolation_ratio: in [0, 1], will control at what percentage of remaining distance to previous goal (cartesian space) will new goal be accepted
     // TODO: limit effective execution speed depending on max joint velocities
-    static const double allow_new_goal_treshold_distance = travel_distance * interpolation_ratio;   // accept new goal only if distance between current position and current goal position is at most this
 
-    geometry_msgs::msg::Pose current_pose;
-    getEEFPose(current_pose);
-    if (m_joint_goal.is_active && squaredDistance(current_pose.position, m_joint_goal.target_pose.position) > sq(allow_new_goal_treshold_distance)) {
-        RCLCPP_INFO(this->get_logger(), "Distance");
-        return;
-    }
+    if (m_joint_goal.is_active && m_joint_goal.getExecutionRatio() < (1-interpolation_ratio)) return;
+
+    m_joint_goal.stop();
+    auto stop_time = std::chrono::steady_clock::now();
 
     normalize(direction);
+    geometry_msgs::msg::Pose current_pose;
+    getEEFPose(current_pose);
     geometry_msgs::msg::Point target_point = pointAdd(current_pose.position, pointMul(direction, travel_distance));
     m_joint_goal.target_pose.position = target_point;
     quaternionCopy(current_pose.orientation, m_joint_goal.target_pose.orientation);
@@ -128,10 +141,17 @@ void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double t
     copyCurrentJointState(m_joint_goal.initial_state);
     m_joint_goal.execution_time_seconds = travel_distance / execution_speed;
     m_joint_goal.start();
+    auto start_time = std::chrono::steady_clock::now();
+    double elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(start_time-stop_time).count() / 1000.0;
+    // RCLCPP_INFO_STREAM(this->get_logger(), "trajectory computation time: " << elapsed_time);
 }
 
 void ServoPlanner::getEEFPose(geometry_msgs::msg::Pose &pose) {
     pose = m_move_group->getCurrentPose().pose;
+}
+
+void ServoPlanner::stop() {
+    m_joint_goal.stop();
 }
 
 bool ServoPlanner::getIK(const geometry_msgs::msg::Pose &ik_pose, const std::vector<double> &ik_seed_state, std::vector<double> &solution) {
@@ -161,9 +181,16 @@ void ServoPlanner::spin()
 }
 
 void ServoPlanner::publishJointCommand() {
-    if (m_joint_goal.is_active) {
-        std_msgs::msg::Float64MultiArray msg;
-        m_joint_goal.getAdvancement(msg);
+    bool velocity_control = true;
+    if (!m_joint_goal.is_active) return;
+
+    std_msgs::msg::Float64MultiArray msg;
+    if (velocity_control) {
+        m_joint_goal.getVelocityAdvancement(msg);
+        m_velocity_command_pub->publish(msg);
+    }
+    else {
+        m_joint_goal.getPositionAdvancement(msg);
         m_posistion_command_pub->publish(msg);
     }
 }
