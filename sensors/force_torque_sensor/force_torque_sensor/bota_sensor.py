@@ -201,10 +201,10 @@ class BotaSerialSensor:
             print('stopped')
 
     def get_directional_force(self) -> Point:
-        return Point(self._fx, self._fy, self._fz)
+        return Point(x=self._fx, y=self._fy, z=self._fz)
     
     def get_rotational_force(self) -> Point:
-        return Point(self._mx, self._my, self._mz)
+        return Point(x=self._mx, y=self._my, z=self._mz)
 
     def start(self):
 

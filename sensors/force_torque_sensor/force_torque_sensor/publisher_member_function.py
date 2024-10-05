@@ -16,8 +16,7 @@ import rclpy
 from rclpy.node import Node
 
 from std_msgs.msg import Float32MultiArray #String 
-#from bota_serial_example import * 
-from py_pubsub.bota_serial_example import *
+from .bota_serial_example import * 
 
 class MinimalPublisher(Node):
 
