@@ -75,57 +75,61 @@
   </gazebo> 
 
 
-// <gazebo reference="hd_link2_1">
-//   <material>${body_color}</material>
+// <gazebo reference="link1">
 //   <mu1>0.2</mu1>
 //   <mu2>0.2</mu2>
 //   <selfCollide>true</selfCollide>
 // </gazebo>
 
-// <gazebo reference="hd_link3_1">
-//   <material>${body_color}</material>
+// <gazebo reference="link2">
 //   <mu1>0.2</mu1>
 //   <mu2>0.2</mu2>
 //   <selfCollide>true</selfCollide>
 // </gazebo>
 
-// <gazebo reference="hd_link4_1">
-//   <material>${body_color}</material>
+// <gazebo reference="link3">
 //   <mu1>0.2</mu1>
 //   <mu2>0.2</mu2>
 //   <selfCollide>true</selfCollide>
 // </gazebo>
 
-// <gazebo reference="hd_link5_1">
-//   <material>${body_color}</material>
+// <gazebo reference="link4">
 //   <mu1>0.2</mu1>
 //   <mu2>0.2</mu2>
 //   <selfCollide>true</selfCollide>
 // </gazebo>
 
-// <gazebo reference="hd_link6_1">
-//   <material>${body_color}</material>
+// <gazebo reference="link5">
 //   <mu1>0.2</mu1>
 //   <mu2>0.2</mu2>
 //   <selfCollide>true</selfCollide>
 // </gazebo>
 
-// <gazebo reference="hd_finger2_1">
-//   <material>${body_color}</material>
+// <gazebo reference="link6">
 //   <mu1>0.2</mu1>
 //   <mu2>0.2</mu2>
 //   <selfCollide>true</selfCollide>
 // </gazebo>
 
-// <gazebo reference="hd_finger1_1">
-//   <material>${body_color}</material>
+// <gazebo reference="Arm_A_v6_2">
 //   <mu1>0.2</mu1>
 //   <mu2>0.2</mu2>
 //   <selfCollide>true</selfCollide>
 // </gazebo>
 
-// <gazebo reference="hd_motor_j3_1">
-//   <material>${body_color}</material>
+// <gazebo reference="Arm_A_v6_1">
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+// <gazebo reference="Finger_v1_2">
+//   <mu1>0.2</mu1>
+//   <mu2>0.2</mu2>
+//   <selfCollide>true</selfCollide>
+// </gazebo>
+
+// <gazebo reference="Finger_v1_1">
 //   <mu1>0.2</mu1>
 //   <mu2>0.2</mu2>
 //   <selfCollide>true</selfCollide>
@@ -145,11 +149,6 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-// <gazebo reference="hd_link1_1">
-//   <material>${body_color}</material>
-//   <mu1>0.2</mu1>
-//   <mu2>0.2</mu2>
-//   <selfCollide>true</selfCollide>
-// </gazebo>
+
 
 </robot>

@@ -51,16 +51,19 @@ def generate_launch_description():
 
 
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
-                        arguments=['-topic', 'robot_description',
+                    
+                        arguments=['-topic', 'robot_description', 
                                    '-entity', 'onyx',
                                    '-x', '0.0',
                                     '-y', '0.0',
-                                    '-z', '4.0',
+                                    '-z', '1.0',
                                     '-Y','0.0'
                                 ],
+                    
                         output='screen'
                         )
 
+    
     joint_broad_spawner = Node(
         package="controller_manager",
         executable="spawner",
@@ -72,9 +75,7 @@ def generate_launch_description():
         executable="spawner",
         arguments=["kerby_arm_moveit_controller"],
     )
-
-
-
+    
 
     return LaunchDescription(
         [
@@ -89,8 +90,6 @@ def generate_launch_description():
         + more_launch_description()
         + more_more_launch_description()
     )
-
-
 
 
 
@@ -154,7 +153,7 @@ def declare_binary_launch_argument(name, default=True, description=""):
     
 
 def more_launch_description():
-    xacro_file = get_package_file('rover_description', 'description/onyx.urdf.xacro')
+    xacro_file = get_package_file('new_moveit_config', 'config/kerby.urdf.xacro')#get_package_file('rover_description', 'description/onyx.urdf.xacro')
     urdf_file = run_xacro(xacro_file)
     srdf_file = get_package_file('new_moveit_config', 'config/kerby.srdf')
     kinematics_file = get_package_file('new_moveit_config', 'config/kinematics.yaml')
@@ -247,13 +246,25 @@ def more_launch_description():
     )
     
     
+    # Startup up ROS2 controllers (will exit immediately)
+    controller_names = ['kerby_arm_moveit_controller', 'joint_state_broadcaster']   # kerby_base_moveit_controller
+    spawn_controllers = [
+        Node(
+            package="controller_manager",
+            executable="spawner",       # spawner.py on foxy
+            arguments=[controller],
+            output="screen")
+        for controller in controller_names
+    ]
+
+
     return [
         rviz_declaration,
         move_group_node,
         # robot_state_publisher,
         rviz,
         # servo_node,
-    ]
+    ] + spawn_controllers
 
 
 
@@ -297,11 +308,17 @@ def more_more_launch_description():
         ]
     )
     
+    trajectory_planner_nodes = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory('trajectory_planner'), 'launch'),
+            '/new_task_execution.launch.py']),
+    )
+
     return [
         sim_declaration,
         fake_cs_declaration,
         keyboard_declaration,
-        # trajectory_planner_nodes,
+        trajectory_planner_nodes,
         fsm_node,
         fake_cs_node_gamepad,
         fake_cs_node_keyboard,

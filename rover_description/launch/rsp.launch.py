@@ -15,9 +15,9 @@ def generate_launch_description():
     # Check if we're told to use sim time
     use_sim_time =LaunchConfiguration('use_sim_time')
 
-    # Process the URDF file
-    pkg_path = os.path.join(get_package_share_directory('rover_description'))
-    xacro_file = os.path.join(pkg_path,'description','onyx.urdf.xacro')
+    # Process the URDF file 
+    pkg_path = os.path.join(get_package_share_directory('new_moveit_config')) #'rover_description' or 'new_moveit_config' or 'new_description'
+    xacro_file = os.path.join(pkg_path,'config', 'kerby.urdf.xacro')#(pkg_path,'description','onyx.urdf.xacro') or (pkg_path,'config','kerby.urdf.xacro') or (pkg_path,'urdf', 'onyx.urdf.xacro')
     robot_description_config = xacro.process_file(xacro_file)
     
     # Create a robot_state_publisher node
