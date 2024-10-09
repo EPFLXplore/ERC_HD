@@ -29,7 +29,7 @@ void ServoPlanner::config()
 
 void ServoPlanner::createROSInterfaces() {
     m_mode_change_sub = this->create_subscription<std_msgs::msg::Int8>("/HD/fsm/mode_change", 10, std::bind(&ServoPlanner::modeChangeCallback, this, _1));
-    m_direction_torque_sub = this->create_subscription<geometry_msgs::msg::Point>("/HD/sensors/directional_torque", 10, std::bind(&ServoPlanner::directionalTorqueCallback, this, _1));
+    m_direction_torque_sub = this->create_subscription<geometry_msgs::msg::Point>("/HD/sensors/directional_torque", 10, std::bind(&ServoPlanner::directionalTorqueCallback2, this, _1));
     m_posistion_command_pub = this->create_publisher<std_msgs::msg::Float64MultiArray>("/HD/kinematics/joint_pos_cmd", 10);    
     m_velocity_command_pub = this->create_publisher<std_msgs::msg::Float64MultiArray>("/HD/fsm/joint_vel_cmd", 10);    
 }
@@ -94,15 +94,15 @@ void quaternionCopy(const geometry_msgs::msg::Quaternion &origin, geometry_msgs:
 }
 
 void ServoPlanner::directionalTorqueCallback(const geometry_msgs::msg::Point::SharedPtr torque) {
-    static const double treshold_torque = 5.0;
+    static const double treshold_torque = 10.0;
     if (squaredNorm(*torque) < sq(treshold_torque)) return;
 
-    std::thread executor(&ServoPlanner::followDirection, this, *torque, 0.02, 0.08, 0.5);
+    std::thread executor(&ServoPlanner::followDirection, this, *torque, 0.02, 0.03, 0.5);
     executor.detach();
 }
 
 void ServoPlanner::directionalTorqueCallback2(const geometry_msgs::msg::Point::SharedPtr torque) {
-    static const double treshold_torque = 5.0;
+    static const double treshold_torque = 10.0;
     if (squaredNorm(*torque) > sq(treshold_torque)) {
         stop();
         return;
@@ -110,16 +110,16 @@ void ServoPlanner::directionalTorqueCallback2(const geometry_msgs::msg::Point::S
 
     geometry_msgs::msg::Point direction;
     direction.x = 1.0;
-    std::thread executor(&ServoPlanner::followDirection, this, direction, 0.02, 0.08, 0.5);
+    std::thread executor(&ServoPlanner::followDirection, this, direction, 0.02, 0.03, 0.5);
     executor.detach();
 }
 
-void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double travel_distance = 0.01, double execution_speed = 0.01, double interpolation_ratio = 0.1)
+void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double travel_distance = 0.02, double execution_speed = 0.01, double interpolation_ratio = 0.5)
 {
     // travel_distance: [m]
     // execution_speed: [m/s] in cartesian space
     // interpolation_ratio: in [0, 1], will control at what percentage of remaining distance to previous goal (cartesian space) will new goal be accepted
-    // TODO: limit effective execution speed depending on max joint velocities
+    // TODO: implement security check on the selected IK solution
 
     if (m_joint_goal.is_active && m_joint_goal.getExecutionRatio() < (1-interpolation_ratio)) return;
 
@@ -136,6 +136,7 @@ void ServoPlanner::followDirection(geometry_msgs::msg::Point direction, double t
 
     m_joint_goal.target_state.clear();
     if (!getIK(m_joint_goal.target_pose, m_joint_goal.target_state)) {
+        RCLCPP_WARN_STREAM(this->get_logger(), "Unable to solve IK problem");
         return;
     }
     copyCurrentJointState(m_joint_goal.initial_state);
@@ -152,7 +153,17 @@ void ServoPlanner::getEEFPose(geometry_msgs::msg::Pose &pose) {
 
 void ServoPlanner::stop() {
     m_joint_goal.stop();
+    if (m_velocity_control) velocityStop();
+    else positionStop();
 }
+
+void ServoPlanner::velocityStop() {
+    std_msgs::msg::Float64MultiArray msg;
+    for (size_t i = 0; i < m_joint_count; i++) msg.data.push_back(0.0);
+    m_velocity_command_pub->publish(msg);
+}
+
+void ServoPlanner::positionStop() {}
 
 bool ServoPlanner::getIK(const geometry_msgs::msg::Pose &ik_pose, const std::vector<double> &ik_seed_state, std::vector<double> &solution) {
     moveit_msgs::msg::MoveItErrorCodes error_code;
@@ -185,7 +196,7 @@ void ServoPlanner::publishJointCommand() {
     if (!m_joint_goal.is_active) return;
 
     std_msgs::msg::Float64MultiArray msg;
-    if (velocity_control) {
+    if (m_velocity_control) {
         m_joint_goal.getVelocityAdvancement(msg);
         m_velocity_command_pub->publish(msg);
     }

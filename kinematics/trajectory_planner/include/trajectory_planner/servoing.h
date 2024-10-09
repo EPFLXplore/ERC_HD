@@ -124,9 +124,13 @@ private:
     void directionalTorqueCallback2(const geometry_msgs::msg::Point::SharedPtr torque);
 
     void followDirection(geometry_msgs::msg::Point direction, double travel_distance, double execution_speed, double interpolation_ratio);
-
-    void stop();
     
+    void stop();
+
+    void velocityStop();
+
+    void positionStop();
+
     void publishJointCommand();
 
     const std::string                                                       m_planning_group = "kerby_arm_group";
@@ -140,4 +144,5 @@ private:
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr          m_posistion_command_pub;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr          m_velocity_command_pub;
     CommandMode                                                             m_mode = CommandMode::MANUAL_DIRECT;
+    bool                                                                    m_velocity_control = true;
 };
